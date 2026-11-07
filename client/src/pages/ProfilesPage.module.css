@@ -1,0 +1,21 @@
+.tile {
+  width: 190px;
+  border-radius: var(--mantine-radius-xl);
+  transition: transform 120ms ease;
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--mantine-primary-color-filled);
+    outline-offset: 3px;
+  }
+}
+
+.add {
+  border-style: dashed;
+  border-width: 2px;
+  color: var(--mantine-color-dimmed);
+  min-height: 170px;
+}

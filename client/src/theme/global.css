@@ -1,0 +1,33 @@
+:root {
+  --klavio-bg-kids: #fffaf2;
+  --klavio-bg-classic: #f8f9fb;
+}
+
+html[data-ui-mode='kids'] body {
+  background: var(--klavio-bg-kids);
+}
+
+html[data-ui-mode='classic'] body {
+  background: var(--klavio-bg-classic);
+}
+
+/* Respect users who prefer less motion (mascot bounce, transitions). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Mantine's default "dimmed" (gray-6) is ~3.3:1 on white; gray-7 meets WCAG AA (4.5:1). */
+:root[data-mantine-color-scheme='light'] {
+  --mantine-color-dimmed: var(--mantine-color-gray-7);
+}
+
+/* Teal "light" variant (privacy badge/alert): lighter background so teal-9 text reaches 4.5:1. */
+:root[data-mantine-color-scheme='light'] {
+  --mantine-color-teal-light: var(--mantine-color-teal-0);
+  --mantine-color-teal-light-hover: var(--mantine-color-teal-1);
+}

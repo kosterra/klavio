@@ -1,0 +1,116 @@
+.keyboard {
+  position: relative;
+  display: flex;
+  width: 100%;
+  user-select: none;
+  touch-action: none;
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+  border: 2px solid var(--mantine-color-dark-6);
+  background: var(--mantine-color-dark-6);
+}
+
+.white {
+  position: relative;
+  flex: 1 1 0;
+  margin-right: 1px;
+  background: #fff;
+  border: 0;
+  border-radius: 0 0 6px 6px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+  font-weight: 700;
+  font-size: var(--mantine-font-size-sm);
+  color: var(--mantine-color-dark-7);
+  cursor: default;
+}
+
+.white:last-child {
+  margin-right: 0;
+}
+
+.black {
+  position: absolute;
+  top: 0;
+  height: 62%;
+  z-index: 1;
+  background: var(--mantine-color-dark-8);
+  border: 0;
+  border-radius: 0 0 5px 5px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  cursor: default;
+}
+
+.interactive {
+  cursor: pointer;
+}
+
+.white.hint {
+  background: var(--mantine-color-yellow-2);
+}
+
+.black.hint {
+  background: var(--mantine-color-yellow-8);
+}
+
+.white.active {
+  background: var(--mantine-color-indigo-3);
+}
+
+.black.active {
+  background: var(--mantine-color-indigo-6);
+}
+
+.white.correct {
+  background: var(--mantine-color-teal-3);
+}
+
+.black.correct {
+  background: var(--mantine-color-teal-7);
+}
+
+.white.wrong {
+  background: var(--mantine-color-red-2);
+}
+
+.black.wrong {
+  background: var(--mantine-color-red-7);
+}
+
+.interactive:focus-visible {
+  outline: 3px solid var(--mantine-color-orange-6);
+  outline-offset: -3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .white,
+  .black {
+    transition: background-color 60ms linear;
+  }
+}
+
+.labels {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.hintKey {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  border: 1px solid currentColor;
+  opacity: 0.75;
+}
