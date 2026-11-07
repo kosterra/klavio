@@ -13,7 +13,7 @@ import {
 import { inputHub, useNoteEvents } from '../input/noteBus';
 import { runMetronome, type MetronomeRun } from '../audio/metronome';
 import { playNote } from '../audio/synth';
-import { Buddy } from '../components/Buddy';
+import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { Staff, type StaffNote } from '../notation/Staff';
 import type { ExerciseProps } from './exercises';
@@ -202,11 +202,12 @@ export function RhythmExercise({
       data-play-start={playStartAt ?? undefined}
       data-beat-ms={beatMs}
     >
-      <Group gap="md" wrap="nowrap" justify="center">
-        <Buddy
-          mood={perfect ? 'cheer' : phase === 'result' ? 'think' : 'listen'}
-          size={kids ? 80 : 56}
-        />
+      <BuddySays
+        mood={perfect ? 'cheer' : phase === 'result' ? 'think' : 'listen'}
+        size={kids ? 80 : 56}
+        kids={kids}
+        classicRow
+      >
         <Text fz={kids ? 26 : 22} fw={800} aria-live="polite" data-testid="rhythm-status">
           {phase === 'countin'
             ? t('lesson.rhythm.countIn')
@@ -220,7 +221,7 @@ export function RhythmExercise({
                     : t('lesson.rhythm.almost')
                   : t('lesson.rhythm.ready')}
         </Text>
-      </Group>
+      </BuddySays>
 
       <Group gap="sm" aria-hidden>
         {Array.from({ length: beatsPerBar }, (_, i) => (

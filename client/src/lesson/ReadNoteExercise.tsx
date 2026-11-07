@@ -1,7 +1,7 @@
 import { Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { midiToName, midiToPitchName, type ReadNoteExercise as Spec } from '@klavio/shared';
-import { Buddy } from '../components/Buddy';
+import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { Staff } from '../notation/Staff';
 import type { ExerciseProps } from './exercises';
@@ -36,10 +36,15 @@ export function ReadNoteExercise({
 
   return (
     <Stack align="center" gap="md" w="100%">
-      <Buddy mood={feedback?.ok ? 'cheer' : feedback ? 'think' : 'listen'} size={kids ? 90 : 64} />
-      <Text fz={kids ? 30 : 24} fw={800} ta="center">
-        {t('lesson.readNote')}
-      </Text>
+      <BuddySays
+        mood={feedback?.ok ? 'cheer' : feedback ? 'think' : 'listen'}
+        size={kids ? 90 : 64}
+        kids={kids}
+      >
+        <Text fz={kids ? 30 : 24} fw={800} ta="center">
+          {t('lesson.readNote')}
+        </Text>
+      </BuddySays>
       <div style={{ width: 'min(100%, 420px)' }}>
         <Staff
           clef={exercise.clef}

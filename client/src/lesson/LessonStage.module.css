@@ -1,0 +1,25 @@
+/* Kids: a lesson takes place in its world – sky in the chapter colour and the
+   world's landscape along the bottom of the screen. */
+.stage {
+  position: relative;
+  min-height: 100dvh;
+  padding-bottom: 44px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--chapter-color) 20%, var(--klavio-bg-kids)) 0%,
+    color-mix(in srgb, var(--chapter-color) 6%, var(--klavio-bg-kids)) 70%
+  );
+
+  --world-hill: color-mix(in srgb, var(--chapter-color) 22%, var(--klavio-surface));
+  --world-hill-2: color-mix(in srgb, var(--chapter-color) 34%, var(--klavio-surface));
+  --world-outline: color-mix(in srgb, var(--chapter-dark) 45%, var(--klavio-surface));
+}
+
+.scenery {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40px;
+  pointer-events: none;
+}

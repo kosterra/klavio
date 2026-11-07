@@ -3,7 +3,7 @@ import { audit } from './audit';
 import { addVirtualAuthenticator, signUpWithEmail, uniqueEmail } from './helpers';
 
 test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ page, context }) => {
-  test.setTimeout(120_000); // many axe audits; slow on the on-demand dev server
+  test.setTimeout(240_000); // eleven axe audits; slow on the on-demand dev server
   await addVirtualAuthenticator(context, page);
 
   await page.goto('/welcome');
