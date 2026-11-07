@@ -266,6 +266,7 @@ export function AccountPage() {
               <Text size="sm">{t('email.codeSent')}</Text>
               <Group wrap="nowrap">
                 <PinInput
+                  size="lg"
                   length={6}
                   type="number"
                   oneTimeCode

@@ -178,11 +178,12 @@ export function ParentPinSettings() {
             )}
           </Group>
         ) : (
-          <Stack gap="xs" align="flex-start">
+          <Stack gap="sm" align="flex-start">
             <Text size="sm" fw={700} id="pin-step">
               {step === 'enter' ? t('parent.newPin') : t('parent.repeatPin')}
             </Text>
             <PinInput
+              size="lg"
               key={step}
               length={4}
               type="number"
@@ -192,7 +193,7 @@ export function ParentPinSettings() {
               aria-labelledby="pin-step"
               autoFocus
             />
-            <Group>
+            <Group mt="xs">
               <Button
                 variant="default"
                 onClick={() => {

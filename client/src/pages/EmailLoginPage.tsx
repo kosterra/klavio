@@ -113,6 +113,7 @@ export function EmailLoginPage({ intent }: { intent: 'login' | 'register' }) {
                     {t('email.code')}
                   </Text>
                   <PinInput
+                    size="lg"
                     length={6}
                     type="number"
                     oneTimeCode
