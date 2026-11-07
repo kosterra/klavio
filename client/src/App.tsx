@@ -40,6 +40,9 @@ const InputPage = lazy(() => import('./pages/InputPage').then((m) => ({ default:
 const ProfileSettingsPage = lazy(() =>
   import('./pages/ProfileSettingsPage').then((m) => ({ default: m.ProfileSettingsPage })),
 );
+const QuickRoundPage = lazy(() =>
+  import('./pages/QuickRoundPage').then((m) => ({ default: m.QuickRoundPage })),
+);
 const KnowledgePage = lazy(() =>
   import('./pages/KnowledgePage').then((m) => ({ default: m.KnowledgePage })),
 );
@@ -143,6 +146,7 @@ export function App() {
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route element={<RequireProfile />}>
                   <Route path="/lesson/:lessonId" element={<LessonPage />} />
+                  <Route path="/quick" element={<QuickRoundPage />} />
                 </Route>
                 <Route element={<AppLayout />}>
                   <Route

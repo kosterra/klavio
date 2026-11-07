@@ -7,7 +7,15 @@ import { useSession } from '../auth/session';
 export function PrivacyNote() {
   const { t } = useTranslation();
   return (
-    <Alert variant="light" color="teal" icon={<IconShieldLock aria-hidden />} radius="lg">
+    <Alert
+      variant="light"
+      color="teal"
+      icon={<IconShieldLock aria-hidden />}
+      radius="lg"
+      style={{
+        border: '1px solid color-mix(in srgb, var(--mantine-color-teal-6) 45%, transparent)',
+      }}
+    >
       {t('privacy.audioLocal')}
     </Alert>
   );

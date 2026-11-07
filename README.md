@@ -14,6 +14,9 @@ Der Produktname ist ein Platzhalter. Er steht zentral in
 - **Entdecken** vor jeder Lektion: kurze Erklärungen mit Bildern, Tipp-Spiele, Bilder-Quiz,
   Hör- und Klatschspiele; «Weisst du's noch?» zu Beginn jedes Kapitels; die Seite **Wissen** zum
   Nachschauen.
+- **Wiederholen** wie mit Lernkarten: gespielte Lektionen kommen nach 1, 3, 7, 14 und 30 Tagen
+  wieder («Heute wiederholen», Markierung im Lernpfad, Bonus-XP); dazu die «Schnelle Runde» mit
+  gemischten Fragen aus allen gespielten Lektionen.
 - **Übungen:** Finde die Taste, Spiel nach, Notenlesen, Lied spielen mit «Warte auf mich»,
   Rhythmus mit Metronom.
 - **Eingaben:** Tonerkennung über das Mikrofon (98,6 % der Töne C2–C6 korrekt und innert 100 ms

@@ -17,6 +17,7 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import {
   LESSONS,
+  applyCompletion,
   chapterOf,
   findLesson,
   isLessonUnlocked,
@@ -69,7 +70,8 @@ function localResult(
 ): ShownResult {
   const stars = starsFor(lessonTargetCount(lesson), body.mistakes);
   const previousBest = before.lessons[lesson.id]?.bestStars ?? 0;
-  const xpGained = xpFor(lesson.xp, stars, previousBest);
+  const { wasDue, bonusXp } = applyCompletion(before.lessons[lesson.id], stars, body.localDate);
+  const xpGained = xpFor(lesson.xp, stars, previousBest) + bonusXp;
   const xp = profile.xp + xpGained;
   const level = levelForXp(xp);
   return {
@@ -86,6 +88,7 @@ function localResult(
       seconds: before.today.seconds + body.durationSec,
       xp: before.today.xp + xpGained,
     },
+    review: wasDue,
     newBadges: [],
     pending: true,
   };

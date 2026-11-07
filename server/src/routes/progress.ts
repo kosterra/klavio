@@ -2,6 +2,7 @@ import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 import {
   addDays,
+  applyCompletion,
   findLesson,
   isLessonUnlocked,
   lessonCompleteSchema,
@@ -12,6 +13,7 @@ import {
   progressQuerySchema,
   starsFor,
   xpFor,
+  type LessonProgressDto,
   type LessonResultDto,
   type ProgressDto,
 } from '@klavio/shared';
@@ -32,6 +34,26 @@ function plausibleLocalDate(date: string): boolean {
   return date >= addDays(utc, -MAX_LATE_DAYS) && date <= addDays(utc, 1);
 }
 
+interface ProgressDoc {
+  bestStars: number;
+  completions?: number | null;
+  lastCompletedAt?: Date | null;
+  lastLocalDate?: string | null;
+  reviewBox?: number | null;
+  reviews?: number | null;
+}
+
+/** Stored progress → DTO. Older entries without a local date use the completion day (UTC). */
+function toDto(l: ProgressDoc): LessonProgressDto {
+  return {
+    bestStars: l.bestStars,
+    completions: l.completions ?? 0,
+    lastDate: l.lastLocalDate ?? l.lastCompletedAt?.toISOString().slice(0, 10) ?? null,
+    box: l.reviewBox ?? 0,
+    reviews: l.reviews ?? 0,
+  };
+}
+
 /** Progress of the session's active profile. */
 const progressRoutes: FastifyPluginAsyncZod = async (app) => {
   app.addHook('preHandler', app.requireAuth);
@@ -49,9 +71,7 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
         DailyActivity.findOne({ profileId, date: req.query.date }).lean(),
       ]);
       return {
-        lessons: Object.fromEntries(
-          lessons.map((l) => [l.lessonId, { bestStars: l.bestStars, completions: l.completions }]),
-        ),
+        lessons: Object.fromEntries(lessons.map((l) => [l.lessonId, toDto(l)])),
         today: { date: req.query.date, seconds: today?.seconds ?? 0, xp: today?.xp ?? 0 },
       };
     },
@@ -75,14 +95,24 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
       const stars = starsFor(lessonTargetCount(lesson), mistakes);
       const previous = await LessonProgress.findOne({ profileId, lessonId: lesson.id }).lean();
       const previousBest = previous?.bestStars ?? 0;
-      const xpGained = xpFor(lesson.xp, stars, previousBest);
+      // repetition: due reviews move the lesson on in the schedule and give a bonus
+      const { next, wasDue, bonusXp } = applyCompletion(
+        previous ? toDto(previous) : undefined,
+        stars,
+        localDate,
+      );
+      const xpGained = xpFor(lesson.xp, stars, previousBest) + bonusXp;
 
       await LessonProgress.updateOne(
         { profileId, lessonId: lesson.id },
         {
           $max: { bestStars: stars },
-          $inc: { completions: 1 },
-          $set: { lastCompletedAt: new Date() },
+          $inc: { completions: 1, reviews: wasDue ? 1 : 0 },
+          $set: {
+            lastCompletedAt: new Date(),
+            lastLocalDate: next.lastDate,
+            reviewBox: next.box,
+          },
         },
         { upsert: true },
       );
@@ -108,7 +138,10 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
       profile.set('streak', streak);
 
       // Badges: computed from the updated progress; once earned, kept for good.
-      const all = await LessonProgress.find({ profileId }, { lessonId: 1, bestStars: 1 }).lean();
+      const all = await LessonProgress.find(
+        { profileId },
+        { lessonId: 1, bestStars: 1, reviews: 1 },
+      ).lean();
       const owned = new Set((profile.badges ?? []).map((b) => b.id!));
       const newBadges = newlyEarnedBadges(
         {
@@ -116,6 +149,7 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
           streak: streak.current,
           todaySeconds: today!.seconds,
           dailyGoalMinutes: profile.dailyGoalMinutes,
+          reviews: all.reduce((n, l) => n + (l.reviews ?? 0), 0),
         },
         owned,
       );
@@ -132,6 +166,7 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
         leveledUp: profile.level > levelBefore,
         streak,
         today: { date: localDate, seconds: today!.seconds, xp: today!.xp },
+        review: wasDue,
         newBadges,
       };
     },

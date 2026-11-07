@@ -466,5 +466,27 @@
     "intro": "Alles, was du schon entdeckt hast – zum Nachschauen.",
     "locked": "noch nicht entdeckt",
     "toLesson": "Zur Lektion"
+  },
+  "review": {
+    "title": "Heute wiederholen",
+    "intro": "Diese Lektionen sind wieder dran – so vergisst du nichts.",
+    "allFresh": "Alles frisch im Kopf!",
+    "quickIntro": "Heute ist nichts fällig. Lust auf eine schnelle Runde?",
+    "daysAgo_one": "vor {{count}} Tag gespielt",
+    "daysAgo_other": "vor {{count}} Tagen gespielt",
+    "go": "Wiederholen",
+    "play": "{{lesson}} wiederholen",
+    "quick": "Schnelle Runde",
+    "quickEmpty": "Spiel zuerst ein paar Lektionen – dann gibt es hier Fragen dazu.",
+    "quickDone": "Super, schnelle Runde geschafft!",
+    "quickAgain": "Noch eine Runde",
+    "back": "Zum Lernpfad",
+    "finish": "Fertig!",
+    "stop": "Beenden",
+    "close": "Schnelle Runde beenden",
+    "done": "Super wiederholt! Du bekommst {{xp}} Bonus-XP.",
+    "due": "zum Wiederholen",
+    "dueCount_one": "{{count}} zum Wiederholen",
+    "dueCount_other": "{{count}} zum Wiederholen"
   }
 }

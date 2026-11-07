@@ -5,8 +5,10 @@ import {
   IconRefresh,
   IconStarFilled,
   IconTrophy,
+  IconRepeat,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+import { REVIEW_BONUS_XP } from '@klavio/shared';
 import type { LessonResultDto } from '@klavio/shared';
 import { Buddy } from '../components/Buddy';
 import { NewBadges } from './Badges';
@@ -61,6 +63,18 @@ export function LessonSummary({
             <Text fz={28} fw={800} c="indigo.8" data-testid="xp-gained">
               {t('lesson.xpGained', { xp: result.xpGained })}
             </Text>
+            {result.review && (
+              <Alert
+                color="teal"
+                variant="light"
+                icon={<IconRepeat />}
+                radius="lg"
+                w="100%"
+                data-testid="review-done"
+              >
+                <Text fw={700}>{t('review.done', { xp: REVIEW_BONUS_XP })}</Text>
+              </Alert>
+            )}
             {result.pending && (
               <Alert
                 color="blue"

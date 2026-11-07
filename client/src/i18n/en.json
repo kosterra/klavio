@@ -466,5 +466,27 @@
     "intro": "Everything you have discovered so far – to look up again.",
     "locked": "not discovered yet",
     "toLesson": "Go to lesson"
+  },
+  "review": {
+    "title": "Review today",
+    "intro": "These lessons are due again – so you don't forget anything.",
+    "allFresh": "Everything fresh in your head!",
+    "quickIntro": "Nothing is due today. Up for a quick round?",
+    "daysAgo_one": "played {{count}} day ago",
+    "daysAgo_other": "played {{count}} days ago",
+    "go": "Review",
+    "play": "Review {{lesson}}",
+    "quick": "Quick round",
+    "quickEmpty": "Play a few lessons first – then there will be questions about them here.",
+    "quickDone": "Great, quick round done!",
+    "quickAgain": "One more round",
+    "back": "Back to the path",
+    "finish": "Done!",
+    "stop": "Stop",
+    "close": "Stop the quick round",
+    "done": "Well reviewed! You get {{xp}} bonus XP.",
+    "due": "to review",
+    "dueCount_one": "{{count}} to review",
+    "dueCount_other": "{{count}} to review"
   }
 }

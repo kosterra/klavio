@@ -5,6 +5,7 @@ import {
   IconFlame,
   IconMetronome,
   IconMusic,
+  IconRepeat,
   IconSparkles,
   IconStarFilled,
   IconTarget,
@@ -24,6 +25,7 @@ const ICONS: Record<BadgeDef['icon'], typeof IconStarFilled> = {
   target: IconTarget,
   book: IconBook,
   sparkles: IconSparkles,
+  repeat: IconRepeat,
 };
 
 const COLORS: Record<BadgeDef['icon'], string> = {
@@ -35,6 +37,7 @@ const COLORS: Record<BadgeDef['icon'], string> = {
   target: 'teal.8',
   book: 'blue.8',
   sparkles: 'pink.7',
+  repeat: 'lime.8',
 };
 
 /** "Neues Abzeichen!" block in the lesson summary. */

@@ -10,6 +10,7 @@ import {
   IconPiano,
   IconPlayerPlay,
   IconStarFilled,
+  IconRepeat,
   IconTrophy,
 } from '@tabler/icons-react';
 import { Link } from 'react-router';
@@ -17,6 +18,8 @@ import { useTranslation } from 'react-i18next';
 import {
   CURRICULUM,
   isLessonUnlocked,
+  isReviewDue,
+  localIsoDate,
   type Avatar,
   type Lesson,
   type ProgressDto,
@@ -259,6 +262,9 @@ export function LearningPath({
   // worlds the fog has already lifted from (read once per profile, so the lift plays once)
   const revealed = useMemo(() => loadRevealed(profileId), [profileId]);
   const completed = new Set(Object.keys(progress).filter((id) => progress[id]!.bestStars > 0));
+  // lessons due for review today (flash-card schedule)
+  const today = localIsoDate();
+  const due = new Set(Object.keys(progress).filter((id) => isReviewDue(progress[id], today)));
   const maxCols = Math.max(3, Math.min(6, Math.floor(width / 150)));
   const narrow = width / maxCols < 140;
   const rowHeight = narrow ? 172 : 156;
@@ -534,6 +540,14 @@ export function LearningPath({
                       {t('path.goalDone')}
                     </Text>
                   )}
+                  {(() => {
+                    const n = chapter.lessons.filter((l) => due.has(l.id)).length;
+                    return n > 0 ? (
+                      <Text component="span" size="sm" className={classes.reviewBadge}>
+                        <IconRepeat size={14} aria-hidden /> {t('review.dueCount', { count: n })}
+                      </Text>
+                    ) : null;
+                  })()}
                   {!sec.reached && (
                     <Group component="span" gap={3} wrap="nowrap" c="dimmed">
                       <IconLock size={15} aria-hidden />
@@ -575,6 +589,7 @@ export function LearningPath({
                         : stars > 0
                           ? t('path.stars', { count: stars })
                           : t('path.notStarted'),
+                      ...(due.has(lesson.id) ? [t('review.due')] : []),
                     ].join(', ');
                     const half = (current ? NODE_CURRENT : NODE) / 2;
                     const starRow = stars > 0 && (
@@ -624,6 +639,11 @@ export function LearningPath({
                           >
                             <KindIcon lesson={lesson} size={current ? 38 : 30} />
                             {starRow}
+                            {due.has(lesson.id) && (
+                              <span className={classes.dueBadge} data-testid={`due-${lesson.id}`}>
+                                <IconRepeat size={16} aria-hidden />
+                              </span>
+                            )}
                           </Link>
                         )}
                         {current && (

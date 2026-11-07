@@ -252,3 +252,32 @@
   flex: 1;
   min-width: 180px;
 }
+
+/* --------------------------------------------------------------- review */
+.review {
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
+  border-radius: var(--mantine-radius-xl);
+  border: 2px solid color-mix(in srgb, var(--mantine-color-lime-6) 45%, var(--klavio-surface));
+  background: color-mix(in srgb, var(--mantine-color-lime-4) 14%, var(--klavio-surface));
+}
+
+.reviewList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reviewItem {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-lg);
+  background: var(--klavio-surface);
+  border-left: 6px solid var(--chapter-light);
+}
+
+.reviewText {
+  flex: 1;
+  min-width: 0;
+}

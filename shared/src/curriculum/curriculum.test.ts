@@ -101,7 +101,7 @@ describe('song notation', () => {
 });
 
 describe('badges', () => {
-  const none = { lessons: {}, streak: 0, todaySeconds: 0, dailyGoalMinutes: 10 };
+  const none = { lessons: {}, streak: 0, todaySeconds: 0, dailyGoalMinutes: 10, reviews: 0 };
 
   it('has unique ids and translated texts', async () => {
     const { BADGES } = await import('./badges.ts');
@@ -127,6 +127,7 @@ describe('badges', () => {
       'streak-7',
       'daily-goal',
     ]);
+    expect(newlyEarnedBadges({ ...none, reviews: 10 }, new Set())).toEqual(['memory-pro']);
   });
 });
 

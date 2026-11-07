@@ -101,6 +101,11 @@ const lessonProgressSchema = new Schema(
     bestStars: { type: Number, required: true },
     completions: { type: Number, default: 0 },
     lastCompletedAt: { type: Date, default: null },
+    // repetition (see shared/curriculum/review.ts): local date of the last
+    // completion, step in the schedule, reviews done while due
+    lastLocalDate: { type: String, default: null },
+    reviewBox: { type: Number, default: 0 },
+    reviews: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

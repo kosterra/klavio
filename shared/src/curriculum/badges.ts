@@ -8,12 +8,15 @@ export interface BadgeStats {
   streak: number;
   todaySeconds: number;
   dailyGoalMinutes: number;
+  /** reviews done while a lesson was due (all lessons together) */
+  reviews: number;
 }
 
 export interface BadgeDef {
   id: string;
   /** Icon key, mapped to an icon in the client. */
-  icon: 'star' | 'trophy' | 'music' | 'metronome' | 'flame' | 'target' | 'book' | 'sparkles';
+  icon:
+    'star' | 'trophy' | 'music' | 'metronome' | 'flame' | 'target' | 'book' | 'sparkles' | 'repeat';
   title: Localized;
   /** How to earn it (shown while it is still open). */
   hint: Localized;
@@ -119,6 +122,16 @@ export const BADGES: BadgeDef[] = [
     title: { 'de-CH': '30 Sterne', en: '30 stars' },
     hint: { 'de-CH': 'Sammle insgesamt 30 Sterne.', en: 'Collect 30 stars in total.' },
     earned: (s) => totalStars(s) >= 30,
+  },
+  {
+    id: 'memory-pro',
+    icon: 'repeat',
+    title: { 'de-CH': 'Gedächtnis-Profi', en: 'Memory pro' },
+    hint: {
+      'de-CH': 'Wiederhole zehnmal eine Lektion, wenn sie fällig ist.',
+      en: 'Review a lesson ten times when it is due.',
+    },
+    earned: (s) => s.reviews >= 10,
   },
 ];
 

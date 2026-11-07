@@ -331,10 +331,19 @@ export function TheorySteps({
   steps,
   kids,
   onDone,
+  title,
+  doneLabel,
+  skipLabel,
 }: {
   steps: TheoryStep[];
   kids: boolean;
   onDone: () => void;
+  /** heading above the steps (default "Entdecken") */
+  title?: string;
+  /** label of the last button (default "Jetzt spielen!") */
+  doneLabel?: string;
+  /** label of the skip button (default "Überspringen") */
+  skipLabel?: string;
 }) {
   const { t } = useTranslation();
   const loc = useLocalized();
@@ -377,7 +386,7 @@ export function TheorySteps({
       <Stack gap="lg">
         <Group justify="space-between" wrap="nowrap">
           <Text size="sm" fw={800} tt="uppercase" c="dimmed">
-            {t('theory.title')}
+            {title ?? t('theory.title')}
           </Text>
           <Group
             gap={6}
@@ -438,7 +447,7 @@ export function TheorySteps({
 
         <Group justify="space-between">
           <Button variant="subtle" color="gray" onClick={onDone}>
-            {t('theory.skip')}
+            {skipLabel ?? t('theory.skip')}
           </Button>
           <Button
             size={kids ? 'xl' : 'lg'}
@@ -446,7 +455,7 @@ export function TheorySteps({
             onClick={next}
             data-testid="theory-next"
           >
-            {last ? t('theory.toLesson') : t('theory.next')}
+            {last ? (doneLabel ?? t('theory.toLesson')) : t('theory.next')}
           </Button>
         </Group>
       </Stack>

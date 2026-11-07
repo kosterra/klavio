@@ -17,6 +17,12 @@ export const progressQuerySchema = z.object({ date: isoDateSchema });
 export interface LessonProgressDto {
   bestStars: number;
   completions: number;
+  /** learner's local date of the last completion (YYYY-MM-DD) */
+  lastDate: string | null;
+  /** repetition step (index into REVIEW_INTERVALS) */
+  box: number;
+  /** reviews done while the lesson was due */
+  reviews: number;
 }
 
 export interface ProgressDto {
@@ -34,6 +40,8 @@ export interface LessonResultDto {
   leveledUp: boolean;
   streak: { current: number; longest: number; lastActiveDate: string | null };
   today: { date: string; seconds: number; xp: number };
+  /** the lesson was due for review (and gave the review bonus) */
+  review: boolean;
   /** Badge ids earned with this lesson. */
   newBadges: string[];
 }

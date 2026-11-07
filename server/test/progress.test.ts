@@ -81,7 +81,7 @@ describe('lesson progress', () => {
     });
 
     const progress = (await call(jar, 'GET', `/api/progress?date=${today}`)).json();
-    expect(progress.lessons[first!.id]).toEqual({ bestStars: 3, completions: 1 });
+    expect(progress.lessons[first!.id]).toMatchObject({ bestStars: 3, completions: 1 });
     expect(progress.today).toEqual({ date: today, seconds: 95, xp: first!.xp + 15 });
 
     const profile = (await call(jar, 'GET', '/api/profiles')).json()[0];
@@ -130,7 +130,7 @@ describe('lesson progress', () => {
     const worse = await complete(jar, first!.id, { mistakes: 20 });
     expect(worse.json()).toMatchObject({ stars: 1, bestStars: 3 });
     const progress = (await call(jar, 'GET', `/api/progress?date=${today}`)).json();
-    expect(progress.lessons[first!.id]).toEqual({ bestStars: 3, completions: 3 });
+    expect(progress.lessons[first!.id]).toMatchObject({ bestStars: 3, completions: 3 });
   });
 
   it('levels up and extends the streak on consecutive days', async () => {
@@ -176,5 +176,29 @@ describe('lesson progress', () => {
     const { LessonProgress, DailyActivity } = await import('../src/models/index.js');
     expect(await LessonProgress.countDocuments({ profileId })).toBe(0);
     expect(await DailyActivity.countDocuments({ profileId })).toBe(0);
+  });
+});
+
+describe('repetition', () => {
+  it('a lesson is due a day later; reviewing it moves it on and gives a bonus', async () => {
+    const { jar } = await learner('review@example.ch');
+    const yesterday = addDays(today, -1);
+    const firstRun = (await complete(jar, first!.id, { localDate: yesterday })).json();
+    expect(firstRun.review).toBe(false);
+
+    let progress = (await call(jar, 'GET', `/api/progress?date=${today}`)).json();
+    expect(progress.lessons[first!.id]).toMatchObject({ lastDate: yesterday, box: 0, reviews: 0 });
+
+    const review = (await complete(jar, first!.id)).json();
+    expect(review.review).toBe(true);
+    // replay XP (half) + 5 per new star (none) + review bonus
+    expect(review.xpGained).toBe(Math.round(first!.xp / 2) + 5);
+
+    progress = (await call(jar, 'GET', `/api/progress?date=${today}`)).json();
+    expect(progress.lessons[first!.id]).toMatchObject({ lastDate: today, box: 1, reviews: 1 });
+
+    // played again the same day: not due any more, no bonus
+    const again = (await complete(jar, first!.id)).json();
+    expect(again.review).toBe(false);
   });
 });

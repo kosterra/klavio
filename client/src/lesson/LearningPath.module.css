@@ -537,3 +537,49 @@ a.node:active {
   pointer-events: none;
   filter: drop-shadow(0 3px 0 rgb(0 0 0 / 12%));
 }
+
+/* due for review: a small badge on the stone and a note in the heading */
+.dueBadge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--mantine-color-lime-8);
+  border: 3px solid var(--klavio-surface);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dueBadge {
+    animation: due-spin 4s ease-in-out infinite;
+  }
+}
+
+@keyframes due-spin {
+  0%,
+  80% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.reviewBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 10px;
+  border-radius: 999px;
+  font-weight: 800;
+  /* dark text on light green: readable in both colour schemes */
+  color: var(--mantine-color-dark-9);
+  background: var(--mantine-color-lime-3);
+}
