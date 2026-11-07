@@ -20,10 +20,16 @@ import { HttpError, badRequest, notFound } from '../lib/errors.js';
 
 const lessonParams = z.object({ lessonId: z.string().regex(/^[a-z0-9-]{1,64}$/) });
 
-/** Learner dates may be ahead of / behind UTC by up to 14 h. */
+/** Results played offline are synced later — accept up to this many days back. */
+const MAX_LATE_DAYS = 14;
+
+/**
+ * Learner dates may be ahead of UTC by up to 14 h (→ tomorrow) and results
+ * played offline can arrive up to two weeks late.
+ */
 function plausibleLocalDate(date: string): boolean {
   const utc = new Date().toISOString().slice(0, 10);
-  return [addDays(utc, -1), utc, addDays(utc, 1)].includes(date);
+  return date >= addDays(utc, -MAX_LATE_DAYS) && date <= addDays(utc, 1);
 }
 
 /** Progress of the session's active profile. */

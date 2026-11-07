@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, type ReactNode } from 'react';
 import { Button, Center, Loader, MantineProvider, Stack, Text } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router';
@@ -13,13 +13,24 @@ import { WelcomePage } from './pages/WelcomePage';
 import { EmailLoginPage } from './pages/EmailLoginPage';
 import { ProfilesPage } from './pages/ProfilesPage';
 import { DashboardPage } from './pages/DashboardPage';
-import { AccountPage } from './pages/AccountPage';
-import { AdminPage } from './pages/AdminPage';
-import { MicTestPage } from './pages/MicTestPage';
-import { MicSetupPage } from './pages/MicSetupPage';
-import { InputPage } from './pages/InputPage';
-import { LessonPage } from './pages/LessonPage';
 import { useMidi } from './input/useMidi';
+
+// Loaded on demand (they pull in audio, notation, …); the service worker
+// precaches them, so they also open offline.
+const AccountPage = lazy(() =>
+  import('./pages/AccountPage').then((m) => ({ default: m.AccountPage })),
+);
+const AdminPage = lazy(() => import('./pages/AdminPage').then((m) => ({ default: m.AdminPage })));
+const MicTestPage = lazy(() =>
+  import('./pages/MicTestPage').then((m) => ({ default: m.MicTestPage })),
+);
+const MicSetupPage = lazy(() =>
+  import('./pages/MicSetupPage').then((m) => ({ default: m.MicSetupPage })),
+);
+const InputPage = lazy(() => import('./pages/InputPage').then((m) => ({ default: m.InputPage })));
+const LessonPage = lazy(() =>
+  import('./pages/LessonPage').then((m) => ({ default: m.LessonPage })),
+);
 
 /** Reconnects a previously allowed MIDI device as soon as the app starts. */
 function MidiAutoConnect() {
@@ -99,32 +110,34 @@ export function App() {
     <SessionProvider>
       <ThemedApp>
         <BrowserRouter>
-          <Routes>
-            <Route element={<AnonymousOnly />}>
-              <Route path="/welcome" element={<WelcomePage />} />
-              <Route path="/login/email" element={<EmailLoginPage intent="login" />} />
-              <Route path="/register" element={<EmailLoginPage intent="register" />} />
-            </Route>
-            <Route element={<RequireAuth />}>
-              <Route path="/profiles" element={<ProfilesPage />} />
-              <Route element={<RequireProfile />}>
-                <Route path="/lesson/:lessonId" element={<LessonPage />} />
+          <Suspense fallback={<FullPageLoader />}>
+            <Routes>
+              <Route element={<AnonymousOnly />}>
+                <Route path="/welcome" element={<WelcomePage />} />
+                <Route path="/login/email" element={<EmailLoginPage intent="login" />} />
+                <Route path="/register" element={<EmailLoginPage intent="register" />} />
               </Route>
-              <Route element={<AppLayout />}>
-                <Route path="/account" element={<AccountPage />} />
-                <Route element={<RequireAdmin />}>
-                  <Route path="/admin" element={<AdminPage />} />
-                </Route>
+              <Route element={<RequireAuth />}>
+                <Route path="/profiles" element={<ProfilesPage />} />
                 <Route element={<RequireProfile />}>
-                  <Route path="/" element={<DashboardPage />} />
-                  <Route path="/mic-test" element={<MicTestPage />} />
-                  <Route path="/mic-setup" element={<MicSetupPage />} />
-                  <Route path="/input" element={<InputPage />} />
+                  <Route path="/lesson/:lessonId" element={<LessonPage />} />
+                </Route>
+                <Route element={<AppLayout />}>
+                  <Route path="/account" element={<AccountPage />} />
+                  <Route element={<RequireAdmin />}>
+                    <Route path="/admin" element={<AdminPage />} />
+                  </Route>
+                  <Route element={<RequireProfile />}>
+                    <Route path="/" element={<DashboardPage />} />
+                    <Route path="/mic-test" element={<MicTestPage />} />
+                    <Route path="/mic-setup" element={<MicSetupPage />} />
+                    <Route path="/input" element={<InputPage />} />
+                  </Route>
                 </Route>
               </Route>
-            </Route>
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </ThemedApp>
     </SessionProvider>

@@ -333,5 +333,21 @@
     "new": "New badge!",
     "new_other": "{{count}} new badges!",
     "earnedOn": "earned on {{date}}"
+  },
+  "offline": {
+    "badge": "Offline",
+    "synced": "{{count}} lesson played offline has been saved.",
+    "synced_other": "{{count}} lessons played offline have been saved.",
+    "pendingResult": "You are offline right now. Your result is stored on this device and will be sent once you are back online. Badges will follow then."
+  },
+  "install": {
+    "title": "Install Klavio",
+    "text": "Install the app: it then starts like a real app in full screen and also works without internet.",
+    "ios": "In Safari, tap “Share” (square with an arrow) and then “Add to Home Screen”. Klavio then starts like a real app and also works without internet.",
+    "button": "Install app"
+  },
+  "update": {
+    "title": "New version available",
+    "reload": "Reload"
   }
 }

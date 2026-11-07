@@ -144,9 +144,20 @@ describe('lesson progress', () => {
     expect(b).toMatchObject({ level: 2, leveledUp: true });
   });
 
+  it('accepts results synced late (offline) without touching the streak', async () => {
+    const { jar } = await learner();
+    await complete(jar, first!.id);
+    const late = (await complete(jar, second!.id, { localDate: addDays(today, -5) })).json();
+    expect(late.streak).toEqual({ current: 1, longest: 1, lastActiveDate: today });
+    expect(late.today).toMatchObject({ date: addDays(today, -5), seconds: 120 });
+  });
+
   it('rejects implausible dates, unknown lessons and bad input', async () => {
     const { jar } = await learner();
     expect((await complete(jar, first!.id, { localDate: '2020-01-01' })).json()).toEqual({
+      error: 'BAD_DATE',
+    });
+    expect((await complete(jar, first!.id, { localDate: addDays(today, 2) })).json()).toEqual({
       error: 'BAD_DATE',
     });
     expect((await complete(jar, 'no-such-lesson')).statusCode).toBe(404);

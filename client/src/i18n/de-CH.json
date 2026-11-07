@@ -333,5 +333,21 @@
     "new": "Neues Abzeichen!",
     "new_other": "{{count}} neue Abzeichen!",
     "earnedOn": "erhalten am {{date}}"
+  },
+  "offline": {
+    "badge": "Offline",
+    "synced": "{{count}} offline gespielte Lektion gespeichert.",
+    "synced_other": "{{count}} offline gespielte Lektionen gespeichert.",
+    "pendingResult": "Du bist gerade offline. Dein Ergebnis ist auf diesem Gerät gespeichert und wird übertragen, sobald du wieder online bist. Abzeichen gibt es dann auch."
+  },
+  "install": {
+    "title": "Klavio installieren",
+    "text": "Installiere die App: Sie startet dann wie eine richtige App im Vollbild und funktioniert auch ohne Internet.",
+    "ios": "Tippe in Safari auf «Teilen» (Quadrat mit Pfeil) und dann auf «Zum Home-Bildschirm». Dann startet Klavio wie eine richtige App und funktioniert auch ohne Internet.",
+    "button": "App installieren"
+  },
+  "update": {
+    "title": "Neue Version verfügbar",
+    "reload": "Neu laden"
   }
 }

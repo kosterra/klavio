@@ -4,9 +4,10 @@ Progressive Web App, mit der Kinder (ab ca. 6 Jahren) und erwachsene Einsteiger 
 spielerisch Klavier lernen. Die App hört über das Mikrofon zu (oder liest ein Digitalpiano per MIDI)
 und wertet das Gespielte aus. Audio wird ausschliesslich lokal im Browser verarbeitet.
 
-> **Stand:** Schritt 6 des Plans – Registrierung per E-Mail-Code, Passkeys, Kinderprofile, Tonerkennung
-> über das Mikrofon, MIDI und Bildschirm-Klaviatur, Lernpfad mit den ersten Lektionen («Finde die
-> Taste», «Spiel nach»), Sterne, XP, Level, Streak und Tagesziel. Weitere Übungstypen folgen.
+> **Stand:** Schritt 7 des Plans – Registrierung per E-Mail-Code, Passkeys, Kinderprofile, Tonerkennung
+> über das Mikrofon, MIDI und Bildschirm-Klaviatur, Lernpfad mit 5 Kapiteln und 18 Lektionen (Finde die
+> Taste, Spiel nach, Notenlesen, Lieder mit «Warte auf mich», Rhythmus), Sterne, XP, Level, Streak,
+> Tagesziel, Abzeichen, Offline-Nutzung mit späterer Synchronisation und Installationshinweis.
 
 Der Produktname ist ein Platzhalter. Er steht zentral in
 [`shared/src/config/app.ts`](shared/src/config/app.ts) und wird von UI, Manifest, WebAuthn und E-Mails verwendet.
@@ -93,6 +94,10 @@ npm run check        # Typecheck + ESLint + Prettier + Unit-Tests
   dort gemockt.
 - **E2E-Tests** nutzen den virtuellen WebAuthn-Authenticator von Chromium, also echte Passkey-Kryptografie,
   sowie Mailpit für den E-Mail-Code, ein virtuelles Mikrofon (WAV-Datei) und ein simuliertes MIDI-Gerät.
+  Lektionstests setzen den Fortschritt früherer Kapitel direkt in der Dev-Datenbank. Der Offline-Test
+  prüft gegen den Docker-Stack auch einen Neustart ohne Verbindung (Service Worker; dafür startet
+  Chromium dort mit `--ignore-certificate-errors`, weil es Service Worker sonst bei der lokalen CA
+  verweigert).
   Sie laufen nacheinander, weil ein Test die Registrierung kurz schliesst. Im Entwicklungsmodus sind
   Anfragen von localhost von den IP-Limits für E-Mail-Codes ausgenommen. Gegen den Docker-Stack laufen
   sie stabiler und schneller, weil der Vite-Dev-Server Module erst bei Bedarf übersetzt und unter Last
@@ -102,11 +107,24 @@ npm run check        # Typecheck + ESLint + Prettier + Unit-Tests
 ## Lernpfad und Lektionen
 
 - **Lehrplan als Daten** (`shared/src/curriculum/`): Kapitel → Lektionen → Übungen. Lektions-IDs sind
-  stabil, weil der Fortschritt pro ID gespeichert wird. Heute 2 Kapitel mit 10 Lektionen, darunter
-  «Alle meine Entchen» (traditionell, gemeinfrei).
-- **Übungstypen:** «Finde die Taste» (Notenname → Taste; je nach Lektion jede Oktave oder genau eine)
-  und «Spiel nach» (Tonfolge nachspielen, die App wartet auf jeden Ton). Hilfen: markierte Taste nach
-  einem Fehler (Kids sofort), bei «Spiel nach» im Kids-Modus immer.
+  stabil, weil der Fortschritt pro ID gespeichert wird. Heute 5 Kapitel mit 18 Lektionen: Tastatur,
+  rechte Hand, Noten lesen, erste Lieder, Rhythmus. Alle Lieder sind traditionell bzw. gemeinfrei
+  (Alle meine Entchen, Hänschen klein, Beethovens «Freude, schöner Götterfunken», Morgen kommt der
+  Weihnachtsmann).
+- **Übungstypen:**
+  - **Finde die Taste:** Notenname → Taste (je nach Lektion jede Oktave oder genau eine).
+  - **Spiel nach:** Tonfolge nachspielen, die App wartet auf jeden Ton.
+  - **Notenlesen:** Note auf den Notenlinien → genau diese Taste; Hilfe erst mit dem Namen, dann mit der
+    markierten Taste.
+  - **Lied spielen:** Melodie mit Notenwerten und Takten, Modus «Warte auf mich»; «Anhören» spielt das
+    Lied vor (Mikrofon dabei stumm). Melodien in kompakter Schreibweise mit Taktprüfung:
+    `'C4/q D4/q E4/q F4/q | G4/h G4/h'`.
+  - **Rhythmus:** ein Takt Einzählen, dann mitspielen, nur das Timing zählt (Kids ±150 ms,
+    Classic ±100 ms). Die Klicks sind tonlose Rauschimpulse (keine Fehlerkennung im Mikrofon), präzise
+    auf der Audio-Uhr geplant und inklusive Ausgabelatenz auf die Zeitbasis der Eingaben umgerechnet;
+    die Verzögerung der Mikrofon-Erkennung (~40 ms) wird abgezogen. Wiederholungen zählen als Übung.
+- **Notation:** VexFlow 5 (MIT) mit eingebetteter Bravura-Schrift, erst bei Bedarf geladen (eigener
+  Chunk, für offline vorab gespeichert). Die CSP erlaubt dafür `font-src data:`.
 - **Eingabe in der Lektion:** MIDI, sonst Mikrofon (startet mit «Los geht's», wegen iOS erst nach einem
   Tippen), sonst Bildschirm-Klaviatur. Mit echter Eingabe zeigt die Bildschirm-Klaviatur nur an, was
   erkannt wurde; umschalten lässt sich jederzeit.
@@ -115,10 +133,28 @@ npm run check        # Typecheck + ESLint + Prettier + Unit-Tests
   Erstes Mal volle XP + 5 pro Stern, Wiederholungen halbe XP + 5 pro verbessertem Stern.
   Level-Schwellen 50, 150, 300, 500 … XP. Der Streak zählt Tage nach dem lokalen Datum des Kindes;
   ein verpasster Tag setzt nur den Streak zurück, XP gehen nie verloren.
+- **Abzeichen** (`badges.ts`, 14 Stück, vom Server vergeben): erste Lektion, perfekt, erstes Lied,
+  Rhythmus, Notenlesen, je Kapitel, 3 und 7 Tage in Folge, Tagesziel, 30 Sterne. Einmal erhalten,
+  bleiben sie – nichts läuft ab, kein Zeitdruck.
 - **Freischalten:** Eine Lektion öffnet sich, wenn die vorherige abgeschlossen ist (auch serverseitig
   geprüft). Abgeschlossene Lektionen lassen sich jederzeit wiederholen; der beste Wert zählt.
-- **Gespeichert** wird pro Profil nur das Beste je Lektion (Sterne, Anzahl Durchgänge) und die
-  Übungszeit pro Tag – keine einzelnen Versuche, keine Aufnahmen.
+- **Gespeichert** wird pro Profil nur das Beste je Lektion (Sterne, Anzahl Durchgänge), die Übungszeit
+  pro Tag und die Abzeichen – keine einzelnen Versuche, keine Aufnahmen.
+
+## Offline und Installation
+
+- Der Service Worker speichert die App inklusive Notenschrift und Tonerkennung vorab; die App startet
+  auch ohne Verbindung (schon beim ersten Besuch, `clientsClaim`).
+- Der letzte bekannte Stand (Konto, Profile, Fortschritt) liegt im `localStorage` des Geräts und wird
+  beim Abmelden gelöscht. Offline läuft die App mit diesem Stand weiter; im Kopf erscheint «Offline».
+- Offline gespielte Lektionen landen in einer Warteschlange auf dem Gerät. Sterne und XP werden sofort
+  nach denselben Regeln lokal berechnet, die nächste Lektion ist frei. Sobald die Verbindung zurück ist,
+  werden die Ergebnisse der Reihe nach übertragen (auch für andere Profile des Kontos); der Server
+  akzeptiert Ergebnisse bis 14 Tage zurück und vergibt dann die Abzeichen. Ein später übertragener
+  Übungstag verändert den Streak nicht mehr.
+- **Installationshinweis** auf dem Dashboard: in Chrome/Edge/Android mit dem Installationsdialog des
+  Browsers, auf iPad/iPhone mit der Anleitung «Teilen → Zum Home-Bildschirm». Wegklickbar.
+- Seiten werden bei Bedarf geladen (Code-Splitting); das Haupt-Bundle ist rund 460 kB (143 kB gzip).
 
 ## Eingaben: MIDI, Mikrofon, Bildschirm-Klaviatur
 
@@ -195,7 +231,9 @@ server/   Fastify-API
 client/   React-PWA
   src/audio/      Mikrofon, AudioWorklet, Tonerkennung (pitch/), Kalibrierung
   src/input/      Note-Bus und Input-Hub (Priorität), Web MIDI, Computertastatur
-  src/lesson/     Lernpfad, Lektionsablauf, Übungstypen, Fortschritt
+  src/lesson/     Lernpfad, Lektionsablauf, Übungstypen, Fortschritt, Abzeichen
+  src/notation/   Notenlinien mit VexFlow
+  src/offline/    Gerätespeicher, Warteschlange und Synchronisation
   src/auth/       Session-Kontext, Passkey-Abläufe
   src/pages/      Willkommen, Registrierung/E-Mail-Login, Profilwahl, Dashboard, Eingabe,
                   Mikrofon-Test, Mikrofon-Einrichtung, Konto, Verwaltung

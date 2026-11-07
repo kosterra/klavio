@@ -1,12 +1,18 @@
 import { Alert, Button, Card, Group, Stack, Text, Title } from '@mantine/core';
-import { IconFlame, IconRefresh, IconStarFilled, IconTrophy } from '@tabler/icons-react';
+import {
+  IconCloudUpload,
+  IconFlame,
+  IconRefresh,
+  IconStarFilled,
+  IconTrophy,
+} from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import type { LessonResultDto } from '@klavio/shared';
 import { Mascot } from '../components/Mascot';
 import { NewBadges } from './Badges';
 
 interface Props {
-  result: LessonResultDto | null;
+  result: (LessonResultDto & { pending?: boolean }) | null;
   saving: boolean;
   error: string | null;
   dailyGoalMinutes: number;
@@ -57,6 +63,17 @@ export function LessonSummary({
             <Text fz={28} fw={800} c="indigo.8" data-testid="xp-gained">
               {t('lesson.xpGained', { xp: result.xpGained })}
             </Text>
+            {result.pending && (
+              <Alert
+                color="blue"
+                icon={<IconCloudUpload />}
+                radius="lg"
+                w="100%"
+                data-testid="pending"
+              >
+                {t('offline.pendingResult')}
+              </Alert>
+            )}
             <NewBadges ids={result.newBadges} />
             {result.leveledUp && (
               <Alert color="yellow" icon={<IconTrophy />} radius="lg" w="100%">

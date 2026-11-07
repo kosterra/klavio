@@ -26,6 +26,7 @@ import { useMidi } from '../input/useMidi';
 import { LESSONS, nextLesson } from '@klavio/shared';
 import { LearningPath } from '../lesson/LearningPath';
 import { BadgeShelf } from '../lesson/Badges';
+import { InstallHint } from '../components/InstallHint';
 import { useProgress } from '../lesson/useProgress';
 import { useLocalized } from '../lesson/useLocalized';
 import { Mascot } from '../components/Mascot';
@@ -49,6 +50,7 @@ export function DashboardPage() {
 
   return (
     <Stack gap="lg" maw={1100} mx="auto">
+      <InstallHint />
       <Paper withBorder radius="xl" p="lg">
         <Group wrap="nowrap" align="center">
           <Mascot mood="happy" size={kids ? 110 : 64} />

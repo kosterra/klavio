@@ -53,9 +53,12 @@ export interface Streak {
   lastActiveDate: string | null;
 }
 
-/** Practising today keeps the streak; yesterday → +1; a gap starts again at 1. */
+/**
+ * Practising today keeps the streak; yesterday → +1; a gap starts again at 1.
+ * A day before the last active one (a result synced late) changes nothing.
+ */
 export function nextStreak(streak: Streak, today: string): Streak {
-  if (streak.lastActiveDate === today) return streak;
+  if (streak.lastActiveDate && today <= streak.lastActiveDate) return streak;
   const current = streak.lastActiveDate === addDays(today, -1) ? streak.current + 1 : 1;
   return { current, longest: Math.max(streak.longest, current), lastActiveDate: today };
 }

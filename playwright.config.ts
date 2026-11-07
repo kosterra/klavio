@@ -16,8 +16,15 @@ export default defineConfig({
     baseURL: process.env.E2E_BASE_URL ?? 'http://localhost:5173',
     locale: 'de-CH',
     trace: 'retain-on-failure',
-    // Caddy's local CA is not trusted inside the test browser
+    // Caddy's local CA is not trusted inside the test browser. ignoreHTTPSErrors
+    // alone is not enough for service workers (Chromium refuses to register
+    // them on certificate errors), hence the launch flag for the HTTPS stack.
     ignoreHTTPSErrors: true,
+    launchOptions: {
+      args: (process.env.E2E_BASE_URL ?? '').startsWith('https')
+        ? ['--ignore-certificate-errors']
+        : [],
+    },
   },
   projects: [
     {

@@ -1,5 +1,12 @@
-import { ActionIcon, AppShell, Group, Menu, Text, UnstyledButton } from '@mantine/core';
-import { IconLogout, IconPiano, IconSettings, IconShield, IconUsers } from '@tabler/icons-react';
+import { ActionIcon, AppShell, Badge, Group, Menu, Text, UnstyledButton } from '@mantine/core';
+import {
+  IconCloudOff,
+  IconLogout,
+  IconPiano,
+  IconSettings,
+  IconShield,
+  IconUsers,
+} from '@tabler/icons-react';
 import { Link, Outlet, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { APP_CONFIG } from '@klavio/shared';
@@ -9,7 +16,7 @@ import { PrivacyBadge } from './PrivacyNote';
 
 export function AppLayout() {
   const { t } = useTranslation();
-  const { me, activeProfile, logout } = useSession();
+  const { me, activeProfile, logout, offline } = useSession();
   const navigate = useNavigate();
 
   return (
@@ -25,6 +32,18 @@ export function AppLayout() {
             </Group>
           </UnstyledButton>
           <Group gap="sm" wrap="nowrap">
+            {offline && (
+              <Badge
+                color="orange.9"
+                variant="light"
+                size="lg"
+                leftSection={<IconCloudOff size={14} />}
+                role="status"
+                data-testid="offline-badge"
+              >
+                {t('offline.badge')}
+              </Badge>
+            )}
             <PrivacyBadge />
             <Menu position="bottom-end" width={240}>
               <Menu.Target>

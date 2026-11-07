@@ -20,10 +20,18 @@ import {
   findLesson,
   isLessonUnlocked,
   lessonTargetCount,
+  levelForXp,
   localIsoDate,
+  nextStreak,
+  starsFor,
+  xpFor,
   type Lesson,
   type LessonResultDto,
+  type ProfileDto,
+  type ProgressDto,
 } from '@klavio/shared';
+import { ApiError } from '../api/client';
+import { enqueueResult } from '../offline/queue';
 import { endpoints } from '../api/endpoints';
 import { useSession } from '../auth/session';
 import { useErrorText } from '../auth/useErrorText';
@@ -38,7 +46,43 @@ import { RhythmExercise } from '../lesson/RhythmExercise';
 import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
 import { useLocalized } from '../lesson/useLocalized';
-import { useProgress } from '../lesson/useProgress';
+import { loadProgress, useProgress } from '../lesson/useProgress';
+
+type ShownResult = LessonResultDto & { pending?: boolean };
+
+/**
+ * What the server would answer, computed on the device with the same rules —
+ * for results played offline (synced later; badges are awarded then).
+ */
+function localResult(
+  lesson: Lesson,
+  body: { mistakes: number; durationSec: number; localDate: string },
+  profile: ProfileDto,
+  before: ProgressDto,
+): ShownResult {
+  const stars = starsFor(lessonTargetCount(lesson), body.mistakes);
+  const previousBest = before.lessons[lesson.id]?.bestStars ?? 0;
+  const xpGained = xpFor(lesson.xp, stars, previousBest);
+  const xp = profile.xp + xpGained;
+  const level = levelForXp(xp);
+  return {
+    stars,
+    bestStars: Math.max(stars, previousBest),
+    firstCompletion: previousBest === 0,
+    xpGained,
+    xp,
+    level,
+    leveledUp: level > profile.level,
+    streak: nextStreak(profile.streak, body.localDate),
+    today: {
+      date: body.localDate,
+      seconds: before.today.seconds + body.durationSec,
+      xp: before.today.xp + xpGained,
+    },
+    newBadges: [],
+    pending: true,
+  };
+}
 
 /** Full-screen lesson: intro → exercises → summary. */
 export function LessonPage() {
@@ -70,7 +114,7 @@ function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void })
   const navigate = useNavigate();
   const errorText = useErrorText();
   const micErrorText = useMicErrorText();
-  const { activeProfile, refresh } = useSession();
+  const { me, activeProfile, refresh, applyLocalResult } = useSession();
   const input = useLessonInput();
   const kids = activeProfile?.uiMode !== 'classic';
   const [phase, setPhase] = useState<'intro' | 'play' | 'result'>('intro');
@@ -78,7 +122,7 @@ function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void })
   const [correct, setCorrect] = useState(0);
   const mistakes = useRef(0);
   const startedAt = useRef(0);
-  const [result, setResult] = useState<LessonResultDto | null>(null);
+  const [result, setResult] = useState<ShownResult | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const total = lessonTargetCount(lesson);
@@ -89,21 +133,37 @@ function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void })
   const save = async () => {
     setSaving(true);
     setSaveError(null);
-    try {
-      const durationSec = Math.min(
+    const body = {
+      mistakes: mistakes.current,
+      durationSec: Math.min(
         3600,
         Math.max(1, Math.round((performance.now() - startedAt.current) / 1000)),
-      );
-      setResult(
-        await endpoints.completeLesson(lesson.id, {
-          mistakes: mistakes.current,
-          durationSec,
-          localDate: localIsoDate(),
-        }),
-      );
+      ),
+      localDate: localIsoDate(),
+    };
+    try {
+      setResult(await endpoints.completeLesson(lesson.id, body));
       await refresh(); // XP, level and streak on the dashboard
     } catch (err) {
-      setSaveError(errorText(err));
+      if (err instanceof ApiError && err.code === 'NETWORK' && me && activeProfile) {
+        // Offline: keep the result on the device and show it right away.
+        const before = await loadProgress(activeProfile.id);
+        enqueueResult({
+          ...body,
+          userId: me.user.id,
+          profileId: activeProfile.id,
+          lessonId: lesson.id,
+        });
+        const local = localResult(lesson, body, activeProfile, before);
+        applyLocalResult(activeProfile.id, {
+          xp: local.xp,
+          level: local.level,
+          streak: local.streak,
+        });
+        setResult(local);
+      } else {
+        setSaveError(errorText(err));
+      }
     } finally {
       setSaving(false);
     }

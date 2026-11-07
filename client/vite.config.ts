@@ -26,6 +26,10 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2,json}'],
         navigateFallback: '/index.html',
+        // The very first service worker takes over the open page right away, so
+        // the app already works offline during the first visit. Updates still
+        // wait for the user (registerType: 'prompt').
+        clientsClaim: true,
         // never let the service worker answer API calls from cache
         navigateFallbackDenylist: [/^\/api\//],
       },
