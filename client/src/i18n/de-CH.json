@@ -580,5 +580,45 @@
     "eggKonami": "Geheimcode geknackt! 🎉 Du bist ein echter Profi.",
     "eggKlavi": "Klavi spielt «Für Elise» – nur für dich! 🎵",
     "eggDucks": "Alle meine Entchen schwimmen auf dem See! 🦆"
+  },
+  "goal": {
+    "kicker": "Mein Traumlied",
+    "percent": "{{percent}} % des Weges zum Traumlied",
+    "skillsReached": "{{reached}} von {{total}} Fähigkeiten geschafft",
+    "skillsLabel": "Was dein Traumlied braucht",
+    "state": {
+      "reached": "geschafft",
+      "open": "kommt auf deinem Weg",
+      "later": "kommt in einer späteren Welt"
+    },
+    "next": "Als Nächstes: {{skill}}",
+    "ready": "Du kannst alles, was «{{title}}» braucht. Zeit für dein Traumlied! 🎉",
+    "waiting": "Die nächsten Fähigkeiten kommen in neuen Welten – bleib dran!",
+    "promptText": "Hast du ein Traumlied, das du eines Tages spielen möchtest?",
+    "promptButton": "Traumlied festlegen",
+    "editorTitle": "Mein Traumlied",
+    "editorIntro": "Welches Lied möchtest du eines Tages spielen? Klavio zeigt dir unterwegs, wie nah du ihm schon bist.",
+    "songTitle": "Titel",
+    "songTitleHint": "Zum Beispiel «Nothing Else Matters – Metallica»",
+    "songTitlePlaceholder": "Lied – Interpret",
+    "style": "Was für ein Stück ist es?",
+    "styles": {
+      "ballad": "Ballade mit gebrochenen Akkorden",
+      "pop": "Pop-Song mit Begleitung",
+      "classical": "Klassisches Stück",
+      "film": "Filmmusik",
+      "melody": "Melodie mit Begleitung"
+    },
+    "needs": "Was braucht das Lied?",
+    "needsHint": "Vorschlag passend zur Art – du kannst anpassen. Grundlagen wie Noten lesen sind immer dabei.",
+    "later": "später",
+    "copyright": "Klavio speichert nur den Titel – keine Noten. Die Noten deines Traumlieds besorgst du dir später selbst, zum Beispiel als «Easy Piano»-Ausgabe.",
+    "save": "Traumlied speichern",
+    "remove": "Traumlied entfernen",
+    "saved": "Traumlied gespeichert.",
+    "removed": "Traumlied entfernt.",
+    "closer": "Ein Schritt näher an «{{title}}»!",
+    "nowYouCan": "Neu kannst du: {{skills}}",
+    "percentOfWay": "{{percent}} % des Weges geschafft"
   }
 }

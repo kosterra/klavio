@@ -26,6 +26,7 @@ import {
   localIsoDate,
   nextStreak,
   starsFor,
+  newlyReachedGoalSkills,
   recapFor,
   theoryFor,
   xpFor,
@@ -52,6 +53,7 @@ import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
 import { useLocalized } from '../lesson/useLocalized';
 import { loadProgress, useProgress } from '../lesson/useProgress';
 import { TheorySteps } from '../lesson/theory/TheorySteps';
+import { GoalMilestone } from '../goal/GoalMilestone';
 import { Scenery } from '../lesson/WorldScenery';
 import { worldOfLesson } from '../lesson/worlds';
 import stage from '../lesson/LessonStage.module.css';
@@ -115,6 +117,7 @@ function LessonGate({ lessonId }: { lessonId: string }) {
       lesson={lesson}
       // the theory part comes first only until the lesson has been played once
       discoverFirst={attempt === 0 && !completed.has(lesson.id)}
+      completedBefore={completed}
       onAgain={() => setAttempt((a) => a + 1)}
     />
   );
@@ -123,10 +126,13 @@ function LessonGate({ lessonId }: { lessonId: string }) {
 function LessonRun({
   lesson,
   discoverFirst,
+  completedBefore,
   onAgain,
 }: {
   lesson: Lesson;
   discoverFirst: boolean;
+  /** lessons completed before this run (for the goal-song milestone) */
+  completedBefore: Set<string>;
   onAgain: () => void;
 }) {
   const { t } = useTranslation();
@@ -336,6 +342,19 @@ function LessonRun({
               onAgain={onAgain}
               onNext={next ? () => navigate(`/lesson/${next.id}`) : null}
               onPath={() => navigate('/')}
+              extra={
+                activeProfile?.goalSong && result && result.stars > 0 ? (
+                  <GoalMilestone
+                    goal={activeProfile.goalSong}
+                    reached={newlyReachedGoalSkills(
+                      activeProfile.goalSong.skills,
+                      completedBefore,
+                      lesson.id,
+                    )}
+                    completed={new Set(completedBefore).add(lesson.id)}
+                  />
+                ) : null
+              }
             />
           )}
         </Stack>

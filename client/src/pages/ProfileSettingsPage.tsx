@@ -13,6 +13,7 @@ import {
 import { IconLock, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import type { GoalSong } from '@klavio/shared';
 import { endpoints, type ProfileInput } from '../api/endpoints';
 import { useSession } from '../auth/session';
 import { useErrorText } from '../auth/useErrorText';
@@ -27,6 +28,7 @@ import { FIGURE_TUNES } from '../landing/figureTunes';
 import { playMelody } from '../audio/synth';
 import landing from '../landing/Landing.module.css';
 import classes from './ProfileSettingsPage.module.css';
+import { GoalSongEditor } from '../goal/GoalSongEditor';
 
 /**
  * "Mein Profil": name, figure, display mode, daily goal. The figure is the
@@ -78,6 +80,20 @@ export function ProfileSettingsPage() {
       await refresh();
       setFormKey((k) => k + 1);
       notify(t('profileSettings.saved'));
+    } catch (err) {
+      setError(errorText(err));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const saveGoal = async (goalSong: GoalSong | null) => {
+    setBusy(true);
+    setError(null);
+    try {
+      await endpoints.updateProfile(activeProfile.id, { goalSong });
+      await refresh();
+      notify(t(goalSong ? 'goal.saved' : 'goal.removed'));
     } catch (err) {
       setError(errorText(err));
     } finally {
@@ -158,6 +174,13 @@ export function ProfileSettingsPage() {
           onSubmit={(v) => void save(v)}
         />
       </Card>
+
+      <GoalSongEditor
+        key={activeProfile.goalSong?.title ?? 'none'}
+        initial={activeProfile.goalSong}
+        busy={busy}
+        onSave={(g) => void saveGoal(g)}
+      />
 
       {parentUnlocked && (
         <Card

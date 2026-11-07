@@ -85,6 +85,14 @@ const profileSchema = new Schema(
       lastActiveDate: { type: String, default: null }, // YYYY-MM-DD in the learner's local time
     },
     badges: { type: [{ id: String, earnedAt: Date, _id: false }], default: [] },
+    // the learner's goal song: only its title, a style and the skills it needs
+    goalSong: {
+      type: new Schema(
+        { title: String, style: String, skills: { type: [String], default: [] } },
+        { _id: false },
+      ),
+      default: null,
+    },
   },
   { timestamps: true },
 );

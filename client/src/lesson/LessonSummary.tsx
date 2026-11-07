@@ -7,6 +7,7 @@ import {
   IconTrophy,
   IconRepeat,
 } from '@tabler/icons-react';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { REVIEW_BONUS_XP } from '@klavio/shared';
 import type { LessonResultDto } from '@klavio/shared';
@@ -22,6 +23,8 @@ interface Props {
   onAgain: () => void;
   onNext: (() => void) | null;
   onPath: () => void;
+  /** e.g. the goal-song milestone */
+  extra?: ReactNode;
 }
 
 /** End of a lesson: stars, XP, level, streak, daily goal — friendly, never shaming. */
@@ -34,6 +37,7 @@ export function LessonSummary({
   onAgain,
   onNext,
   onPath,
+  extra,
 }: Props) {
   const { t } = useTranslation();
   const stars = result?.stars ?? 0;
@@ -63,6 +67,7 @@ export function LessonSummary({
             <Text fz={28} fw={800} c="indigo.8" data-testid="xp-gained">
               {t('lesson.xpGained', { xp: result.xpGained })}
             </Text>
+            {extra}
             {result.review && (
               <Alert
                 color="teal"

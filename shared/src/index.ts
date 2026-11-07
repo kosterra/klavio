@@ -7,6 +7,7 @@ export * from './curriculum/types.ts';
 export * from './curriculum/curriculum.ts';
 export * from './curriculum/theory.ts';
 export * from './curriculum/review.ts';
+export * from './curriculum/skills.ts';
 export * from './curriculum/rewards.ts';
 export * from './schemas/progress.ts';
 export * from './curriculum/song.ts';

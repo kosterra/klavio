@@ -6,6 +6,7 @@ import {
   profileUpdateSchema,
   selectProfileSchema,
   type ProfileDto,
+  type GoalSong,
 } from '@klavio/shared';
 import {
   DailyActivity,
@@ -38,6 +39,13 @@ export function profileToDto(p: ProfileDoc): ProfileDto {
       lastActiveDate: p.streak?.lastActiveDate ?? null,
     },
     badges: (p.badges ?? []).map((b) => ({ id: b.id!, earnedAt: b.earnedAt!.toISOString() })),
+    goalSong: p.goalSong?.title
+      ? {
+          title: p.goalSong.title,
+          style: p.goalSong.style as GoalSong['style'],
+          skills: (p.goalSong.skills ?? []) as GoalSong['skills'],
+        }
+      : null,
   };
 }
 
@@ -70,9 +78,9 @@ const profileRoutes: FastifyPluginAsyncZod = async (app) => {
     { schema: { params: idParams, body: profileUpdateSchema } },
     async (req, reply) => {
       const { calibration, ...rest } = req.body;
-      // Children may pick their own figure and save their microphone calibration;
-      // name, display mode and daily goal are parent area.
-      const parentOnly = Object.keys(rest).filter((k) => k !== 'avatar');
+      // Learners may pick their own figure, set their goal song and save their
+      // microphone calibration; name, display mode and daily goal are parent area.
+      const parentOnly = Object.keys(rest).filter((k) => k !== 'avatar' && k !== 'goalSong');
       if (parentOnly.length > 0) await app.requireParent(req, reply);
       const update: Record<string, unknown> = { ...rest };
       for (const [k, v] of Object.entries(calibration ?? {})) update[`calibration.${k}`] = v;

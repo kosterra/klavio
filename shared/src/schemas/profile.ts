@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { displayNameSchema } from './auth.ts';
+import { GOAL_STYLES, SKILL_IDS } from '../curriculum/skills.ts';
 
 export const uiModeSchema = z.enum(['kids', 'classic']);
 export type UiMode = z.infer<typeof uiModeSchema>;
@@ -15,6 +16,14 @@ export const calibrationSchema = z.object({
 });
 export type Calibration = z.infer<typeof calibrationSchema>;
 
+/** The song an (adult) learner would like to play one day – only its title is stored. */
+export const goalSongSchema = z.object({
+  title: z.string().trim().min(1).max(80),
+  style: z.enum(GOAL_STYLES),
+  skills: z.array(z.enum(SKILL_IDS)).max(SKILL_IDS.length),
+});
+export type GoalSong = z.infer<typeof goalSongSchema>;
+
 export const profileCreateSchema = z.object({
   name: displayNameSchema,
   avatar: avatarSchema.default('klavi'),
@@ -29,6 +38,7 @@ export const profileUpdateSchema = z
     uiMode: uiModeSchema,
     dailyGoalMinutes: z.number().int().min(5).max(60),
     calibration: calibrationSchema.partial(),
+    goalSong: goalSongSchema.nullable(),
   })
   .partial();
 
@@ -45,6 +55,7 @@ export interface ProfileDto {
   level: number;
   streak: { current: number; longest: number; lastActiveDate: string | null };
   badges: { id: string; earnedAt: string }[];
+  goalSong: GoalSong | null;
 }
 
 export const MAX_PROFILES_PER_ACCOUNT = 8;

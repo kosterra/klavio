@@ -1,0 +1,103 @@
+.card {
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
+  border-radius: var(--mantine-radius-xl);
+  border: 2px solid color-mix(in srgb, var(--mantine-color-pink-6) 40%, var(--klavio-surface));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--mantine-color-pink-5) 14%, var(--klavio-surface)),
+    color-mix(in srgb, var(--mantine-color-grape-5) 10%, var(--klavio-surface))
+  );
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.kicker {
+  letter-spacing: 0.05em;
+}
+
+.title {
+  overflow-wrap: anywhere;
+}
+
+.bar {
+  flex: 1;
+  background: var(--klavio-surface);
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: var(--mantine-spacing-md) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 700;
+  border: 1px solid var(--mantine-color-default-border);
+  background: var(--klavio-surface);
+}
+
+li[data-state='reached'] .skill {
+  color: var(--mantine-color-dark-9);
+  background: var(--mantine-color-pink-2);
+  border-color: var(--mantine-color-pink-4);
+}
+
+li[data-state='later'] .skill {
+  border-style: dashed;
+  opacity: 0.8;
+}
+
+.skill:focus-visible {
+  outline: 2px solid var(--mantine-color-pink-6);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.prompt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-lg);
+  border: 1px dashed color-mix(in srgb, var(--mantine-color-pink-6) 50%, transparent);
+  background: var(--klavio-surface);
+}
+
+.promptIcon {
+  color: var(--mantine-color-pink-7);
+}
+
+.promptText {
+  flex: 1;
+  min-width: 200px;
+}
+
+.milestone {
+  width: 100%;
+  padding: var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-lg);
+  text-align: center;
+  color: var(--mantine-color-dark-9);
+  background: linear-gradient(135deg, var(--mantine-color-pink-2), var(--mantine-color-yellow-2));
+  border: 2px solid var(--mantine-color-pink-4);
+}

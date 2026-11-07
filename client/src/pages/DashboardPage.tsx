@@ -12,6 +12,7 @@ import { HeroStage } from '../dashboard/HeroStage';
 import { StatTiles } from '../dashboard/StatTiles';
 import { MicHint } from '../dashboard/MicHint';
 import { ReviewCard } from '../dashboard/ReviewCard';
+import { GoalSongCard, GoalSongPrompt } from '../goal/GoalSongCard';
 
 /** Home of a learner: greeting, stats, daily goal and the learning path. */
 export function DashboardPage() {
@@ -40,6 +41,12 @@ export function DashboardPage() {
         allDone={!!progress && completed.size === LESSONS.length}
         greeting={kids ? t('dashboard.mascotKids') : t('dashboard.mascotClassic')}
       />
+
+      {activeProfile.goalSong ? (
+        <GoalSongCard goal={activeProfile.goalSong} completed={completed} />
+      ) : (
+        !kids && <GoalSongPrompt />
+      )}
 
       {progress && <ReviewCard progress={progress} />}
 

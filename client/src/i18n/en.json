@@ -580,5 +580,45 @@
     "eggKonami": "Secret code cracked! 🎉 You're a real pro.",
     "eggKlavi": "Klavi plays “Für Elise” – just for you! 🎵",
     "eggDucks": "All my little ducklings are swimming on the lake! 🦆"
+  },
+  "goal": {
+    "kicker": "My dream song",
+    "percent": "{{percent}} % of the way to your dream song",
+    "skillsReached": "{{reached}} of {{total}} skills done",
+    "skillsLabel": "What your dream song needs",
+    "state": {
+      "reached": "done",
+      "open": "on your way",
+      "later": "comes in a later world"
+    },
+    "next": "Next: {{skill}}",
+    "ready": "You can do everything “{{title}}” needs. Time for your dream song! 🎉",
+    "waiting": "The next skills come in new worlds – keep going!",
+    "promptText": "Is there a dream song you'd like to play one day?",
+    "promptButton": "Set a dream song",
+    "editorTitle": "My dream song",
+    "editorIntro": "Which song would you like to play one day? Klavio shows you along the way how close you are.",
+    "songTitle": "Title",
+    "songTitleHint": "For example “Nothing Else Matters – Metallica”",
+    "songTitlePlaceholder": "Song – artist",
+    "style": "What kind of piece is it?",
+    "styles": {
+      "ballad": "Ballad with broken chords",
+      "pop": "Pop song with accompaniment",
+      "classical": "Classical piece",
+      "film": "Film music",
+      "melody": "Melody with accompaniment"
+    },
+    "needs": "What does the song need?",
+    "needsHint": "A suggestion for this kind of piece – adjust it as you like. Basics like reading notes are always included.",
+    "later": "later",
+    "copyright": "Klavio only stores the title – no notes. You get the sheet music of your dream song yourself later, for example as an “easy piano” edition.",
+    "save": "Save dream song",
+    "remove": "Remove dream song",
+    "saved": "Dream song saved.",
+    "removed": "Dream song removed.",
+    "closer": "One step closer to “{{title}}”!",
+    "nowYouCan": "New skills: {{skills}}",
+    "percentOfWay": "{{percent}} % of the way done"
   }
 }

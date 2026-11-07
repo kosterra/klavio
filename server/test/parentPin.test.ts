@@ -74,6 +74,20 @@ describe('parent PIN', () => {
     ).toBe(200);
     const fig = await call(jar, 'PATCH', `/api/profiles/${kid.id}`, { avatar: 'frog' });
     expect(fig.json().avatar).toBe('frog');
+    // … and set a goal song (only the title, a style and skills are stored)
+    const goalSong = { title: 'Nothing Else Matters', style: 'ballad', skills: ['minor', 'pedal'] };
+    const goal = await call(jar, 'PATCH', `/api/profiles/${kid.id}`, { goalSong });
+    expect(goal.json().goalSong).toEqual(goalSong);
+    expect(
+      (
+        await call(jar, 'PATCH', `/api/profiles/${kid.id}`, {
+          goalSong: { ...goalSong, skills: ['flying'] },
+        })
+      ).statusCode,
+    ).toBe(400);
+    expect(
+      (await call(jar, 'PATCH', `/api/profiles/${kid.id}`, { goalSong: null })).json().goalSong,
+    ).toBeNull();
     expect(
       (
         await call(jar, 'PATCH', `/api/profiles/${kid.id}`, { avatar: 'owl', dailyGoalMinutes: 30 })
