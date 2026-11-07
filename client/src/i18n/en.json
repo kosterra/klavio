@@ -415,5 +415,41 @@
     "delete": "Delete profile",
     "deleteHint": "Deletes the profile “{{name}}” with all progress and badges. This cannot be undone.",
     "deleteConfirm": "Delete profile “{{name}}”?"
+  },
+  "theory": {
+    "title": "Discover",
+    "next": "Next",
+    "skip": "Skip",
+    "toLesson": "Let’s play!",
+    "again": "Discover again",
+    "stepOf": "Step {{n}} of {{total}}",
+    "right": "Exactly!",
+    "allRight": "Great, all correct!",
+    "tryAgain": "Almost! Try again.",
+    "found": "{{n}} of {{total}} found",
+    "listen": "Listen",
+    "listenAgain": "Listen carefully once more.",
+    "round": "Round {{n}} of {{total}}",
+    "lower": "lower",
+    "higher": "higher",
+    "keyboardPicture": "Piano keys",
+    "keyboardMarked": "Piano keys, marked: {{notes}}",
+    "handNumbers": "Right hand from above: thumb 1, index finger 2, middle finger 3, ring finger 4, little finger 5",
+    "handMarked": "Right hand from above, one finger is marked",
+    "values": {
+      "w": "Whole",
+      "h": "Half",
+      "q": "Quarter",
+      "qr": "Quarter rest"
+    },
+    "beats_one": "{{count}} beat",
+    "beats_other": "{{count}} beats",
+    "clapStart": "Start",
+    "clap": "Clap!",
+    "clapNow": "Your turn!",
+    "countIn": "Count-in: {{n}}",
+    "clapGood": "Great, right in time!",
+    "clapAgain": "Almost! Listen to the clicks and try again.",
+    "clapAgainButton": "Again"
   }
 }

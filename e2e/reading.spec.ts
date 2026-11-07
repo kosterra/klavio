@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { LESSONS } from '@klavio/shared';
-import { seedCompletedLessons, signUpWithEmail, uniqueEmail } from './helpers';
+import { seedCompletedLessons, signUpWithEmail, uniqueEmail, startLesson } from './helpers';
 import { audit } from './audit';
 
 test('note reading: the staff shows a note, playing it is checked exactly', async ({ page }) => {
@@ -24,7 +24,7 @@ test('note reading: the staff shows a note, playing it is checked exactly', asyn
   await page.reload();
   await expect(page.getByTestId('path-read-c-d-e')).toHaveAttribute('aria-current', 'step');
   await page.getByTestId('path-read-c-d-e').click();
-  await page.getByRole('button', { name: 'Los geht’s!' }).click();
+  await startLesson(page);
 
   const staff = page.getByRole('img', { name: /Notenlinien mit Violinschlüssel/ });
   await expect(staff).toBeVisible();

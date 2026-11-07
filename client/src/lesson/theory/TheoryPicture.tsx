@@ -1,0 +1,227 @@
+import { Box, Text } from '@mantine/core';
+import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
+import { isBlackKey, midiToName, type TheoryPicture as Picture } from '@klavio/shared';
+import { PianoKeyboard } from '../../components/PianoKeyboard';
+import { Staff } from '../../notation/Staff';
+import { Sticker } from '../Stickers';
+import type { StickerKind } from '../stickerKinds';
+import { NoteValues } from './NoteValues';
+import classes from './Theory.module.css';
+
+/** Horizontal centre of a key in % of the keyboard width (same maths as PianoKeyboard). */
+function keyCenter(midi: number, from: number, to: number): number {
+  const whites: number[] = [];
+  for (let m = from; m <= to; m++) if (!isBlackKey(m)) whites.push(m);
+  const w = 100 / whites.length;
+  if (isBlackKey(midi)) return (whites.indexOf(midi - 1) + 1) * w;
+  return (whites.indexOf(midi) + 0.5) * w;
+}
+
+/** The groups of two and three black keys: neighbours are two semitones apart. */
+function blackGroups(from: number, to: number): number[][] {
+  const groups: number[][] = [];
+  for (let m = from; m <= to; m++) {
+    if (!isBlackKey(m)) continue;
+    const last = groups[groups.length - 1];
+    if (last && last[last.length - 1] === m - 2) last.push(m);
+    else groups.push([m]);
+  }
+  return groups;
+}
+
+function KeyboardPicture({
+  p,
+  height,
+}: {
+  p: Extract<Picture, { kind: 'keyboard' }>;
+  height: number;
+}) {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language.startsWith('de') ? 'de' : 'en';
+  const at = (m: number) => `${keyCenter(m, p.from, p.to)}%`;
+  const marks = p.marks ?? [];
+  return (
+    <Box
+      className={classes.keyboardPicture}
+      role="img"
+      aria-label={
+        marks.length
+          ? t('theory.keyboardMarked', { notes: marks.map((m) => midiToName(m, lang)).join(', ') })
+          : t('theory.keyboardPicture')
+      }
+    >
+      {p.groups && (
+        <div className={classes.overlayRow} aria-hidden>
+          {blackGroups(p.from, p.to).map((g) => {
+            const left = keyCenter(g[0]!, p.from, p.to);
+            const right = keyCenter(g[g.length - 1]!, p.from, p.to);
+            return (
+              <span
+                key={g[0]}
+                className={classes.group}
+                data-size={g.length}
+                style={{ left: `calc(${left}% - 14px)`, width: `calc(${right - left}% + 28px)` }}
+              >
+                {g.length}
+              </span>
+            );
+          })}
+        </div>
+      )}
+      {p.fingering && (
+        <div className={classes.overlayRow} aria-hidden>
+          {p.fingering.map(([m, f]) => (
+            <span key={m} className={classes.finger} style={{ left: at(m) }}>
+              {f}
+            </span>
+          ))}
+        </div>
+      )}
+      <div aria-hidden>
+        <PianoKeyboard
+          from={p.from}
+          to={p.to}
+          labels={p.labels ?? 'none'}
+          hints={marks}
+          height={height}
+        />
+      </div>
+      {p.direction && (
+        <div className={classes.direction} aria-hidden>
+          <Text fw={800} c="dimmed" className={classes.directionItem}>
+            <IconArrowLeft size={20} /> {t('theory.lower')}
+          </Text>
+          <Text fw={800} c="dimmed" className={classes.directionItem}>
+            {t('theory.higher')} <IconArrowRight size={20} />
+          </Text>
+        </div>
+      )}
+    </Box>
+  );
+}
+
+/** A right hand seen from above (thumb on the left), with finger numbers 1–5 – own drawing. */
+export function HandPicture({
+  highlight,
+  numbers = true,
+}: {
+  highlight?: number;
+  numbers?: boolean;
+}) {
+  const { t } = useTranslation();
+  // finger 1 = thumb … 5 = little finger: [base, tip]
+  const fingers: [number, number, number, number][] = [
+    [80, 150, 34, 104],
+    [78, 112, 78, 46],
+    [104, 108, 104, 30],
+    [130, 110, 130, 40],
+    [154, 118, 156, 64],
+  ];
+  return (
+    <svg
+      className={classes.hand}
+      viewBox="0 0 200 200"
+      role="img"
+      aria-label={numbers ? t('theory.handNumbers') : t('theory.handMarked')}
+    >
+      {/* outline, then skin */}
+      {[true, false].map((outline) =>
+        fingers.map(([x1, y1, x2, y2], i) => (
+          <line
+            key={`${outline}-${i}`}
+            x1={x1}
+            y1={y1}
+            x2={x2}
+            y2={y2}
+            strokeLinecap="round"
+            strokeWidth={outline ? 30 : 25}
+            stroke={
+              outline
+                ? 'var(--klavio-hand-line)'
+                : highlight === i + 1
+                  ? 'var(--mantine-color-orange-4)'
+                  : 'var(--klavio-hand)'
+            }
+          />
+        )),
+      )}
+      <rect
+        x="62"
+        y="98"
+        width="110"
+        height="88"
+        rx="40"
+        fill="var(--klavio-hand)"
+        stroke="var(--klavio-hand-line)"
+        strokeWidth="2.5"
+      />
+      {/* cover the finger bases so palm and fingers join */}
+      <rect x="66" y="100" width="102" height="30" rx="14" fill="var(--klavio-hand)" />
+      {fingers.map(([, , x, y], i) => {
+        const show = numbers || highlight === i + 1;
+        if (!show) return null;
+        return (
+          <g key={i}>
+            <circle
+              cx={x}
+              cy={y + 2}
+              r="11"
+              fill="var(--klavio-surface)"
+              stroke="var(--klavio-hand-line)"
+              strokeWidth="1.5"
+            />
+            <text
+              x={x}
+              y={y + 2}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fontSize="14"
+              fontWeight="800"
+              fill="var(--mantine-color-text)"
+              fontFamily="inherit"
+            >
+              {numbers ? i + 1 : '?'}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+/** Draws a theory picture from its description. */
+export function TheoryPicture({ picture, kids }: { picture: Picture; kids: boolean }) {
+  const { i18n } = useTranslation();
+  const lang = i18n.language.startsWith('de') ? 'de' : 'en';
+  switch (picture.kind) {
+    case 'keyboard':
+      return <KeyboardPicture p={picture} height={kids ? 150 : 120} />;
+    case 'hand':
+      return <HandPicture highlight={picture.highlight} numbers={picture.numbers} />;
+    case 'sticker':
+      return (
+        <div className={classes.sticker} aria-hidden>
+          <Sticker kind={picture.sticker as StickerKind} size={110} style={{ left: 0, top: 0 }} />
+        </div>
+      );
+    case 'staff':
+      return (
+        <Box className={classes.staffPicture} data-highlight={picture.highlight}>
+          <Staff
+            clef={picture.clef}
+            notes={picture.notes.map((m) => ({
+              midi: m,
+              duration: 'q',
+              label: picture.names ? midiToName(m, lang).replace(/\d+$/, '') : undefined,
+            }))}
+            // room below the staff for the note names
+            height={(kids ? 170 : 150) + (picture.names ? 40 : 0)}
+            label={picture.notes.map((m) => midiToName(m, lang)).join(', ')}
+          />
+        </Box>
+      );
+    case 'note-values':
+      return <NoteValues values={picture.values} pizza={picture.pizza} />;
+  }
+}

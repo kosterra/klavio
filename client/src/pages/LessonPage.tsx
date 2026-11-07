@@ -24,6 +24,7 @@ import {
   localIsoDate,
   nextStreak,
   starsFor,
+  theoryFor,
   xpFor,
   type Lesson,
   type LessonResultDto,
@@ -47,6 +48,7 @@ import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
 import { useLocalized } from '../lesson/useLocalized';
 import { loadProgress, useProgress } from '../lesson/useProgress';
+import { TheorySteps } from '../lesson/theory/TheorySteps';
 
 type ShownResult = LessonResultDto & { pending?: boolean };
 
@@ -103,12 +105,22 @@ function LessonGate({ lessonId }: { lessonId: string }) {
     <LessonRun
       key={`${lesson.id}-${attempt}`}
       lesson={lesson}
+      // the theory part comes first only until the lesson has been played once
+      discoverFirst={attempt === 0 && !completed.has(lesson.id)}
       onAgain={() => setAttempt((a) => a + 1)}
     />
   );
 }
 
-function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void }) {
+function LessonRun({
+  lesson,
+  discoverFirst,
+  onAgain,
+}: {
+  lesson: Lesson;
+  discoverFirst: boolean;
+  onAgain: () => void;
+}) {
   const { t } = useTranslation();
   const loc = useLocalized();
   const navigate = useNavigate();
@@ -117,7 +129,10 @@ function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void })
   const { me, activeProfile, refresh, applyLocalResult } = useSession();
   const input = useLessonInput();
   const kids = activeProfile?.uiMode !== 'classic';
-  const [phase, setPhase] = useState<'intro' | 'play' | 'result'>('intro');
+  const theory = theoryFor(lesson.id);
+  const [phase, setPhase] = useState<'theory' | 'intro' | 'play' | 'result'>(
+    discoverFirst && theory.length ? 'theory' : 'intro',
+  );
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
   const mistakes = useRef(0);
@@ -217,6 +232,11 @@ function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void })
           </Alert>
         )}
 
+        {/* ------------------------------------------- theory ("Entdecken") */}
+        {phase === 'theory' && (
+          <TheorySteps steps={theory} kids={kids} onDone={() => setPhase('intro')} />
+        )}
+
         {/* -------------------------------------------------------- intro */}
         {phase === 'intro' && (
           <Card withBorder radius="xl" padding="xl" maw={640} mx="auto" w="100%">
@@ -238,6 +258,15 @@ function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void })
                 midiDevice={input.midiDevice}
                 micSupported={input.micSupported}
               />
+              {theory.length > 0 && (
+                <Button
+                  variant="subtle"
+                  onClick={() => setPhase('theory')}
+                  data-testid="theory-again"
+                >
+                  {t('theory.again')}
+                </Button>
+              )}
               <Button
                 size="xl"
                 mt="sm"

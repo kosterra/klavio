@@ -5,6 +5,7 @@ export * from './music/notes.ts';
 export * from './music/noteEvent.ts';
 export * from './curriculum/types.ts';
 export * from './curriculum/curriculum.ts';
+export * from './curriculum/theory.ts';
 export * from './curriculum/rewards.ts';
 export * from './schemas/progress.ts';
 export * from './curriculum/song.ts';

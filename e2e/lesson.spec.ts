@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { signUpWithEmail, uniqueEmail } from './helpers';
+import { signUpWithEmail, uniqueEmail, skipTheory } from './helpers';
 import { audit } from './audit';
 
 /** No MIDI, microphone denied → the lesson falls back to the on-screen keyboard. */
@@ -54,6 +54,7 @@ async function solvePlayAlong(page: Page) {
 }
 
 async function startLesson(page: Page, title: string) {
+  await skipTheory(page);
   await expect(page.getByRole('heading', { name: title })).toBeVisible();
   await page.getByRole('button', { name: 'Los geht’s!' }).click();
 }

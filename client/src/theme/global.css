@@ -9,6 +9,11 @@
   --klavio-fog: var(--mantine-color-gray-1);
   --klavio-fog-cloud: #fff;
   --klavio-snow: #fff;
+  --klavio-success: var(--mantine-color-teal-9);
+  --klavio-bubble: var(--mantine-color-indigo-0);
+  --klavio-grape-text: var(--mantine-color-grape-8);
+  --klavio-hand: #f8d5b8;
+  --klavio-hand-line: #c98e66;
   --klavio-snow-edge: var(--mantine-color-blue-1);
   --klavio-snowflake: var(--mantine-color-blue-2);
   --klavio-bar: rgb(255 255 255 / 70%);
@@ -35,6 +40,11 @@
   --klavio-fog: var(--mantine-color-dark-7);
   --klavio-fog-cloud: var(--mantine-color-dark-4);
   --klavio-snow: var(--mantine-color-gray-3);
+  --klavio-success: var(--mantine-color-teal-4);
+  --klavio-bubble: var(--mantine-color-dark-5);
+  --klavio-grape-text: var(--mantine-color-grape-3);
+  --klavio-hand: #e2b493;
+  --klavio-hand-line: #8a5a3c;
   --klavio-snow-edge: var(--mantine-color-gray-5);
   --klavio-snowflake: #fff;
   --klavio-bar: rgb(255 255 255 / 14%);

@@ -114,3 +114,18 @@ export async function seedCompletedLessons(page: Page, lessonIds: string[]) {
     `db.lessonprogresses.insertMany([${docs.join(',')}])`,
   ]);
 }
+
+/** Skips the "Entdecken" part if the lesson starts with it; returns at the start card. */
+export async function skipTheory(page: Page) {
+  const start = page.getByRole('button', { name: 'Los geht’s!' });
+  const skip = page.getByRole('button', { name: 'Überspringen' });
+  await expect(start.or(skip)).toBeVisible();
+  if (await skip.isVisible()) await skip.click();
+  await expect(start).toBeVisible();
+}
+
+/** Skips the theory part (if any) and starts the lesson. */
+export async function startLesson(page: Page) {
+  await skipTheory(page);
+  await page.getByRole('button', { name: 'Los geht’s!' }).click();
+}

@@ -415,5 +415,41 @@
     "delete": "Profil löschen",
     "deleteHint": "Löscht das Profil «{{name}}» mit allem Fortschritt und allen Abzeichen. Das kann nicht rückgängig gemacht werden.",
     "deleteConfirm": "Profil «{{name}}» löschen?"
+  },
+  "theory": {
+    "title": "Entdecken",
+    "next": "Weiter",
+    "skip": "Überspringen",
+    "toLesson": "Jetzt spielen!",
+    "again": "Nochmals entdecken",
+    "stepOf": "Schritt {{n}} von {{total}}",
+    "right": "Genau!",
+    "allRight": "Super, alles richtig!",
+    "tryAgain": "Fast! Versuch es nochmals.",
+    "found": "{{n}} von {{total}} gefunden",
+    "listen": "Anhören",
+    "listenAgain": "Hör nochmals genau hin.",
+    "round": "Runde {{n}} von {{total}}",
+    "lower": "tiefer",
+    "higher": "höher",
+    "keyboardPicture": "Klaviertasten",
+    "keyboardMarked": "Klaviertasten, markiert: {{notes}}",
+    "handNumbers": "Rechte Hand von oben: Daumen 1, Zeigefinger 2, Mittelfinger 3, Ringfinger 4, kleiner Finger 5",
+    "handMarked": "Rechte Hand von oben, ein Finger ist markiert",
+    "values": {
+      "w": "Ganze",
+      "h": "Halbe",
+      "q": "Viertel",
+      "qr": "Viertelpause"
+    },
+    "beats_one": "{{count}} Schlag",
+    "beats_other": "{{count}} Schläge",
+    "clapStart": "Start",
+    "clap": "Klatsch!",
+    "clapNow": "Jetzt du!",
+    "countIn": "Einzählen: {{n}}",
+    "clapGood": "Super im Takt!",
+    "clapAgain": "Fast! Hör auf die Klicks und versuch es nochmals.",
+    "clapAgainButton": "Nochmals"
   }
 }

@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { signUpWithEmail, uniqueEmail } from './helpers';
+import { signUpWithEmail, uniqueEmail, skipTheory } from './helpers';
 import { audit } from './audit';
 
 const key = (page: Page, name: string) => page.getByRole('button', { name, exact: true });
@@ -30,7 +30,7 @@ test('lessons work offline; results are synced when back online', async ({ page,
   // open the lesson once while online (the dev server has no service worker
   // that would have precached the lesson page)
   await page.getByRole('link', { name: 'Erste Lektion starten' }).click();
-  await expect(page.getByRole('button', { name: 'Los geht’s!' })).toBeVisible();
+  await skipTheory(page);
 
   if (process.env.E2E_BASE_URL?.startsWith('https')) {
     // production build: wait until the service worker controls the page
