@@ -145,7 +145,11 @@ export function DashboardPage() {
           {t('dashboard.learnPath')}
         </Title>
         {progress ? (
-          <LearningPath progress={progress.lessons} currentLessonId={current.id} />
+          <LearningPath
+            progress={progress.lessons}
+            currentLessonId={current.id}
+            avatar={activeProfile.avatar}
+          />
         ) : (
           <Center py="xl">
             <Loader aria-label={t('common.loading')} />

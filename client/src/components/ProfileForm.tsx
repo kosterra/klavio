@@ -29,7 +29,7 @@ export function ProfileForm({ initial, submitLabel, busy, onSubmit, onCancel }: 
     mode: 'controlled',
     initialValues: {
       name: initial?.name ?? '',
-      avatar: initial?.avatar ?? 'fox',
+      avatar: initial?.avatar ?? 'klavi',
       uiMode: initial?.uiMode ?? 'kids',
       dailyGoalMinutes: initial?.dailyGoalMinutes ?? 10,
     },
@@ -50,18 +50,24 @@ export function ProfileForm({ initial, submitLabel, busy, onSubmit, onCancel }: 
 
         <Stack gap={6} role="radiogroup" aria-label={t('profiles.avatar')}>
           <Text fw={500}>{t('profiles.avatar')}</Text>
-          <SimpleGrid cols={{ base: 3, xs: 6 }} spacing="xs">
+          <SimpleGrid cols={{ base: 4, xs: 7 }} spacing="xs">
             {avatarSchema.options.map((a: Avatar) => (
               <UnstyledButton
                 key={a}
                 role="radio"
                 aria-checked={form.values.avatar === a}
-                aria-label={t(`avatars.${a}`)}
+                aria-label={t('avatars.label', {
+                  name: t(`avatars.names.${a}`),
+                  kind: t(`avatars.${a}`),
+                })}
                 className={classes.avatar}
                 data-selected={form.values.avatar === a || undefined}
                 onClick={() => form.setFieldValue('avatar', a)}
               >
                 <ProfileAvatar avatar={a} size={56} />
+                <Text size="xs" fw={700} aria-hidden>
+                  {t(`avatars.names.${a}`)}
+                </Text>
               </UnstyledButton>
             ))}
           </SimpleGrid>

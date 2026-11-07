@@ -69,7 +69,7 @@ const profileSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     name: { type: String, required: true },
-    avatar: { type: String, default: 'fox' },
+    avatar: { type: String, default: 'klavi' },
     uiMode: { type: String, enum: ['kids', 'classic'], default: 'kids' },
     dailyGoalMinutes: { type: Number, default: 10 },
     calibration: {

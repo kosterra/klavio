@@ -4,7 +4,8 @@ import { displayNameSchema } from './auth.ts';
 export const uiModeSchema = z.enum(['kids', 'classic']);
 export type UiMode = z.infer<typeof uiModeSchema>;
 
-export const avatarSchema = z.enum(['fox', 'owl', 'cat', 'bear', 'frog', 'whale']);
+/** Figures a profile can choose; "klavi" (the app's mascot) is the default. */
+export const avatarSchema = z.enum(['klavi', 'fox', 'owl', 'cat', 'bear', 'frog', 'whale']);
 export type Avatar = z.infer<typeof avatarSchema>;
 
 export const calibrationSchema = z.object({
@@ -16,7 +17,7 @@ export type Calibration = z.infer<typeof calibrationSchema>;
 
 export const profileCreateSchema = z.object({
   name: displayNameSchema,
-  avatar: avatarSchema.default('fox'),
+  avatar: avatarSchema.default('klavi'),
   uiMode: uiModeSchema.default('kids'),
   dailyGoalMinutes: z.number().int().min(5).max(60).default(10),
 });
