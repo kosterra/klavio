@@ -109,7 +109,8 @@
       "auto": "Automatic",
       "light": "Light",
       "dark": "Dark"
-    }
+    },
+    "knowledge": "Knowledge"
   },
   "account": {
     "title": "Account",
@@ -453,5 +454,11 @@
     "clapAgainButton": "Again",
     "staffLines": "Staff with the lines marked. Notes: {{notes}}",
     "staffSpaces": "Staff with the spaces marked. Notes: {{notes}}"
+  },
+  "knowledge": {
+    "title": "Knowledge",
+    "intro": "Everything you have discovered so far – to look up again.",
+    "locked": "not discovered yet",
+    "toLesson": "Go to lesson"
   }
 }

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { LESSONS } from './curriculum.ts';
-import { LESSON_THEORY } from './theory.ts';
+import { CURRICULUM } from './curriculum.ts';
+import { LESSON_THEORY, recapFor } from './theory.ts';
 import type { Localized, TheoryStep } from './types.ts';
 
 const texts = (s: TheoryStep): Localized[] => {
@@ -52,5 +53,26 @@ describe('lesson theory', () => {
         if (s.type === 'clap') expect(s.pattern.length, id).toBeGreaterThan(0);
       }
     }
+  });
+});
+
+describe('recap ("Weisst du’s noch?")', () => {
+  it('starts every chapter after the first with questions from the one before', () => {
+    expect(recapFor(CURRICULUM[0]!.lessons[0]!.id)).toEqual([]);
+    for (const [ci, chapter] of CURRICULUM.entries()) {
+      if (ci === 0) continue;
+      const steps = recapFor(chapter.lessons[0]!.id);
+      expect(steps[0]!.type, chapter.id).toBe('explain');
+      const quizzes = steps.slice(1);
+      expect(quizzes.length, chapter.id).toBeGreaterThan(0);
+      expect(quizzes.length, chapter.id).toBeLessThanOrEqual(3);
+      const previous = CURRICULUM[ci - 1]!.lessons.flatMap((l) => LESSON_THEORY[l.id] ?? []);
+      for (const q of quizzes) expect(previous).toContain(q);
+      expect(new Set(quizzes).size, chapter.id).toBe(quizzes.length);
+    }
+  });
+
+  it('is only shown at the first lesson of a chapter', () => {
+    expect(recapFor(CURRICULUM[1]!.lessons[1]!.id)).toEqual([]);
   });
 });

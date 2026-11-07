@@ -24,6 +24,7 @@ import {
   localIsoDate,
   nextStreak,
   starsFor,
+  recapFor,
   theoryFor,
   xpFor,
   type Lesson,
@@ -130,8 +131,12 @@ function LessonRun({
   const input = useLessonInput();
   const kids = activeProfile?.uiMode !== 'classic';
   const theory = theoryFor(lesson.id);
+  // first visit: "Weisst du's noch?" (start of a chapter) + the lesson's theory
+  const [steps, setSteps] = useState(() =>
+    discoverFirst ? [...recapFor(lesson.id), ...theory] : theory,
+  );
   const [phase, setPhase] = useState<'theory' | 'intro' | 'play' | 'result'>(
-    discoverFirst && theory.length ? 'theory' : 'intro',
+    discoverFirst && steps.length ? 'theory' : 'intro',
   );
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -234,7 +239,7 @@ function LessonRun({
 
         {/* ------------------------------------------- theory ("Entdecken") */}
         {phase === 'theory' && (
-          <TheorySteps steps={theory} kids={kids} onDone={() => setPhase('intro')} />
+          <TheorySteps steps={steps} kids={kids} onDone={() => setPhase('intro')} />
         )}
 
         {/* -------------------------------------------------------- intro */}
@@ -261,7 +266,10 @@ function LessonRun({
               {theory.length > 0 && (
                 <Button
                   variant="subtle"
-                  onClick={() => setPhase('theory')}
+                  onClick={() => {
+                    setSteps(theory);
+                    setPhase('theory');
+                  }}
                   data-testid="theory-again"
                 >
                   {t('theory.again')}

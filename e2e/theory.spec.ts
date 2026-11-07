@@ -103,7 +103,8 @@ test('reading and rhythm theory: staff lines/spaces, pizza note values, clap gam
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   const ids = LESSONS.map((l) => l.id);
-  await seedCompletedLessons(page, ids.slice(0, ids.indexOf('rhythm-quarters')));
+  // all played: «Nochmals entdecken» opens just the lesson's theory (no recap)
+  await seedCompletedLessons(page, ids.slice(0, ids.indexOf('rhythm-quarters') + 1));
 
   const next = page.getByTestId('theory-next');
   const again = page.getByTestId('theory-again');
@@ -124,6 +125,7 @@ test('reading and rhythm theory: staff lines/spaces, pizza note values, clap gam
 
   // rhythm: pizza note values, then the clap game appears
   await page.goto('/lesson/rhythm-quarters');
+  await again.click();
   await expect(page.getByText('Ganze', { exact: true })).toBeVisible();
   await expect(page.getByText('4 Schläge')).toBeVisible();
   await audit(page);
@@ -135,4 +137,34 @@ test('reading and rhythm theory: staff lines/spaces, pizza note values, clap gam
   await page.getByRole('button', { name: 'Start' }).click();
   await expect(page.getByRole('button', { name: 'Klatsch!' })).toBeVisible();
   await audit(page);
+});
+
+test('"Wissen" lists what was discovered; a new chapter starts with "Weisst du’s noch?"', async ({
+  page,
+}) => {
+  test.setTimeout(90_000);
+  await signUpWithEmail(page, uniqueEmail('wissen'), 'Familie Wissen');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Ela');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
+  const ids = LESSONS.map((l) => l.id);
+  await seedCompletedLessons(page, ids.slice(0, ids.indexOf('hand-a-h')));
+
+  // knowledge page via the menu
+  await page.getByRole('button', { name: 'Menü' }).click();
+  await page.getByRole('menuitem', { name: 'Wissen' }).click();
+  await expect(page.getByRole('heading', { name: 'Wissen', level: 1 })).toBeVisible();
+  await expect(page.getByTestId('knowledge-keys-c')).toContainText('schwarze');
+  await expect(page.getByTestId('knowledge-hand-a-h')).toBeVisible(); // reached, not played yet
+  await expect(page.getByText('Alle weissen Tasten – noch nicht entdeckt')).toBeVisible();
+  await audit(page);
+
+  // first lesson of chapter 2: recap questions from chapter 1 come first
+  await page.getByTestId('knowledge-hand-a-h').getByRole('link', { name: 'Zur Lektion' }).click();
+  const text = page.getByTestId('theory-text');
+  await expect(text).toContainText('Weisst du’s noch?');
+  await page.getByTestId('theory-next').click();
+  await expect(page.getByTestId('theory-next')).toBeDisabled(); // a quiz from chapter 1
+  await expect(page.getByRole('group').first()).toBeVisible();
 });

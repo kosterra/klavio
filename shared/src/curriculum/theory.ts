@@ -1,4 +1,5 @@
-import type { Localized, TheoryStep } from './types.ts';
+import { CURRICULUM } from './curriculum.ts';
+import type { Localized, QuizStep, TheoryStep } from './types.ts';
 
 const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
 
@@ -739,4 +740,36 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
 
 export function theoryFor(lessonId: string): TheoryStep[] {
   return LESSON_THEORY[lessonId] ?? [];
+}
+
+/** How many questions the recap at the start of a chapter asks. */
+const RECAP_QUESTIONS = 3;
+
+/**
+ * "Weisst du's noch?": at the first lesson of every chapter after the first,
+ * a few quiz questions from the previous chapter's theory come first.
+ * Questions are spread over the chapter (deterministic, no randomness).
+ */
+export function recapFor(lessonId: string): TheoryStep[] {
+  const ci = CURRICULUM.findIndex((c) => c.lessons[0]?.id === lessonId);
+  if (ci < 1) return [];
+  const quizzes = CURRICULUM[ci - 1]!.lessons.flatMap((l) =>
+    (LESSON_THEORY[l.id] ?? []).filter((s): s is QuizStep => s.type === 'quiz'),
+  );
+  if (!quizzes.length) return [];
+  const n = Math.min(RECAP_QUESTIONS, quizzes.length);
+  const picked = Array.from(
+    { length: n },
+    (_, i) => quizzes[Math.round((i * (quizzes.length - 1)) / Math.max(1, n - 1))]!,
+  );
+  return [
+    {
+      type: 'explain',
+      text: L(
+        'Weisst du’s noch? Bevor es in die neue Welt geht, ein paar Fragen zum letzten Kapitel.',
+        'Do you remember? Before we enter the new world, a few questions about the last chapter.',
+      ),
+    },
+    ...picked,
+  ];
 }

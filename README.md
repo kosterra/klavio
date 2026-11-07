@@ -11,6 +11,9 @@ Der Produktname ist ein Platzhalter. Er steht zentral in
 
 - **Lernpfad** mit 5 Kapiteln und 18 Lektionen: Tastatur entdecken, rechte Hand, Noten lesen, erste
   Lieder, Rhythmus.
+- **Entdecken** vor jeder Lektion: kurze Erklärungen mit Bildern, Tipp-Spiele, Bilder-Quiz,
+  Hör- und Klatschspiele; «Weisst du's noch?» zu Beginn jedes Kapitels; die Seite **Wissen** zum
+  Nachschauen.
 - **Übungen:** Finde die Taste, Spiel nach, Notenlesen, Lied spielen mit «Warte auf mich»,
   Rhythmus mit Metronom.
 - **Eingaben:** Tonerkennung über das Mikrofon (98,6 % der Töne C2–C6 korrekt und innert 100 ms

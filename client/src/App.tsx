@@ -40,6 +40,9 @@ const InputPage = lazy(() => import('./pages/InputPage').then((m) => ({ default:
 const ProfileSettingsPage = lazy(() =>
   import('./pages/ProfileSettingsPage').then((m) => ({ default: m.ProfileSettingsPage })),
 );
+const KnowledgePage = lazy(() =>
+  import('./pages/KnowledgePage').then((m) => ({ default: m.KnowledgePage })),
+);
 const LessonPage = lazy(() =>
   import('./pages/LessonPage').then((m) => ({ default: m.LessonPage })),
 );
@@ -166,6 +169,7 @@ export function App() {
                     <Route path="/mic-setup" element={<MicSetupPage />} />
                     <Route path="/input" element={<InputPage />} />
                     <Route path="/profile" element={<ProfileSettingsPage />} />
+                    <Route path="/knowledge" element={<KnowledgePage />} />
                   </Route>
                 </Route>
               </Route>

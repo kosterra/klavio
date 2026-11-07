@@ -19,6 +19,7 @@ import {
   IconSettings,
   IconShield,
   IconUserCircle,
+  IconBulb,
   IconUsers,
 } from '@tabler/icons-react';
 import { Link, Outlet, useNavigate } from 'react-router';
@@ -84,6 +85,14 @@ export function AppLayout() {
                     onClick={() => navigate('/profile')}
                   >
                     {t('nav.profile')}
+                  </Menu.Item>
+                )}
+                {activeProfile && (
+                  <Menu.Item
+                    leftSection={<IconBulb size={18} />}
+                    onClick={() => navigate('/knowledge')}
+                  >
+                    {t('nav.knowledge')}
                   </Menu.Item>
                 )}
                 {activeProfile && (

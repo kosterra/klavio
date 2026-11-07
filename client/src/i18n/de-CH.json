@@ -109,7 +109,8 @@
       "auto": "Automatisch",
       "light": "Hell",
       "dark": "Dunkel"
-    }
+    },
+    "knowledge": "Wissen"
   },
   "account": {
     "title": "Konto",
@@ -453,5 +454,11 @@
     "clapAgainButton": "Nochmals",
     "staffLines": "Notenlinien, die Linien sind markiert. Noten: {{notes}}",
     "staffSpaces": "Notenlinien, die Zwischenräume sind markiert. Noten: {{notes}}"
+  },
+  "knowledge": {
+    "title": "Wissen",
+    "intro": "Alles, was du schon entdeckt hast – zum Nachschauen.",
+    "locked": "noch nicht entdeckt",
+    "toLesson": "Zur Lektion"
   }
 }

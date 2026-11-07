@@ -87,6 +87,23 @@ rhythm('q q q q | h h | q qr q qr', { tempo: 76 });
 
 Werte wie oben plus Pausen `qr`, `hr`, `wr`. Toleranz: Kids ±150 ms, Classic ±100 ms.
 
+## Entdecken (Theorie)
+
+Die Theorie einer Lektion steht in `shared/src/curriculum/theory.ts` unter der Lektions-ID. Schritte:
+
+| Typ        | Zweck                                                                    |
+| ---------- | ------------------------------------------------------------------------ |
+| `explain`  | Text der Figur, optional mit Bild (`picture`)                            |
+| `tap-keys` | Tasten auf der Bildschirm-Klaviatur antippen (`targets` = Gruppen)       |
+| `quiz`     | Antworten zur Auswahl, genau eine mit `correct: true`; `hint` bei Fehler |
+| `listen`   | Töne anhören, zwischen zwei Antworten wählen (höher/tiefer …)            |
+| `clap`     | einen Takt mitklatschen (`pattern` wie bei Rhythmus-Übungen)             |
+
+Bilder: `keyboard` (mit `marks`, `groups`, `fingering`, `direction`), `hand`, `sticker`, `staff`
+(mit `names` oder `highlight: 'lines' | 'spaces'`) und `note-values` (mit `pizza`). Quizfragen
+erscheinen auch in «Weisst du's noch?» zu Beginn des nächsten Kapitels. `theory.test.ts` prüft
+Übersetzungen, Schreibweise und dass jedes Spiel lösbar ist.
+
 ## Neues Kapitel
 
 ```ts

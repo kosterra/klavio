@@ -191,6 +191,14 @@ sequenceDiagram
   L->>K: Zusammenfassung
 ```
 
+**Entdecken:** Vor dem ersten Spielen einer Lektion zeigt `lesson/theory/TheorySteps.tsx` die
+Theorie aus `shared/src/curriculum/theory.ts` (`theoryFor`): Erklärungen mit Bildern, Tipp-Spiele auf der
+Bildschirm-Klaviatur, Quiz, Hörspiele und ein Klatschspiel mit Metronom. Bilder werden aus Daten
+gezeichnet (`TheoryPicture`: Klaviatur mit Markierungen, Gruppen und Fingersatz, Hand, Notenlinien,
+Notenwerte als Pizza) – keine Bilddateien. Nichts davon wird bewertet. Die erste Lektion jedes
+Kapitels beginnt mit «Weisst du's noch?» (`recapFor`: Quizfragen aus dem vorherigen Kapitel). Die
+Seite «Wissen» (`/knowledge`) zeigt die Erklärungen aller erreichten Lektionen.
+
 Übungstypen (`client/src/lesson/`): `FindKeyExercise`, `PlayAlongExercise`, `ReadNoteExercise`,
 `SongExercise`, `RhythmExercise`. Rundenbasierte Übungen teilen sich `useRoundTask`. Notation zeichnet
 `notation/Staff.tsx` mit VexFlow; die Bibliothek wird erst geladen, wenn Noten gebraucht werden.
