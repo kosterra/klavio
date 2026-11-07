@@ -69,4 +69,12 @@ describe('input hub', () => {
     expect(hub.accept(ev('microphone', 1080))).toBe(false);
     expect(hub.accept(ev('microphone', 1700))).toBe(true);
   });
+
+  it('mutes the microphone while the app plays music itself', () => {
+    const hub = new InputHub();
+    hub.muteMicrophoneUntil(5000);
+    expect(hub.accept(ev('microphone', 4000))).toBe(false);
+    expect(hub.accept(ev('keyboard', 4000))).toBe(true);
+    expect(hub.accept(ev('microphone', 6000))).toBe(true);
+  });
 });

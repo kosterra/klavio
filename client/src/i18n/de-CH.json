@@ -302,6 +302,13 @@
     "clef": {
       "treble": "Violinschlüssel",
       "bass": "Bassschlüssel"
-    }
+    },
+    "playSong": "Spiel das Lied – ich warte auf dich",
+    "listening": "Hör gut zu …",
+    "listen": "Anhören",
+    "stopListening": "Stopp",
+    "songStaffLabel": "Noten des Lieds, Zeile {{line}} von {{lines}}",
+    "songProgress": "Ton {{n}} von {{total}}",
+    "nextNote": "Nächster Ton: {{note}}"
   }
 }

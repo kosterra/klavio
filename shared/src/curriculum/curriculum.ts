@@ -1,5 +1,6 @@
 import { noteNameToMidi } from '../music/notes.ts';
 import type { Chapter, Lesson } from './types.ts';
+import { song } from './song.ts';
 
 /** "C4 D4 E4" → [60, 62, 64]; German "H" is accepted. */
 const seq = (s: string) => s.trim().split(/\s+/).map(noteNameToMidi);
@@ -183,23 +184,17 @@ export const CURRICULUM: Chapter[] = [
         title: { 'de-CH': 'Alle meine Entchen', en: 'All my little ducklings' },
         intro: {
           'de-CH':
-            'Dein erstes Lied! Ein altes Kinderlied, das du vielleicht schon kennst. Spiel es Stück für Stück.',
-          en: 'Your first song! A traditional German children’s song. Play it bit by bit.',
+            'Dein erstes Lied! Ein altes Kinderlied, das du vielleicht schon kennst. Unter jeder Note steht ihr Name. Ich warte bei jedem Ton auf dich – tippe auf «Anhören», wenn du es zuerst hören möchtest.',
+          en: 'Your first song! A traditional German children’s song. The name of each note is written below it. I wait for every note – tap “Listen” to hear it first.',
         },
         xp: 20,
         keyboard: C4_C5,
         keyLabels: 'all',
         exercises: [
-          {
-            type: 'play-along',
-            sequences: [
-              seq('C4 D4 E4 F4 G4 G4'),
-              seq('A4 A4 A4 A4 G4'),
-              seq('A4 A4 A4 A4 G4'),
-              seq('F4 F4 F4 F4 E4 E4'),
-              seq('D4 D4 D4 D4 C4'),
-            ],
-          },
+          song(
+            'C4/q D4/q E4/q F4/q | G4/h G4/h | A4/q A4/q A4/q A4/q | G4/w | A4/q A4/q A4/q A4/q | G4/w | F4/q F4/q F4/q F4/q | E4/h E4/h | D4/q D4/q D4/q D4/q | C4/w',
+            { showNames: true, tempo: 100 },
+          ),
         ],
       },
     ],
@@ -257,6 +252,70 @@ CURRICULUM.push({
   ],
 });
 
+CURRICULUM.push({
+  id: 'songs',
+  title: { 'de-CH': 'Erste Lieder', en: 'First songs' },
+  lessons: [
+    {
+      id: 'song-haenschen',
+      kind: 'song',
+      title: { 'de-CH': 'Hänschen klein', en: 'Little Hans' },
+      intro: {
+        'de-CH':
+          'Ein altes Kinderlied mit fünf Tönen von C bis G. Diesmal stehen keine Namen unter den Noten – lies sie auf den Notenlinien.',
+        en: 'A traditional children’s song with five notes from C to G. This time there are no names below the notes – read them on the staff.',
+      },
+      xp: 25,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'G4/q E4/q E4/h | F4/q D4/q D4/h | C4/q D4/q E4/q F4/q | G4/q G4/q G4/h | G4/q E4/q E4/h | F4/q D4/q D4/h | C4/q E4/q G4/q G4/q | C4/w',
+          { tempo: 100 },
+        ),
+      ],
+    },
+    {
+      id: 'song-freude',
+      kind: 'song',
+      title: { 'de-CH': 'Freude, schöner Götterfunken', en: 'Ode to Joy' },
+      intro: {
+        'de-CH':
+          'Die berühmte Melodie von Ludwig van Beethoven. Achtung: Der Punkt hinter einer Note macht sie ein wenig länger.',
+        en: 'The famous melody by Ludwig van Beethoven. Watch out: a dot after a note makes it a little longer.',
+      },
+      xp: 30,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | E4/qd D4/8 D4/h | E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | D4/qd C4/8 C4/h',
+          { tempo: 104 },
+        ),
+      ],
+    },
+    {
+      id: 'song-weihnachtsmann',
+      kind: 'song',
+      title: { 'de-CH': 'Morgen kommt der Weihnachtsmann', en: 'Twinkle, Twinkle, Little Star' },
+      intro: {
+        'de-CH':
+          'Diese Melodie kennt man auf der ganzen Welt – auf Englisch heisst sie «Twinkle, Twinkle, Little Star». Jetzt kommt auch das A dazu.',
+        en: 'This melody is known all over the world – in German it is a Christmas song. Now A joins in too.',
+      },
+      xp: 30,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'C4/q C4/q G4/q G4/q | A4/q A4/q G4/h | F4/q F4/q E4/q E4/q | D4/q D4/q C4/h | G4/q G4/q F4/q F4/q | E4/q E4/q D4/h | G4/q G4/q F4/q F4/q | E4/q E4/q D4/h | C4/q C4/q G4/q G4/q | A4/q A4/q G4/h | F4/q F4/q E4/q E4/q | D4/q D4/q C4/h',
+          { tempo: 100 },
+        ),
+      ],
+    },
+  ],
+});
+
 /** All lessons in learning order. */
 export const LESSONS: Lesson[] = CURRICULUM.flatMap((c) => c.lessons);
 
@@ -272,7 +331,12 @@ export function chapterOf(lessonId: string) {
 export function lessonTargetCount(lesson: Lesson): number {
   return lesson.exercises.reduce(
     (n, e) =>
-      n + (e.type === 'play-along' ? e.sequences.reduce((m, s) => m + s.length, 0) : e.rounds),
+      n +
+      (e.type === 'play-along'
+        ? e.sequences.reduce((m, s) => m + s.length, 0)
+        : e.type === 'song'
+          ? e.bars.reduce((m, b) => m + b.length, 0)
+          : e.rounds),
     0,
   );
 }

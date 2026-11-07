@@ -11,6 +11,12 @@ import type { NoteEvent } from '@klavio/shared';
 export class InputHub {
   midiConnected = false;
   private lastScreenKeyAt = -Infinity;
+  private micMutedUntil = -Infinity;
+
+  /** Ignore the microphone while the app itself plays music (e.g. "listen first"). */
+  muteMicrophoneUntil(time: number): void {
+    this.micMutedUntil = time;
+  }
 
   constructor(private readonly echoGuardMs = 600) {}
 
@@ -22,7 +28,7 @@ export class InputHub {
       case 'midi':
         return true;
       case 'microphone':
-        if (this.midiConnected) return false;
+        if (this.midiConnected || event.time < this.micMutedUntil) return false;
         return event.time - this.lastScreenKeyAt > this.echoGuardMs;
     }
   }

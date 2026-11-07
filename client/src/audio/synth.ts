@@ -75,3 +75,47 @@ export function playNote(midi: number, velocity = 0.8): Voice | null {
     },
   };
 }
+
+export interface Playback {
+  stop(): void;
+  /** Resolves when the melody has finished (or was stopped). */
+  done: Promise<void>;
+}
+
+/**
+ * Plays a melody ({ midi, beats }) at `tempo` quarter notes per minute.
+ * `onNote(index)` is called as each note starts (for highlighting).
+ */
+export function playMelody(
+  notes: { midi: number; beats: number }[],
+  tempo: number,
+  onNote?: (index: number) => void,
+): Playback {
+  const beatMs = 60000 / tempo;
+  const timers: ReturnType<typeof setTimeout>[] = [];
+  const voices: (Voice | null)[] = [];
+  let resolve!: () => void;
+  const done = new Promise<void>((r) => (resolve = r));
+  let t = 0;
+  notes.forEach((n, i) => {
+    const start = t;
+    const length = n.beats * beatMs;
+    timers.push(
+      setTimeout(() => {
+        onNote?.(i);
+        voices[i] = playNote(n.midi, 0.7);
+      }, start),
+      setTimeout(() => voices[i]?.release(), start + length * 0.9),
+    );
+    t += length;
+  });
+  timers.push(setTimeout(resolve, t + 200));
+  return {
+    done,
+    stop() {
+      timers.forEach(clearTimeout);
+      voices.forEach((v) => v?.release());
+      resolve();
+    },
+  };
+}

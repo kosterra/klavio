@@ -33,6 +33,7 @@ import { PrivacyBadge } from '../components/PrivacyNote';
 import { FindKeyExercise } from '../lesson/FindKeyExercise';
 import { PlayAlongExercise } from '../lesson/PlayAlongExercise';
 import { ReadNoteExercise } from '../lesson/ReadNoteExercise';
+import { SongExercise } from '../lesson/SongExercise';
 import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
 import { useLocalized } from '../lesson/useLocalized';
@@ -197,6 +198,8 @@ function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void })
             <FindKeyExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
           ) : exercise.type === 'read-note' ? (
             <ReadNoteExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+          ) : exercise.type === 'song' ? (
+            <SongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
           ) : (
             <PlayAlongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
           ))}

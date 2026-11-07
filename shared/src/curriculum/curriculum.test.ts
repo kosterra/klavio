@@ -29,7 +29,12 @@ describe('curriculum data', () => {
   it('only asks for keys that are on the visible keyboard', () => {
     for (const l of LESSONS) {
       for (const e of l.exercises) {
-        const notes = e.type === 'play-along' ? e.sequences.flat() : e.notes;
+        const notes =
+          e.type === 'play-along'
+            ? e.sequences.flat()
+            : e.type === 'song'
+              ? e.bars.flat().map((n) => n.midi)
+              : e.notes;
         for (const n of notes) {
           if (e.type === 'find-key' && e.anyOctave) {
             // some octave of the pitch class must be visible
@@ -60,6 +65,24 @@ describe('curriculum data', () => {
     expect(isLessonUnlocked('nope', new Set())).toBe(false);
     expect(nextLesson(new Set([first])).id).toBe(second);
     expect(nextLesson(new Set(LESSONS.map((l) => l.id))).id).toBe(LESSONS.at(-1)!.id);
+  });
+});
+
+describe('song notation', () => {
+  it('parses notes, values and bars and checks full bars', async () => {
+    const { parseSong, beatsOf } = await import('./song.ts');
+    expect(parseSong('C4/q D4/q E4/h | G4/w', '4/4')).toEqual([
+      [
+        { midi: 60, value: 'q' },
+        { midi: 62, value: 'q' },
+        { midi: 64, value: 'h' },
+      ],
+      [{ midi: 67, value: 'w' }],
+    ]);
+    expect(beatsOf('qd') + beatsOf('8')).toBe(2);
+    expect(() => parseSong('C4/q D4/q', '4/4')).toThrow(/Bar 1 has 2 beats/);
+    expect(() => parseSong('C4/x D4/q', '2/4')).toThrow(/Unknown note value/);
+    expect(parseSong('C4/q D4/q | E4/h', '2/4')).toHaveLength(2);
   });
 });
 

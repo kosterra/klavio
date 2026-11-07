@@ -27,7 +27,31 @@ export interface ReadNoteExercise {
   rounds: number;
 }
 
-export type Exercise = FindKeyExercise | PlayAlongExercise | ReadNoteExercise;
+/** Note values (VexFlow notation): whole, half, quarter, eighth; "d" = dotted. */
+export type NoteValue = 'w' | 'h' | 'hd' | 'q' | 'qd' | '8';
+
+export interface SongNote {
+  midi: number;
+  value: NoteValue;
+}
+
+/**
+ * "Lied spielen": a melody on the staff, bar by bar. In "wait for me" mode the
+ * song only moves on when the right note is played.
+ */
+export interface SongExercise {
+  type: 'song';
+  clef: 'treble' | 'bass';
+  /** Time signature, e.g. "4/4". */
+  time: string;
+  /** Tempo for listening (quarter notes per minute). */
+  tempo: number;
+  /** Show note names below the notes (before note reading is learned). */
+  showNames: boolean;
+  bars: SongNote[][];
+}
+
+export type Exercise = FindKeyExercise | PlayAlongExercise | ReadNoteExercise | SongExercise;
 
 export interface Lesson {
   id: string;

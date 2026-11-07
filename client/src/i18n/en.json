@@ -302,6 +302,13 @@
     "clef": {
       "treble": "treble clef",
       "bass": "bass clef"
-    }
+    },
+    "playSong": "Play the song – I will wait for you",
+    "listening": "Listen carefully …",
+    "listen": "Listen",
+    "stopListening": "Stop",
+    "songStaffLabel": "Notes of the song, line {{line}} of {{lines}}",
+    "songProgress": "Note {{n}} of {{total}}",
+    "nextNote": "Next note: {{note}}"
   }
 }
