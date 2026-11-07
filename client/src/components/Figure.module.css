@@ -111,3 +111,8 @@
     transform: translateY(-5px) scaleY(1.3);
   }
 }
+
+/* Small avatars: same drawing, no motion */
+.still * {
+  animation: none !important;
+}

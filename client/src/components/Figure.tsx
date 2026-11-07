@@ -190,17 +190,27 @@ export function Figure({
   mood = 'happy',
   size = 120,
   label,
+  still = false,
 }: {
   avatar: Avatar;
   mood?: MascotMood;
   size?: number;
   label?: string;
+  /** No motion (small avatars in lists and menus). */
+  still?: boolean;
 }) {
-  if (avatar === 'klavi') return <Mascot mood={mood} size={size} label={label} />;
+  if (avatar === 'klavi') return <Mascot mood={mood} size={size} label={label} still={still} />;
   const spec = SPECS[avatar];
   const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true };
   return (
-    <svg viewBox="0 0 100 100" width={size} height={size} overflow="visible" {...a11y}>
+    <svg
+      viewBox="0 0 100 100"
+      width={size}
+      height={size}
+      overflow="visible"
+      className={still ? classes.still : undefined}
+      {...a11y}
+    >
       <g className={`${classes.part} ${MOOD_CLASS[mood]}`}>
         <g className={`${classes.part} ${mood === 'listen' ? classes.earsListen : ''}`}>
           <Ears animal={avatar} color={spec.ear} />

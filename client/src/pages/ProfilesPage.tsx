@@ -90,7 +90,7 @@ export function ProfilesPage() {
             <UnstyledButton key={p.id} onClick={() => choose(p.id)} className={classes.tile}>
               <Card withBorder radius="xl" padding="lg" h="100%">
                 <Stack align="center" gap="xs">
-                  <ProfileAvatar avatar={p.avatar} size={96} />
+                  <ProfileAvatar avatar={p.avatar} size={110} alive />
                   <Text fw={800} fz="xl" ta="center">
                     {p.name}
                   </Text>
@@ -160,7 +160,7 @@ export function ProfilesPage() {
         opened={creating}
         onClose={() => setCreating(false)}
         title={t('profiles.createTitle')}
-        size="lg"
+        size="xl"
         radius="lg"
       >
         <ProfileForm

@@ -40,3 +40,7 @@
     transform: scaleY(0.1);
   }
 }
+
+.still * {
+  animation: none !important;
+}

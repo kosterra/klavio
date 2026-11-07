@@ -50,7 +50,7 @@ export function ProfileForm({ initial, submitLabel, busy, onSubmit, onCancel }: 
 
         <Stack gap={6} role="radiogroup" aria-label={t('profiles.avatar')}>
           <Text fw={500}>{t('profiles.avatar')}</Text>
-          <SimpleGrid cols={{ base: 4, xs: 7 }} spacing="xs">
+          <SimpleGrid cols={{ base: 3, xs: 4, sm: 7 }} spacing={6}>
             {avatarSchema.options.map((a: Avatar) => (
               <UnstyledButton
                 key={a}
@@ -64,7 +64,12 @@ export function ProfileForm({ initial, submitLabel, busy, onSubmit, onCancel }: 
                 data-selected={form.values.avatar === a || undefined}
                 onClick={() => form.setFieldValue('avatar', a)}
               >
-                <ProfileAvatar avatar={a} size={56} />
+                <ProfileAvatar
+                  avatar={a}
+                  size={68}
+                  alive
+                  mood={form.values.avatar === a ? 'cheer' : 'happy'}
+                />
                 <Text size="xs" fw={700} aria-hidden>
                   {t(`avatars.names.${a}`)}
                 </Text>
