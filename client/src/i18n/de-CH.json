@@ -421,7 +421,10 @@
     "openParent": "Elternbereich öffnen",
     "delete": "Profil löschen",
     "deleteHint": "Löscht das Profil «{{name}}» mit allem Fortschritt und allen Abzeichen. Das kann nicht rückgängig gemacht werden.",
-    "deleteConfirm": "Profil «{{name}}» löschen?"
+    "deleteConfirm": "Profil «{{name}}» löschen?",
+    "figureButton": "{{name}}, deine Figur",
+    "eggTune": "{{name}} tanzt und spielt sein Lied für dich! 🎶",
+    "eggDisco": "Disco-Modus! 🪩 Lass die Farben tanzen."
   },
   "theory": {
     "title": "Entdecken",
@@ -488,5 +491,94 @@
     "due": "zum Wiederholen",
     "dueCount_one": "{{count}} zum Wiederholen",
     "dueCount_other": "{{count}} zum Wiederholen"
+  },
+  "landing": {
+    "headline": "Klavier lernen – am echten Klavier, wie im Spiel.",
+    "lead": "Klavio hört dir beim Spielen zu, zeigt dir Schritt für Schritt, was als Nächstes kommt, und führt dich durch fünf bunte Welten – von der ersten Taste bis zum ersten Lied.",
+    "cta": "Jetzt loslegen",
+    "how": "So funktioniert’s",
+    "login": "Anmelden",
+    "badgeAudio": "Audio bleibt auf dem Gerät",
+    "badgeOpen": "Freie Software",
+    "klavi": "Klavi, das Maskottchen",
+    "howTitle": "So funktioniert’s",
+    "steps": {
+      "profile": {
+        "title": "Profil anlegen",
+        "text": "Ein Konto für die Familie, ein Profil für jede Person – mit eigener Figur."
+      },
+      "stand": {
+        "title": "Aufs Notenpult stellen",
+        "text": "Tablet, Handy oder Laptop aufs Klavier stellen. Ein Digitalpiano geht auch per Kabel."
+      },
+      "play": {
+        "title": "Spielen – Klavio hört zu",
+        "text": "Du spielst auf deinem Klavier, Klavio erkennt die Töne und hilft dir weiter."
+      }
+    },
+    "featuresTitle": "Was Klavio kann",
+    "features": {
+      "listen": {
+        "title": "Hört dir zu",
+        "text": "Tonerkennung über das Mikrofon, MIDI fürs Digitalpiano oder die Bildschirm-Klaviatur."
+      },
+      "worlds": {
+        "title": "Fünf Welten",
+        "text": "Vom Tasten-Tal bis zum Rhythmus-Berg: ein Lernpfad wie ein Spielbrett."
+      },
+      "discover": {
+        "title": "Entdecken & Wissen",
+        "text": "Kurze Erklärungen, Quiz und kleine Spiele vor jeder Lektion – zum Nachschauen gesammelt."
+      },
+      "review": {
+        "title": "Wiederholen",
+        "text": "Gespielte Lektionen kommen zur richtigen Zeit wieder – so bleibt alles im Kopf."
+      },
+      "medals": {
+        "title": "Medaillen & Sterne",
+        "text": "Sterne, Level, Tagesziel und Medaillen zum Sammeln – ganz ohne Druck."
+      },
+      "family": {
+        "title": "Für die ganze Familie",
+        "text": "Mehrere Profile, Kinder- und Classic-Darstellung, Eltern-Bereich mit PIN."
+      }
+    },
+    "worldsTitle": "Fünf Welten warten auf dich",
+    "worldsText": "Jedes Kapitel ist eine eigene Welt. Noch nicht erreichte Welten liegen im Nebel – bis du sie entdeckst.",
+    "tryTitle": "Probier’s gleich aus",
+    "tryText": "Tippe auf die Tasten oder klicke sie an.",
+    "tryHint": "Kennst du ein Kinderlied? Spiel es doch mal …",
+    "privacyTitle": "Sicher und ehrlich",
+    "privacy": {
+      "audio": "Was du spielst, bleibt auf deinem Gerät – Audio wird nie gesendet oder gespeichert.",
+      "ads": "Keine Werbung, kein Tracking.",
+      "data": "Nur das Nötigste: kein Geburtsdatum, für Kinder genügt ein Vorname.",
+      "open": "Freie Software (AGPL-3.0) – der Quellcode ist offen."
+    },
+    "faqTitle": "Häufige Fragen",
+    "faq": {
+      "piano": {
+        "q": "Brauche ich ein Digitalpiano?",
+        "a": "Nein. Ein echtes Klavier genügt – das Mikrofon erkennt die Töne. Ein Digitalpiano kannst du per USB-MIDI anschliessen, und zum Ausprobieren gibt es die Bildschirm-Klaviatur."
+      },
+      "who": {
+        "q": "Für wen ist Klavio?",
+        "a": "Für Kinder und Erwachsene ohne Vorkenntnisse. Jede Person bekommt ein eigenes Profil – Kinder in einer verspielten, Erwachsene auf Wunsch in einer ruhigen Darstellung."
+      },
+      "devices": {
+        "q": "Auf welchen Geräten läuft Klavio?",
+        "a": "In jedem aktuellen Browser auf Tablet, Handy oder Computer. Du kannst Klavio auch wie eine App installieren."
+      },
+      "offline": {
+        "q": "Geht es auch ohne Internet?",
+        "a": "Ja. Lektionen funktionieren offline, deine Ergebnisse werden nachgereicht, sobald du wieder online bist."
+      }
+    },
+    "finalTitle": "Bereit für deine erste Taste?",
+    "footer": "Klavio ist freie Software.",
+    "source": "Zum Quellcode",
+    "eggKonami": "Geheimcode geknackt! 🎉 Du bist ein echter Profi.",
+    "eggKlavi": "Klavi spielt «Für Elise» – nur für dich! 🎵",
+    "eggDucks": "Alle meine Entchen schwimmen auf dem See! 🦆"
   }
 }

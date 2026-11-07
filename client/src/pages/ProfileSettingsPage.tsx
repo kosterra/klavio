@@ -1,5 +1,15 @@
 import { useState } from 'react';
-import { Alert, Button, Card, Group, Modal, Stack, Text, Title } from '@mantine/core';
+import {
+  Alert,
+  Button,
+  Card,
+  Group,
+  Modal,
+  Stack,
+  Text,
+  Title,
+  UnstyledButton,
+} from '@mantine/core';
 import { IconLock, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +21,12 @@ import { useParentUnlocked } from '../auth/useParentUnlocked';
 import { Buddy } from '../components/Buddy';
 import { ProfileForm } from '../components/ProfileForm';
 import { notify } from '../components/notify';
+import { NoteRain } from '../landing/Effects';
+import { tapCounter, useKonami } from '../landing/easterEggs';
+import { FIGURE_TUNES } from '../landing/figureTunes';
+import { playMelody } from '../audio/synth';
+import landing from '../landing/Landing.module.css';
+import classes from './ProfileSettingsPage.module.css';
 
 /**
  * "Mein Profil": name, figure, display mode, daily goal. The figure is the
@@ -18,6 +34,22 @@ import { notify } from '../components/notify';
  */
 export function ProfileSettingsPage() {
   const { t } = useTranslation();
+  // easter eggs
+  const [rain, setRain] = useState(0);
+  const [spin, setSpin] = useState(false);
+  const [disco, setDisco] = useState(false);
+  const [secret, setSecret] = useState('');
+  const [taps] = useState(() => tapCounter(5));
+  const announce = (message: string) => {
+    setSecret(message);
+    setTimeout(() => setSecret(''), 4500);
+  };
+  useKonami(() => {
+    setDisco(true);
+    setRain((r) => r + 1);
+    announce(t('profileSettings.eggDisco'));
+    setTimeout(() => setDisco(false), 6000);
+  });
   const { activeProfile, refresh } = useSession();
   const navigate = useNavigate();
   const errorText = useErrorText();
@@ -67,10 +99,36 @@ export function ProfileSettingsPage() {
     }
   };
 
+  const onFigureTap = () => {
+    if (!activeProfile || !taps()) return;
+    const tune = FIGURE_TUNES[activeProfile.avatar];
+    playMelody(
+      tune.map((midi) => ({ midi, beats: 0.5 })),
+      150,
+    );
+    setSpin(true);
+    setRain((r) => r + 1);
+    announce(t('profileSettings.eggTune', { name: t(`avatars.names.${activeProfile.avatar}`) }));
+  };
+
   return (
     <Stack gap="lg" maw={760} mx="auto">
+      <NoteRain run={rain} />
+      <div role="status" aria-live="polite" className={landing.secret}>
+        {secret}
+      </div>
       <Group wrap="nowrap">
-        <Buddy mood="happy" size={72} />
+        {/* secret: tap your figure five times – or type the Konami code */}
+        <UnstyledButton
+          onClick={onFigureTap}
+          aria-label={t('profileSettings.figureButton', {
+            name: t(`avatars.names.${activeProfile.avatar}`),
+          })}
+          className={`${classes.figureButton} ${spin ? classes.spin : ''} ${disco ? classes.disco : ''}`}
+          onAnimationEnd={() => setSpin(false)}
+        >
+          <Buddy mood={spin || disco ? 'cheer' : 'happy'} size={72} />
+        </UnstyledButton>
         <Title order={1}>{t('profileSettings.title')}</Title>
       </Group>
 

@@ -212,6 +212,21 @@ allen gespielten Lektionen (nicht bewertet).
 `SongExercise`, `RhythmExercise`. Rundenbasierte Übungen teilen sich `useRoundTask`. Notation zeichnet
 `notation/Staff.tsx` mit VexFlow; die Bibliothek wird erst geladen, wenn Noten gebraucht werden.
 
+## Startseite und Easter Eggs
+
+`/welcome` ist die öffentliche Startseite (`pages/WelcomePage.tsx`): Kopfbereich mit Anmeldekarte
+(`landing/LoginCard.tsx`), «So funktioniert's», Funktionen, die fünf Welten, eine Klaviatur zum
+Ausprobieren, Datenschutz und Fragen. Versteckt (`landing/easterEggs.ts`, getestet in
+`e2e/landing.spec.ts`):
+
+- Konami-Code (↑↑↓↓←→←→BA) auf der Startseite: Notenregen; auf «Mein Profil»: Disco-Modus der Figur.
+- Klavi in der Anmeldekarte fünfmal antippen: «Für Elise».
+- Den Anfang von «Alle meine Entchen» auf der Probier-Klaviatur spielen: eine Entenparade.
+- Die eigene Figur auf «Mein Profil» fünfmal antippen: Sie dreht sich und spielt ihr eigenes Lied
+  (`landing/figureTunes.ts`).
+
+Bewegte Effekte entfallen bei «Bewegung reduzieren»; die Meldung erscheint trotzdem.
+
 ## Offline
 
 ```mermaid

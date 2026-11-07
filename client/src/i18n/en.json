@@ -421,7 +421,10 @@
     "openParent": "Open parent area",
     "delete": "Delete profile",
     "deleteHint": "Deletes the profile “{{name}}” with all progress and badges. This cannot be undone.",
-    "deleteConfirm": "Delete profile “{{name}}”?"
+    "deleteConfirm": "Delete profile “{{name}}”?",
+    "figureButton": "{{name}}, your figure",
+    "eggTune": "{{name}} dances and plays a tune for you! 🎶",
+    "eggDisco": "Disco mode! 🪩 Let the colours dance."
   },
   "theory": {
     "title": "Discover",
@@ -488,5 +491,94 @@
     "due": "to review",
     "dueCount_one": "{{count}} to review",
     "dueCount_other": "{{count}} to review"
+  },
+  "landing": {
+    "headline": "Learn piano – on a real piano, like a game.",
+    "lead": "Klavio listens while you play, shows you step by step what comes next and guides you through five colourful worlds – from your first key to your first song.",
+    "cta": "Get started",
+    "how": "How it works",
+    "login": "Log in",
+    "badgeAudio": "Audio stays on your device",
+    "badgeOpen": "Free software",
+    "klavi": "Klavi, the mascot",
+    "howTitle": "How it works",
+    "steps": {
+      "profile": {
+        "title": "Create a profile",
+        "text": "One account for the family, one profile for everyone – each with their own figure."
+      },
+      "stand": {
+        "title": "Put it on the music stand",
+        "text": "Place a tablet, phone or laptop on the piano. A digital piano works by cable too."
+      },
+      "play": {
+        "title": "Play – Klavio listens",
+        "text": "You play on your piano, Klavio recognises the notes and helps you along."
+      }
+    },
+    "featuresTitle": "What Klavio can do",
+    "features": {
+      "listen": {
+        "title": "Listens to you",
+        "text": "Note detection with the microphone, MIDI for digital pianos, or the on-screen keyboard."
+      },
+      "worlds": {
+        "title": "Five worlds",
+        "text": "From Key Valley to Rhythm Mountain: a learning path like a board game."
+      },
+      "discover": {
+        "title": "Discover & knowledge",
+        "text": "Short explanations, quizzes and little games before every lesson – collected to look up again."
+      },
+      "review": {
+        "title": "Review",
+        "text": "Lessons you played come back at the right time – so everything sticks."
+      },
+      "medals": {
+        "title": "Medals & stars",
+        "text": "Stars, levels, a daily goal and medals to collect – without any pressure."
+      },
+      "family": {
+        "title": "For the whole family",
+        "text": "Several profiles, a kids and a classic look, a parents' area with a PIN."
+      }
+    },
+    "worldsTitle": "Five worlds are waiting for you",
+    "worldsText": "Every chapter is a world of its own. Worlds you haven't reached yet lie in the fog – until you discover them.",
+    "tryTitle": "Try it right now",
+    "tryText": "Tap or click the keys.",
+    "tryHint": "Do you know a children's song? Why not play it …",
+    "privacyTitle": "Safe and honest",
+    "privacy": {
+      "audio": "What you play stays on your device – audio is never sent or stored.",
+      "ads": "No ads, no tracking.",
+      "data": "Only what's needed: no date of birth, a first name is enough for children.",
+      "open": "Free software (AGPL-3.0) – the source code is open."
+    },
+    "faqTitle": "Frequently asked questions",
+    "faq": {
+      "piano": {
+        "q": "Do I need a digital piano?",
+        "a": "No. A real piano is enough – the microphone recognises the notes. You can connect a digital piano via USB MIDI, and there is an on-screen keyboard to try things out."
+      },
+      "who": {
+        "q": "Who is Klavio for?",
+        "a": "For children and adults without prior knowledge. Everyone gets their own profile – children a playful look, adults a calm one if they like."
+      },
+      "devices": {
+        "q": "Which devices does Klavio run on?",
+        "a": "In any current browser on a tablet, phone or computer. You can also install Klavio like an app."
+      },
+      "offline": {
+        "q": "Does it work without internet?",
+        "a": "Yes. Lessons work offline, and your results are sent as soon as you're back online."
+      }
+    },
+    "finalTitle": "Ready for your first key?",
+    "footer": "Klavio is free software.",
+    "source": "View the source code",
+    "eggKonami": "Secret code cracked! 🎉 You're a real pro.",
+    "eggKlavi": "Klavi plays “Für Elise” – just for you! 🎵",
+    "eggDucks": "All my little ducklings are swimming on the lake! 🦆"
   }
 }
