@@ -539,7 +539,7 @@ export function LearningPath({
                     </Text>
                   </Group>
                   {sec.finished && (
-                    <Text component="span" fw={700} size="sm">
+                    <Text component="span" size="sm" className={classes.doneBadge}>
                       {t('path.goalDone')}
                     </Text>
                   )}
@@ -675,7 +675,7 @@ export function LearningPath({
                           <IconTrophy size={30} aria-hidden />
                         </span>
                         <Text
-                          className={classes.title}
+                          className={`${classes.title} ${sec.finished ? classes.doneBadge : ''}`}
                           maw={labelWidth - 6}
                           fz={narrow ? 12 : 'sm'}
                           aria-hidden

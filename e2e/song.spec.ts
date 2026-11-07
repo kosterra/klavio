@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { LESSONS } from '@klavio/shared';
-import { seedCompletedLessons, signUpWithEmail, uniqueEmail } from './helpers';
+import { seedCompletedLessons, signUpWithEmail, uniqueEmail, startLesson } from './helpers';
 import { audit } from './audit';
 
 const before = (id: string) =>
@@ -39,9 +39,13 @@ test('song mode waits for every note; "listen" plays the song first', async ({ p
   await expect(ch1).toHaveAttribute('aria-expanded', 'true');
   await expect(page.getByTestId('path-keys-c')).toBeVisible();
   await audit(page);
+  // …and closes again (the open board must not cover its own heading)
+  await ch1.click();
+  await expect(ch1).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.getByTestId('path-keys-c')).toBeHidden();
 
   await page.getByTestId('path-hand-entchen').click();
-  await page.getByRole('button', { name: 'Los geht’s!' }).click();
+  await startLesson(page);
   const staff = page.getByRole('img', { name: /Noten des Lieds, Zeile 1 von 3/ });
   await expect(staff.locator('svg')).toBeVisible();
   await audit(page);
@@ -78,7 +82,7 @@ test('song mode waits for every note; "listen" plays the song first', async ({ p
   // the line moved on while playing: a later song shows dotted notes and eighths
   await seedCompletedLessons(page, ['song-haenschen']);
   await page.goto('/lesson/song-freude');
-  await page.getByRole('button', { name: 'Los geht’s!' }).click();
+  await startLesson(page);
   await expect(page.getByRole('img', { name: /Noten des Lieds/ }).locator('svg')).toBeVisible();
   await shot(page, 'song-freude');
   await audit(page);
