@@ -21,13 +21,19 @@ import { useErrorText } from '../auth/useErrorText';
 
 type Step = 'email' | 'code' | 'name';
 
-export function EmailLoginPage() {
+/**
+ * Sign-up and login share one flow: e-mail → 6-digit code → (new accounts only) name.
+ * The server decides whether the address already has an account; `intent` only
+ * changes the wording.
+ */
+export function EmailLoginPage({ intent }: { intent: 'login' | 'register' }) {
   const { t } = useTranslation();
-  const { refresh, setPendingRecoveryCodes } = useSession();
+  const { config, refresh } = useSession();
   const errorText = useErrorText();
   const [step, setStep] = useState<Step>('email');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const registrationClosed = intent === 'register' && config?.registrationOpen === false;
 
   const form = useForm({
     mode: 'controlled',
@@ -40,20 +46,10 @@ export function EmailLoginPage() {
     },
   });
 
-  const run = async (fn: () => Promise<void>) => {
+  const onSubmit = form.onSubmit(async (v) => {
     setBusy(true);
     setError(null);
     try {
-      await fn();
-    } catch (err) {
-      setError(errorText(err));
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  const onSubmit = form.onSubmit((v) =>
-    run(async () => {
       const email = v.email.trim().toLowerCase();
       if (step === 'email') {
         await endpoints.emailRequest(email);
@@ -69,12 +65,13 @@ export function EmailLoginPage() {
         setStep('name');
         return;
       }
-      if (res.status === 'created') {
-        setPendingRecoveryCodes({ codes: res.recoveryCodes, next: '/profiles' });
-      }
-      await refresh();
-    }),
-  );
+      await refresh(); // the route guard moves on to the profile picker
+    } catch (err) {
+      setError(errorText(err));
+    } finally {
+      setBusy(false);
+    }
+  });
 
   return (
     <Center mih="100dvh" p="md">
@@ -82,8 +79,17 @@ export function EmailLoginPage() {
         <form onSubmit={onSubmit} noValidate>
           <Stack gap="md">
             <Title order={1} size="h2">
-              {t('email.title')}
+              {intent === 'register' ? t('email.registerTitle') : t('email.title')}
             </Title>
+            {registrationClosed ? (
+              <Alert color="orange">{t('email.registrationClosed')}</Alert>
+            ) : (
+              step === 'email' && (
+                <Text c="dimmed">
+                  {intent === 'register' ? t('email.registerIntro') : t('email.loginIntro')}
+                </Text>
+              )
+            )}
             {error && (
               <Alert color="red" role="alert">
                 {error}
@@ -94,7 +100,7 @@ export function EmailLoginPage() {
               type="email"
               autoComplete="email"
               inputMode="email"
-              disabled={step !== 'email'}
+              disabled={step !== 'email' || registrationClosed}
               {...form.getInputProps('email')}
             />
             {step !== 'email' && (
@@ -125,8 +131,10 @@ export function EmailLoginPage() {
             {step === 'name' && (
               <TextInput
                 label={t('email.needsName')}
+                description={t('email.nameHint')}
                 autoComplete="nickname"
                 maxLength={40}
+                data-autofocus
                 {...form.getInputProps('displayName')}
               />
             )}
@@ -134,12 +142,14 @@ export function EmailLoginPage() {
               <Button variant="default" component={Link} to="/welcome">
                 {t('common.back')}
               </Button>
-              <Button type="submit" loading={busy}>
+              <Button type="submit" loading={busy} disabled={registrationClosed}>
                 {step === 'email'
                   ? t('email.sendCode')
                   : step === 'name'
                     ? t('email.createAccount')
-                    : t('email.verify')}
+                    : intent === 'register'
+                      ? t('common.continue')
+                      : t('email.verify')}
               </Button>
             </Group>
           </Stack>

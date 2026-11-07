@@ -15,8 +15,16 @@ import {
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconCloud, IconKey, IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
-import { useLocation, useNavigate } from 'react-router';
+import { notifications } from '@mantine/notifications';
+import {
+  IconCloud,
+  IconFingerprint,
+  IconKey,
+  IconPencil,
+  IconPlus,
+  IconTrash,
+} from '@tabler/icons-react';
+import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { emailSchema, type PasskeyDto } from '@klavio/shared';
 import { endpoints } from '../api/endpoints';
@@ -26,9 +34,8 @@ import { useErrorText } from '../auth/useErrorText';
 
 export function AccountPage() {
   const { t, i18n } = useTranslation();
-  const { me, refresh, logout, setPendingRecoveryCodes, setAfterLogin } = useSession();
+  const { me, refresh, logout } = useSession();
   const navigate = useNavigate();
-  const notice = (useLocation().state as { notice?: string } | null)?.notice;
   const errorText = useErrorText();
   const [passkeys, setPasskeys] = useState<PasskeyDto[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -37,14 +44,12 @@ export function AccountPage() {
   const [newName, setNewName] = useState('');
   const [email, setEmail] = useState('');
   const [emailCode, setEmailCode] = useState('');
-  const [emailStep, setEmailStep] = useState<'idle' | 'code'>('idle');
+  const [emailStep, setEmailStep] = useState<'show' | 'edit' | 'code'>('show');
   const [confirmDelete, deleteModal] = useDisclosure(false);
 
   const loadPasskeys = () => endpoints.passkeys().then(setPasskeys);
   useEffect(() => {
     void loadPasskeys();
-    setAfterLogin(null); // the one-time post-login redirect has been consumed
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const run = async (key: string, fn: () => Promise<void>) => {
@@ -65,7 +70,6 @@ export function AccountPage() {
   return (
     <Stack gap="lg" maw={760} mx="auto">
       <Title order={1}>{t('account.title')}</Title>
-      {notice && <Alert color="blue">{notice}</Alert>}
       {error && (
         <Alert color="red" role="alert" withCloseButton onClose={() => setError(null)}>
           {error}
@@ -81,6 +85,11 @@ export function AccountPage() {
           <Text c="dimmed" size="sm">
             {t('account.passkeysHint')}
           </Text>
+          {passkeys.length === 0 && (
+            <Alert color="blue" variant="light" icon={<IconFingerprint />}>
+              {t('account.noPasskeys')}
+            </Alert>
+          )}
           {passkeys.map((p) => (
             <Group key={p.id} justify="space-between" wrap="nowrap">
               <Group gap="sm" wrap="nowrap">
@@ -121,7 +130,7 @@ export function AccountPage() {
                     if (!window.confirm(t('account.deleteConfirm', { name: p.name }))) return;
                     void run(`del-${p.id}`, async () => {
                       await endpoints.deletePasskey(p.id);
-                      await loadPasskeys();
+                      await Promise.all([loadPasskeys(), refresh()]);
                     });
                   }}
                 >
@@ -131,13 +140,13 @@ export function AccountPage() {
             </Group>
           ))}
           <Button
-            variant="light"
+            variant={passkeys.length === 0 ? 'filled' : 'light'}
             leftSection={<IconPlus />}
             loading={busy === 'add'}
             onClick={() =>
               run('add', async () => {
                 await addPasskey();
-                await loadPasskeys();
+                await Promise.all([loadPasskeys(), refresh()]);
               })
             }
           >
@@ -155,45 +164,38 @@ export function AccountPage() {
           <Text c="dimmed" size="sm">
             {t('account.emailHint')}
           </Text>
-          {me.user.email ? (
+          {emailStep === 'show' ? (
             <Group justify="space-between">
-              <Text fw={700}>{me.user.email}</Text>
-              <Button
-                variant="subtle"
-                color="red.9"
-                size="md"
-                loading={busy === 'email-remove'}
-                onClick={() =>
-                  run('email-remove', async () => {
-                    await endpoints.accountEmailRemove();
-                    await refresh();
-                  })
-                }
-              >
-                {t('account.emailRemove')}
+              <Text fw={700}>{me.user.email ?? '—'}</Text>
+              <Button variant="subtle" size="md" onClick={() => setEmailStep('edit')}>
+                {t('account.emailChange')}
               </Button>
             </Group>
-          ) : emailStep === 'idle' ? (
-            <Group align="flex-end" wrap="nowrap">
+          ) : emailStep === 'edit' ? (
+            <Group align="flex-end">
               <TextInput
-                style={{ flex: 1 }}
+                style={{ flex: 1, minWidth: 220 }}
                 type="email"
                 autoComplete="email"
-                label={t('email.address')}
+                label={t('account.emailNew')}
                 value={email}
                 onChange={(e) => setEmail(e.currentTarget.value)}
+                data-autofocus
               />
+              <Button variant="default" onClick={() => setEmailStep('show')}>
+                {t('common.cancel')}
+              </Button>
               <Button
-                loading={busy === 'email-add'}
+                loading={busy === 'email-request'}
                 disabled={!emailSchema.safeParse(email).success}
                 onClick={() =>
-                  run('email-add', async () => {
+                  run('email-request', async () => {
                     await endpoints.accountEmailRequest(email.trim().toLowerCase());
                     setEmailStep('code');
                   })
                 }
               >
-                {t('account.emailAdd')}
+                {t('account.emailSendCode')}
               </Button>
             </Group>
           ) : (
@@ -214,9 +216,11 @@ export function AccountPage() {
                   onClick={() =>
                     run('email-verify', async () => {
                       await endpoints.accountEmailVerify(emailCode);
-                      setEmailStep('idle');
+                      setEmailStep('show');
                       setEmailCode('');
+                      setEmail('');
                       await refresh();
+                      notifications.show({ color: 'teal', message: t('account.emailChanged') });
                     })
                   }
                 >
@@ -225,31 +229,6 @@ export function AccountPage() {
               </Group>
             </Stack>
           )}
-        </Stack>
-      </Card>
-
-      {/* ------------------------------------------------------- recovery codes */}
-      <Card withBorder radius="lg" padding="lg">
-        <Stack gap="sm">
-          <Title order={2} size="h3">
-            {t('account.recoveryCodes')}
-          </Title>
-          <Text>{t('account.recoveryRemaining', { count: me.user.recoveryCodesRemaining })}</Text>
-          <Button
-            variant="light"
-            loading={busy === 'recovery'}
-            onClick={() => {
-              if (!window.confirm(t('account.recoveryRegenerateConfirm'))) return;
-              void run('recovery', async () => {
-                const { recoveryCodes } = await endpoints.regenerateRecoveryCodes();
-                setPendingRecoveryCodes({ codes: recoveryCodes, next: '/account' });
-                await refresh();
-                navigate('/recovery-codes');
-              });
-            }}
-          >
-            {t('account.recoveryRegenerate')}
-          </Button>
         </Stack>
       </Card>
 

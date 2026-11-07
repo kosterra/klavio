@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { addVirtualAuthenticator, signUpWithEmail, uniqueEmail } from './helpers';
 
 async function audit(page: Page) {
   // let Mantine transitions finish so colours are final
@@ -16,30 +17,18 @@ async function audit(page: Page) {
   expect(summary).toEqual([]);
 }
 
-test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ page }) => {
-  const cdp = await page.context().newCDPSession(page);
-  await cdp.send('WebAuthn.enable');
-  await cdp.send('WebAuthn.addVirtualAuthenticator', {
-    options: {
-      protocol: 'ctap2',
-      transport: 'internal',
-      hasResidentKey: true,
-      hasUserVerification: true,
-      isUserVerified: true,
-      automaticPresenceSimulation: true,
-    },
-  });
+test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ page, context }) => {
+  await addVirtualAuthenticator(context, page);
 
   await page.goto('/welcome');
   await audit(page);
 
-  await page.getByRole('button', { name: 'Neues Konto' }).click();
-  await page.getByLabel('Wie heisst du?').fill(`A11y ${Date.now()}`);
+  await page.goto('/register');
+  await page.getByRole('heading', { name: 'Konto erstellen' }).waitFor();
   await audit(page);
-  await page.getByRole('button', { name: 'Passkey erstellen' }).click();
-  await page.getByRole('heading', { name: 'Deine Wiederherstellungscodes' }).waitFor();
-  await audit(page);
-  await page.getByRole('button', { name: 'Ich habe die Codes gesichert' }).click();
+
+  await signUpWithEmail(page, uniqueEmail('a11y'), 'A11y');
+  await audit(page); // profile picker incl. passkey hint
 
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Kim');
@@ -49,7 +38,11 @@ test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ p
   await audit(page);
 
   await page.goto('/account');
-  await page.getByRole('heading', { name: 'Passkeys' }).waitFor();
+  await page.getByText('Noch kein Passkey eingerichtet.').waitFor();
+  await audit(page);
+  await page.getByRole('button', { name: 'Passkey hinzufügen' }).click();
+  await page.getByRole('button', { name: /^Löschen:/ }).waitFor();
+  await page.getByRole('button', { name: 'Ändern' }).click();
   await audit(page);
 
   // Classic mode
@@ -60,5 +53,7 @@ test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ p
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await page.getByRole('heading', { name: 'Hallo Max!' }).waitFor();
   await audit(page);
-  await audit(await page.goto('/profiles').then(() => page));
+  await page.goto('/account');
+  await page.getByRole('heading', { name: 'Passkeys' }).waitFor();
+  await audit(page);
 });

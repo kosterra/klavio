@@ -11,8 +11,6 @@ import { ReloadPrompt } from './components/ReloadPrompt';
 import { Mascot } from './components/Mascot';
 import { WelcomePage } from './pages/WelcomePage';
 import { EmailLoginPage } from './pages/EmailLoginPage';
-import { RecoveryLoginPage } from './pages/RecoveryLoginPage';
-import { RecoveryCodesPage } from './pages/RecoveryCodesPage';
 import { ProfilesPage } from './pages/ProfilesPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { AccountPage } from './pages/AccountPage';
@@ -58,14 +56,9 @@ function Offline() {
 }
 
 function AnonymousOnly() {
-  const { status, pendingRecoveryCodes, afterLogin } = useSession();
+  const { status } = useSession();
   if (status === 'loading') return <FullPageLoader />;
-  if (status === 'authenticated') {
-    if (pendingRecoveryCodes) return <Navigate to="/recovery-codes" replace />;
-    if (afterLogin)
-      return <Navigate to={afterLogin.to} state={{ notice: afterLogin.notice }} replace />;
-    return <Navigate to="/profiles" replace />;
-  }
+  if (status === 'authenticated') return <Navigate to="/profiles" replace />;
   return <Outlet />;
 }
 
@@ -97,11 +90,10 @@ export function App() {
           <Routes>
             <Route element={<AnonymousOnly />}>
               <Route path="/welcome" element={<WelcomePage />} />
-              <Route path="/login/email" element={<EmailLoginPage />} />
-              <Route path="/login/recovery" element={<RecoveryLoginPage />} />
+              <Route path="/login/email" element={<EmailLoginPage intent="login" />} />
+              <Route path="/register" element={<EmailLoginPage intent="register" />} />
             </Route>
             <Route element={<RequireAuth />}>
-              <Route path="/recovery-codes" element={<RecoveryCodesPage />} />
               <Route path="/profiles" element={<ProfilesPage />} />
               <Route element={<AppLayout />}>
                 <Route path="/account" element={<AccountPage />} />

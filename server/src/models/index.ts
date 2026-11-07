@@ -8,15 +8,15 @@ const userSchema = new Schema(
     displayName: { type: String, required: true },
     /** Random opaque WebAuthn user handle (base64url) — never the Mongo id or PII. */
     webauthnUserId: { type: String, required: true, unique: true },
-    /** Optional, only set after the address was verified with a code. */
-    email: { type: String, default: null },
+    /** Verified with a one-time code at sign-up; the account's fallback login. */
+    email: { type: String, required: true },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
-    recoveryCodeHashes: { type: [String], default: [], index: true },
     parentPinHash: { type: String, default: null },
     locale: { type: String, default: 'de-CH' },
   },
   { timestamps: true },
 );
+// Partial: accounts from before e-mail sign-up became mandatory may still lack an address.
 userSchema.index(
   { email: 1 },
   { unique: true, partialFilterExpression: { email: { $type: 'string' } } },
@@ -96,11 +96,9 @@ const authChallengeSchema = new Schema({
   /** SHA-256 of the random token stored in the challenge cookie. */
   tokenHash: { type: String, required: true, unique: true },
   challenge: { type: String, required: true },
-  purpose: { type: String, enum: ['register', 'login', 'add-passkey'], required: true },
-  /** register: the pending account data; add-passkey: the logged-in user. */
+  purpose: { type: String, enum: ['login', 'add-passkey'], required: true },
+  /** add-passkey: the logged-in user. */
   userId: { type: Schema.Types.ObjectId, default: null },
-  webauthnUserId: { type: String, default: null },
-  displayName: { type: String, default: null },
   expiresAt: { type: Date, required: true },
 });
 authChallengeSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
@@ -127,7 +125,8 @@ export const EmailCode = model('EmailCode', emailCodeSchema);
 const appSettingsSchema = new Schema(
   {
     _id: { type: String, default: 'global' },
-    emailLoginEnabled: { type: Boolean, required: true },
+    /** When false, no new accounts can be created; existing users can still log in. */
+    registrationOpen: { type: Boolean, required: true },
   },
   { timestamps: true },
 );

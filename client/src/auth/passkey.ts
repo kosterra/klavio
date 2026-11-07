@@ -24,14 +24,6 @@ async function guard<T>(fn: () => Promise<T>): Promise<T> {
   }
 }
 
-export function registerAccount(displayName: string) {
-  return guard(async () => {
-    const optionsJSON = await endpoints.registerOptions(displayName);
-    const response = await startRegistration({ optionsJSON });
-    return endpoints.registerVerify(response);
-  });
-}
-
 export function loginWithPasskey() {
   return guard(async () => {
     const optionsJSON = await endpoints.loginOptions();

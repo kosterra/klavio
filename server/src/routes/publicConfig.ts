@@ -9,7 +9,7 @@ const publicConfigRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (
 ) => {
   app.get('/config', async (): Promise<PublicConfigResponse> => {
     const settings = await getSettings(config);
-    return { appName: APP_CONFIG.name, emailLoginEnabled: settings.emailLoginEnabled };
+    return { appName: APP_CONFIG.name, registrationOpen: settings.registrationOpen };
   });
 
   app.get('/health', async () => ({ ok: true }));

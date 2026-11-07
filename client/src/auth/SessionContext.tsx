@@ -28,9 +28,6 @@ async function loadSnapshot(): Promise<Snapshot> {
 
 export function SessionProvider({ children }: { children: ReactNode }) {
   const [snap, setSnap] = useState<Snapshot>(initial);
-  const [pendingRecoveryCodes, setPendingRecoveryCodes] =
-    useState<SessionValue['pendingRecoveryCodes']>(null);
-  const [afterLogin, setAfterLogin] = useState<SessionValue['afterLogin']>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -51,8 +48,6 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     await endpoints.logout().catch(() => undefined);
-    setPendingRecoveryCodes(null);
-    setAfterLogin(null);
     setSnap((s) => ({ ...s, status: 'anonymous', me: null, profiles: [] }));
   }, []);
 
@@ -63,12 +58,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       refresh,
       selectProfile,
       logout,
-      pendingRecoveryCodes,
-      setPendingRecoveryCodes,
-      afterLogin,
-      setAfterLogin,
     }),
-    [snap, refresh, selectProfile, logout, pendingRecoveryCodes, afterLogin],
+    [snap, refresh, selectProfile, logout],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

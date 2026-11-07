@@ -23,17 +23,3 @@ export function randomDigits(length: number): string {
   for (let i = 0; i < length; i++) out += randomInt(0, 10).toString();
   return out;
 }
-
-// Crockford-ish alphabet without easily confused characters (0/O, 1/I/L)
-const RECOVERY_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-
-/** 10 chars, displayed as XXXXX-XXXXX. */
-export function randomRecoveryCode(): string {
-  let out = '';
-  for (let i = 0; i < 10; i++) out += RECOVERY_ALPHABET[randomInt(0, RECOVERY_ALPHABET.length)];
-  return out;
-}
-
-export function formatRecoveryCode(code: string): string {
-  return `${code.slice(0, 5)}-${code.slice(5)}`;
-}

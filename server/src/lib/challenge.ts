@@ -8,7 +8,7 @@ import { badRequest } from './errors.js';
 
 const CHALLENGE_TTL_MS = 5 * 60 * 1000;
 
-type Purpose = 'register' | 'login' | 'add-passkey';
+type Purpose = 'login' | 'add-passkey';
 
 export async function storeChallenge(
   config: AppConfig,
@@ -17,8 +17,6 @@ export async function storeChallenge(
     challenge: string;
     purpose: Purpose;
     userId?: Types.ObjectId;
-    webauthnUserId?: string;
-    displayName?: string;
   },
 ): Promise<void> {
   const token = randomToken(24);

@@ -12,10 +12,7 @@ const adminRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, { 
 
   app.put('/settings', { schema: { body: adminSettingsSchema } }, async (req) => {
     await getSettings(config); // ensure the singleton exists
-    await AppSettings.updateOne(
-      { _id: 'global' },
-      { emailLoginEnabled: req.body.emailLoginEnabled },
-    );
+    await AppSettings.updateOne({ _id: 'global' }, { registrationOpen: req.body.registrationOpen });
     req.log.info({ admin: req.auth!.user._id, settings: req.body }, 'global settings changed');
     return getSettings(config);
   });

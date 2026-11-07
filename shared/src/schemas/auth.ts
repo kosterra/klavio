@@ -12,17 +12,6 @@ export const emailSchema = z.string().trim().toLowerCase().pipe(z.email().max(25
 
 export const emailCodeSchema = z.string().regex(/^\d{6}$/);
 
-export const recoveryCodeSchema = z
-  .string()
-  .trim()
-  .toUpperCase()
-  .transform((s) => s.replace(/[^A-Z0-9]/g, ''))
-  .pipe(z.string().length(10));
-
-export const registerOptionsRequestSchema = z.object({
-  displayName: displayNameSchema,
-});
-
 /** WebAuthn JSON payloads are validated structurally by @simplewebauthn; we only bound size/shape. */
 export const webauthnResponseSchema = z
   .object({
@@ -44,11 +33,9 @@ export const emailRequestSchema = z.object({ email: emailSchema });
 export const emailVerifySchema = z.object({
   email: emailSchema,
   code: emailCodeSchema,
-  /** Required only when no account exists for this e-mail yet (sign-up via e-mail). */
+  /** Required only when no account exists for this e-mail yet (sign-up). */
   displayName: displayNameSchema.optional(),
 });
-
-export const recoveryLoginSchema = z.object({ code: recoveryCodeSchema });
 
 export const passkeyRenameSchema = z.object({ name: z.string().trim().min(1).max(60) });
 
@@ -60,9 +47,10 @@ export interface MeResponse {
   user: {
     id: string;
     displayName: string;
+    /** Always set for accounts created via e-mail sign-up; null only for legacy accounts. */
     email: string | null;
     role: UserRole;
-    recoveryCodesRemaining: number;
+    passkeyCount: number;
   };
   activeProfileId: string | null;
 }
@@ -78,11 +66,11 @@ export interface PasskeyDto {
 
 export interface PublicConfigResponse {
   appName: string;
-  emailLoginEnabled: boolean;
+  registrationOpen: boolean;
 }
 
 export interface AdminSettingsDto {
-  emailLoginEnabled: boolean;
+  registrationOpen: boolean;
 }
 
-export const adminSettingsSchema = z.object({ emailLoginEnabled: z.boolean() });
+export const adminSettingsSchema = z.object({ registrationOpen: z.boolean() });

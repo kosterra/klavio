@@ -19,10 +19,10 @@ export function AdminPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const toggle = async (emailLoginEnabled: boolean) => {
+  const toggle = async (registrationOpen: boolean) => {
     setError(null);
     try {
-      setSettings(await endpoints.updateAdminSettings({ emailLoginEnabled }));
+      setSettings(await endpoints.updateAdminSettings({ registrationOpen }));
       await refresh();
     } catch (err) {
       setError(errorText(err));
@@ -35,9 +35,9 @@ export function AdminPage() {
       {error && <Alert color="red">{error}</Alert>}
       <Card withBorder radius="lg" padding="lg">
         <Switch
-          label={t('admin.emailLogin')}
-          description={t('admin.emailLoginHint')}
-          checked={settings?.emailLoginEnabled ?? false}
+          label={t('admin.registrationOpen')}
+          description={t('admin.registrationOpenHint')}
+          checked={settings?.registrationOpen ?? false}
           disabled={!settings}
           onChange={(e) => void toggle(e.currentTarget.checked)}
         />

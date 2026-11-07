@@ -20,23 +20,13 @@ export const endpoints = {
   me: () => api<MeResponse>('GET', '/auth/me'),
   logout: () => api('POST', '/auth/logout'),
 
-  registerOptions: (displayName: string) =>
-    api<PublicKeyCredentialCreationOptionsJSON>('POST', '/auth/register/options', { displayName }),
-  registerVerify: (response: RegistrationResponseJSON) =>
-    api<{ recoveryCodes: string[] }>('POST', '/auth/register/verify', { response }),
   loginOptions: () => api<PublicKeyCredentialRequestOptionsJSON>('POST', '/auth/login/options'),
   loginVerify: (response: AuthenticationResponseJSON) =>
     api('POST', '/auth/login/verify', { response }),
-  recoveryLogin: (code: string) =>
-    api<{ ok: true; recoveryCodesRemaining: number }>('POST', '/auth/recovery', { code }),
 
   emailRequest: (email: string) => api('POST', '/auth/email/request', { email }),
   emailVerify: (body: { email: string; code: string; displayName?: string }) =>
-    api<
-      | { status: 'ok' }
-      | { status: 'needs-display-name' }
-      | { status: 'created'; recoveryCodes: string[] }
-    >('POST', '/auth/email/verify', body),
+    api<{ status: 'ok' | 'needs-display-name' | 'created' }>('POST', '/auth/email/verify', body),
 
   passkeys: () => api<PasskeyDto[]>('GET', '/passkeys'),
   addPasskeyOptions: () => api<PublicKeyCredentialCreationOptionsJSON>('POST', '/passkeys/options'),
@@ -49,9 +39,6 @@ export const endpoints = {
   accountEmailRequest: (email: string) => api('POST', '/account/email/request', { email }),
   accountEmailVerify: (code: string) =>
     api<{ email: string }>('POST', '/account/email/verify', { code }),
-  accountEmailRemove: () => api('DELETE', '/account/email'),
-  regenerateRecoveryCodes: () =>
-    api<{ recoveryCodes: string[] }>('POST', '/account/recovery-codes'),
   deleteAccount: () => api('DELETE', '/account'),
 
   profiles: () => api<ProfileDto[]>('GET', '/profiles'),

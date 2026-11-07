@@ -11,12 +11,12 @@ const envSchema = z.object({
   APP_ORIGIN: z.url().default('http://localhost:5173'),
   /** WebAuthn relying-party ID: the registrable domain (no scheme, no port). */
   RP_ID: z.string().default('localhost'),
-  /** Server-side secret (>= 32 chars) used to HMAC e-mail codes and recovery codes. */
+  /** Server-side secret (>= 32 chars) used to HMAC e-mail codes. */
   AUTH_SECRET: z.string().min(32),
   COOKIE_SECURE: bool.default(true),
   SESSION_TTL_DAYS: z.coerce.number().int().min(1).max(365).default(60),
-  /** Initial value of the global "e-mail login" switch; admins can change it at runtime. */
-  EMAIL_LOGIN_DEFAULT: bool.default(false),
+  /** Initial value of the global "registration open" switch; admins can change it at runtime. */
+  REGISTRATION_OPEN_DEFAULT: bool.default(true),
   SMTP_HOST: z.string().optional(),
   SMTP_PORT: z.coerce.number().int().default(587),
   SMTP_SECURE: bool.default(false),

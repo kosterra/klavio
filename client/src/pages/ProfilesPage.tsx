@@ -12,7 +12,8 @@ import {
   Title,
   UnstyledButton,
 } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
+import { IconFingerprint, IconPlus } from '@tabler/icons-react';
+import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { MAX_PROFILES_PER_ACCOUNT } from '@klavio/shared';
@@ -27,12 +28,16 @@ import classes from './ProfilesPage.module.css';
 /** "Who's playing today?" — shown after login and when switching profiles. */
 export function ProfilesPage() {
   const { t } = useTranslation();
-  const { profiles, selectProfile, refresh } = useSession();
+  const { me, profiles, selectProfile, refresh } = useSession();
   const navigate = useNavigate();
   const errorText = useErrorText();
   const [creating, setCreating] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [nudgeDismissed, setNudgeDismissed] = useState(false);
+  // Accounts start with e-mail login only; suggest a passkey until one exists.
+  const showPasskeyNudge =
+    !nudgeDismissed && me?.user.passkeyCount === 0 && browserSupportsWebAuthn();
 
   const choose = async (id: string) => {
     setError(null);
@@ -104,6 +109,24 @@ export function ProfilesPage() {
         </Group>
         {profiles.length >= MAX_PROFILES_PER_ACCOUNT && (
           <Text c="dimmed">{t('profiles.limit')}</Text>
+        )}
+        {showPasskeyNudge && (
+          <Alert
+            color="blue"
+            variant="light"
+            icon={<IconFingerprint />}
+            maw={560}
+            withCloseButton
+            closeButtonLabel={t('common.close')}
+            onClose={() => setNudgeDismissed(true)}
+          >
+            <Stack gap="xs" align="flex-start">
+              <Text size="sm">{t('profiles.passkeyNudge')}</Text>
+              <Button size="sm" onClick={() => navigate('/account')}>
+                {t('profiles.passkeyNudgeButton')}
+              </Button>
+            </Stack>
+          </Alert>
         )}
         <Button variant="subtle" onClick={() => navigate('/account')}>
           {t('nav.account')}

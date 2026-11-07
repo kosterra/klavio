@@ -4,8 +4,9 @@ import { AppSettings } from '../models/index.js';
 export async function getSettings(config: AppConfig) {
   const doc = await AppSettings.findOneAndUpdate(
     { _id: 'global' },
-    { $setOnInsert: { emailLoginEnabled: config.EMAIL_LOGIN_DEFAULT } },
+    { $setOnInsert: { registrationOpen: config.REGISTRATION_OPEN_DEFAULT } },
     { upsert: true, returnDocument: 'after', lean: true },
   );
-  return { emailLoginEnabled: doc!.emailLoginEnabled };
+  // Documents from before the switch was renamed have no `registrationOpen` yet.
+  return { registrationOpen: doc!.registrationOpen ?? config.REGISTRATION_OPEN_DEFAULT };
 }

@@ -1,73 +1,19 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
-import {
-  registerOptionsRequestSchema,
-  recoveryLoginSchema,
-  webauthnVerifyRequestSchema,
-  type MeResponse,
-} from '@klavio/shared';
+import { webauthnVerifyRequestSchema, type MeResponse } from '@klavio/shared';
 import type { AppConfig } from '../config.js';
-import { Passkey, User } from '../models/index.js';
+import { Passkey } from '../models/index.js';
 import { consumeChallenge, storeChallenge } from '../lib/challenge.js';
-import { randomToken } from '../lib/crypto.js';
 import { badRequest } from '../lib/errors.js';
-import { generateRecoveryCodes, hashRecoveryCode } from '../lib/recoveryCodes.js';
 import { createSession, destroySession } from '../lib/session.js';
 import { webauthn } from '../lib/webauthn.js';
 
 export const authRateLimit = { max: 20, timeWindow: '1 minute' };
 
+/**
+ * Passkey login and session endpoints. Accounts are created via e-mail code
+ * (see emailAuth.ts); passkeys are added afterwards under /api/passkeys.
+ */
 const authRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, { config }) => {
-  // ---------------------------------------------------------------- register
-  app.post(
-    '/register/options',
-    { schema: { body: registerOptionsRequestSchema }, config: { rateLimit: authRateLimit } },
-    async (req, reply) => {
-      const webauthnUserId = randomToken(32);
-      const options = await webauthn.registrationOptions(config, {
-        webauthnUserId,
-        displayName: req.body.displayName,
-      });
-      await storeChallenge(config, reply, {
-        challenge: options.challenge,
-        purpose: 'register',
-        webauthnUserId,
-        displayName: req.body.displayName,
-      });
-      return options;
-    },
-  );
-
-  app.post(
-    '/register/verify',
-    { schema: { body: webauthnVerifyRequestSchema }, config: { rateLimit: authRateLimit } },
-    async (req, reply) => {
-      const ch = await consumeChallenge(config, req, reply, 'register');
-      const cred = await webauthn.verifyRegistration(config, req.body.response, ch.challenge);
-      if (await Passkey.exists({ credentialId: cred.credentialId })) {
-        throw badRequest('PASSKEY_ALREADY_REGISTERED');
-      }
-      const recovery = generateRecoveryCodes(config.AUTH_SECRET);
-      const user = await User.create({
-        displayName: ch.displayName!,
-        webauthnUserId: ch.webauthnUserId!,
-        recoveryCodeHashes: recovery.hashes,
-      });
-      await Passkey.create({
-        userId: user._id,
-        credentialId: cred.credentialId,
-        publicKey: cred.publicKey,
-        counter: cred.counter,
-        transports: cred.transports,
-        deviceType: cred.deviceType,
-        backedUp: cred.backedUp,
-        name: cred.providerName ?? 'Passkey',
-        lastUsedAt: new Date(),
-      });
-      await createSession(config, req, reply, user._id);
-      return { recoveryCodes: recovery.display };
-    },
-  );
-
   // ------------------------------------------------------------------- login
   app.post('/login/options', { config: { rateLimit: authRateLimit } }, async (_req, reply) => {
     const options = await webauthn.authenticationOptions(config);
@@ -97,27 +43,6 @@ const authRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, { c
     },
   );
 
-  // ---------------------------------------------------------------- recovery
-  app.post(
-    '/recovery',
-    {
-      schema: { body: recoveryLoginSchema },
-      config: { rateLimit: { max: 5, timeWindow: '1 minute' } },
-    },
-    async (req, reply) => {
-      const hash = hashRecoveryCode(config.AUTH_SECRET, req.body.code);
-      // atomically consume the code so it can only be used once
-      const user = await User.findOneAndUpdate(
-        { recoveryCodeHashes: hash },
-        { $pull: { recoveryCodeHashes: hash } },
-        { returnDocument: 'after' },
-      );
-      if (!user) throw badRequest('RECOVERY_CODE_INVALID');
-      await createSession(config, req, reply, user._id);
-      return { ok: true, recoveryCodesRemaining: user.recoveryCodeHashes.length };
-    },
-  );
-
   // ------------------------------------------------------------------ session
   app.post('/logout', async (req, reply) => {
     await destroySession(req, reply, config);
@@ -132,7 +57,7 @@ const authRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, { c
         displayName: user.displayName,
         email: user.email ?? null,
         role: user.role as MeResponse['user']['role'],
-        recoveryCodesRemaining: user.recoveryCodeHashes.length,
+        passkeyCount: await Passkey.countDocuments({ userId: user._id }),
       },
       activeProfileId: activeProfileId?.toString() ?? null,
     };

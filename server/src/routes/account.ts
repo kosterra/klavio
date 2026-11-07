@@ -5,7 +5,6 @@ import { EmailCode, Passkey, Profile, Session, User } from '../models/index.js';
 import { HttpError, badRequest } from '../lib/errors.js';
 import { checkEmailCode, issueEmailCode } from '../lib/emailCodes.js';
 import { verifyEmailMail, type Mailer } from '../lib/mailer.js';
-import { generateRecoveryCodes } from '../lib/recoveryCodes.js';
 import { destroySession } from '../lib/session.js';
 
 const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }> = async (
@@ -14,7 +13,7 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
 ) => {
   app.addHook('preHandler', app.requireAuth);
 
-  // ------------------------------------------------------- optional e-mail
+  // -------------------------------------------- change the e-mail address
   app.post(
     '/email/request',
     {
@@ -65,20 +64,6 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
       return { email: pending.email };
     },
   );
-
-  app.delete('/email', async (req, reply) => {
-    const userId = req.auth!.user._id;
-    if ((await Passkey.countDocuments({ userId })) === 0) throw badRequest('LAST_LOGIN_METHOD');
-    await User.updateOne({ _id: userId }, { email: null });
-    return reply.code(204).send();
-  });
-
-  // --------------------------------------------------------- recovery codes
-  app.post('/recovery-codes', async (req) => {
-    const recovery = generateRecoveryCodes(config.AUTH_SECRET);
-    await User.updateOne({ _id: req.auth!.user._id }, { recoveryCodeHashes: recovery.hashes });
-    return { recoveryCodes: recovery.display };
-  });
 
   // ------------------------------------------------- delete account entirely
   app.delete('/', async (req, reply) => {

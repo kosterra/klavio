@@ -42,7 +42,7 @@ export function loginCodeMail(to: string, code: string): Mail {
     text: [
       `Hallo!`,
       ``,
-      `Dein Anmeldecode für ${APP_CONFIG.name}: ${code}`,
+      `Dein Code für die Anmeldung bei ${APP_CONFIG.name}: ${code}`,
       ``,
       `Der Code ist 10 Minuten gültig. Wenn du ihn nicht angefordert hast, kannst du diese E-Mail ignorieren.`,
     ].join('\n'),

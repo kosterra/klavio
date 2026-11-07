@@ -6,7 +6,7 @@ import type { Mail, Mailer } from '../src/lib/mailer.js';
 
 export const ORIGIN = 'https://klavio.test';
 
-export async function setupTestApp() {
+export async function setupTestApp({ rateLimit = false }: { rateLimit?: boolean } = {}) {
   const mongo = await MongoMemoryServer.create();
   await mongoose.connect(mongo.getUri());
   await mongoose.connection.syncIndexes();
@@ -16,11 +16,11 @@ export async function setupTestApp() {
     AUTH_SECRET: 'test-secret-test-secret-test-secret-123',
     APP_ORIGIN: ORIGIN,
     RP_ID: 'klavio.test',
-    EMAIL_LOGIN_DEFAULT: 'false',
+    REGISTRATION_OPEN_DEFAULT: 'true',
   });
   const outbox: Mail[] = [];
   const mailer: Mailer = { send: async (m) => void outbox.push(m) };
-  const app = await buildApp({ config, mailer, rateLimit: false });
+  const app = await buildApp({ config, mailer, rateLimit });
   await app.ready();
 
   return {

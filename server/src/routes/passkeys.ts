@@ -2,10 +2,9 @@ import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 import { passkeyRenameSchema, webauthnVerifyRequestSchema, type PasskeyDto } from '@klavio/shared';
 import type { AppConfig } from '../config.js';
-import { Passkey, User } from '../models/index.js';
+import { Passkey } from '../models/index.js';
 import { consumeChallenge, storeChallenge } from '../lib/challenge.js';
 import { badRequest, notFound } from '../lib/errors.js';
-import { getSettings } from '../lib/settings.js';
 import { webauthn } from '../lib/webauthn.js';
 
 const idParams = z.object({ id: z.string().regex(/^[a-f0-9]{24}$/) });
@@ -90,14 +89,7 @@ const passkeyRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
     const userId = req.auth!.user._id;
     const passkey = await Passkey.findOne({ _id: req.params.id, userId });
     if (!passkey) throw notFound();
-    // Never let an account lock itself out: the last passkey may only go when
-    // e-mail login is available as an alternative.
-    const count = await Passkey.countDocuments({ userId });
-    if (count <= 1) {
-      const user = await User.findById(userId).lean();
-      const emailLogin = (await getSettings(config)).emailLoginEnabled;
-      if (!user?.email || !emailLogin) throw badRequest('LAST_LOGIN_METHOD');
-    }
+    // Every account keeps its verified e-mail as login, so even the last passkey may go.
     await passkey.deleteOne();
     return reply.code(204).send();
   });

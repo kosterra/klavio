@@ -6,36 +6,42 @@ import { HttpError } from '../lib/errors.js';
 import { issueEmailCode, checkEmailCode } from '../lib/emailCodes.js';
 import { loginCodeMail, type Mailer } from '../lib/mailer.js';
 import { randomToken } from '../lib/crypto.js';
-import { generateRecoveryCodes } from '../lib/recoveryCodes.js';
 import { createSession } from '../lib/session.js';
 import { getSettings } from '../lib/settings.js';
+import { emailRateLimit } from '../lib/emailRateLimit.js';
 
 /**
- * Passwordless e-mail login with a 6-digit one-time code.
+ * Sign-up and passwordless login with a 6-digit one-time e-mail code.
+ * Every account is created here; passkeys are added later in the account settings.
  * A code (not a magic link) is used on purpose: on iOS a link opens Safari,
  * not the installed PWA, so the session cookie would land in the wrong place.
- * The whole feature can be switched off globally by admins.
+ * Admins can close registration; existing accounts can always log in.
  */
 const emailAuthRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }> = async (
   app,
   { config, mailer },
 ) => {
-  app.addHook('preHandler', async () => {
-    if (!(await getSettings(config)).emailLoginEnabled) {
-      throw new HttpError(403, 'EMAIL_LOGIN_DISABLED');
-    }
-  });
+  const registrationOpen = async () => (await getSettings(config)).registrationOpen;
+
+  const requestLimit = emailRateLimit(app, 'email-request', { perAddress: 5, perIp: 30 });
+  const verifyLimit = emailRateLimit(app, 'email-verify', { perAddress: 10, perIp: 60 });
 
   app.post(
     '/request',
     {
       schema: { body: emailRequestSchema },
-      config: { rateLimit: { max: 5, timeWindow: '10 minutes' } },
+      config: requestLimit.routeConfig,
     },
     async (req, reply) => {
-      const code = await issueEmailCode(config, { email: req.body.email, purpose: 'login' });
+      await requestLimit.checkIp(req);
+      const { email } = req.body;
       // Always 204 — never reveal whether an account exists or a mail was throttled.
-      if (code) await mailer.send(loginCodeMail(req.body.email, code));
+      // With registration closed, unknown addresses silently get no mail.
+      if (!(await User.exists({ email })) && !(await registrationOpen())) {
+        return reply.code(204).send();
+      }
+      const code = await issueEmailCode(config, { email, purpose: 'login' });
+      if (code) await mailer.send(loginCodeMail(email, code));
       return reply.code(204).send();
     },
   );
@@ -44,16 +50,20 @@ const emailAuthRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer
     '/verify',
     {
       schema: { body: emailVerifySchema },
-      config: { rateLimit: { max: 10, timeWindow: '10 minutes' } },
+      config: verifyLimit.routeConfig,
     },
     async (req, reply) => {
+      await verifyLimit.checkIp(req);
       const { email, code, displayName } = req.body;
       const existing = await User.findOne({ email });
 
-      if (!existing && !displayName) {
-        // Code is checked but not consumed: the client asks for a name and retries.
+      if (!existing) {
+        // Check the code before anything else so the response never reveals
+        // whether an address has an account. Not consumed yet: the client may
+        // still have to ask for a name and retry.
         await checkEmailCode(config, { email, purpose: 'login', code, consume: false });
-        return { status: 'needs-display-name' as const };
+        if (!(await registrationOpen())) throw new HttpError(403, 'REGISTRATION_CLOSED');
+        if (!displayName) return { status: 'needs-display-name' as const };
       }
 
       await checkEmailCode(config, { email, purpose: 'login', code, consume: true });
@@ -63,15 +73,15 @@ const emailAuthRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer
         return { status: 'ok' as const };
       }
 
-      const recovery = generateRecoveryCodes(config.AUTH_SECRET);
-      const user = await User.create({
-        displayName,
-        email,
-        webauthnUserId: randomToken(32),
-        recoveryCodeHashes: recovery.hashes,
-      });
+      let user;
+      try {
+        user = await User.create({ displayName, email, webauthnUserId: randomToken(32) });
+      } catch {
+        // Lost a race against a parallel sign-up with the same address.
+        throw new HttpError(409, 'EMAIL_IN_USE');
+      }
       await createSession(config, req, reply, user._id);
-      return { status: 'created' as const, recoveryCodes: recovery.display };
+      return { status: 'created' as const };
     },
   );
 };

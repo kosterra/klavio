@@ -16,17 +16,12 @@
   "welcome": {
     "title": "Willkommen bei {{appName}}!",
     "subtitle": "Lerne Klavier spielen – an deinem echten Klavier. Ich höre dir zu und helfe dir dabei.",
-    "login": "Anmelden",
-    "loginHint": "Mit Fingerabdruck, Gesicht oder Geräte-PIN – ganz ohne Passwort.",
-    "register": "Neues Konto",
-    "registerTitle": "Neues Konto erstellen",
-    "displayName": "Wie heisst du?",
-    "displayNameHint": "Dein Name erscheint nur in der App. Bei einem Familienkonto zum Beispiel «Familie Muster».",
-    "createPasskey": "Passkey erstellen",
-    "whatIsPasskey": "Ein Passkey ersetzt das Passwort. Er wird sicher auf deinem Gerät oder in deinem Passwort-Manager gespeichert.",
+    "passkeyLogin": "Mit Passkey anmelden",
+    "passkeyHint": "Mit Fingerabdruck, Gesicht oder Geräte-PIN – ganz ohne Passwort.",
     "emailLogin": "Mit E-Mail-Code anmelden",
-    "recovery": "Wiederherstellungscode verwenden",
-    "noPasskeySupport": "Dieser Browser unterstützt keine Passkeys. Bitte verwende einen aktuellen Browser."
+    "newHere": "Neu hier?",
+    "register": "Konto erstellen",
+    "registrationClosed": "Neue Konten können zurzeit nicht erstellt werden."
   },
   "email": {
     "title": "Anmelden mit E-Mail",
@@ -36,23 +31,12 @@
     "code": "Code aus der E-Mail",
     "verify": "Anmelden",
     "needsName": "Für diese Adresse gibt es noch kein Konto. Wie heisst du?",
-    "createAccount": "Konto erstellen"
-  },
-  "recoveryLogin": {
-    "title": "Wiederherstellungscode",
-    "hint": "Gib einen deiner Wiederherstellungscodes ein. Jeder Code funktioniert nur einmal.",
-    "code": "Code (z. B. ABCDE-FGH23)",
-    "submit": "Anmelden",
-    "afterLogin": "Du bist angemeldet. Füge jetzt unter «Konto» einen neuen Passkey hinzu."
-  },
-  "recoveryCodes": {
-    "title": "Deine Wiederherstellungscodes",
-    "intro": "Falls du einmal keinen Zugriff auf deinen Passkey hast, kommst du mit einem dieser Codes wieder in dein Konto. Jeder Code funktioniert nur einmal.",
-    "warning": "Drucke die Codes aus oder bewahre sie sicher auf. Sie werden nur jetzt angezeigt.",
-    "print": "Drucken",
-    "copy": "Kopieren",
-    "copied": "Kopiert",
-    "confirm": "Ich habe die Codes gesichert"
+    "createAccount": "Konto erstellen",
+    "registerTitle": "Konto erstellen",
+    "registerIntro": "Gib deine E-Mail-Adresse ein. Wir schicken dir einen Code, mit dem du dein Konto bestätigst. Einen Passkey kannst du danach unter «Konto» einrichten.",
+    "loginIntro": "Wir schicken dir einen 6-stelligen Code an deine E-Mail-Adresse.",
+    "nameHint": "Dein Name erscheint nur in der App. Bei einem Familienkonto zum Beispiel «Familie Muster».",
+    "registrationClosed": "Neue Konten können zurzeit nicht erstellt werden. Bestehende Konten können sich weiterhin anmelden."
   },
   "profiles": {
     "title": "Wer spielt heute?",
@@ -70,7 +54,9 @@
     "switch": "Profil wechseln",
     "edit": "Profil bearbeiten",
     "deleteConfirm": "Profil «{{name}}» mit allem Fortschritt löschen?",
-    "limit": "Maximal 8 Profile pro Konto."
+    "limit": "Maximal 8 Profile pro Konto.",
+    "passkeyNudge": "Tipp: Richte einen Passkey ein, dann meldest du dich beim nächsten Mal per Fingerabdruck oder Gesicht an – ohne E-Mail-Code.",
+    "passkeyNudgeButton": "Passkey einrichten"
   },
   "avatars": {
     "fox": "Fuchs",
@@ -105,51 +91,46 @@
     "title": "Konto",
     "userId": "Konto-ID",
     "passkeys": "Passkeys",
-    "passkeysHint": "Mit jedem Passkey kannst du dich anmelden. Füge einen zweiten hinzu, z. B. auf dem Handy, damit du nie ausgesperrt wirst.",
+    "passkeysHint": "Mit einem Passkey meldest du dich per Fingerabdruck, Gesicht oder Geräte-PIN an – schneller als mit einem E-Mail-Code. Richte ihn auf jedem Gerät ein, mit dem du übst.",
     "addPasskey": "Passkey hinzufügen",
     "rename": "Umbenennen",
     "synced": "synchronisiert",
     "lastUsed": "zuletzt verwendet {{date}}",
     "neverUsed": "noch nie verwendet",
     "deleteConfirm": "Passkey «{{name}}» löschen?",
-    "email": "E-Mail-Adresse (optional)",
-    "emailHint": "Nur nötig, wenn du dich auch mit einem E-Mail-Code anmelden möchtest.",
-    "emailNone": "Keine E-Mail-Adresse hinterlegt.",
-    "emailAdd": "E-Mail hinzufügen",
-    "emailRemove": "E-Mail entfernen",
+    "email": "E-Mail-Adresse",
+    "emailHint": "Damit meldest du dich per Code an, wenn kein Passkey zur Hand ist.",
     "emailVerify": "Bestätigen",
-    "recoveryCodes": "Wiederherstellungscodes",
-    "recoveryRemaining": "Noch {{count}} unbenutzte Codes.",
-    "recoveryRegenerate": "Neue Codes erzeugen",
-    "recoveryRegenerateConfirm": "Neue Codes erzeugen? Die alten Codes werden ungültig.",
     "danger": "Konto löschen",
     "dangerHint": "Löscht dein Konto mit allen Profilen und allem Fortschritt. Das kann nicht rückgängig gemacht werden.",
     "deleteAccount": "Konto endgültig löschen",
-    "deleteAccountConfirm": "Wirklich alles löschen?"
+    "deleteAccountConfirm": "Wirklich alles löschen?",
+    "noPasskeys": "Noch kein Passkey eingerichtet. Bis dahin meldest du dich mit einem E-Mail-Code an.",
+    "emailChange": "Ändern",
+    "emailNew": "Neue E-Mail-Adresse",
+    "emailSendCode": "Code senden",
+    "emailChanged": "E-Mail-Adresse geändert."
   },
   "admin": {
     "title": "Verwaltung",
-    "emailLogin": "Anmeldung per E-Mail-Code erlauben",
-    "emailLoginHint": "Wenn ausgeschaltet, ist nur die Anmeldung mit Passkey oder Wiederherstellungscode möglich."
+    "registrationOpen": "Registrierung neuer Konten erlauben",
+    "registrationOpenHint": "Wenn ausgeschaltet, können keine neuen Konten erstellt werden. Bestehende Konten können sich weiterhin mit Passkey oder E-Mail-Code anmelden."
   },
   "errors": {
-    "EMAIL_LOGIN_DISABLED": "Die Anmeldung per E-Mail ist zurzeit ausgeschaltet.",
     "EMAIL_CODE_INVALID": "Der Code stimmt nicht oder ist abgelaufen.",
     "EMAIL_IN_USE": "Diese E-Mail-Adresse wird bereits verwendet.",
     "TOO_MANY_CODES": "Zu viele Codes angefordert. Bitte warte ein paar Minuten.",
-    "RECOVERY_CODE_INVALID": "Dieser Wiederherstellungscode ist ungültig oder wurde schon verwendet.",
     "PASSKEY_UNKNOWN": "Dieser Passkey ist uns nicht bekannt. Vielleicht wurde er gelöscht?",
     "PASSKEY_ALREADY_REGISTERED": "Dieser Passkey ist bereits registriert.",
-    "LAST_LOGIN_METHOD": "Das ist deine letzte Anmeldemöglichkeit – sie kann nicht entfernt werden.",
     "PROFILE_LIMIT": "Maximal 8 Profile pro Konto.",
     "RATE_LIMITED": "Zu viele Versuche. Bitte warte einen Moment.",
     "WEBAUTHN_CANCELLED": "Der Vorgang wurde abgebrochen.",
-    "VALIDATION": "Bitte überprüfe deine Eingaben."
+    "VALIDATION": "Bitte überprüfe deine Eingaben.",
+    "REGISTRATION_CLOSED": "Neue Konten können zurzeit nicht erstellt werden."
   },
   "validation": {
     "name": "Bitte gib einen Namen ein (höchstens 40 Zeichen).",
     "email": "Bitte gib eine gültige E-Mail-Adresse ein.",
-    "code": "Der Code hat 6 Ziffern.",
-    "recovery": "Ein Code hat 10 Zeichen, z. B. ABCDE-FGH23."
+    "code": "Der Code hat 6 Ziffern."
   }
 }
