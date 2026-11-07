@@ -4,7 +4,6 @@ import { useElementSize } from '@mantine/hooks';
 import {
   IconChevronDown,
   IconFileMusic,
-  IconHandFinger,
   IconLock,
   IconMetronome,
   IconMusic,
@@ -24,6 +23,8 @@ import {
 } from '@klavio/shared';
 import { Figure } from '../components/Figure';
 import { useLocalized } from './useLocalized';
+import { Sticker } from './Stickers';
+import { STICKER_KINDS, type StickerKind } from './stickerKinds';
 import classes from './LearningPath.module.css';
 
 /** One colour per chapter (Mantine palette names), repeating. */
@@ -71,9 +72,6 @@ function layout(
     return { x: columnX(col, cols, width, margin), y: top + row * rowHeight, row };
   });
 }
-
-/** Big, faint emblem per chapter for the empty spots of its last row. */
-const EMBLEMS = [IconPiano, IconHandFinger, IconFileMusic, IconMusic, IconMetronome];
 
 /**
  * Road through the stones: along each row, and at its end straight down to
@@ -350,7 +348,48 @@ export function LearningPath({
         } as React.CSSProperties;
         const rows = points.length ? points[points.length - 1]!.row + 1 : 0;
         const emptyCells = points.length ? rows * sec.cols - points.length : 0;
-        const Emblem = EMBLEMS[ci % EMBLEMS.length]!;
+        // decoration stickers: free spots only, chosen deterministically per chapter
+        const kind = (k: number) => STICKER_KINDS[(ci * 2 + k) % STICKER_KINDS.length]!;
+        const stickers: { kind: StickerKind; x: number; y: number; size: number; tilt: number }[] =
+          [];
+        if (!narrow) {
+          // beside the flag, right of the signpost text
+          stickers.push(
+            { kind: kind(0), x: width - 70, y: markerY + 4, size: 44, tilt: -8 },
+            { kind: kind(3), x: width - 150, y: markerY - 14, size: 30, tilt: 10 },
+          );
+        }
+        if (points.length) {
+          // empty spots in the last row
+          for (let k = 0; k < emptyCells; k++) {
+            const lastRow = rows - 1;
+            const c = sec.cols - 1 - k;
+            const col = lastRow % 2 === 0 ? c : sec.cols - 1 - c;
+            stickers.push({
+              kind: kind(k + 1),
+              x: columnX(col, sec.cols, width, sec.markerX),
+              y: points[0]!.y + lastRow * rowHeight,
+              size: Math.min(56, cell * 0.45),
+              tilt: k % 2 ? 12 : -10,
+            });
+          }
+          // small ones in the gaps between rows (between titles and the next row)
+          for (let r = 0; r < rows - 1; r++) {
+            for (let j = 0; j < sec.cols - 1; j++) {
+              if ((j + r + ci) % 3 !== 1) continue;
+              stickers.push({
+                kind: kind(j + r + 2),
+                x:
+                  (columnX(j, sec.cols, width, sec.markerX) +
+                    columnX(j + 1, sec.cols, width, sec.markerX)) /
+                  2,
+                y: points[0]!.y + r * rowHeight + rowHeight * 0.6,
+                size: 28,
+                tilt: (j + r) % 2 ? 14 : -12,
+              });
+            }
+          }
+        }
         return (
           <section
             key={chapter.id}
@@ -451,27 +490,22 @@ export function LearningPath({
               </Box>
             </UnstyledButton>
 
+            {stickers.map((st, k) => (
+              <Sticker
+                key={k}
+                kind={st.kind}
+                size={st.size}
+                delay={(k * 0.7) % 3}
+                style={{
+                  left: st.x - st.size / 2,
+                  top: st.y - st.size / 2,
+                  transform: `rotate(${st.tilt}deg)`,
+                }}
+              />
+            ))}
+
             {sec.open && (
               <>
-                {Array.from({ length: emptyCells }, (_, k) => {
-                  const lastRow = rows - 1;
-                  const c = sec.cols - 1 - k;
-                  const col = lastRow % 2 === 0 ? c : sec.cols - 1 - c;
-                  return (
-                    <Emblem
-                      key={k}
-                      aria-hidden
-                      className={classes.emblem}
-                      size={Math.min(64, cell * 0.5)}
-                      style={{
-                        left: columnX(col, sec.cols, width, sec.markerX),
-                        top: points[0]!.y + lastRow * rowHeight,
-                        color: `var(--mantine-color-${color}-3)`,
-                        transform: `translate(-50%, -50%) rotate(${k % 2 ? 12 : -10}deg)`,
-                      }}
-                    />
-                  );
-                })}
                 <ol className={classes.list} id={`chapter-board-${chapter.id}`}>
                   {sec.lessons.map(({ lesson, number, point: p }) => {
                     const stars = progress[lesson.id]?.bestStars ?? 0;
