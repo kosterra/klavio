@@ -309,6 +309,22 @@
     "stopListening": "Stopp",
     "songStaffLabel": "Noten des Lieds, Zeile {{line}} von {{lines}}",
     "songProgress": "Ton {{n}} von {{total}}",
-    "nextNote": "Nächster Ton: {{note}}"
+    "nextNote": "Nächster Ton: {{note}}",
+    "rhythm": {
+      "ready": "Hör zu, dann spiel mit",
+      "countIn": "Zähl mit: 1, 2, 3, 4 …",
+      "now": "Jetzt du!",
+      "perfect": "Super im Takt!",
+      "almost": "Fast! Nochmals?",
+      "start": "Los",
+      "staffLabel": "Rhythmus {{n}} von {{total}}",
+      "hits": "{{hits}} von {{total}} im Takt",
+      "ok": "genau",
+      "early": "zu früh",
+      "late": "zu spät",
+      "missed": "gefehlt",
+      "extra": "{{count}} Ton zu viel",
+      "extra_other": "{{count}} Töne zu viel"
+    }
   }
 }

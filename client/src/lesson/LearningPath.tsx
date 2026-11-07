@@ -2,6 +2,7 @@ import { Group, Stack, Text, Title } from '@mantine/core';
 import {
   IconFileMusic,
   IconLock,
+  IconMetronome,
   IconMusic,
   IconPiano,
   IconPlayerPlay,
@@ -21,6 +22,7 @@ function KindIcon({ lesson, size }: { lesson: Lesson; size: number }) {
   if (lesson.kind === 'song') return <IconMusic size={size} aria-hidden />;
   if (lesson.kind === 'play') return <IconPlayerPlay size={size} aria-hidden />;
   if (lesson.kind === 'read') return <IconFileMusic size={size} aria-hidden />;
+  if (lesson.kind === 'rhythm') return <IconMetronome size={size} aria-hidden />;
   return <IconPiano size={size} aria-hidden />;
 }
 

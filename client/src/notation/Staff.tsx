@@ -4,7 +4,7 @@ import { loadVexFlow, midiToVexKey } from './vexflow';
 
 export interface StaffNote {
   midi: number;
-  /** VexFlow duration: 'w' whole, 'h' half, 'q' quarter, '8' eighth (+ 'd' dotted). */
+  /** VexFlow duration: 'w' whole, 'h' half, 'q' quarter, '8' eighth (+ 'd' dotted, 'r' rest). */
   duration?: string;
   /** Highlight: current note, already played, or wrong. */
   state?: 'current' | 'done' | 'wrong';
@@ -85,11 +85,13 @@ export function Staff({ clef, notes, bars: barsProp, time, height = 160, label }
         x += w;
 
         const staveNotes = bar.map((n) => {
-          const vexKey = midiToVexKey(n.midi);
           const duration = n.duration ?? 'w';
+          const rest = duration.endsWith('r');
+          // rests sit in the middle of the staff, whatever the pitch
+          const vexKey = rest ? (clef === 'bass' ? 'd/3' : 'b/4') : midiToVexKey(n.midi);
           const note = new VF.StaveNote({ keys: [vexKey], duration, clef });
-          if (vexKey.includes('#')) note.addModifier(new VF.Accidental('#'), 0);
-          if (duration.includes('d')) VF.Dot.buildAndAttach([note], { all: true });
+          if (!rest && vexKey.includes('#')) note.addModifier(new VF.Accidental('#'), 0);
+          if (/^\w+d$/.test(duration) && !rest) VF.Dot.buildAndAttach([note], { all: true });
           if (n.label) {
             note.addModifier(
               new VF.Annotation(n.label)

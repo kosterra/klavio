@@ -1,6 +1,6 @@
 import { noteNameToMidi } from '../music/notes.ts';
 import type { Chapter, Lesson } from './types.ts';
-import { song } from './song.ts';
+import { rhythm, rhythmOnsets, song } from './song.ts';
 
 /** "C4 D4 E4" → [60, 62, 64]; German "H" is accepted. */
 const seq = (s: string) => s.trim().split(/\s+/).map(noteNameToMidi);
@@ -316,6 +316,41 @@ CURRICULUM.push({
   ],
 });
 
+CURRICULUM.push({
+  id: 'rhythm',
+  title: { 'de-CH': 'Im Takt', en: 'In time' },
+  lessons: [
+    {
+      id: 'rhythm-quarters',
+      kind: 'rhythm',
+      title: { 'de-CH': 'Viertel und Halbe', en: 'Quarters and halves' },
+      intro: {
+        'de-CH':
+          'Jetzt geht es um den Rhythmus: Welche Taste du drückst, ist egal. Ich zähle vor – «1, 2, 3, 4» – dann spielst du mit. Eine Viertelnote dauert einen Schlag, eine halbe Note zwei.',
+        en: 'Now it’s all about rhythm: it doesn’t matter which key you press. I count in – “1, 2, 3, 4” – then you play along. A quarter note lasts one beat, a half note two.',
+      },
+      xp: 20,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [rhythm('q q q q | h h | q q h | h q q | q q q q', { tempo: 76 })],
+    },
+    {
+      id: 'rhythm-rests',
+      kind: 'rhythm',
+      title: { 'de-CH': 'Ganze Noten und Pausen', en: 'Whole notes and rests' },
+      intro: {
+        'de-CH':
+          'Eine ganze Note dauert vier Schläge. Bei einer Pause spielst du nichts – aber du zählst leise weiter.',
+        en: 'A whole note lasts four beats. At a rest you play nothing – but keep counting quietly.',
+      },
+      xp: 20,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [rhythm('w | q q qr q | h hr | q qr q qr | qr q q q', { tempo: 76 })],
+    },
+  ],
+});
+
 /** All lessons in learning order. */
 export const LESSONS: Lesson[] = CURRICULUM.flatMap((c) => c.lessons);
 
@@ -336,7 +371,9 @@ export function lessonTargetCount(lesson: Lesson): number {
         ? e.sequences.reduce((m, s) => m + s.length, 0)
         : e.type === 'song'
           ? e.bars.reduce((m, b) => m + b.length, 0)
-          : e.rounds),
+          : e.type === 'rhythm'
+            ? e.patterns.reduce((m, p) => m + rhythmOnsets(p).length, 0)
+            : e.rounds),
     0,
   );
 }

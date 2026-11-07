@@ -309,6 +309,22 @@
     "stopListening": "Stop",
     "songStaffLabel": "Notes of the song, line {{line}} of {{lines}}",
     "songProgress": "Note {{n}} of {{total}}",
-    "nextNote": "Next note: {{note}}"
+    "nextNote": "Next note: {{note}}",
+    "rhythm": {
+      "ready": "Listen, then play along",
+      "countIn": "Count along: 1, 2, 3, 4 …",
+      "now": "Your turn!",
+      "perfect": "Perfectly in time!",
+      "almost": "Almost! Again?",
+      "start": "Go",
+      "staffLabel": "Rhythm {{n}} of {{total}}",
+      "hits": "{{hits}} of {{total}} in time",
+      "ok": "on time",
+      "early": "too early",
+      "late": "too late",
+      "missed": "missed",
+      "extra": "{{count}} extra note",
+      "extra_other": "{{count}} extra notes"
+    }
   }
 }

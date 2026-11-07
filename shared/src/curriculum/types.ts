@@ -51,7 +51,26 @@ export interface SongExercise {
   bars: SongNote[][];
 }
 
-export type Exercise = FindKeyExercise | PlayAlongExercise | ReadNoteExercise | SongExercise;
+/** Rhythm values: note values plus rests ("qr" = quarter rest, …). */
+export type RhythmValue = NoteValue | 'qr' | 'hr' | 'wr';
+
+/**
+ * "Rhythmus": play one bar in time with a metronome (after a count-in).
+ * Any key counts — only the timing matters.
+ */
+export interface RhythmExercise {
+  type: 'rhythm';
+  time: string;
+  /** Quarter notes per minute. */
+  tempo: number;
+  /** Pitch used to draw the notes (all on one line). */
+  midi: number;
+  /** One bar per pattern. */
+  patterns: RhythmValue[][];
+}
+
+export type Exercise =
+  FindKeyExercise | PlayAlongExercise | ReadNoteExercise | SongExercise | RhythmExercise;
 
 export interface Lesson {
   id: string;
@@ -65,7 +84,7 @@ export interface Lesson {
   /** Note names on the keys (beginners) or not (when finding the key is the point). */
   keyLabels: 'all' | 'c' | 'none';
   /** Song lessons are drawn differently on the learning path. */
-  kind: 'keys' | 'play' | 'read' | 'song';
+  kind: 'keys' | 'play' | 'read' | 'song' | 'rhythm';
   exercises: Exercise[];
 }
 

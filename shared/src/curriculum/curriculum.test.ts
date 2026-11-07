@@ -34,7 +34,9 @@ describe('curriculum data', () => {
             ? e.sequences.flat()
             : e.type === 'song'
               ? e.bars.flat().map((n) => n.midi)
-              : e.notes;
+              : e.type === 'rhythm'
+                ? [e.midi]
+                : e.notes;
         for (const n of notes) {
           if (e.type === 'find-key' && e.anyOctave) {
             // some octave of the pitch class must be visible
@@ -83,6 +85,18 @@ describe('song notation', () => {
     expect(() => parseSong('C4/q D4/q', '4/4')).toThrow(/Bar 1 has 2 beats/);
     expect(() => parseSong('C4/x D4/q', '2/4')).toThrow(/Unknown note value/);
     expect(parseSong('C4/q D4/q | E4/h', '2/4')).toHaveLength(2);
+  });
+
+  it('parses rhythms with rests and finds the onsets', async () => {
+    const { rhythm, rhythmOnsets } = await import('./song.ts');
+    const r = rhythm('q q qr q | h hr');
+    expect(r.patterns).toEqual([
+      ['q', 'q', 'qr', 'q'],
+      ['h', 'hr'],
+    ]);
+    expect(rhythmOnsets(r.patterns[0]!)).toEqual([0, 1, 3]);
+    expect(rhythmOnsets(['qd', '8', 'h'])).toEqual([0, 1.5, 2]);
+    expect(() => rhythm('q q q')).toThrow(/3 beats/);
   });
 });
 
