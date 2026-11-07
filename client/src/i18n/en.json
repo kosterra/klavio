@@ -78,14 +78,16 @@
     "comingSoon": "Lessons are in the works.",
     "learnPath": "Learning path",
     "levelLabel": "Level",
-    "streakLabel": "days in a row"
+    "streakLabel": "days in a row",
+    "micSetup": "First set up the microphone so I can hear your piano well. It takes about a minute."
   },
   "nav": {
     "home": "Home",
     "account": "Account",
     "admin": "Administration",
     "logout": "Sign out",
-    "menu": "Menu"
+    "menu": "Menu",
+    "micTest": "Microphone test"
   },
   "account": {
     "title": "Account",
@@ -132,5 +134,71 @@
     "name": "Please enter a name (max. 40 characters).",
     "email": "Please enter a valid e-mail address.",
     "code": "The code has 6 digits."
+  },
+  "keyboard": {
+    "label": "Piano keyboard",
+    "showing": "Piano keyboard, detected: {{notes}}"
+  },
+  "mic": {
+    "title": "Microphone test",
+    "intro": "Play a few notes on your piano. Here you can see what the app hears.",
+    "setup": "Set up microphone",
+    "start": "Start microphone",
+    "stop": "Stop",
+    "listening": "Listening …",
+    "detected": "Detected note",
+    "noNote": "no note",
+    "cents": "{{cents}} cents",
+    "centsLabel": "Tuning of the note",
+    "level": "Level",
+    "levelLabel": "Input level",
+    "quiet": "quiet",
+    "loud": "loud",
+    "gateHint": "Notes are only analysed above the marker (above the room noise).",
+    "clarity": "Clarity",
+    "a4": "Concert pitch A",
+    "sampleRate": "Sample rate",
+    "window": "Analysis window / step",
+    "cost": "Processing time per analysis",
+    "device": "Microphone",
+    "log": "Recently detected notes",
+    "logEmpty": "No notes detected yet.",
+    "logNote": "Note",
+    "logCents": "Deviation (cents)",
+    "logVelocity": "Velocity",
+    "logTime": "Time",
+    "notCalibrated": "The microphone is not set up for this profile yet. Detection works anyway, but becomes more reliable after setup.",
+    "errorTitle": "Microphone not available",
+    "errors": {
+      "MIC_UNSUPPORTED": "This browser cannot use the microphone here. Please use an up-to-date browser over a secure connection (https).",
+      "MIC_DENIED": "Access to the microphone was denied. Allow it in the browser settings (on iPad: Settings → Safari → Microphone) and try again.",
+      "MIC_NOT_FOUND": "No microphone was found.",
+      "MIC_FAILED": "The microphone could not be started. Please try again."
+    }
+  },
+  "micSetup": {
+    "title": "Set up microphone",
+    "intro": "In four short steps I get to know your piano and your room.",
+    "stepMic": "Microphone",
+    "stepNoise": "Quiet",
+    "stepTuning": "Tuning",
+    "stepTest": "Try it",
+    "micText": "Place the device on the music stand or near the piano. Then allow access to the microphone.",
+    "allow": "Allow microphone",
+    "noiseText": "Please be completely quiet for {{seconds}} seconds. I am listening to how loud the room is.",
+    "measure": "Measure",
+    "again": "Again",
+    "noiseOk": "Good, the room is quiet ({{db}} dBFS).",
+    "noiseLoud": "It is quite loud ({{db}} dBFS). Detection works, but is more reliable in a quieter room.",
+    "tuningText": "Play the A to the right of middle C (marked yellow) and hold the key until the bar is full.",
+    "listening": "Waiting for the A …",
+    "keepHolding": "Good, keep holding the key a little longer …",
+    "tuningResult": "Your piano is tuned to A = {{hz}} Hz ({{cents}} cents compared to 440 Hz).",
+    "tuningFar": "That is quite far off. Was it really the A? Otherwise try again.",
+    "skipTuning": "Skip (use 440 Hz)",
+    "testText": "Now play {{count}} different notes, one after the other.",
+    "testOk": "Great, I can hear you well!",
+    "finish": "Save and finish",
+    "saved": "Microphone set up."
   }
 }

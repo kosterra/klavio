@@ -4,8 +4,9 @@ Progressive Web App, mit der Kinder (ab ca. 6 Jahren) und erwachsene Einsteiger 
 spielerisch Klavier lernen. Die App hört über das Mikrofon zu (oder liest ein Digitalpiano per MIDI)
 und wertet das Gespielte aus. Audio wird ausschliesslich lokal im Browser verarbeitet.
 
-> **Stand:** Schritt 3 des Plans – Projektgerüst, Registrierung per E-Mail-Code, Passkeys,
-> Kinderprofile, leeres Dashboard. Tonerkennung, MIDI und Lektionen folgen.
+> **Stand:** Schritt 4 des Plans – Projektgerüst, Registrierung per E-Mail-Code, Passkeys,
+> Kinderprofile, Tonerkennung über das Mikrofon mit Testseite und Einrichtungsassistent.
+> MIDI, virtuelle Klaviatur als Eingabe und Lektionen folgen.
 
 Der Produktname ist ein Platzhalter. Er steht zentral in
 [`shared/src/config/app.ts`](shared/src/config/app.ts) und wird von UI, Manifest, WebAuthn und E-Mails verwendet.
@@ -96,6 +97,51 @@ npm run check        # Typecheck + ESLint + Prettier + Unit-Tests
   greift das Rate-Limit pro IP (Server neu starten setzt es zurück).
 - **Barrierefreiheit:** axe-core prüft die Hauptseiten in Kids- und Classic-Darstellung auf WCAG 2.1 AA.
 
+## Tonerkennung (Mikrofon)
+
+Mikrofon → AudioWorklet (Analyse) → Notentracker → `NoteEvent` → Note-Bus → Übungen.
+MIDI und die virtuelle Klaviatur liefern später dieselben `NoteEvent`s (`shared/src/music/noteEvent.ts`).
+
+- **Analyse im AudioWorklet** (`client/src/audio/pitch/`): McLeod Pitch Method (NSDF, Autokorrelation per
+  FFT), Fenster ≈ 43 ms, alle ≈ 11 ms eine Analyse, Rechenzeit < 1 ms. Das Worklet schickt nur Zahlen
+  (Tonhöhe, Klarheit, Pegel) an die Seite – **Audio verlässt den Worklet nicht** und wird nie gespeichert.
+  Echo-Unterdrückung, Rauschfilter und automatische Verstärkung des Browsers sind ausgeschaltet.
+- **Notentracker:** Rauschschwelle aus der Kalibrierung (mit Hysterese), Toleranz ±35 Cent, zwei stabile
+  Analysen bis zum Note-on, Anschlagserkennung über den Hochtonanteil (gleiche Taste nochmals, auch mit
+  Pedal), Schutz vor Oktav-/Duodezimsprüngen und Pegelschwankungen im Ausklang.
+- **Mehrstimmigkeit vorbereitet:** Detektoren liefern eine Liste von Kandidaten (`PitchDetector`); der
+  heutige Detektor und Tracker sind einstimmig.
+- **Einrichtung pro Profil** (`/mic-setup`): Mikrofon erlauben → 3 s Ruhe (Raumrauschen) → das A halten
+  (Kammerton, Median des ausgeklungenen Tons, 415–466 Hz) → Probespielen. Gespeichert werden nur
+  `a4Hz` und `noiseFloorDb`. **Testseite** (`/mic-test`): erkannter Ton, Cent-Anzeige, Pegel, Ereignisliste.
+
+### Genauigkeit
+
+Getestet mit echten Aufnahmen eines Steinway-Flügels (University of Iowa Musical Instrument Samples,
+frei verwendbar), C2–C6, je pp/mf/ff = 147 Töne. «Sauber» heisst: richtiger Ton, keine weiteren
+(falschen oder doppelten) Töne in den ersten 1,5 s, gemeldet innert 100 ms nach dem Anschlag.
+
+| Dynamik | richtig | sauber | ≤ 100 ms | Median | 95 %  |
+| ------- | ------- | ------ | -------- | ------ | ----- |
+| pp      | 98,0 %  | 95,9 % | 95,9 %   | 39 ms  | 72 ms |
+| mf      | 100 %   | 100 %  | 100 %    | 37 ms  | 60 ms |
+| ff      | 100 %   | 100 %  | 100 %    | 37 ms  | 60 ms |
+| gesamt  | 99,3 %  | 98,6 % | 98,6 %   | 37 ms  | 60 ms |
+
+Die Latenz ist ab Anschlag im Signal gemessen; dazu kommt die Eingangslatenz des Geräts (typisch 5–20 ms).
+Grenzen: sehr leise Töne kaum über dem Raumrauschen (pp C6), Stimmen und andere Instrumente im Raum
+werden ebenfalls als Töne erkannt.
+
+```bash
+npm run samples:fetch      # lädt die Aufnahmen einmalig nach .cache/ (≈ 220 MB Download, 29 MB gespeichert)
+npm test                   # der Genauigkeitstest läuft automatisch mit, sobald die Aufnahmen da sind
+                           # Bericht: .cache/piano-samples-report.txt
+```
+
+Synthetische Klaviertöne (inharmonische Teiltöne, schwacher Grundton im Bass) prüfen C2–C6 zusätzlich
+ohne Download. Der E2E-Test spielt eine WAV-Datei als virtuelles Mikrofon in Chromium ab und durchläuft
+Einrichtung und Testseite.
+
 ## Projektstruktur
 
 ```
@@ -105,11 +151,15 @@ server/   Fastify-API
   src/lib/        Sessions, Challenges, E-Mail-Codes, Rate-Limits, WebAuthn-Wrapper
   src/models/     Mongoose-Modelle (User, Passkey, Session, Profile, AuthChallenge, EmailCode, AppSettings)
 client/   React-PWA
+  src/audio/      Mikrofon, AudioWorklet, Tonerkennung (pitch/), Kalibrierung
+  src/input/      Note-Bus: gemeinsame Schnittstelle aller Eingaben
   src/auth/       Session-Kontext, Passkey-Abläufe
-  src/pages/      Willkommen, Registrierung/E-Mail-Login, Profilwahl, Dashboard, Konto, Verwaltung
+  src/pages/      Willkommen, Registrierung/E-Mail-Login, Profilwahl, Dashboard, Mikrofon-Test,
+                  Mikrofon-Einrichtung, Konto, Verwaltung
   src/components/ Maskottchen «Klavi», Profilfiguren, Layout, Datenschutzhinweis
   src/i18n/       de-CH (Schweizer Schreibweise, kein ß) und en
-e2e/      Playwright-Tests
+e2e/      Playwright-Tests (inkl. virtuellem Mikrofon)
+scripts/  Hilfsskripte (Klavieraufnahmen für den Genauigkeitstest laden)
 ```
 
 ## Authentifizierung

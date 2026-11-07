@@ -1,7 +1,12 @@
 import { execFileSync } from 'node:child_process';
+import { join } from 'node:path';
+import { writeMicFixture } from './fixtures/micAudio';
+
+export const MIC_FIXTURE = join(import.meta.dirname, '..', 'test-results', 'mic-fixture.wav');
 
 /** A previously aborted run may have left registration closed; reopen it. */
 export default function globalSetup() {
+  writeMicFixture(MIC_FIXTURE);
   execFileSync('docker', [
     'compose',
     'exec',

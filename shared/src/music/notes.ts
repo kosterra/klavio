@@ -33,3 +33,20 @@ export function midiToName(midi: number, locale: 'de' | 'en' = 'de'): string {
 export function isBlackKey(midi: number): boolean {
   return [1, 3, 6, 8, 10].includes(((midi % 12) + 12) % 12);
 }
+
+const PITCH_CLASS: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11, H: 11 };
+
+/** "C4" → 60, "F#3" → 54, "Bb4" → 70. German "H" is accepted as B. */
+export function noteNameToMidi(name: string): number {
+  const m = /^([A-H])(#|b)?(-?\d)$/.exec(name.trim());
+  if (!m) throw new Error(`Invalid note name: ${name}`);
+  const [, letter, accidental, octave] = m;
+  const shift = accidental === '#' ? 1 : accidental === 'b' ? -1 : 0;
+  return (Number(octave) + 1) * 12 + PITCH_CLASS[letter!]! + shift;
+}
+
+/** Note name without octave in the learner's language: 60 → "C", 71 → "H" (de) / "B" (en). */
+export function midiToPitchName(midi: number, locale: 'de' | 'en' = 'de'): string {
+  const names = locale === 'de' ? NOTE_NAMES_DE : NOTE_NAMES_EN;
+  return names[((midi % 12) + 12) % 12]!;
+}

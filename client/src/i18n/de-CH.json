@@ -78,14 +78,16 @@
     "comingSoon": "Die Lektionen sind in Arbeit.",
     "learnPath": "Lernpfad",
     "levelLabel": "Level",
-    "streakLabel": "Tage in Folge"
+    "streakLabel": "Tage in Folge",
+    "micSetup": "Richte zuerst das Mikrofon ein, damit ich dein Klavier gut hören kann. Das dauert eine Minute."
   },
   "nav": {
     "home": "Start",
     "account": "Konto",
     "admin": "Verwaltung",
     "logout": "Abmelden",
-    "menu": "Menü"
+    "menu": "Menü",
+    "micTest": "Mikrofon-Test"
   },
   "account": {
     "title": "Konto",
@@ -132,5 +134,71 @@
     "name": "Bitte gib einen Namen ein (höchstens 40 Zeichen).",
     "email": "Bitte gib eine gültige E-Mail-Adresse ein.",
     "code": "Der Code hat 6 Ziffern."
+  },
+  "keyboard": {
+    "label": "Klaviatur",
+    "showing": "Klaviatur, erkannt: {{notes}}"
+  },
+  "mic": {
+    "title": "Mikrofon-Test",
+    "intro": "Spiel ein paar Töne auf deinem Klavier. Hier siehst du, was die App hört.",
+    "setup": "Mikrofon einrichten",
+    "start": "Mikrofon starten",
+    "stop": "Stoppen",
+    "listening": "Ich höre zu …",
+    "detected": "Erkannter Ton",
+    "noNote": "kein Ton",
+    "cents": "{{cents}} Cent",
+    "centsLabel": "Stimmung des Tons",
+    "level": "Lautstärke",
+    "levelLabel": "Eingangspegel",
+    "quiet": "leise",
+    "loud": "laut",
+    "gateHint": "Töne werden erst ab der Markierung ausgewertet (über dem Raumrauschen).",
+    "clarity": "Klarheit",
+    "a4": "Kammerton A",
+    "sampleRate": "Abtastrate",
+    "window": "Analysefenster / Takt",
+    "cost": "Rechenzeit pro Analyse",
+    "device": "Mikrofon",
+    "log": "Zuletzt erkannte Töne",
+    "logEmpty": "Noch keine Töne erkannt.",
+    "logNote": "Ton",
+    "logCents": "Abweichung (Cent)",
+    "logVelocity": "Anschlag",
+    "logTime": "Zeit",
+    "notCalibrated": "Das Mikrofon ist für dieses Profil noch nicht eingerichtet. Die Erkennung funktioniert trotzdem, wird nach der Einrichtung aber zuverlässiger.",
+    "errorTitle": "Mikrofon nicht verfügbar",
+    "errors": {
+      "MIC_UNSUPPORTED": "Dieser Browser kann das Mikrofon hier nicht verwenden. Bitte nutze einen aktuellen Browser über eine sichere Verbindung (https).",
+      "MIC_DENIED": "Der Zugriff auf das Mikrofon wurde verweigert. Erlaube ihn in den Einstellungen des Browsers (auf dem iPad: Einstellungen → Safari → Mikrofon) und versuche es nochmals.",
+      "MIC_NOT_FOUND": "Es wurde kein Mikrofon gefunden.",
+      "MIC_FAILED": "Das Mikrofon konnte nicht gestartet werden. Bitte versuche es nochmals."
+    }
+  },
+  "micSetup": {
+    "title": "Mikrofon einrichten",
+    "intro": "In vier kurzen Schritten lerne ich dein Klavier und deinen Raum kennen.",
+    "stepMic": "Mikrofon",
+    "stepNoise": "Ruhe",
+    "stepTuning": "Stimmung",
+    "stepTest": "Ausprobieren",
+    "micText": "Stell das Gerät auf das Notenpult oder in die Nähe des Klaviers. Dann erlaube den Zugriff auf das Mikrofon.",
+    "allow": "Mikrofon erlauben",
+    "noiseText": "Sei jetzt bitte {{seconds}} Sekunden ganz still. Ich höre, wie laut es im Raum ist.",
+    "measure": "Messen",
+    "again": "Nochmals",
+    "noiseOk": "Gut, der Raum ist ruhig ({{db}} dBFS).",
+    "noiseLoud": "Es ist ziemlich laut ({{db}} dBFS). Die Erkennung funktioniert, ist aber in einem ruhigeren Raum zuverlässiger.",
+    "tuningText": "Spiel das A rechts neben dem mittleren C (gelb markiert) und halte die Taste gedrückt, bis der Balken voll ist.",
+    "listening": "Ich warte auf das A …",
+    "keepHolding": "Gut so, halte die Taste noch etwas gedrückt …",
+    "tuningResult": "Dein Klavier ist auf A = {{hz}} Hz gestimmt ({{cents}} Cent gegenüber 440 Hz).",
+    "tuningFar": "Das ist recht weit weg. War es wirklich das A? Sonst versuche es nochmals.",
+    "skipTuning": "Überspringen (440 Hz verwenden)",
+    "testText": "Spiel jetzt {{count}} verschiedene Töne, einen nach dem anderen.",
+    "testOk": "Super, ich höre dich gut!",
+    "finish": "Speichern und fertig",
+    "saved": "Mikrofon eingerichtet."
   }
 }

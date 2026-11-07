@@ -15,7 +15,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { notifications } from '@mantine/notifications';
+import { notify } from '../components/notify';
 import {
   IconCloud,
   IconFingerprint,
@@ -220,7 +220,7 @@ export function AccountPage() {
                       setEmailCode('');
                       setEmail('');
                       await refresh();
-                      notifications.show({ color: 'teal', message: t('account.emailChanged') });
+                      notify(t('account.emailChanged'));
                     })
                   }
                 >

@@ -1,5 +1,17 @@
-import { Card, Group, Paper, RingProgress, SimpleGrid, Stack, Text, Title } from '@mantine/core';
-import { IconFlame, IconStar, IconTrophy } from '@tabler/icons-react';
+import {
+  Alert,
+  Button,
+  Card,
+  Group,
+  Paper,
+  RingProgress,
+  SimpleGrid,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core';
+import { Link } from 'react-router';
+import { IconFlame, IconMicrophone, IconStar, IconTrophy } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useSession } from '../auth/session';
 import { Mascot } from '../components/Mascot';
@@ -49,6 +61,17 @@ export function DashboardPage() {
           </Group>
         </Card>
       </SimpleGrid>
+
+      {activeProfile.calibration.noiseFloorDb === null && (
+        <Alert color="blue" variant="light" icon={<IconMicrophone />} radius="lg">
+          <Group justify="space-between" gap="sm">
+            <Text>{t('dashboard.micSetup')}</Text>
+            <Button component={Link} to="/mic-setup">
+              {t('mic.setup')}
+            </Button>
+          </Group>
+        </Alert>
+      )}
 
       <Card withBorder radius="xl" padding="lg">
         <Title order={2} size="h3" mb="sm">

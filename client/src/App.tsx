@@ -15,6 +15,8 @@ import { ProfilesPage } from './pages/ProfilesPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { AccountPage } from './pages/AccountPage';
 import { AdminPage } from './pages/AdminPage';
+import { MicTestPage } from './pages/MicTestPage';
+import { MicSetupPage } from './pages/MicSetupPage';
 
 /** Theme follows the active profile's Kids/Classic choice. */
 function ThemedApp({ children }: { children: ReactNode }) {
@@ -102,6 +104,8 @@ export function App() {
                 </Route>
                 <Route element={<RequireProfile />}>
                   <Route path="/" element={<DashboardPage />} />
+                  <Route path="/mic-test" element={<MicTestPage />} />
+                  <Route path="/mic-setup" element={<MicSetupPage />} />
                 </Route>
               </Route>
             </Route>

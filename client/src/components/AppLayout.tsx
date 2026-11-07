@@ -1,5 +1,11 @@
 import { ActionIcon, AppShell, Group, Menu, Text, UnstyledButton } from '@mantine/core';
-import { IconLogout, IconSettings, IconShield, IconUsers } from '@tabler/icons-react';
+import {
+  IconLogout,
+  IconMicrophone,
+  IconSettings,
+  IconShield,
+  IconUsers,
+} from '@tabler/icons-react';
 import { Link, Outlet, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { APP_CONFIG } from '@klavio/shared';
@@ -44,6 +50,14 @@ export function AppLayout() {
                 >
                   {t('profiles.switch')}
                 </Menu.Item>
+                {activeProfile && (
+                  <Menu.Item
+                    leftSection={<IconMicrophone size={18} />}
+                    onClick={() => navigate('/mic-test')}
+                  >
+                    {t('nav.micTest')}
+                  </Menu.Item>
+                )}
                 <Menu.Item
                   leftSection={<IconSettings size={18} />}
                   onClick={() => navigate('/account')}

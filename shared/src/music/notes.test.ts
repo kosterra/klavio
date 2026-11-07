@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { frequencyToNote, isBlackKey, midiToFrequency, midiToName } from './notes.ts';
+import {
+  frequencyToNote,
+  isBlackKey,
+  midiToFrequency,
+  midiToName,
+  midiToPitchName,
+  noteNameToMidi,
+} from './notes.ts';
 
 describe('notes', () => {
   it('converts A4 and middle C', () => {
@@ -30,5 +37,23 @@ describe('notes', () => {
     expect(isBlackKey(60)).toBe(false);
     expect(isBlackKey(61)).toBe(true);
     expect(isBlackKey(70)).toBe(true);
+  });
+
+  it('parses note names', () => {
+    expect(noteNameToMidi('C4')).toBe(60);
+    expect(noteNameToMidi('A4')).toBe(69);
+    expect(noteNameToMidi('F#3')).toBe(54);
+    expect(noteNameToMidi('Bb4')).toBe(70);
+    expect(noteNameToMidi('H4')).toBe(71);
+    expect(() => noteNameToMidi('X4')).toThrow();
+    for (let m = 21; m <= 108; m++) {
+      if (!isBlackKey(m)) expect(noteNameToMidi(midiToName(m, 'en'))).toBe(m);
+    }
+  });
+
+  it('names pitch classes in German and English', () => {
+    expect(midiToPitchName(71)).toBe('H');
+    expect(midiToPitchName(71, 'en')).toBe('B');
+    expect(midiToPitchName(48)).toBe('C');
   });
 });
