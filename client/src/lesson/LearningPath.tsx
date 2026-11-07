@@ -51,49 +51,45 @@ interface Point {
  * Board-game layout: stops in rows across the full width, alternating
  * left→right and right→left ("snake"), joined by a road with U-turns.
  */
-function layout(count: number, width: number, cols: number, top: number, rowHeight: number) {
-  const cell = width / cols;
+/** x of a column: stones spread evenly between the same left and right margin in every chapter. */
+function columnX(col: number, cols: number, width: number, margin: number): number {
+  return cols > 1 ? margin + (col * (width - 2 * margin)) / (cols - 1) : margin;
+}
+
+function layout(
+  count: number,
+  width: number,
+  cols: number,
+  top: number,
+  rowHeight: number,
+  margin: number,
+) {
   return Array.from({ length: count }, (_, i): Point => {
     const row = Math.floor(i / cols);
     const c = i % cols;
     const col = row % 2 === 0 ? c : cols - 1 - c;
-    return { x: (col + 0.5) * cell, y: top + row * rowHeight, row };
+    return { x: columnX(col, cols, width, margin), y: top + row * rowHeight, row };
   });
 }
 
 /** Big, faint emblem per chapter for the empty spots of its last row. */
 const EMBLEMS = [IconPiano, IconHandFinger, IconFileMusic, IconMusic, IconMetronome];
 
-function roadPath(points: Point[], cell: number): string {
-  if (!points.length) return '';
-  let d = `M ${points[0]!.x} ${points[0]!.y}`;
-  for (let i = 1; i < points.length; i++) {
-    const p = points[i - 1]!;
-    const q = points[i]!;
-    if (p.row === q.row) {
-      d += ` L ${q.x} ${q.y}`;
-    } else {
-      // U-turn at the end of a row, bulging outwards
-      const dir = p.row % 2 === 0 ? 1 : -1;
-      const b = dir * cell * 0.42;
-      d += ` C ${p.x + b} ${p.y}, ${q.x + b} ${q.y}, ${q.x} ${q.y}`;
-    }
-  }
-  return d;
+/**
+ * Road through the stones: along each row, and at its end straight down to
+ * the first stone of the next row (same column) – no diagonal stretches.
+ */
+function roadPath(points: Point[]): string {
+  return points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
 }
 
 /**
  * Path from (x1, y1) down to (x2, y2) with round elbows: down, round turn,
- * across, round turn, down — like the U-turns inside a chapter.
+ * across, round turn, down (between chapters).
  * Continues an existing path (no leading "M").
  */
 function roundedStep(x1: number, y1: number, x2: number, y2: number, radius = 44): string {
   if (Math.abs(x2 - x1) < 1) return ` L ${x2} ${y2}`;
-  if (Math.abs(x2 - x1) < radius * 2) {
-    // small offset: one gentle S-curve instead of two tight elbows
-    const mid = (y1 + y2) / 2;
-    return ` C ${x1} ${mid}, ${x2} ${mid}, ${x2} ${y2}`;
-  }
   const mid = (y1 + y2) / 2;
   const r = Math.min(radius, Math.abs(x2 - x1) / 2, (y2 - y1) / 2);
   const dir = x2 > x1 ? 1 : -1;
@@ -110,8 +106,8 @@ function roundedStep(x1: number, y1: number, x2: number, y2: number, radius = 44
 }
 
 /** Path continuing from the first point (no leading "M"). */
-function continuePath(points: Point[], cell: number): string {
-  return roadPath(points, cell).replace(/^M [^ ]+ [^ ]+/, '');
+function continuePath(points: Point[]): string {
+  return roadPath(points).replace(/^M [^ ]+ [^ ]+/, '');
 }
 
 const HEADER = 92; // height of a chapter's signpost row
@@ -269,12 +265,14 @@ export function LearningPath({
         // stops: lessons + the trophy, rows filled evenly (7 → 4 + 3, not 6 + 1)
         const count = chapter.lessons.length + 1;
         const cols = Math.ceil(count / Math.ceil(count / maxCols));
-        const cell = width / cols;
+        // the first column sits exactly under the flag lane → the road runs straight down
+        const markerX = width / maxCols / 2;
+        const cell = cols > 1 ? (width - 2 * markerX) / (cols - 1) : width;
         const currentIndex = chapter.lessons.findIndex((l) => l.id === currentLessonId);
         const figureSpace = currentIndex >= 0 && currentIndex < cols ? 58 : 6;
-        const points = open ? layout(count, width, cols, HEADER + figureSpace + 50, rowHeight) : [];
-        // signposts always stand in the left lane, so their text has the full width
-        const markerX = width / maxCols / 2;
+        const points = open
+          ? layout(count, width, cols, HEADER + figureSpace + 50, rowHeight, markerX)
+          : [];
         const markerY = HEADER / 2;
         // open chapters end with room below the last titles for the bend to the next signpost
         const height = open ? points[points.length - 1]!.y + (narrow ? 160 : 140) : HEADER;
@@ -287,7 +285,7 @@ export function LearningPath({
         if (open) {
           const f = points[0]!;
           const leadIn = roundedStep(markerX, markerY, f.x, f.y);
-          road += leadIn + continuePath(points, cell);
+          road += leadIn + continuePath(points);
           const goal = points[points.length - 1]!;
           // leave the trophy downwards and bend into the signpost lane below the titles
           const bendTop = goal.y + (narrow ? 100 : 85);
@@ -302,7 +300,7 @@ export function LearningPath({
             travelled =
               start +
               leadIn +
-              (reachedIndex > 0 ? continuePath(points.slice(0, reachedIndex + 1), cell) : '');
+              (reachedIndex > 0 ? continuePath(points.slice(0, reachedIndex + 1)) : '');
           }
         } else {
           if (!last) road += ` L ${markerX} ${height}`;
@@ -341,6 +339,8 @@ export function LearningPath({
     <div ref={ref}>
       {sections.map((sec) => {
         const { chapter, ci, color, cell, points, height, markerX, markerY } = sec;
+        // stones at the edges sit one margin from the border: keep their titles inside
+        const labelWidth = Math.min(cell, 2 * markerX + 24);
         const vars = {
           '--chapter-color': `var(--mantine-color-${color}-7)`,
           '--chapter-light': `var(--mantine-color-${color}-5)`,
@@ -464,7 +464,7 @@ export function LearningPath({
                       className={classes.emblem}
                       size={Math.min(64, cell * 0.5)}
                       style={{
-                        left: (col + 0.5) * cell,
+                        left: columnX(col, sec.cols, width, sec.markerX),
                         top: points[0]!.y + lastRow * rowHeight,
                         color: `var(--mantine-color-${color}-3)`,
                         transform: `translate(-50%, -50%) rotate(${k % 2 ? 12 : -10}deg)`,
@@ -517,7 +517,7 @@ export function LearningPath({
                         style={{
                           left: p!.x,
                           top: p!.y - half,
-                          width: cell,
+                          width: labelWidth,
                           transform: 'translateX(-50%)',
                         }}
                       >
@@ -551,7 +551,7 @@ export function LearningPath({
                         )}
                         <Text
                           className={`${classes.title} ${current ? classes.titleCurrent : ''}`}
-                          maw={cell - 6}
+                          maw={labelWidth - 6}
                           fz={narrow ? 12 : 'sm'}
                           lang={i18n.language}
                           aria-hidden
@@ -569,7 +569,7 @@ export function LearningPath({
                         style={{
                           left: p.x,
                           top: p.y - NODE / 2,
-                          width: cell,
+                          width: labelWidth,
                           transform: 'translateX(-50%)',
                         }}
                       >
@@ -585,7 +585,7 @@ export function LearningPath({
                         </span>
                         <Text
                           className={classes.title}
-                          maw={cell - 6}
+                          maw={labelWidth - 6}
                           fz={narrow ? 12 : 'sm'}
                           aria-hidden
                         >
