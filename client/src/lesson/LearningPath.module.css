@@ -334,7 +334,10 @@ a.node:active {
 .map {
   position: relative;
   overflow: clip;
-  border-radius: var(--mantine-radius-lg);
+}
+
+.mapTitle {
+  padding: var(--mantine-spacing-lg) var(--mantine-spacing-lg) var(--mantine-spacing-xs);
 }
 
 .section {

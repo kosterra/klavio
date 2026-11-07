@@ -116,6 +116,17 @@ function continuePath(points: Point[]): string {
   return roadPath(points).replace(/^M [^ ]+ [^ ]+/, '');
 }
 
+/** CSS variables that colour a chapter's world. */
+function chapterVars(color: string) {
+  return {
+    '--chapter-color': `var(--mantine-color-${color}-7)`,
+    '--chapter-light': `var(--mantine-color-${color}-5)`,
+    '--chapter-dark': `var(--mantine-color-${color}-9)`,
+    '--chapter-road-light': `var(--mantine-color-${color}-2)`,
+    '--chapter-road-dark': `var(--mantine-color-${color}-9)`,
+  } as React.CSSProperties;
+}
+
 const HEADER = 92; // height of a chapter's signpost row
 const FOOT = 36; // room at the bottom of every world for its landscape and the next gate
 const FLAG_POLE_X = 12; // x of the pole inside the flag drawing
@@ -234,11 +245,14 @@ export function LearningPath({
   currentLessonId,
   avatar,
   profileId,
+  title,
 }: {
   progress: ProgressDto['lessons'];
   currentLessonId: string;
   avatar: Avatar;
   profileId: string;
+  /** heading drawn on the first world's background, so the map fills the whole panel */
+  title?: React.ReactNode;
 }) {
   const { t, i18n } = useTranslation();
   const loc = useLocalized();
@@ -366,17 +380,19 @@ export function LearningPath({
 
   return (
     <div ref={ref} className={classes.map}>
+      {title && (
+        <div
+          className={`${classes.section} ${classes.mapTitle}`}
+          style={chapterVars(CHAPTER_COLORS[0]!)}
+        >
+          {title}
+        </div>
+      )}
       {sections.map((sec) => {
         const { chapter, world, ci, color, cell, points, height, markerX, markerY } = sec;
         // stones at the edges sit one margin from the border: keep their titles inside
         const labelWidth = Math.min(cell, 2 * markerX + 24);
-        const vars = {
-          '--chapter-color': `var(--mantine-color-${color}-7)`,
-          '--chapter-light': `var(--mantine-color-${color}-5)`,
-          '--chapter-dark': `var(--mantine-color-${color}-9)`,
-          '--chapter-road-light': `var(--mantine-color-${color}-2)`,
-          '--chapter-road-dark': `var(--mantine-color-${color}-9)`,
-        } as React.CSSProperties;
+        const vars = chapterVars(color);
         const rows = points.length ? points[points.length - 1]!.row + 1 : 0;
         const emptyCells = points.length ? rows * sec.cols - points.length : 0;
         // decoration stickers: free spots only, chosen deterministically per chapter

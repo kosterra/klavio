@@ -48,6 +48,11 @@ export function DashboardPage() {
   );
   const kids = activeProfile.uiMode === 'kids';
 
+  const pathTitle = (
+    <Title order={2} size="h3">
+      {t('dashboard.learnPath')}
+    </Title>
+  );
   return (
     <Stack gap="lg" maw={1100} mx="auto">
       <InstallHint />
@@ -140,21 +145,23 @@ export function DashboardPage() {
         </Alert>
       )}
 
-      <Card withBorder radius="xl" padding="lg">
-        <Title order={2} size="h3" mb="lg">
-          {t('dashboard.learnPath')}
-        </Title>
+      {/* the path's worlds fill the whole panel, the heading sits on the first one */}
+      <Card withBorder radius="xl" padding={0}>
         {progress ? (
           <LearningPath
             progress={progress.lessons}
             currentLessonId={current.id}
             avatar={activeProfile.avatar}
             profileId={activeProfile.id}
+            title={pathTitle}
           />
         ) : (
-          <Center py="xl">
-            <Loader aria-label={t('common.loading')} />
-          </Center>
+          <Stack p="lg">
+            {pathTitle}
+            <Center py="xl">
+              <Loader aria-label={t('common.loading')} />
+            </Center>
+          </Stack>
         )}
       </Card>
 
