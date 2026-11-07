@@ -1,0 +1,25 @@
+.sky {
+  position: relative;
+  width: min(100%, 420px);
+  height: 40px;
+  pointer-events: none;
+}
+
+.spark {
+  position: absolute;
+  bottom: 0;
+  color: var(--mantine-color-yellow-5);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spark {
+    animation: rise 1.2s ease-out forwards;
+  }
+}
+
+@keyframes rise {
+  to {
+    transform: translateY(-36px) scale(1.4);
+    opacity: 0;
+  }
+}

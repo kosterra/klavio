@@ -79,6 +79,29 @@ Notenwerte: `w` ganze, `hd` punktierte halbe, `h` halbe, `qd` punktierte Viertel
 `8` Achtel. Jeder Takt muss genau voll sein, sonst wirft `song()` beim Laden einen Fehler (und die
 Tests schlagen fehl) – Tippfehler fallen so sofort auf.
 
+**Notenlesen im grossen Notensystem** – `clef: 'grand'`: ab dem mittleren C oben (rechte Hand),
+darunter unten (linke Hand):
+
+```ts
+{ type: 'read-note', clef: 'grand', notes: seq('C3 G3 C4 G4'), rounds: 10 }
+```
+
+**Stück für beide Hände** («Warte auf mich» im grossen Notensystem) – zwei Stimmen mit gleich vielen
+Takten, Pausen mit `r/<Wert>`. Ein Schritt ist jeder Moment, an dem Töne beginnen; mit MIDI oder
+der Bildschirm-Klaviatur zählen alle Töne des Schritts, mit dem Mikrofon (ein Ton aufs Mal) die
+Melodie:
+
+```ts
+piece('C4/q D4/q E4/q F4/q | G4/h G4/h', 'C3/w | C3/h r/h', { tempo: 90, showNames: true });
+```
+
+**Improvisieren** – freies Spiel auf den schwarzen Tasten zu einer Begleitung, nichts ist falsch;
+fertig nach `bars` Takten mit mindestens `minNotes` Tönen:
+
+```ts
+{ type: 'improvise', keys: 'black', tempo: 88, bars: 8, minNotes: 12 }
+```
+
 **Rhythmus** – ein Takt pro Muster; nur das Timing zählt, Pausen mit `r`:
 
 ```ts
@@ -103,6 +126,14 @@ Bilder: `keyboard` (mit `marks`, `groups`, `fingering`, `direction`), `hand`, `s
 (mit `names` oder `highlight: 'lines' | 'spaces'`) und `note-values` (mit `pizza`). Quizfragen
 erscheinen auch in «Weisst du's noch?» zu Beginn des nächsten Kapitels. `theory.test.ts` prüft
 Übersetzungen, Schreibweise und dass jedes Spiel lösbar ist.
+
+## Stufen und Fähigkeiten
+
+Jedes Kapitel gehört zu einer Stufe (`stage: 1 | 2 | 3`); jede Stufe hat im Lernpfad ihre eigene
+Karte. Jede Lektion lehrt eine oder mehrere Fähigkeiten (`LESSON_SKILLS` in
+`shared/src/curriculum/skills.ts`) – daraus rechnet «Mein Traumlied» den Fortschritt. Eine Fähigkeit
+ist erreicht, wenn alle Lektionen dazu geschafft sind. Fähigkeiten ohne Lektion gelten als «kommt
+später». Der Test verlangt für jede Lektion mindestens eine Fähigkeit.
 
 ## Neues Kapitel
 

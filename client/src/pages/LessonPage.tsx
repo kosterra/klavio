@@ -48,6 +48,8 @@ import { PlayAlongExercise } from '../lesson/PlayAlongExercise';
 import { ReadNoteExercise } from '../lesson/ReadNoteExercise';
 import { SongExercise } from '../lesson/SongExercise';
 import { RhythmExercise } from '../lesson/RhythmExercise';
+import { PieceExercise } from '../lesson/PieceExercise';
+import { ImproviseExercise } from '../lesson/ImproviseExercise';
 import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
 import { useLocalized } from '../lesson/useLocalized';
@@ -325,6 +327,10 @@ function LessonRun({
               <ReadNoteExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'song' ? (
               <SongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'piece' ? (
+              <PieceExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'improvise' ? (
+              <ImproviseExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'rhythm' ? (
               <RhythmExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : (

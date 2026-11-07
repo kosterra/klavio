@@ -327,6 +327,69 @@ export function Sticker({
           />
         </>
       )}
+      {kind === 'bat' && (
+        <>
+          <path
+            d="M24 18 Q16 8 4 12 Q10 16 8 22 Q14 20 16 26 Q20 22 24 26 Q28 22 32 26 Q34 20 40 22 Q38 16 44 12 Q32 8 24 18 Z"
+            fill={dark}
+          />
+          <ellipse cx="24" cy="22" rx="6" ry="8" fill={fill} />
+          <path d="M19 15 L20 10 L22 14 Z M29 15 L28 10 L26 14 Z" fill={fill} />
+          <circle cx="22" cy="20" r="1.5" fill="#fff" />
+          <circle cx="26" cy="20" r="1.5" fill="#fff" />
+        </>
+      )}
+      {kind === 'crystal' && (
+        <>
+          <path
+            d="M14 42 L8 26 L14 10 L20 26 Z"
+            fill={fill}
+            stroke={dark}
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M28 44 L20 24 L28 4 L36 24 Z"
+            fill={fill}
+            stroke={dark}
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M38 44 L34 32 L38 22 L42 32 Z"
+            fill={fill}
+            stroke={dark}
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+          <path d="M28 8 L24 22" stroke={gloss} strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M14 14 L11 24" stroke={gloss} strokeWidth="2" strokeLinecap="round" />
+        </>
+      )}
+      {kind === 'balloon' && (
+        <>
+          <path d="M24 34 Q22 40 26 46" stroke={dark} strokeWidth="1.5" fill="none" />
+          <ellipse cx="24" cy="19" rx="13" ry="16" fill={fill} />
+          <path d="M21 34 L27 34 L24 37 Z" fill={dark} />
+          <ellipse cx="19" cy="13" rx="3.5" ry="6" fill={gloss} transform="rotate(20 19 13)" />
+        </>
+      )}
+      {kind === 'moon' && (
+        <>
+          <path
+            d="M30 6 A18 18 0 1 0 42 34 A14 14 0 1 1 30 6 Z"
+            fill="var(--mantine-color-yellow-4)"
+            stroke="var(--mantine-color-yellow-7)"
+            strokeWidth="1.5"
+          />
+          <circle cx="16" cy="24" r="2.5" fill="var(--mantine-color-yellow-6)" />
+          <circle cx="22" cy="34" r="1.8" fill="var(--mantine-color-yellow-6)" />
+          <path
+            d="M40 8 L41 11 L44 12 L41 13 L40 16 L39 13 L36 12 L39 11 Z"
+            fill="var(--mantine-color-yellow-4)"
+          />
+        </>
+      )}
     </svg>
   );
 }

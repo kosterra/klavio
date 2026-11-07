@@ -1,5 +1,12 @@
 import { noteNameToMidi } from '../music/notes.ts';
-import type { NoteValue, RhythmValue, SongExercise, SongNote } from './types.ts';
+import type {
+  PieceExercise,
+  PieceNote,
+  NoteValue,
+  RhythmValue,
+  SongExercise,
+  SongNote,
+} from './types.ts';
 
 const VALUES: Record<RhythmValue, number> = {
   w: 4,
@@ -104,4 +111,99 @@ export function rhythm(
     midi: opts.midi ?? noteNameToMidi('C5'),
     patterns: bars,
   };
+}
+
+/**
+ * One hand of a piece: "C4/q D4/q r/h | …"; "r/<value>" is a rest. Every bar
+ * must be full (checked against `time`).
+ */
+function parsePart(part: string, time: string, hand: string): PieceNote[][] {
+  const beatsPerBar = barBeats(time);
+  return part
+    .split('|')
+    .map((bar) => bar.trim())
+    .filter(Boolean)
+    .map((bar, i) => {
+      const notes = bar.split(/\s+/).map((token): PieceNote => {
+        const [pitch, value = 'q'] = token.split('/');
+        if (pitch === 'r') {
+          const rest = (value.endsWith('r') ? value : `${value}r`) as RhythmValue;
+          if (!(rest in VALUES)) throw new Error(`Unknown rest "${token}" (${hand}, bar ${i + 1})`);
+          return { midi: null, value: rest };
+        }
+        if (!(value in VALUES) || value.endsWith('r')) {
+          throw new Error(`Unknown note value "${value}" (${hand}, bar ${i + 1})`);
+        }
+        return { midi: noteNameToMidi(pitch!), value: value as RhythmValue };
+      });
+      const beats = notes.reduce((n, x) => n + VALUES[x.value], 0);
+      if (beats !== beatsPerBar) {
+        throw new Error(`${hand} bar ${i + 1} has ${beats} beats, expected ${beatsPerBar}`);
+      }
+      return notes;
+    });
+}
+
+/** A piece for both hands, written as two parts with the same number of bars. */
+export function piece(
+  rh: string,
+  lh: string,
+  opts: Partial<Omit<PieceExercise, 'type' | 'bars'>> = {},
+): PieceExercise {
+  const time = opts.time ?? '4/4';
+  const right = parsePart(rh, time, 'right hand');
+  const left = parsePart(lh, time, 'left hand');
+  if (right.length !== left.length) {
+    throw new Error(`Both hands need the same number of bars (${right.length} / ${left.length})`);
+  }
+  return {
+    type: 'piece',
+    time,
+    tempo: opts.tempo ?? 90,
+    showNames: opts.showNames ?? false,
+    bars: right.map((r, i) => ({ rh: r, lh: left[i]! })),
+  };
+}
+
+export interface PieceStep {
+  /** start of the step in beats from the beginning */
+  at: number;
+  /** notes that start here (right hand first) */
+  rh: number | null;
+  lh: number | null;
+  /** position in the bars, for highlighting */
+  bar: number;
+  rhIndex: number | null;
+  lhIndex: number | null;
+}
+
+/** All moments where at least one note starts, in time order (both hands merged). */
+export function pieceSteps(exercise: PieceExercise): PieceStep[] {
+  const steps = new Map<number, PieceStep>();
+  let barStart = 0;
+  const beatsPerBar = barBeats(exercise.time);
+  exercise.bars.forEach((bar, b) => {
+    for (const hand of ['rh', 'lh'] as const) {
+      let t = barStart;
+      bar[hand].forEach((n, i) => {
+        if (n.midi !== null) {
+          const key = Math.round(t * 1000);
+          const step = steps.get(key) ?? {
+            at: t,
+            rh: null,
+            lh: null,
+            bar: b,
+            rhIndex: null,
+            lhIndex: null,
+          };
+          step[hand] = n.midi;
+          step[hand === 'rh' ? 'rhIndex' : 'lhIndex'] = i;
+          steps.set(key, step);
+        }
+        t += VALUES[n.value];
+      });
+    }
+    barStart += beatsPerBar;
+  });
+  return [...steps.values()].sort((a, b) => a.at - b.at);
 }

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Box, Group, Text, UnstyledButton } from '@mantine/core';
+import { Box, Button, Group, SegmentedControl, Text, UnstyledButton } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
 import {
   IconChevronDown,
@@ -9,6 +9,7 @@ import {
   IconMusic,
   IconPiano,
   IconPlayerPlay,
+  IconSparkles,
   IconStarFilled,
   IconRepeat,
   IconTrophy,
@@ -50,6 +51,7 @@ function KindIcon({ lesson, size }: { lesson: Lesson; size: number }) {
   if (lesson.kind === 'play') return <IconPlayerPlay {...props} />;
   if (lesson.kind === 'read') return <IconFileMusic {...props} />;
   if (lesson.kind === 'rhythm') return <IconMetronome {...props} />;
+  if (lesson.kind === 'improvise') return <IconSparkles {...props} />;
   return <IconPiano {...props} />;
 }
 
@@ -270,6 +272,13 @@ export function LearningPath({
   const rowHeight = narrow ? 172 : 156;
   const header = narrow ? HEADER : HEADER_WIDE;
 
+  // one map per level ("Stufe"): the level of the lesson to play next is shown first
+  const stages = [...new Set(CURRICULUM.map((c) => c.stage))];
+  const currentStage =
+    CURRICULUM.find((c) => c.lessons.some((l) => l.id === currentLessonId))?.stage ?? 1;
+  const [stage, setStage] = useState(currentStage);
+  const stageChapters = CURRICULUM.filter((c) => c.stage === stage);
+
   // Lay out the chapters one after another: every chapter's road starts and ends
   // in the left lane where the signposts stand, so they join seamlessly.
   let lessonNumber = 0;
@@ -283,7 +292,9 @@ export function LearningPath({
         const reached = isLessonUnlocked(chapter.lessons[0]!.id, completed);
         const defaultOpen = chapter.lessons.some((l) => l.id === currentLessonId);
         const open = defaultOpen !== toggled.has(chapter.id);
-        const last = ci === CURRICULUM.length - 1;
+        // the road starts and ends with the level's map
+        const first = chapter.id === stageChapters[0]?.id;
+        const last = chapter.id === stageChapters[stageChapters.length - 1]?.id;
 
         // stops: lessons + the trophy, rows filled evenly (7 → 4 + 3, not 6 + 1)
         const count = chapter.lessons.length + 1;
@@ -304,7 +315,7 @@ export function LearningPath({
 
         // road through this chapter
         // the road always arrives in the signpost lane (chapters bend into it at their end)
-        const start = `M ${markerX} ${ci === 0 ? markerY : 0} L ${markerX} ${markerY}`;
+        const start = `M ${markerX} ${first ? markerY : 0} L ${markerX} ${markerY}`;
         let road = start;
         let travelled = '';
         if (open) {
@@ -345,6 +356,7 @@ export function LearningPath({
           chapter,
           world: worldOf(chapter.id, ci),
           ci,
+          first,
           color,
           earned,
           total,
@@ -373,20 +385,38 @@ export function LearningPath({
   useEffect(() => {
     if (reachedIds) saveRevealed(profileId, reachedIds.split(','));
   }, [profileId, reachedIds]);
-  const totalHeight = sections.reduce((h, s) => h + s.height, 0);
+  const shown = sections.filter((s) => s.chapter.stage === stage);
+  const totalHeight = shown.reduce((h, s) => h + s.height, 0);
+  const nextStage = stages.find((s) => s > stage);
 
   return (
-    <div ref={ref} className={classes.map}>
-      {title && (
+    <div ref={ref} className={classes.map} id="learning-path">
+      {(title || stages.length > 1) && (
         <div
           className={`${classes.section} ${classes.mapTitle}`}
-          style={chapterVars(CHAPTER_COLORS[0]!)}
+          style={chapterVars(
+            CHAPTER_COLORS[
+              CURRICULUM.findIndex((c) => c.id === stageChapters[0]?.id) % CHAPTER_COLORS.length
+            ]!,
+          )}
         >
           {title}
+          {stages.length > 1 && (
+            <SegmentedControl
+              mt="sm"
+              radius="xl"
+              value={String(stage)}
+              onChange={(v) => setStage(Number(v) as typeof stage)}
+              data={stages.map((s) => ({ value: String(s), label: t(`path.stages.${s}`) }))}
+              aria-label={t('path.stagesLabel')}
+              data-testid="stage-switch"
+              className={classes.stageSwitch}
+            />
+          )}
         </div>
       )}
-      {sections.map((sec) => {
-        const { chapter, world, ci, color, cell, points, height, markerX, markerY } = sec;
+      {shown.map((sec) => {
+        const { chapter, world, ci, first, color, cell, points, height, markerX, markerY } = sec;
         // stones at the edges sit one margin from the border: keep their titles inside
         const labelWidth = Math.min(cell, 2 * markerX + 24);
         const vars = chapterVars(color);
@@ -490,7 +520,7 @@ export function LearningPath({
                 strokeLinecap={world.road.cap}
               />
             </svg>
-            {ci > 0 && (
+            {!first && (
               <WorldGate style={{ left: markerX - 32, top: -FOOT - 2 }} snowy={christmas} />
             )}
 
@@ -702,6 +732,22 @@ export function LearningPath({
           </section>
         );
       })}
+      {nextStage && (
+        <div className={`${classes.section} ${classes.stageTeaser}`} style={chapterVars('grape')}>
+          <Text fw={800}>{t('path.nextStage', { stage: t(`path.stages.${nextStage}`) })}</Text>
+          <Button
+            variant="filled"
+            color="grape.8"
+            onClick={() => {
+              setStage(nextStage);
+              document.getElementById('learning-path')?.scrollIntoView({ block: 'start' });
+            }}
+            data-testid="next-stage"
+          >
+            {t('path.toStage', { stage: nextStage })}
+          </Button>
+        </div>
+      )}
       {christmas && totalHeight > 0 && <Snowfall height={totalHeight} />}
     </div>
   );

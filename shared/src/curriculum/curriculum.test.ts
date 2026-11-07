@@ -36,7 +36,13 @@ describe('curriculum data', () => {
               ? e.bars.flat().map((n) => n.midi)
               : e.type === 'rhythm'
                 ? [e.midi]
-                : e.notes;
+                : e.type === 'piece'
+                  ? e.bars
+                      .flatMap((b) => [...b.rh, ...b.lh])
+                      .flatMap((n) => (n.midi === null ? [] : [n.midi]))
+                  : e.type === 'improvise'
+                    ? []
+                    : e.notes;
         for (const n of notes) {
           if (e.type === 'find-key' && e.anyOctave) {
             // some octave of the pitch class must be visible

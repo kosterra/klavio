@@ -1,9 +1,15 @@
 import { Box, Text } from '@mantine/core';
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { isBlackKey, midiToName, type TheoryPicture as Picture } from '@klavio/shared';
+import {
+  isBlackKey,
+  midiToName,
+  midiToPitchName,
+  type TheoryPicture as Picture,
+} from '@klavio/shared';
 import { PianoKeyboard } from '../../components/PianoKeyboard';
 import { Staff } from '../../notation/Staff';
+import { GrandStaff } from '../../notation/GrandStaff';
 import { Sticker } from '../Stickers';
 import type { StickerKind } from '../stickerKinds';
 import { NoteValues } from './NoteValues';
@@ -101,14 +107,22 @@ function KeyboardPicture({
   );
 }
 
-/** A right hand seen from above (thumb on the left), with finger numbers 1–5 – own drawing. */
+/**
+ * A hand seen from above with finger numbers 1–5 – own drawing. The right hand
+ * has its thumb on the left; the left hand is the mirror image.
+ */
 export function HandPicture({
   highlight,
   numbers = true,
+  side = 'right',
 }: {
   highlight?: number;
   numbers?: boolean;
+  side?: 'left' | 'right';
 }) {
+  const left = side === 'left';
+  // mirror the shapes for the left hand; the numbers stay readable
+  const mx = (x: number) => (left ? 200 - x : x);
   const { t } = useTranslation();
   // finger 1 = thumb … 5 = little finger: [base, tip]
   const fingers: [number, number, number, number][] = [
@@ -123,42 +137,53 @@ export function HandPicture({
       className={classes.hand}
       viewBox="0 0 200 200"
       role="img"
-      aria-label={numbers ? t('theory.handNumbers') : t('theory.handMarked')}
+      aria-label={
+        left
+          ? numbers
+            ? t('theory.handNumbersLeft')
+            : t('theory.handMarkedLeft')
+          : numbers
+            ? t('theory.handNumbers')
+            : t('theory.handMarked')
+      }
     >
-      {/* outline, then skin */}
-      {[true, false].map((outline) =>
-        fingers.map(([x1, y1, x2, y2], i) => (
-          <line
-            key={`${outline}-${i}`}
-            x1={x1}
-            y1={y1}
-            x2={x2}
-            y2={y2}
-            strokeLinecap="round"
-            strokeWidth={outline ? 30 : 25}
-            stroke={
-              outline
-                ? 'var(--klavio-hand-line)'
-                : highlight === i + 1
-                  ? 'var(--mantine-color-orange-4)'
-                  : 'var(--klavio-hand)'
-            }
-          />
-        )),
-      )}
-      <rect
-        x="62"
-        y="98"
-        width="110"
-        height="88"
-        rx="40"
-        fill="var(--klavio-hand)"
-        stroke="var(--klavio-hand-line)"
-        strokeWidth="2.5"
-      />
-      {/* cover the finger bases so palm and fingers join */}
-      <rect x="66" y="100" width="102" height="30" rx="14" fill="var(--klavio-hand)" />
-      {fingers.map(([, , x, y], i) => {
+      <g transform={left ? 'translate(200 0) scale(-1 1)' : undefined}>
+        {/* outline, then skin */}
+        {[true, false].map((outline) =>
+          fingers.map(([x1, y1, x2, y2], i) => (
+            <line
+              key={`${outline}-${i}`}
+              x1={x1}
+              y1={y1}
+              x2={x2}
+              y2={y2}
+              strokeLinecap="round"
+              strokeWidth={outline ? 30 : 25}
+              stroke={
+                outline
+                  ? 'var(--klavio-hand-line)'
+                  : highlight === i + 1
+                    ? 'var(--mantine-color-orange-4)'
+                    : 'var(--klavio-hand)'
+              }
+            />
+          )),
+        )}
+        <rect
+          x="62"
+          y="98"
+          width="110"
+          height="88"
+          rx="40"
+          fill="var(--klavio-hand)"
+          stroke="var(--klavio-hand-line)"
+          strokeWidth="2.5"
+        />
+        {/* cover the finger bases so palm and fingers join */}
+        <rect x="66" y="100" width="102" height="30" rx="14" fill="var(--klavio-hand)" />
+      </g>
+      {fingers.map(([, , fx, y], i) => {
+        const x = mx(fx);
         const show = numbers || highlight === i + 1;
         if (!show) return null;
         return (
@@ -282,7 +307,34 @@ export function TheoryPicture({ picture, kids }: { picture: Picture; kids: boole
     case 'keyboard':
       return <KeyboardPicture p={picture} height={kids ? 150 : 120} />;
     case 'hand':
-      return <HandPicture highlight={picture.highlight} numbers={picture.numbers} />;
+      return (
+        <HandPicture highlight={picture.highlight} numbers={picture.numbers} side={picture.side} />
+      );
+    case 'grand-staff':
+      return (
+        <Box className={classes.staffPicture}>
+          <GrandStaff
+            bars={[
+              {
+                rh: picture.notes
+                  .filter((m) => m >= 60)
+                  .map((m) => ({
+                    midi: m,
+                    label: picture.names ? midiToPitchName(m, lang) : undefined,
+                  })),
+                lh: picture.notes
+                  .filter((m) => m < 60)
+                  .map((m) => ({
+                    midi: m,
+                    label: picture.names ? midiToPitchName(m, lang) : undefined,
+                  })),
+              },
+            ]}
+            height={kids ? 260 : 230}
+            label={picture.notes.map((m) => midiToName(m, lang)).join(', ')}
+          />
+        </Box>
+      );
     case 'sticker':
       return (
         <div className={classes.sticker} aria-hidden>

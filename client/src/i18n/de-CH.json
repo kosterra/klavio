@@ -298,8 +298,19 @@
       "forest": "Hand-Wald",
       "sea": "Noten-Meer",
       "village": "Lieder-Dorf",
-      "mountain": "Rhythmus-Berg"
-    }
+      "mountain": "Rhythmus-Berg",
+      "cave": "Bass-Höhle",
+      "city": "Brücken-Stadt",
+      "night": "Sternen-Nacht"
+    },
+    "stages": {
+      "1": "Stufe 1 · Erste Schritte",
+      "2": "Stufe 2 · Beide Hände",
+      "3": "Stufe 3 · Musiker"
+    },
+    "stagesLabel": "Stufe des Lernpfads",
+    "nextStage": "Danach geht es weiter: {{stage}}",
+    "toStage": "Zu Stufe {{stage}}"
   },
   "lesson": {
     "close": "Lektion beenden",
@@ -343,7 +354,8 @@
     "itIs": "Das ist ein {{note}}.",
     "clef": {
       "treble": "Violinschlüssel",
-      "bass": "Bassschlüssel"
+      "bass": "Bassschlüssel",
+      "grand": "grossem Notensystem"
     },
     "playSong": "Spiel das Lied – ich warte auf dich",
     "listening": "Hör gut zu …",
@@ -367,7 +379,21 @@
       "missed": "gefehlt",
       "extra": "{{count}} Ton zu viel",
       "extra_other": "{{count}} Töne zu viel"
-    }
+    },
+    "improvise": {
+      "ready": "Bereit? Ich spiele eine Begleitung – du spielst frei auf den schwarzen Tasten.",
+      "play": "Spiel, was dir gefällt!",
+      "nudge": "Probier die schwarzen Tasten!",
+      "more": "Schön! Spiel beim nächsten Mal noch etwas mehr – mindestens {{min}} Töne.",
+      "done": "Wunderschön – du hast komponiert!",
+      "count_one": "{{count}} Stern",
+      "count_other": "{{count}} Sterne",
+      "progress": "Begleitung",
+      "start": "Los geht’s",
+      "again": "Nochmals"
+    },
+    "playPiece": "Spiel mit beiden Händen",
+    "micMelodyOnly": "Mit dem Mikrofon zählt hier die Melodie."
   },
   "badges": {
     "title": "Abzeichen",
@@ -462,7 +488,9 @@
     "clapAgain": "Fast! Hör auf die Klicks und versuch es nochmals.",
     "clapAgainButton": "Nochmals",
     "staffLines": "Notenlinien, die Linien sind markiert. Noten: {{notes}}",
-    "staffSpaces": "Notenlinien, die Zwischenräume sind markiert. Noten: {{notes}}"
+    "staffSpaces": "Notenlinien, die Zwischenräume sind markiert. Noten: {{notes}}",
+    "handNumbersLeft": "Linke Hand von oben: Daumen 1, Zeigefinger 2, Mittelfinger 3, Ringfinger 4, kleiner Finger 5",
+    "handMarkedLeft": "Linke Hand von oben, ein Finger ist markiert"
   },
   "knowledge": {
     "title": "Wissen",

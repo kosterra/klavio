@@ -298,8 +298,19 @@
       "forest": "Hand Forest",
       "sea": "Note Sea",
       "village": "Song Village",
-      "mountain": "Rhythm Mountain"
-    }
+      "mountain": "Rhythm Mountain",
+      "cave": "Bass Cave",
+      "city": "Bridge Town",
+      "night": "Starry Night"
+    },
+    "stages": {
+      "1": "Level 1 · First steps",
+      "2": "Level 2 · Both hands",
+      "3": "Level 3 · Musician"
+    },
+    "stagesLabel": "Level of the learning path",
+    "nextStage": "Up next: {{stage}}",
+    "toStage": "To level {{stage}}"
   },
   "lesson": {
     "close": "End lesson",
@@ -343,7 +354,8 @@
     "itIs": "That is {{note}}.",
     "clef": {
       "treble": "treble clef",
-      "bass": "bass clef"
+      "bass": "bass clef",
+      "grand": "grand staff"
     },
     "playSong": "Play the song – I will wait for you",
     "listening": "Listen carefully …",
@@ -367,7 +379,21 @@
       "missed": "missed",
       "extra": "{{count}} extra note",
       "extra_other": "{{count}} extra notes"
-    }
+    },
+    "improvise": {
+      "ready": "Ready? I play an accompaniment – you play freely on the black keys.",
+      "play": "Play whatever you like!",
+      "nudge": "Try the black keys!",
+      "more": "Lovely! Play a bit more next time – at least {{min}} notes.",
+      "done": "Beautiful – you composed!",
+      "count_one": "{{count}} star",
+      "count_other": "{{count}} stars",
+      "progress": "Accompaniment",
+      "start": "Let’s go",
+      "again": "Again"
+    },
+    "playPiece": "Play with both hands",
+    "micMelodyOnly": "With the microphone, the melody counts here."
   },
   "badges": {
     "title": "Badges",
@@ -462,7 +488,9 @@
     "clapAgain": "Almost! Listen to the clicks and try again.",
     "clapAgainButton": "Again",
     "staffLines": "Staff with the lines marked. Notes: {{notes}}",
-    "staffSpaces": "Staff with the spaces marked. Notes: {{notes}}"
+    "staffSpaces": "Staff with the spaces marked. Notes: {{notes}}",
+    "handNumbersLeft": "Left hand from above: thumb 1, index finger 2, middle finger 3, ring finger 4, little finger 5",
+    "handMarkedLeft": "Left hand from above, one finger is marked"
   },
   "knowledge": {
     "title": "Knowledge",

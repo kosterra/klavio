@@ -17,4 +17,8 @@ export type StickerKind =
   | 'tree'
   | 'gift'
   | 'snowflake'
-  | 'candle';
+  | 'candle'
+  | 'bat'
+  | 'crystal'
+  | 'balloon'
+  | 'moon';

@@ -109,7 +109,7 @@ export function GoalSongPrompt() {
       <Text fw={700} className={classes.promptText}>
         {t('goal.promptText')}
       </Text>
-      <Button component={Link} to="/profile#goal" variant="light" color="pink.8" size="sm">
+      <Button component={Link} to="/profile#goal" variant="default" size="sm">
         {t('goal.promptButton')}
       </Button>
     </section>

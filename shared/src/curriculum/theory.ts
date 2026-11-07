@@ -736,6 +736,457 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       hint: L('Denk an die ganze Pizza.', 'Think of the whole pizza.'),
     },
   ],
+
+  // ------------------------------------------------- level 2, chapter 6
+  'bass-hand': [
+    {
+      type: 'explain',
+      text: L(
+        'Die linke Hand hat dieselben Fingernummern: Daumen 1 bis kleiner Finger 5. Aber Achtung – bei der linken Hand ist der Daumen rechts!',
+        'The left hand has the same finger numbers: thumb 1 to little finger 5. But careful – on the left hand the thumb is on the right!',
+      ),
+      picture: { kind: 'hand', side: 'left', numbers: true },
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Welche Nummer hat dieser Finger der linken Hand?',
+        'Which number is this finger of the left hand?',
+      ),
+      picture: { kind: 'hand', side: 'left', highlight: 5, numbers: false },
+      answers: [{ text: L('1', '1') }, { text: L('3', '3') }, { text: L('5', '5'), correct: true }],
+      hint: L(
+        'Der kleinste Finger hat die grösste Nummer.',
+        'The smallest finger has the biggest number.',
+      ),
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Leg die linke Hand aufs C unter dem mittleren C: kleiner Finger auf das C, dann ein Finger pro Taste – der Daumen landet auf dem G.',
+        'Place your left hand on the C below middle C: little finger on C, then one finger per key – the thumb lands on G.',
+      ),
+      picture: {
+        kind: 'keyboard',
+        from: 48,
+        to: 60,
+        labels: 'all',
+        fingering: [
+          [48, 5],
+          [50, 4],
+          [52, 3],
+          [53, 2],
+          [55, 1],
+        ],
+      },
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Mit welchem Finger spielt die linke Hand das C?',
+        'Which finger of the left hand plays C?',
+      ),
+      answers: [
+        { text: L('Mit dem Daumen (1)', 'The thumb (1)') },
+        { text: L('Mit dem kleinen Finger (5)', 'The little finger (5)'), correct: true },
+        { text: L('Mit dem Mittelfinger (3)', 'The middle finger (3)') },
+      ],
+      hint: L(
+        'Links ist der kleine Finger ganz aussen – beim C.',
+        'On the left the little finger is on the outside – on C.',
+      ),
+    },
+  ],
+
+  'bass-clef': [
+    {
+      type: 'explain',
+      text: L(
+        'Für tiefe Töne gibt es einen eigenen Schlüssel: den Bassschlüssel. Seine zwei Punkte umarmen eine Linie – die F-Linie. Darum heisst er auch F-Schlüssel.',
+        'Low notes have their own clef: the bass clef. Its two dots hug one line – the F line. That is why it is also called the F clef.',
+      ),
+      picture: { kind: 'staff', clef: 'bass', notes: [53], names: true },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Von C bis G: C im zweiten Zwischenraum, D auf der Mittellinie, E im dritten Zwischenraum, F auf der vierten Linie, G ganz oben im Zwischenraum.',
+        'From C to G: C in the second space, D on the middle line, E in the third space, F on the fourth line, G in the top space.',
+      ),
+      picture: { kind: 'staff', clef: 'bass', notes: [48, 50, 52, 53, 55], names: true },
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Wie heisst diese Note im Bassschlüssel?',
+        'What is this note called in the bass clef?',
+      ),
+      picture: { kind: 'staff', clef: 'bass', notes: [50] },
+      answers: [{ text: L('C', 'C') }, { text: L('D', 'D'), correct: true }, { text: L('E', 'E') }],
+      hint: L('Sie sitzt genau auf der mittleren Linie.', 'It sits right on the middle line.'),
+    },
+    {
+      type: 'quiz',
+      text: L('Und diese?', 'And this one?'),
+      picture: { kind: 'staff', clef: 'bass', notes: [53] },
+      answers: [{ text: L('E', 'E') }, { text: L('F', 'F'), correct: true }, { text: L('G', 'G') }],
+      hint: L(
+        'Die zwei Punkte des Schlüssels zeigen auf diese Linie.',
+        'The two dots of the clef point to this line.',
+      ),
+    },
+  ],
+
+  'bass-low': [
+    {
+      type: 'explain',
+      text: L(
+        'Unter dem C geht es weiter hinunter: Das H sitzt auf der zweiten Linie, das A im untersten Zwischenraum und das G auf der untersten Linie.',
+        'Below C it goes further down: B sits on the second line, A in the lowest space and G on the bottom line.',
+      ),
+      picture: { kind: 'staff', clef: 'bass', notes: [43, 45, 47, 48], names: true },
+    },
+    {
+      type: 'quiz',
+      text: L('Wie heisst diese Note?', 'What is this note called?'),
+      picture: { kind: 'staff', clef: 'bass', notes: [43] },
+      answers: [{ text: L('G', 'G'), correct: true }, { text: L('A', 'A') }, { text: L('H', 'B') }],
+      hint: L('Sie liegt auf der untersten Linie.', 'It is on the bottom line.'),
+    },
+    {
+      type: 'listen',
+      text: L(
+        'Hör gut zu: Ist der zweite Ton höher oder tiefer?',
+        'Listen carefully: is the second note higher or lower?',
+      ),
+      answers: [L('Höher', 'Higher'), L('Tiefer', 'Lower')],
+      rounds: [
+        { notes: [43, 48], answer: 0 },
+        { notes: [55, 45], answer: 1 },
+        { notes: [47, 52], answer: 0 },
+      ],
+    },
+  ],
+
+  'bass-lamb': [
+    {
+      type: 'explain',
+      text: L(
+        '«Mary Had a Little Lamb» ist ein Kinderlied aus Amerika, fast 200 Jahre alt. Es erzählt von einem Lamm, das Mary sogar in die Schule folgt.',
+        '“Mary Had a Little Lamb” is a children’s song from America, almost 200 years old. It tells of a lamb that even follows Mary to school.',
+      ),
+      picture: { kind: 'sticker', sticker: 'heart' },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Du brauchst nur C, D, E und G – die Finger 5, 4, 3 und 1 der linken Hand.',
+        'You only need C, D, E and G – fingers 5, 4, 3 and 1 of the left hand.',
+      ),
+      picture: {
+        kind: 'keyboard',
+        from: 48,
+        to: 60,
+        labels: 'all',
+        fingering: [
+          [48, 5],
+          [50, 4],
+          [52, 3],
+          [55, 1],
+        ],
+      },
+    },
+    {
+      type: 'listen',
+      text: L(
+        'Hör dir den Anfang an: Geht die Melodie hinauf oder hinunter?',
+        'Listen to the beginning: does the melody go up or down?',
+      ),
+      answers: [L('Hinauf', 'Up'), L('Hinunter', 'Down')],
+      rounds: [{ notes: [52, 50, 48], answer: 1 }],
+    },
+  ],
+
+  // ------------------------------------------------- level 2, chapter 7
+  'both-turns': [
+    {
+      type: 'explain',
+      text: L(
+        'Jetzt spielen beide Hände! Links liegt der kleine Finger auf dem tiefen C, rechts der Daumen auf dem mittleren C. Zuerst spielen sie abwechselnd.',
+        'Now both hands play! On the left the little finger is on the low C, on the right the thumb is on middle C. First they take turns.',
+      ),
+      picture: {
+        kind: 'keyboard',
+        from: 48,
+        to: 72,
+        labels: 'c',
+        fingering: [
+          [48, 5],
+          [55, 1],
+          [60, 1],
+          [67, 5],
+        ],
+      },
+    },
+    {
+      type: 'quiz',
+      text: L('Welche Hand spielt die tiefen Töne?', 'Which hand plays the low notes?'),
+      answers: [
+        { text: L('Die linke Hand', 'The left hand'), correct: true },
+        { text: L('Die rechte Hand', 'The right hand') },
+      ],
+      hint: L('Tief ist auf dem Klavier links.', 'On the piano, low is on the left.'),
+    },
+    {
+      type: 'tap-keys',
+      text: L('Tippe das tiefe C und das mittlere C an!', 'Tap the low C and middle C!'),
+      keyboard: { from: 48, to: 72 },
+      labels: 'none',
+      targets: [[48], [60]],
+      need: 'all',
+      hint: L(
+        'Das C liegt links von den zwei schwarzen Tasten – such ein tiefes und das in der Mitte.',
+        'C is left of the two black keys – find a low one and the one in the middle.',
+      ),
+    },
+  ],
+
+  'both-grand': [
+    {
+      type: 'explain',
+      text: L(
+        'Das grosse Notensystem: oben die Linien mit Violinschlüssel für die rechte Hand, unten die mit Bassschlüssel für die linke. Eine Klammer hält beide zusammen.',
+        'The grand staff: on top the lines with the treble clef for the right hand, below the ones with the bass clef for the left. A brace holds them together.',
+      ),
+      picture: { kind: 'grand-staff', notes: [48, 67], names: true },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Das mittlere C sitzt genau dazwischen – auf einer kleinen Hilfslinie, die zu beiden Systemen gehört.',
+        'Middle C sits right in between – on a little ledger line that belongs to both staves.',
+      ),
+      picture: { kind: 'grand-staff', notes: [60], names: true },
+    },
+    {
+      type: 'quiz',
+      text: L('Welche Hand spielt diese Note?', 'Which hand plays this note?'),
+      picture: { kind: 'grand-staff', notes: [53] },
+      answers: [
+        { text: L('Die linke Hand', 'The left hand'), correct: true },
+        { text: L('Die rechte Hand', 'The right hand') },
+      ],
+      hint: L('Sie steht im unteren System.', 'It is in the lower staff.'),
+    },
+    {
+      type: 'quiz',
+      text: L('Und diese?', 'And this one?'),
+      picture: { kind: 'grand-staff', notes: [67] },
+      answers: [
+        { text: L('Die linke Hand', 'The left hand') },
+        { text: L('Die rechte Hand', 'The right hand'), correct: true },
+      ],
+      hint: L('Sie steht im oberen System.', 'It is in the upper staff.'),
+    },
+  ],
+
+  'both-entchen': [
+    {
+      type: 'explain',
+      text: L(
+        'Die rechte Hand spielt die Melodie, die linke begleitet mit einem langen tiefen Ton pro Takt. Drück beide Tasten gleichzeitig – und halte den tiefen Ton, während die rechte weiterspielt.',
+        'The right hand plays the melody, the left accompanies with one long low note per bar. Press both keys at the same time – and hold the low note while the right hand plays on.',
+      ),
+      picture: { kind: 'grand-staff', notes: [48, 60], names: true },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Spielst du mit dem Mikrofon, höre ich nur einen Ton aufs Mal – dann zählt die Melodie. Mit einem Digitalpiano höre ich beide Hände.',
+        'If you play with the microphone, I can only hear one note at a time – then the melody counts. With a digital piano I hear both hands.',
+      ),
+      picture: { kind: 'sticker', sticker: 'duck' },
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Was macht die linke Hand bei diesem Lied?',
+        'What does the left hand do in this song?',
+      ),
+      answers: [
+        { text: L('Sie spielt die Melodie', 'It plays the melody') },
+        { text: L('Sie hält lange tiefe Töne', 'It holds long low notes'), correct: true },
+        { text: L('Sie macht Pause', 'It rests') },
+      ],
+      hint: L('Die Melodie spielt die rechte Hand.', 'The right hand plays the melody.'),
+    },
+  ],
+
+  'both-freude': [
+    {
+      type: 'explain',
+      text: L(
+        'Bei «Freude» wechselt die linke Hand zwischen C und G: Das G macht neugierig, das C bringt dich wieder nach Hause.',
+        'In “Ode to Joy” the left hand switches between C and G: G makes you curious, C brings you back home.',
+      ),
+      picture: { kind: 'keyboard', from: 48, to: 72, labels: 'c', marks: [48, 55] },
+    },
+    {
+      type: 'listen',
+      text: L(
+        'Hör zu: Geht die linke Hand hinauf oder hinunter?',
+        'Listen: does the left hand go up or down?',
+      ),
+      answers: [L('Hinauf', 'Up'), L('Hinunter', 'Down')],
+      rounds: [
+        { notes: [48, 55], answer: 0 },
+        { notes: [55, 48], answer: 1 },
+      ],
+    },
+  ],
+
+  // ------------------------------------------------- level 2, chapter 8
+  'black-keys': [
+    {
+      type: 'explain',
+      text: L(
+        'Die schwarzen Tasten haben Namen! Rechts neben dem C liegt das Cis – «is» heisst: einen Schritt höher. So gibt es Cis, Dis, Fis, Gis und Ais.',
+        'The black keys have names! Right of C is C sharp – “sharp” means one step higher. So there are C sharp, D sharp, F sharp, G sharp and A sharp.',
+      ),
+      picture: { kind: 'keyboard', from: 60, to: 72, labels: 'all', marks: [61, 63, 66, 68, 70] },
+    },
+    {
+      type: 'tap-keys',
+      text: L('Tippe alle Fis an!', 'Tap every F sharp!'),
+      keyboard: { from: 48, to: 72 },
+      labels: 'none',
+      targets: [[54], [66]],
+      need: 'all',
+      hint: L(
+        'Das Fis liegt rechts neben dem F – die erste Taste der Dreiergruppe.',
+        'F sharp is right of F – the first key of the group of three.',
+      ),
+    },
+    {
+      type: 'quiz',
+      text: L('Welche schwarze Taste liegt rechts neben dem G?', 'Which black key is right of G?'),
+      answers: [
+        { text: L('Fis', 'F sharp') },
+        { text: L('Gis', 'G sharp'), correct: true },
+        { text: L('Ais', 'A sharp') },
+      ],
+      hint: L('Rechts neben dem G heisst: G mit «is».', 'Right of G means: G sharp.'),
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Übrigens: Jede schwarze Taste hat zwei Namen. Das Cis heisst auch Des – «es» heisst einen Schritt tiefer. Zuerst lernst du die Namen mit «is».',
+        'By the way: every black key has two names. C sharp is also D flat – “flat” means one step lower. You learn the sharp names first.',
+      ),
+      picture: { kind: 'keyboard', from: 60, to: 72, labels: 'all', marks: [61] },
+    },
+  ],
+
+  'black-sharps': [
+    {
+      type: 'explain',
+      text: L(
+        'In den Noten zeigt ein Kreuz ♯: Spiel die Taste einen Schritt höher. Aus F wird Fis.',
+        'In the music a sharp ♯ shows: play the key one step higher. F becomes F sharp.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [65, 66], names: true },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Und ein ♭ macht eine Note einen Schritt tiefer. Lustig: Aus H wird so das B – darum heisst bei uns die weisse Taste H und nicht B.',
+        'And a flat ♭ makes a note one step lower. Fun fact: in German, B flat is called “B” – that is why Germans call the white key B an “H”.',
+      ),
+      picture: { kind: 'keyboard', from: 60, to: 72, labels: 'all', marks: [70, 71] },
+    },
+    {
+      type: 'quiz',
+      text: L('Welche Taste spielst du für diese Note?', 'Which key do you play for this note?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [66] },
+      answers: [
+        { text: L('F', 'F') },
+        { text: L('Fis', 'F sharp'), correct: true },
+        { text: L('G', 'G') },
+      ],
+      hint: L('Schau auf das Kreuz vor der Note.', 'Look at the sharp in front of the note.'),
+    },
+    {
+      type: 'quiz',
+      text: L('Was macht das Kreuz ♯?', 'What does the sharp ♯ do?'),
+      answers: [
+        { text: L('Einen Schritt höher', 'One step higher'), correct: true },
+        { text: L('Einen Schritt tiefer', 'One step lower') },
+        { text: L('Die Note wird lauter', 'The note gets louder') },
+      ],
+      hint: L(
+        'Aus F wird Fis – die Taste rechts daneben.',
+        'F becomes F sharp – the key to its right.',
+      ),
+    },
+  ],
+
+  'black-lamb': [
+    {
+      type: 'explain',
+      text: L(
+        'Ein Trick der Pianisten: Das Lied vom Lamm klingt auch nur auf schwarzen Tasten! Es beginnt auf dem Ais.',
+        'A pianist’s trick: the song about the lamb also works on black keys only! It starts on A sharp.',
+      ),
+      picture: { kind: 'keyboard', from: 60, to: 74, labels: 'none', marks: [66, 68, 70, 73] },
+    },
+    {
+      type: 'quiz',
+      text: L('Auf welcher Taste beginnt das Lied?', 'Which key does the song start on?'),
+      answers: [
+        { text: L('Fis', 'F sharp') },
+        { text: L('Gis', 'G sharp') },
+        { text: L('Ais', 'A sharp'), correct: true },
+      ],
+      hint: L('Lies nochmals oben nach.', 'Read the text above once more.'),
+    },
+  ],
+
+  'black-improvise': [
+    {
+      type: 'explain',
+      text: L(
+        'Improvisieren heisst: Du erfindest Musik, während du spielst. Auf den schwarzen Tasten passt alles zusammen – du kannst nichts falsch machen.',
+        'Improvising means: you make up music while you play. On the black keys everything fits together – you cannot go wrong.',
+      ),
+      picture: {
+        kind: 'keyboard',
+        from: 48,
+        to: 72,
+        labels: 'none',
+        marks: [49, 51, 54, 56, 58, 61, 63, 66, 68, 70],
+      },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Tipps: Spiel mal schnell, mal langsam, mal hoch, mal tief. Und mach auch mal eine Pause – Stille gehört zur Musik.',
+        'Tips: play sometimes fast, sometimes slow, sometimes high, sometimes low. And take a break now and then – silence is part of music.',
+      ),
+      picture: { kind: 'sticker', sticker: 'star' },
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Was klingt auf den schwarzen Tasten falsch?',
+        'What sounds wrong on the black keys?',
+      ),
+      answers: [
+        { text: L('Fast alles', 'Almost everything') },
+        { text: L('Nichts – alles passt zusammen', 'Nothing – everything fits'), correct: true },
+      ],
+      hint: L('Probier es aus – du wirst staunen.', 'Try it – you will be amazed.'),
+    },
+  ],
 };
 
 export function theoryFor(lessonId: string): TheoryStep[] {

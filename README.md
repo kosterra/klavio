@@ -9,8 +9,11 @@ Der Produktname ist ein Platzhalter. Er steht zentral in
 
 ## Was die App kann
 
-- **Lernpfad** mit 5 Kapiteln und 18 Lektionen: Tastatur entdecken, rechte Hand, Noten lesen, erste
-  Lieder, Rhythmus.
+- **Lernpfad** in Stufen mit je eigener Karte: Stufe 1 (Tastatur entdecken, rechte Hand, Noten
+  lesen, erste Lieder, Rhythmus) und Stufe 2 (linke Hand und Bassschlüssel, beide Hände im grossen
+  Notensystem, schwarze Tasten mit Improvisieren) – 8 Welten, 30 Lektionen.
+- **Mein Traumlied:** Erwachsene (und Kinder) nennen das Lied, das sie eines Tages spielen möchten;
+  Klavio zeigt, welche Fähigkeiten es braucht, wie weit der Weg schon ist, und feiert Meilensteine.
 - **Entdecken** vor jeder Lektion: kurze Erklärungen mit Bildern, Tipp-Spiele, Bilder-Quiz,
   Hör- und Klatschspiele; «Weisst du's noch?» zu Beginn jedes Kapitels; die Seite **Wissen** zum
   Nachschauen.

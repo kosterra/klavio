@@ -1,6 +1,6 @@
 import { noteNameToMidi } from '../music/notes.ts';
 import type { Chapter, Lesson } from './types.ts';
-import { rhythm, rhythmOnsets, song } from './song.ts';
+import { piece, pieceSteps, rhythm, rhythmOnsets, song } from './song.ts';
 
 /** "C4 D4 E4" → [60, 62, 64]; German "H" is accepted. */
 const seq = (s: string) => s.trim().split(/\s+/).map(noteNameToMidi);
@@ -19,6 +19,7 @@ export const CURRICULUM: Chapter[] = [
   {
     id: 'keys',
     title: { 'de-CH': 'Die Tastatur entdecken', en: 'Discover the keyboard' },
+    stage: 1,
     lessons: [
       {
         id: 'keys-c',
@@ -130,6 +131,7 @@ export const CURRICULUM: Chapter[] = [
   {
     id: 'hand',
     title: { 'de-CH': 'Die rechte Hand', en: 'The right hand' },
+    stage: 1,
     lessons: [
       {
         id: 'hand-a-h',
@@ -204,6 +206,7 @@ export const CURRICULUM: Chapter[] = [
 CURRICULUM.push({
   id: 'read',
   title: { 'de-CH': 'Noten lesen', en: 'Reading notes' },
+  stage: 1,
   lessons: [
     {
       id: 'read-c-d-e',
@@ -255,6 +258,7 @@ CURRICULUM.push({
 CURRICULUM.push({
   id: 'songs',
   title: { 'de-CH': 'Erste Lieder', en: 'First songs' },
+  stage: 1,
   lessons: [
     {
       id: 'song-haenschen',
@@ -319,6 +323,7 @@ CURRICULUM.push({
 CURRICULUM.push({
   id: 'rhythm',
   title: { 'de-CH': 'Im Takt', en: 'In time' },
+  stage: 1,
   lessons: [
     {
       id: 'rhythm-quarters',
@@ -351,6 +356,261 @@ CURRICULUM.push({
   ],
 });
 
+// ---------------------------------------------------------------- level 2
+const C3_C4 = { from: 48, to: 60 };
+const G2_C4 = { from: 43, to: 60 };
+
+CURRICULUM.push({
+  id: 'bass',
+  title: { 'de-CH': 'Die linke Hand', en: 'The left hand' },
+  stage: 2,
+  lessons: [
+    {
+      id: 'bass-hand',
+      kind: 'play',
+      title: { 'de-CH': 'Fünf Töne links', en: 'Five notes on the left' },
+      intro: {
+        'de-CH':
+          'Jetzt ist die linke Hand dran! Der kleine Finger liegt auf dem C unter dem mittleren C, der Daumen auf dem G. Spiel nach, was ich zeige.',
+        en: 'Now it is the left hand’s turn! The little finger is on the C below middle C, the thumb on G. Play what I show you.',
+      },
+      xp: 15,
+      keyboard: C3_C4,
+      keyLabels: 'all',
+      exercises: [
+        {
+          type: 'play-along',
+          sequences: [
+            seq('C3 D3 E3 F3 G3'),
+            seq('G3 F3 E3 D3 C3'),
+            seq('C3 E3 G3'),
+            seq('G3 E3 C3'),
+            seq('C3 D3 E3 D3 C3'),
+          ],
+        },
+      ],
+    },
+    {
+      id: 'bass-clef',
+      kind: 'read',
+      title: { 'de-CH': 'Der Bassschlüssel', en: 'The bass clef' },
+      intro: {
+        'de-CH':
+          'Die linke Hand liest ihre Noten im Bassschlüssel. Seine zwei Punkte umarmen die F-Linie. Das C sitzt im zweiten Zwischenraum.',
+        en: 'The left hand reads its notes in the bass clef. Its two dots hug the F line. C sits in the second space.',
+      },
+      xp: 15,
+      keyboard: C3_C4,
+      keyLabels: 'c',
+      exercises: [{ type: 'read-note', clef: 'bass', notes: seq('C3 D3 E3 F3 G3'), rounds: 8 }],
+    },
+    {
+      id: 'bass-low',
+      kind: 'read',
+      title: { 'de-CH': 'Tief unten: G, A, H', en: 'Deep down: G, A, B' },
+      intro: {
+        'de-CH':
+          'Noch tiefer in die Höhle: unter dem C liegen H, A und G. Im Bassschlüssel steht das G auf der untersten Linie.',
+        en: 'Deeper into the cave: below C are B, A and G. In the bass clef, G sits on the bottom line.',
+      },
+      xp: 20,
+      keyboard: G2_C4,
+      keyLabels: 'c',
+      exercises: [
+        { type: 'read-note', clef: 'bass', notes: seq('G2 A2 H2 C3 D3 E3 F3 G3'), rounds: 10 },
+      ],
+    },
+    {
+      id: 'bass-lamb',
+      kind: 'song',
+      title: { 'de-CH': 'Mary Had a Little Lamb', en: 'Mary Had a Little Lamb' },
+      intro: {
+        'de-CH':
+          'Ein englisches Kinderlied – ganz für die linke Hand, im Bassschlüssel. Drei Finger reichen fast für alles!',
+        en: 'An English children’s song – all for the left hand, in the bass clef. Three fingers almost do it all!',
+      },
+      xp: 25,
+      keyboard: C3_C4,
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'E3/q D3/q C3/q D3/q | E3/q E3/q E3/h | D3/q D3/q D3/h | E3/q G3/q G3/h | E3/q D3/q C3/q D3/q | E3/q E3/q E3/q E3/q | D3/q D3/q E3/q D3/q | C3/w',
+          { clef: 'bass', tempo: 96 },
+        ),
+      ],
+    },
+  ],
+});
+
+CURRICULUM.push({
+  id: 'both',
+  title: { 'de-CH': 'Beide Hände', en: 'Both hands' },
+  stage: 2,
+  lessons: [
+    {
+      id: 'both-turns',
+      kind: 'play',
+      title: { 'de-CH': 'Hände abwechselnd', en: 'Taking turns' },
+      intro: {
+        'de-CH':
+          'Beide Hände liegen bereit: links ab dem tiefen C, rechts ab dem mittleren C. Sie spielen abwechselnd – wie ein Gespräch.',
+        en: 'Both hands are ready: left from the low C, right from middle C. They take turns – like a conversation.',
+      },
+      xp: 15,
+      keyboard: C3_C5,
+      keyLabels: 'c',
+      exercises: [
+        {
+          type: 'play-along',
+          sequences: [
+            seq('C3 C4 D3 D4 E3 E4'),
+            seq('G3 G4 F3 F4 E3 E4'),
+            seq('C3 E4 G3 G4'),
+            seq('E3 C4 D3 D4 C3 C4'),
+          ],
+        },
+      ],
+    },
+    {
+      id: 'both-grand',
+      kind: 'read',
+      title: { 'de-CH': 'Das grosse Notensystem', en: 'The grand staff' },
+      intro: {
+        'de-CH':
+          'Oben der Violinschlüssel für die rechte Hand, unten der Bassschlüssel für die linke – zusammen das grosse Notensystem. Spiel jede Note mit der richtigen Hand.',
+        en: 'Treble clef on top for the right hand, bass clef below for the left – together the grand staff. Play every note with the right hand.',
+      },
+      xp: 20,
+      keyboard: C3_C5,
+      keyLabels: 'c',
+      exercises: [
+        {
+          type: 'read-note',
+          clef: 'grand',
+          notes: seq('C3 D3 E3 F3 G3 C4 D4 E4 F4 G4'),
+          rounds: 10,
+        },
+      ],
+    },
+    {
+      id: 'both-entchen',
+      kind: 'song',
+      title: { 'de-CH': 'Entchen mit Begleitung', en: 'Ducklings with accompaniment' },
+      intro: {
+        'de-CH':
+          'Die rechte Hand spielt die Melodie, die linke hält dazu einen langen tiefen Ton. Mit dem Digitalpiano zählen beide Töne, mit dem Mikrofon die Melodie.',
+        en: 'The right hand plays the melody, the left holds a long low note. With a digital piano both notes count, with the microphone the melody.',
+      },
+      xp: 30,
+      keyboard: C3_C5,
+      keyLabels: 'c',
+      exercises: [
+        piece(
+          'C4/q D4/q E4/q F4/q | G4/h G4/h | A4/q A4/q A4/q A4/q | G4/w | A4/q A4/q A4/q A4/q | G4/w | F4/q F4/q F4/q F4/q | E4/h E4/h | D4/q D4/q D4/q D4/q | C4/w',
+          'C3/w | C3/w | F3/w | C3/w | F3/w | C3/w | F3/w | C3/w | G3/w | C3/w',
+          { tempo: 90, showNames: true },
+        ),
+      ],
+    },
+    {
+      id: 'both-freude',
+      kind: 'song',
+      title: { 'de-CH': 'Freude mit beiden Händen', en: 'Ode to Joy with both hands' },
+      intro: {
+        'de-CH':
+          'Beethovens Melodie kennst du schon. Jetzt kommt die linke Hand dazu: ein tiefes C oder G am Anfang jedes Takts.',
+        en: 'You already know Beethoven’s melody. Now the left hand joins: a low C or G at the start of every bar.',
+      },
+      xp: 35,
+      keyboard: C3_C5,
+      keyLabels: 'c',
+      exercises: [
+        piece(
+          'E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | E4/qd D4/8 D4/h | E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | D4/qd C4/8 C4/h',
+          'C3/w | G3/w | C3/w | G3/w | C3/w | G3/w | C3/w | G3/h C3/h',
+          { tempo: 96 },
+        ),
+      ],
+    },
+  ],
+});
+
+CURRICULUM.push({
+  id: 'black',
+  title: { 'de-CH': 'Die schwarzen Tasten', en: 'The black keys' },
+  stage: 2,
+  lessons: [
+    {
+      id: 'black-keys',
+      kind: 'keys',
+      title: { 'de-CH': 'Cis, Dis, Fis, Gis, Ais', en: 'C♯, D♯, F♯, G♯, A♯' },
+      intro: {
+        'de-CH':
+          'Die schwarzen Tasten bekommen Namen: Rechts neben dem C liegt das Cis, neben dem D das Dis. Finde sie alle!',
+        en: 'The black keys get names: right of C is C sharp, right of D is D sharp. Find them all!',
+      },
+      xp: 15,
+      keyboard: C3_C5,
+      keyLabels: 'none',
+      exercises: [{ type: 'find-key', notes: pcs('C# D# F# G# A#'), rounds: 8, anyOctave: true }],
+    },
+    {
+      id: 'black-sharps',
+      kind: 'read',
+      title: { 'de-CH': 'Kreuz in den Noten', en: 'Sharps in the music' },
+      intro: {
+        'de-CH':
+          'Ein Kreuz ♯ vor einer Note heisst: eine Taste weiter nach rechts – meistens die schwarze. Aus F wird Fis.',
+        en: 'A sharp ♯ in front of a note means: one key further to the right – usually the black one. F becomes F sharp.',
+      },
+      xp: 20,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        {
+          type: 'read-note',
+          clef: 'treble',
+          notes: seq('C#4 D#4 F#4 G#4 A#4 D4 F4 G4'),
+          rounds: 10,
+        },
+      ],
+    },
+    {
+      id: 'black-lamb',
+      kind: 'song',
+      title: { 'de-CH': 'Mary auf den schwarzen Tasten', en: 'Mary on the black keys' },
+      intro: {
+        'de-CH':
+          'Das Lied vom Lamm, diesmal nur auf schwarzen Tasten – es beginnt auf dem Ais, der obersten Taste der Dreiergruppe.',
+        en: 'The song about the lamb, this time on black keys only – it starts on A sharp, the top key of the group of three.',
+      },
+      xp: 30,
+      keyboard: { from: 60, to: 74 }, // up to D5: the song reaches C sharp 5
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'A#4/q G#4/q F#4/q G#4/q | A#4/q A#4/q A#4/h | G#4/q G#4/q G#4/h | A#4/q C#5/q C#5/h | A#4/q G#4/q F#4/q G#4/q | A#4/q A#4/q A#4/q A#4/q | G#4/q G#4/q A#4/q G#4/q | F#4/w',
+          { tempo: 96, showNames: true },
+        ),
+      ],
+    },
+    {
+      id: 'black-improvise',
+      kind: 'improvise',
+      title: { 'de-CH': 'Sternen-Improvisation', en: 'Starlight improvisation' },
+      intro: {
+        'de-CH':
+          'Jetzt bist du der Komponist! Ich spiele eine Begleitung, du spielst dazu frei auf den schwarzen Tasten. Hier klingt nichts falsch.',
+        en: 'Now you are the composer! I play an accompaniment, you play freely on the black keys. Nothing sounds wrong here.',
+      },
+      xp: 25,
+      keyboard: C3_C5,
+      keyLabels: 'none',
+      exercises: [{ type: 'improvise', keys: 'black', tempo: 88, bars: 8, minNotes: 12 }],
+    },
+  ],
+});
+
 /** All lessons in learning order. */
 export const LESSONS: Lesson[] = CURRICULUM.flatMap((c) => c.lessons);
 
@@ -373,7 +633,11 @@ export function lessonTargetCount(lesson: Lesson): number {
           ? e.bars.reduce((m, b) => m + b.length, 0)
           : e.type === 'rhythm'
             ? e.patterns.reduce((m, p) => m + rhythmOnsets(p).length, 0)
-            : e.rounds),
+            : e.type === 'piece'
+              ? pieceSteps(e).length
+              : e.type === 'improvise'
+                ? 1
+                : e.rounds),
     0,
   );
 }

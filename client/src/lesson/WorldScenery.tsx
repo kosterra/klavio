@@ -87,6 +87,55 @@ const TILES: Record<WorldId, { width: number; draw: ReactNode }> = {
       </>
     ),
   },
+  // Bass-Höhle: stalagmites with glowing crystals
+  cave: {
+    width: 96,
+    draw: (
+      <>
+        <path
+          d="M0 40 V30 L10 14 L18 30 L28 20 L36 30 L52 8 L64 30 L76 22 L88 30 L96 30 V40 Z"
+          fill={HILL2}
+        />
+        <path d="M44 34 L48 22 L52 34 Z" fill="var(--mantine-color-yellow-3)" opacity="0.9" />
+        <path d="M80 36 L83 27 L86 36 Z" fill="var(--mantine-color-cyan-3)" opacity="0.9" />
+        <rect x="0" y="36" width="96" height="4" fill={HILL} />
+      </>
+    ),
+  },
+  // Brücken-Stadt: rooftops and the arches of a bridge
+  city: {
+    width: 120,
+    draw: (
+      <>
+        <rect x="6" y="16" width="20" height="20" fill={HILL2} />
+        <path d="M4 17 L16 6 L28 17 Z" fill={LIGHT} opacity="0.6" />
+        <rect x="30" y="22" width="16" height="14" fill={HILL} />
+        <rect x="96" y="12" width="14" height="24" fill={HILL2} />
+        <path d="M94 13 L103 4 L112 13 Z" fill={LIGHT} opacity="0.6" />
+        <path d="M46 36 V30 Q58 18 70 30 Q82 18 94 30 V36 Z" fill={HILL} />
+        <rect x="0" y="34" width="120" height="6" fill={HILL2} />
+        <rect x="12" y="22" width="5" height="5" fill={SURFACE} opacity="0.7" />
+        <rect x="100" y="18" width="5" height="5" fill={SURFACE} opacity="0.7" />
+      </>
+    ),
+  },
+  // Sternen-Nacht: dark hills under twinkling stars
+  night: {
+    width: 110,
+    draw: (
+      <>
+        <path d="M0 40 V26 Q28 10 55 24 T110 26 V40 Z" fill={HILL2} />
+        <path d="M0 40 V34 Q30 26 60 32 T110 34 V40 Z" fill={DARK} opacity="0.35" />
+        <path
+          d="M20 8 L21.5 11.5 L25 13 L21.5 14.5 L20 18 L18.5 14.5 L15 13 L18.5 11.5 Z"
+          fill="var(--mantine-color-yellow-4)"
+        />
+        <circle cx="70" cy="10" r="1.8" fill="var(--mantine-color-yellow-3)" />
+        <circle cx="92" cy="6" r="1.4" fill="var(--mantine-color-yellow-3)" />
+        <circle cx="46" cy="4" r="1.2" fill="var(--mantine-color-yellow-3)" />
+      </>
+    ),
+  },
 };
 
 /** The landscape along the bottom edge of a world, repeated across the full width. */

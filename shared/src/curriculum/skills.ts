@@ -84,6 +84,18 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
   'song-weihnachtsmann': ['melodies'],
   'rhythm-quarters': ['note-values'],
   'rhythm-rests': ['note-values'],
+  'bass-hand': ['left-hand'],
+  'bass-clef': ['bass-clef'],
+  'bass-low': ['bass-clef'],
+  'bass-lamb': ['left-hand'],
+  'both-turns': ['both-hands'],
+  'both-grand': ['grand-staff'],
+  'both-entchen': ['both-hands'],
+  'both-freude': ['both-hands'],
+  'black-keys': ['black-keys'],
+  'black-sharps': ['black-keys'],
+  'black-lamb': ['black-keys'],
+  'black-improvise': ['improvise'],
 };
 
 /** Lessons (in learning order) that teach a skill; empty = planned for later. */

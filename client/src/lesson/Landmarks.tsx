@@ -245,6 +245,117 @@ const LANDMARKS: Record<WorldId, ReactNode> = {
       <Note x={40} y={20} s={0.8} />
     </>
   ),
+  // Bass-Höhle: a cave mouth with glowing crystals and a bat
+  cave: (
+    <>
+      <path d="M6 126 Q10 40 90 30 Q170 40 174 126 Z" fill={C} {...line} />
+      <path d="M40 126 Q44 70 90 64 Q136 70 140 126 Z" fill="#20172e" {...line} />
+      <path
+        d="M58 126 L66 96 L74 126 Z"
+        fill="var(--mantine-color-yellow-3)"
+        {...line}
+        strokeWidth={2}
+      />
+      <path
+        d="M100 126 L110 88 L120 126 Z"
+        fill="var(--mantine-color-cyan-3)"
+        {...line}
+        strokeWidth={2}
+      />
+      <path d="M84 126 L89 108 L94 126 Z" fill={LIGHT} {...line} strokeWidth={2} />
+      <path d="M70 66 L74 80 L78 66 Z M98 66 L102 82 L106 66 Z" fill={C} />
+      <path
+        d="M90 22 Q82 12 70 16 Q76 20 74 26 Q80 24 82 30 Q86 26 90 30 Q94 26 98 30 Q100 24 106 26 Q104 20 110 16 Q98 12 90 22 Z"
+        fill={INK}
+      />
+      <circle cx="87" cy="23" r="1.6" fill="#fff" />
+      <circle cx="93" cy="23" r="1.6" fill="#fff" />
+      <path
+        d="M30 60 Q40 48 52 50"
+        stroke={GLOSS}
+        strokeWidth="5"
+        fill="none"
+        strokeLinecap="round"
+      />
+    </>
+  ),
+  // Brücken-Stadt: an arched bridge between two towers
+  city: (
+    <>
+      <path
+        d="M2 116 Q24 108 46 116 T90 116 T134 116 T178 116 V128 H2 Z"
+        fill="var(--mantine-color-cyan-3)"
+        {...line}
+      />
+      <rect x="14" y="40" width="30" height="86" rx="3" fill={LIGHT} {...line} />
+      <rect x="136" y="40" width="30" height="86" rx="3" fill={LIGHT} {...line} />
+      <path d="M10 42 L29 16 L48 42 Z" fill={DARK} {...line} />
+      <path d="M132 42 L151 16 L170 42 Z" fill={DARK} {...line} />
+      <path d="M44 74 H136 V88 Q113 66 90 88 Q67 66 44 88 Z" fill={C} {...line} />
+      <path d="M44 74 Q90 40 136 74" stroke={INK} strokeWidth="3" fill="none" />
+      <path
+        d="M60 64 V74 M75 56 V74 M90 54 V74 M105 56 V74 M120 64 V74"
+        stroke={INK}
+        strokeWidth="2"
+      />
+      <rect
+        x="23"
+        y="56"
+        width="12"
+        height="16"
+        rx="6"
+        fill="var(--mantine-color-yellow-3)"
+        {...line}
+        strokeWidth={2}
+      />
+      <rect
+        x="145"
+        y="56"
+        width="12"
+        height="16"
+        rx="6"
+        fill="var(--mantine-color-yellow-3)"
+        {...line}
+        strokeWidth={2}
+      />
+      <rect x="18" y="46" width="4" height="22" rx="2" fill={GLOSS} />
+    </>
+  ),
+  // Sternen-Nacht: an observatory under the moon
+  night: (
+    <>
+      <Ground />
+      <path
+        d="M128 10 A18 18 0 1 0 150 40 A14 14 0 1 1 128 10 Z"
+        fill="var(--mantine-color-yellow-4)"
+        {...line}
+      />
+      <rect x="62" y="64" width="56" height="58" fill={C} {...line} />
+      <path d="M56 66 Q90 18 124 66 Z" fill={LIGHT} {...line} />
+      <path d="M84 30 L84 66 M84 30 L104 40" stroke={INK} strokeWidth="3" />
+      <rect
+        x="94"
+        y="34"
+        width="22"
+        height="9"
+        rx="3"
+        fill={DARK}
+        {...line}
+        strokeWidth={2}
+        transform="rotate(-25 105 38)"
+      />
+      <rect x="80" y="92" width="20" height="30" rx="8" fill={DARK} {...line} />
+      <path
+        d="M30 26 L32 31 L37 33 L32 35 L30 40 L28 35 L23 33 L28 31 Z"
+        fill="var(--mantine-color-yellow-4)"
+      />
+      <path
+        d="M44 8 L45.5 11.5 L49 13 L45.5 14.5 L44 18 L42.5 14.5 L39 13 L42.5 11.5 Z"
+        fill="var(--mantine-color-yellow-4)"
+      />
+      <rect x="66" y="70" width="4" height="26" rx="2" fill={GLOSS} />
+    </>
+  ),
 };
 
 /** A world's landmark with a wooden name sign. */

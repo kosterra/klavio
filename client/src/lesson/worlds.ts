@@ -3,7 +3,16 @@ import { CURRICULUM } from '@klavio/shared';
 import type { StickerKind } from './stickerKinds';
 
 /** One colour per chapter (Mantine palette names), repeating. */
-export const CHAPTER_COLORS = ['indigo', 'teal', 'grape', 'orange', 'cyan'];
+export const CHAPTER_COLORS = [
+  'indigo',
+  'teal',
+  'grape',
+  'orange',
+  'cyan',
+  'violet',
+  'pink',
+  'blue',
+];
 
 /** CSS variables that colour a chapter's world. */
 export function chapterVars(color: string): CSSProperties {
@@ -27,7 +36,8 @@ export function worldOfLesson(lessonId: string) {
   return { chapter, index: ci, color, world: worldOf(chapter.id, ci), vars: chapterVars(color) };
 }
 
-export type WorldId = 'keys' | 'forest' | 'sea' | 'village' | 'mountain';
+export type WorldId =
+  'keys' | 'forest' | 'sea' | 'village' | 'mountain' | 'cave' | 'city' | 'night';
 
 /** The centre marking of the road – each world has its own surface. */
 export interface RoadSurface {
@@ -82,6 +92,24 @@ export const WORLDS: Record<WorldId, World> = {
     stickers: ['drum', 'metronome', 'heart'],
     road: { width: 26, dash: '3 21', cap: 'butt', color: LINE },
   },
+  // Bass-Höhle: glowing crystal dots
+  cave: {
+    id: 'cave',
+    stickers: ['bat', 'crystal', 'note'],
+    road: { width: 9, dash: '0 16', cap: 'round', color: 'var(--mantine-color-yellow-3)' },
+  },
+  // Brücken-Stadt: paving stones
+  city: {
+    id: 'city',
+    stickers: ['balloon', 'bell', 'heart'],
+    road: { width: 22, dash: '12 4', cap: 'butt', color: LINE, opacity: 0.8 },
+  },
+  // Sternen-Nacht: a trail of little stars
+  night: {
+    id: 'night',
+    stickers: ['moon', 'star', 'sparkle'],
+    road: { width: 7, dash: '0 12', cap: 'round', color: 'var(--mantine-color-yellow-4)' },
+  },
 };
 
 const BY_CHAPTER: Record<string, WorldId> = {
@@ -90,9 +118,12 @@ const BY_CHAPTER: Record<string, WorldId> = {
   read: 'sea',
   songs: 'village',
   rhythm: 'mountain',
+  bass: 'cave',
+  both: 'city',
+  black: 'night',
 };
 
-const ORDER: WorldId[] = ['keys', 'forest', 'sea', 'village', 'mountain'];
+const ORDER: WorldId[] = ['keys', 'forest', 'sea', 'village', 'mountain', 'cave', 'city', 'night'];
 
 export function worldOf(chapterId: string, index: number): World {
   return WORLDS[BY_CHAPTER[chapterId] ?? ORDER[index % ORDER.length]!];

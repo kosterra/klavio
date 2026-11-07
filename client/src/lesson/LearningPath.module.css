@@ -583,3 +583,18 @@ a.node:active {
   color: var(--mantine-color-dark-9);
   background: var(--mantine-color-lime-3);
 }
+
+/* level switch in the map heading and the teaser for the next level */
+.stageSwitch {
+  max-width: 100%;
+  background: color-mix(in srgb, var(--chapter-color) 12%, var(--klavio-surface));
+}
+
+.stageTeaser {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
+}

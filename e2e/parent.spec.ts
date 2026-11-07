@@ -21,7 +21,7 @@ test('account name and parent PIN protect the parent area', async ({ page }) => 
   await expect(page.getByTestId('account-name')).toHaveText('Familie Muster');
   await page.getByRole('button', { name: 'Name ändern' }).click();
   await page.getByLabel('Name des Kontos').fill('Familie Huber');
-  await page.getByRole('button', { name: 'Speichern' }).click();
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
   await expect(page.getByTestId('account-name')).toHaveText('Familie Huber');
 
   await page.getByRole('button', { name: 'PIN festlegen' }).click();
@@ -32,7 +32,7 @@ test('account name and parent PIN protect the parent area', async ({ page }) => 
   await typePin(page, pinCard, '2468');
   await page.getByRole('button', { name: 'Weiter' }).click();
   await typePin(page, pinCard, '2468');
-  await page.getByRole('button', { name: 'Speichern' }).click();
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
   await expect(page.getByText('Die Eltern-PIN ist eingerichtet.')).toBeVisible();
   await audit(page);
 
@@ -71,7 +71,7 @@ test('account name and parent PIN protect the parent area', async ({ page }) => 
   await expect(page.getByText('Deine Figur kannst du selbst wählen.')).toBeVisible();
   await expect(page.getByLabel('Name')).toBeDisabled();
   await page.getByRole('radio', { name: 'Quaki, der Frosch' }).click();
-  await page.getByRole('button', { name: 'Speichern' }).click();
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
   await expect(page.getByText('Profil gespeichert.')).toBeVisible();
   await expect(page.getByRole('radio', { name: 'Quaki, der Frosch' })).toHaveAttribute(
     'aria-checked',

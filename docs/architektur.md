@@ -199,6 +199,17 @@ Notenwerte als Pizza) – keine Bilddateien. Nichts davon wird bewertet. Die ers
 Kapitels beginnt mit «Weisst du's noch?» (`recapFor`: Quizfragen aus dem vorherigen Kapitel). Die
 Seite «Wissen» (`/knowledge`) zeigt die Erklärungen aller erreichten Lektionen.
 
+**Stufen, Fähigkeiten und Traumlied:** Kapitel gehören zu Stufen mit je eigener Karte im
+Lernpfad. Lektionen lehren Fähigkeiten (`shared/src/curriculum/skills.ts`); das Traumlied eines
+Profils (Titel, Art, gewünschte Fähigkeiten – keine Noten) wird daraus fortlaufend bewertet
+(`goalProgress`), Meilensteine meldet die Ergebnisseite (`newlyReachedGoalSkills`).
+
+**Beide Hände:** `notation/GrandStaff.tsx` zeichnet das grosse Notensystem (VexFlow, Klammer,
+ausgerichtete Stimmen). `PieceExercise` wartet Schritt für Schritt (`pieceSteps`) auf die Töne beider
+Hände; mit dem Mikrofon genügt die Melodie. `ImproviseExercise` spielt eine Begleitung (mit dem
+Mikrofon nur Klicks, damit es die Begleitung nicht als Töne hört) und zählt Töne auf schwarzen
+Tasten.
+
 **Wiederholen:** `shared/src/curriculum/review.ts` legt fest, wann eine gespielte Lektion wieder
 fällig ist (nach 1, 3, 7, 14, dann 30 Tagen; Stufe `box`). Eine gute Wiederholung (2–3 Sterne) einer
 fälligen Lektion rückt eine Stufe weiter und gibt `REVIEW_BONUS_XP`, ein schwaches Ergebnis eine
