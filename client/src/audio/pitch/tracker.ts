@@ -58,7 +58,8 @@ export class NoteTracker {
   /** Levels of the last few frames, and the loudest of them before the latest attack. */
   private readonly recentLevels: number[] = [];
   private onsetBaseDb = -120;
-  private lastReleased: { midi: number; time: number } | null = null;
+  /** The note that ended last, when, and how loud it was shortly before. */
+  private lastReleased: { midi: number; time: number; levelDb: number } | null = null;
 
   constructor(options: TrackerOptions = {}) {
     this.o = {
@@ -104,11 +105,11 @@ export class NoteTracker {
     const events: NoteEvent[] = [];
     const time = o.toEventTime(frame.time);
 
-    // Loudest level of the last ~55 ms: a dropout dips and comes back to it,
+    // Loudest level of the last ~150 ms: a dropout dips and comes back to it,
     // a real strike of the same key goes above it.
     const recentMaxDb = this.recentLevels.length ? Math.max(...this.recentLevels) : -120;
     this.recentLevels.push(frame.levelDb);
-    if (this.recentLevels.length > 5) this.recentLevels.shift();
+    if (this.recentLevels.length > 14) this.recentLevels.shift();
     const gate = this.current !== null ? o.gateDb - o.releaseHysteresisDb : o.gateDb;
     if (frame.levelDb < gate) {
       this.candidate = null;
@@ -176,14 +177,12 @@ export class NoteTracker {
       if (this.candidateCount >= o.stableFrames) this.pendingOnset = false;
       return events;
     }
-    // The note we just released, coming back without a new attack, is the same
-    // string still ringing (level swell), not a new key press.
-    if (
-      !this.pendingOnset &&
-      this.lastReleased?.midi === midi &&
-      time - this.lastReleased.time < o.retriggerGuardMs
-    ) {
-      return events;
+    // The note that just ended, coming back: without a new attack it's the same
+    // string still ringing (level swell); with one, it must be louder than the
+    // note was before it ended — otherwise it was a dropout of the audio stream.
+    const recent = this.lastReleased;
+    if (recent?.midi === midi && time - recent.time < o.retriggerGuardMs) {
+      if (!this.pendingOnset || this.peakDb < recent.levelDb + o.restrikeRiseDb) return events;
     }
 
     // Without a new attack, a jump to an octave / twelfth of the sounding note
@@ -220,7 +219,11 @@ export class NoteTracker {
   private off(time: number): NoteEvent {
     const midi = this.current!;
     this.current = null;
-    this.lastReleased = { midi, time };
+    this.lastReleased = {
+      midi,
+      time,
+      levelDb: this.recentLevels.length ? Math.max(...this.recentLevels) : -120,
+    };
     this.silentCount = 0;
     this.unclearCount = 0;
     return { type: 'note-off', midi, velocity: 0, time, source: 'microphone' };

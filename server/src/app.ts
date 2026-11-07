@@ -17,6 +17,7 @@ import emailAuthRoutes from './routes/emailAuth.js';
 import passkeyRoutes from './routes/passkeys.js';
 import accountRoutes from './routes/account.js';
 import profileRoutes from './routes/profiles.js';
+import progressRoutes from './routes/progress.js';
 import adminRoutes from './routes/admin.js';
 import publicConfigRoutes from './routes/publicConfig.js';
 
@@ -91,6 +92,7 @@ export async function buildApp({ config, mailer, rateLimit: withRateLimit = true
       await api.register(passkeyRoutes, { prefix: '/passkeys', config });
       await api.register(accountRoutes, { prefix: '/account', config, mailer: resolvedMailer });
       await api.register(profileRoutes, { prefix: '/profiles' });
+      await api.register(progressRoutes, { prefix: '/progress' });
       await api.register(adminRoutes, { prefix: '/admin', config });
     },
     { prefix: '/api' },

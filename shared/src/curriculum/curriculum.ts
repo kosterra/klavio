@@ -1,0 +1,239 @@
+import { noteNameToMidi } from '../music/notes.ts';
+import type { Chapter, Lesson } from './types.ts';
+
+/** "C4 D4 E4" → [60, 62, 64]; German "H" is accepted. */
+const seq = (s: string) => s.trim().split(/\s+/).map(noteNameToMidi);
+/** Pitch classes for "any octave" exercises, given in the 4th octave. */
+const pcs = (s: string) => seq(s.replace(/\S+/g, (n) => `${n}4`));
+
+const C3_C5 = { from: 48, to: 72 };
+const C4_C5 = { from: 60, to: 72 };
+
+/**
+ * The curriculum: chapters → lessons → exercises, as plain data.
+ * Songs are public domain (traditional). Lesson ids are stable: progress is
+ * stored per id, so never rename or reuse one.
+ */
+export const CURRICULUM: Chapter[] = [
+  {
+    id: 'keys',
+    title: { 'de-CH': 'Die Tastatur entdecken', en: 'Discover the keyboard' },
+    lessons: [
+      {
+        id: 'keys-c',
+        kind: 'keys',
+        title: { 'de-CH': 'Wo ist das C?', en: 'Where is C?' },
+        intro: {
+          'de-CH':
+            'Die Tasten wiederholen sich immer wieder. Das C findest du direkt links von zwei schwarzen Tasten. Spiel jedes C, das du findest!',
+          en: 'The keys repeat again and again. You find C right to the left of two black keys. Play every C you can find!',
+        },
+        xp: 10,
+        keyboard: C3_C5,
+        keyLabels: 'none',
+        exercises: [{ type: 'find-key', notes: pcs('C'), rounds: 5, anyOctave: true }],
+      },
+      {
+        id: 'keys-middle-c',
+        kind: 'keys',
+        title: { 'de-CH': 'Das mittlere C', en: 'Middle C' },
+        intro: {
+          'de-CH':
+            'Das mittlere C liegt ungefähr in der Mitte des Klaviers, meistens unter dem Namen des Klaviers. Von hier aus geht es los.',
+          en: 'Middle C is roughly in the middle of the piano, usually below the brand name. This is where we start.',
+        },
+        xp: 10,
+        keyboard: C3_C5,
+        keyLabels: 'none',
+        exercises: [{ type: 'find-key', notes: seq('C4'), rounds: 3, anyOctave: false }],
+      },
+      {
+        id: 'keys-d-e',
+        kind: 'keys',
+        title: { 'de-CH': 'D und E', en: 'D and E' },
+        intro: {
+          'de-CH':
+            'Das D liegt zwischen den zwei schwarzen Tasten. Das E kommt gleich rechts daneben.',
+          en: 'D sits between the two black keys. E comes right next to it.',
+        },
+        xp: 10,
+        keyboard: C3_C5,
+        keyLabels: 'none',
+        exercises: [{ type: 'find-key', notes: pcs('C D E'), rounds: 6, anyOctave: true }],
+      },
+      {
+        id: 'keys-cde',
+        kind: 'play',
+        title: { 'de-CH': 'C, D, E nachspielen', en: 'Play C, D, E' },
+        intro: {
+          'de-CH':
+            'Jetzt spielst du kleine Melodien nach. Ich warte bei jedem Ton auf dich – du kannst dir Zeit lassen.',
+          en: 'Now you play little melodies. I wait for every note – take your time.',
+        },
+        xp: 15,
+        keyboard: C4_C5,
+        keyLabels: 'all',
+        exercises: [
+          {
+            type: 'play-along',
+            sequences: [
+              seq('C4 D4 E4'),
+              seq('E4 D4 C4'),
+              seq('C4 E4 D4'),
+              seq('D4 C4 E4'),
+              seq('C4 D4 E4 D4 C4'),
+            ],
+          },
+        ],
+      },
+      {
+        id: 'keys-f-g',
+        kind: 'keys',
+        title: { 'de-CH': 'F und G', en: 'F and G' },
+        intro: {
+          'de-CH': 'Das F liegt direkt links von drei schwarzen Tasten. Das G kommt gleich danach.',
+          en: 'F is right to the left of three black keys. G comes right after it.',
+        },
+        xp: 10,
+        keyboard: C3_C5,
+        keyLabels: 'none',
+        exercises: [{ type: 'find-key', notes: pcs('C D E F G'), rounds: 8, anyOctave: true }],
+      },
+      {
+        id: 'keys-five',
+        kind: 'play',
+        title: { 'de-CH': 'Fünf Töne', en: 'Five notes' },
+        intro: {
+          'de-CH':
+            'Leg deine rechte Hand aufs C: Daumen auf C, dann ein Finger pro Taste bis zum G. So spielst du alle fünf Töne ohne zu suchen.',
+          en: 'Put your right hand on C: thumb on C, then one finger per key up to G. That way you play all five notes without searching.',
+        },
+        xp: 15,
+        keyboard: C4_C5,
+        keyLabels: 'all',
+        exercises: [
+          {
+            type: 'play-along',
+            sequences: [
+              seq('C4 D4 E4 F4 G4'),
+              seq('G4 F4 E4 D4 C4'),
+              seq('C4 E4 G4'),
+              seq('E4 F4 G4 F4 E4'),
+              seq('C4 D4 E4 F4 G4 F4 E4 D4 C4'),
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'hand',
+    title: { 'de-CH': 'Die rechte Hand', en: 'The right hand' },
+    lessons: [
+      {
+        id: 'hand-a-h',
+        kind: 'keys',
+        title: { 'de-CH': 'A und H', en: 'A and B' },
+        intro: {
+          'de-CH':
+            'Nach dem G kommen A und H – dann beginnt alles wieder mit C. Auf Englisch heisst das H übrigens B.',
+          en: 'After G come A and B – then everything starts again with C. In German, B is called H.',
+        },
+        xp: 10,
+        keyboard: C3_C5,
+        keyLabels: 'none',
+        exercises: [{ type: 'find-key', notes: pcs('G A H'), rounds: 6, anyOctave: true }],
+      },
+      {
+        id: 'hand-white-keys',
+        kind: 'keys',
+        title: { 'de-CH': 'Alle weissen Tasten', en: 'All white keys' },
+        intro: {
+          'de-CH':
+            'C, D, E, F, G, A, H – findest du sie alle? Denk an die schwarzen Tasten als Wegweiser.',
+          en: 'C, D, E, F, G, A, B – can you find them all? Use the black keys as signposts.',
+        },
+        xp: 15,
+        keyboard: C3_C5,
+        keyLabels: 'none',
+        exercises: [{ type: 'find-key', notes: pcs('C D E F G A H'), rounds: 10, anyOctave: true }],
+      },
+      {
+        id: 'hand-scale',
+        kind: 'play',
+        title: { 'de-CH': 'Die C-Dur-Tonleiter', en: 'The C major scale' },
+        intro: {
+          'de-CH':
+            'Eine Tonleiter sind alle Töne von C bis zum nächsten C. Hinauf und wieder hinunter!',
+          en: 'A scale is all the notes from C up to the next C. Up and down again!',
+        },
+        xp: 15,
+        keyboard: C4_C5,
+        keyLabels: 'all',
+        exercises: [
+          {
+            type: 'play-along',
+            sequences: [seq('C4 D4 E4 F4 G4 A4 H4 C5'), seq('C5 H4 A4 G4 F4 E4 D4 C4')],
+          },
+        ],
+      },
+      {
+        id: 'hand-entchen',
+        kind: 'song',
+        title: { 'de-CH': 'Alle meine Entchen', en: 'All my little ducklings' },
+        intro: {
+          'de-CH':
+            'Dein erstes Lied! Ein altes Kinderlied, das du vielleicht schon kennst. Spiel es Stück für Stück.',
+          en: 'Your first song! A traditional German children’s song. Play it bit by bit.',
+        },
+        xp: 20,
+        keyboard: C4_C5,
+        keyLabels: 'all',
+        exercises: [
+          {
+            type: 'play-along',
+            sequences: [
+              seq('C4 D4 E4 F4 G4 G4'),
+              seq('A4 A4 A4 A4 G4'),
+              seq('A4 A4 A4 A4 G4'),
+              seq('F4 F4 F4 F4 E4 E4'),
+              seq('D4 D4 D4 D4 C4'),
+            ],
+          },
+        ],
+      },
+    ],
+  },
+];
+
+/** All lessons in learning order. */
+export const LESSONS: Lesson[] = CURRICULUM.flatMap((c) => c.lessons);
+
+export function findLesson(id: string): Lesson | undefined {
+  return LESSONS.find((l) => l.id === id);
+}
+
+export function chapterOf(lessonId: string) {
+  return CURRICULUM.find((c) => c.lessons.some((l) => l.id === lessonId));
+}
+
+/** Number of correct notes needed to finish a lesson. */
+export function lessonTargetCount(lesson: Lesson): number {
+  return lesson.exercises.reduce(
+    (n, e) =>
+      n + (e.type === 'find-key' ? e.rounds : e.sequences.reduce((m, s) => m + s.length, 0)),
+    0,
+  );
+}
+
+/** A lesson is open once the previous one (in learning order) has been completed. */
+export function isLessonUnlocked(lessonId: string, completed: ReadonlySet<string>): boolean {
+  const i = LESSONS.findIndex((l) => l.id === lessonId);
+  if (i < 0) return false;
+  return i === 0 || completed.has(LESSONS[i - 1]!.id);
+}
+
+/** The lesson to continue with: the first one not yet completed (or the last one). */
+export function nextLesson(completed: ReadonlySet<string>): Lesson {
+  return LESSONS.find((l) => !completed.has(l.id)) ?? LESSONS[LESSONS.length - 1]!;
+}

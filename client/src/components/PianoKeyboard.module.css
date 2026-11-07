@@ -69,6 +69,14 @@
   background: var(--mantine-color-indigo-6);
 }
 
+.white.correct {
+  background: var(--mantine-color-teal-3);
+}
+
+.black.correct {
+  background: var(--mantine-color-teal-7);
+}
+
 .white.wrong {
   background: var(--mantine-color-red-2);
 }

@@ -7,7 +7,13 @@ import {
   selectProfileSchema,
   type ProfileDto,
 } from '@klavio/shared';
-import { Profile, Session, type ProfileDoc } from '../models/index.js';
+import {
+  DailyActivity,
+  LessonProgress,
+  Profile,
+  Session,
+  type ProfileDoc,
+} from '../models/index.js';
 import { HttpError, notFound } from '../lib/errors.js';
 
 const idParams = z.object({ id: z.string().regex(/^[a-f0-9]{24}$/) });
@@ -71,6 +77,10 @@ const profileRoutes: FastifyPluginAsyncZod = async (app) => {
   app.delete('/:id', { schema: { params: idParams } }, async (req, reply) => {
     const res = await Profile.deleteOne({ _id: req.params.id, userId: req.auth!.user._id });
     if (res.deletedCount === 0) throw notFound();
+    await Promise.all([
+      LessonProgress.deleteMany({ profileId: req.params.id }),
+      DailyActivity.deleteMany({ profileId: req.params.id }),
+    ]);
     await Session.updateMany({ activeProfileId: req.params.id }, { activeProfileId: null });
     return reply.code(204).send();
   });

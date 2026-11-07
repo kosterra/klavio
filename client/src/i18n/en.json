@@ -68,19 +68,24 @@
   },
   "dashboard": {
     "greeting": "Hi {{name}}!",
-    "mascotKids": "Great to see you! Your first lesson is coming soon.",
+    "mascotKids": "Great to see you! Ready for the next lesson?",
     "mascotClassic": "Welcome back.",
     "xp": "XP",
     "level": "Level {{level}}",
     "streak": "{{count}} day in a row",
     "streak_other": "{{count}} days in a row",
     "dailyGoal": "Daily goal: {{minutes}} minutes",
-    "comingSoon": "Lessons are in the works.",
     "learnPath": "Learning path",
     "levelLabel": "Level",
-    "streakLabel": "days in a row",
     "micSetup": "First set up the microphone so I can hear your piano well. It takes about a minute.",
-    "otherInputs": "Digital piano (MIDI)?"
+    "otherInputs": "Digital piano (MIDI)?",
+    "continue": "Continue: {{lesson}}",
+    "startFirst": "Start the first lesson",
+    "todayGoal": "{{minutes}} of {{goal}} minutes today",
+    "goalReached": "Daily goal reached!",
+    "allDone": "You have finished all lessons! New ones are coming soon.",
+    "streakLabel_one": "day in a row",
+    "streakLabel_other": "days in a row"
   },
   "nav": {
     "home": "Home",
@@ -129,7 +134,11 @@
     "RATE_LIMITED": "Too many attempts. Please wait a moment.",
     "WEBAUTHN_CANCELLED": "The action was cancelled.",
     "VALIDATION": "Please check your input.",
-    "REGISTRATION_CLOSED": "New accounts cannot be created at the moment."
+    "REGISTRATION_CLOSED": "New accounts cannot be created at the moment.",
+    "LESSON_LOCKED": "This lesson is still locked.",
+    "BAD_DATE": "The date on your device seems to be wrong.",
+    "NO_ACTIVE_PROFILE": "Please choose a profile first.",
+    "NETWORK": "No connection to the server. Check the internet connection and try again."
   },
   "validation": {
     "name": "Please enter a name (max. 40 characters).",
@@ -240,5 +249,51 @@
       "text": "Tap the keys – to try things out or when no piano is around.",
       "keys": "On a computer the keyboard plays too: A S D F G H J K are the white keys from middle C, W E T Y U the black ones."
     }
+  },
+  "path": {
+    "chapter": "Chapter {{n}}",
+    "lessonN": "Lesson {{n}}",
+    "locked": "locked",
+    "notStarted": "not played yet",
+    "stars": "{{count}} of 3 stars",
+    "stars_one": "{{count}} of 3 stars",
+    "starsEarned": "{{earned}} of {{total}} stars"
+  },
+  "lesson": {
+    "close": "End lesson",
+    "progress": "Lesson progress",
+    "start": "Let’s go!",
+    "inputMidi": "I can hear your digital piano ({{device}}).",
+    "inputMic": "I am listening through the microphone – just play your piano.",
+    "inputMicSetup": "Tip: set up the microphone once and I will recognise you even better.",
+    "inputScreen": "Play on the keyboard here on the screen.",
+    "useScreen": "You can keep playing on the on-screen keyboard.",
+    "micOn": "Microphone on",
+    "useMic": "Use microphone",
+    "switchToScreen": "Switch off the microphone and play on the screen",
+    "findKey": "Find {{note}}",
+    "middleC": "middle C",
+    "correct": "Correct!",
+    "wrong": "That was {{note}} – try again.",
+    "hint": "Look, the marked key helps you.",
+    "round": "Task {{n}} of {{total}}",
+    "playAlong": "Play these notes",
+    "notesToPlay": "Notes to play",
+    "played": "played",
+    "wellDone": "Great!",
+    "wrongPlay": "That was {{note}}. Try the marked key.",
+    "part": "Part {{n}} of {{total}}",
+    "finished": "Done!",
+    "result3": "Perfect!",
+    "result2": "Very good!",
+    "result1": "Done!",
+    "moreStars": "Play the lesson again to collect more stars.",
+    "xpGained": "+{{xp}} XP",
+    "levelUp": "New level: {{level}}!",
+    "todayMinutes": "Today: {{minutes}} of {{goal}} minutes",
+    "retrySave": "Save again",
+    "next": "Next lesson",
+    "again": "Again",
+    "toPath": "To the learning path"
   }
 }

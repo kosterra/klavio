@@ -1,7 +1,15 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { accountEmailVerifySchema, emailRequestSchema } from '@klavio/shared';
 import type { AppConfig } from '../config.js';
-import { EmailCode, Passkey, Profile, Session, User } from '../models/index.js';
+import {
+  DailyActivity,
+  EmailCode,
+  LessonProgress,
+  Passkey,
+  Profile,
+  Session,
+  User,
+} from '../models/index.js';
 import { HttpError, badRequest } from '../lib/errors.js';
 import { checkEmailCode, issueEmailCode } from '../lib/emailCodes.js';
 import { verifyEmailMail, type Mailer } from '../lib/mailer.js';
@@ -68,7 +76,10 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
   // ------------------------------------------------- delete account entirely
   app.delete('/', async (req, reply) => {
     const userId = req.auth!.user._id;
+    const profileIds = (await Profile.find({ userId }, { _id: 1 }).lean()).map((p) => p._id);
     await Promise.all([
+      LessonProgress.deleteMany({ profileId: { $in: profileIds } }),
+      DailyActivity.deleteMany({ profileId: { $in: profileIds } }),
       Profile.deleteMany({ userId }),
       Passkey.deleteMany({ userId }),
       EmailCode.deleteMany({ userId }),

@@ -1,0 +1,139 @@
+.chapter {
+  position: relative;
+  margin: 0 auto;
+  max-width: 520px;
+}
+
+.chapterHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-lg);
+  background: var(--mantine-color-indigo-0);
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.track {
+  position: relative;
+}
+
+.list {
+  position: absolute;
+  inset: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.stop {
+  position: absolute;
+  transform: translate(-50%, 0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 150px;
+  gap: 4px;
+}
+
+.node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 0;
+  text-decoration: none;
+  color: #fff;
+  background: var(--mantine-color-indigo-7);
+  box-shadow: 0 6px 0 var(--mantine-color-indigo-9);
+  cursor: pointer;
+}
+
+.node:focus-visible {
+  outline: 3px solid var(--mantine-color-orange-6);
+  outline-offset: 4px;
+}
+
+.done {
+  background: var(--mantine-color-teal-7);
+  box-shadow: 0 6px 0 var(--mantine-color-teal-9);
+}
+
+.current {
+  width: 92px;
+  height: 92px;
+  background: var(--mantine-color-orange-7);
+  box-shadow: 0 6px 0 var(--mantine-color-orange-9);
+}
+
+.locked {
+  background: var(--mantine-color-gray-3);
+  box-shadow: 0 6px 0 var(--mantine-color-gray-5);
+  color: var(--mantine-color-gray-7);
+  cursor: not-allowed;
+}
+
+.title {
+  padding: 2px 8px;
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+  font-weight: 700;
+  font-size: var(--mantine-font-size-sm);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+  height: 20px;
+  padding: 1px 4px;
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-body);
+}
+
+.stars:empty {
+  visibility: hidden;
+}
+
+.mascot {
+  position: absolute;
+  top: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .current {
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .node:not(.locked):hover {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 6px 0 var(--mantine-color-orange-9),
+      0 0 0 0 rgb(253 126 20 / 45%);
+  }
+
+  50% {
+    box-shadow:
+      0 6px 0 var(--mantine-color-orange-9),
+      0 0 0 14px rgb(253 126 20 / 0%);
+  }
+}

@@ -68,19 +68,24 @@
   },
   "dashboard": {
     "greeting": "Hallo {{name}}!",
-    "mascotKids": "Schön, dass du da bist! Bald geht's los mit deiner ersten Lektion.",
+    "mascotKids": "Schön, dass du da bist! Bereit für die nächste Lektion?",
     "mascotClassic": "Willkommen zurück.",
     "xp": "XP",
     "level": "Level {{level}}",
     "streak": "{{count}} Tag in Folge",
     "streak_other": "{{count}} Tage in Folge",
     "dailyGoal": "Tagesziel: {{minutes}} Minuten",
-    "comingSoon": "Die Lektionen sind in Arbeit.",
     "learnPath": "Lernpfad",
     "levelLabel": "Level",
-    "streakLabel": "Tage in Folge",
     "micSetup": "Richte zuerst das Mikrofon ein, damit ich dein Klavier gut hören kann. Das dauert eine Minute.",
-    "otherInputs": "Digitalpiano (MIDI)?"
+    "otherInputs": "Digitalpiano (MIDI)?",
+    "continue": "Weiter: {{lesson}}",
+    "startFirst": "Erste Lektion starten",
+    "todayGoal": "{{minutes}} von {{goal}} Minuten heute",
+    "goalReached": "Tagesziel erreicht!",
+    "allDone": "Du hast alle Lektionen geschafft! Neue kommen bald.",
+    "streakLabel_one": "Tag in Folge",
+    "streakLabel_other": "Tage in Folge"
   },
   "nav": {
     "home": "Start",
@@ -129,7 +134,11 @@
     "RATE_LIMITED": "Zu viele Versuche. Bitte warte einen Moment.",
     "WEBAUTHN_CANCELLED": "Der Vorgang wurde abgebrochen.",
     "VALIDATION": "Bitte überprüfe deine Eingaben.",
-    "REGISTRATION_CLOSED": "Neue Konten können zurzeit nicht erstellt werden."
+    "REGISTRATION_CLOSED": "Neue Konten können zurzeit nicht erstellt werden.",
+    "LESSON_LOCKED": "Diese Lektion ist noch gesperrt.",
+    "BAD_DATE": "Das Datum auf deinem Gerät scheint nicht zu stimmen.",
+    "NO_ACTIVE_PROFILE": "Bitte wähle zuerst ein Profil.",
+    "NETWORK": "Keine Verbindung zum Server. Prüfe das Internet und versuche es nochmals."
   },
   "validation": {
     "name": "Bitte gib einen Namen ein (höchstens 40 Zeichen).",
@@ -240,5 +249,51 @@
       "text": "Tippe auf die Tasten – zum Ausprobieren oder wenn gerade kein Klavier da ist.",
       "keys": "Am Computer spielt auch die Tastatur: A S D F G H J K sind die weissen Tasten ab dem mittleren C, W E T Z U die schwarzen."
     }
+  },
+  "path": {
+    "chapter": "Kapitel {{n}}",
+    "lessonN": "Lektion {{n}}",
+    "locked": "noch gesperrt",
+    "notStarted": "noch nicht gespielt",
+    "stars": "{{count}} von 3 Sternen",
+    "stars_one": "{{count}} von 3 Sternen",
+    "starsEarned": "{{earned}} von {{total}} Sternen"
+  },
+  "lesson": {
+    "close": "Lektion beenden",
+    "progress": "Fortschritt der Lektion",
+    "start": "Los geht’s!",
+    "inputMidi": "Ich höre dein Digitalpiano ({{device}}).",
+    "inputMic": "Ich höre dir über das Mikrofon zu – spiel einfach auf deinem Klavier.",
+    "inputMicSetup": "Tipp: Richte das Mikrofon einmal ein, dann erkenne ich dich noch besser.",
+    "inputScreen": "Spiel auf der Klaviatur hier auf dem Bildschirm.",
+    "useScreen": "Du kannst auf der Bildschirm-Klaviatur weiterspielen.",
+    "micOn": "Mikrofon an",
+    "useMic": "Mikrofon verwenden",
+    "switchToScreen": "Mikrofon ausschalten und auf dem Bildschirm spielen",
+    "findKey": "Finde das {{note}}",
+    "middleC": "das mittlere C",
+    "correct": "Richtig!",
+    "wrong": "Das war {{note}} – versuch es nochmals.",
+    "hint": "Schau, die markierte Taste hilft dir.",
+    "round": "Aufgabe {{n}} von {{total}}",
+    "playAlong": "Spiel diese Töne nach",
+    "notesToPlay": "Töne zum Nachspielen",
+    "played": "gespielt",
+    "wellDone": "Super!",
+    "wrongPlay": "Das war {{note}}. Probier die markierte Taste.",
+    "part": "Teil {{n}} von {{total}}",
+    "finished": "Geschafft!",
+    "result3": "Perfekt!",
+    "result2": "Sehr gut!",
+    "result1": "Geschafft!",
+    "moreStars": "Spiel die Lektion nochmals, um mehr Sterne zu sammeln.",
+    "xpGained": "+{{xp}} XP",
+    "levelUp": "Neues Level: {{level}}!",
+    "todayMinutes": "Heute: {{minutes}} von {{goal}} Minuten",
+    "retrySave": "Nochmals speichern",
+    "next": "Nächste Lektion",
+    "again": "Nochmals",
+    "toPath": "Zum Lernpfad"
   }
 }

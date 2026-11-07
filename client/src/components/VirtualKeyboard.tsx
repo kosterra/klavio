@@ -22,6 +22,11 @@ interface Props extends Omit<PianoKeyboardProps, 'onPress' | 'onRelease' | 'acti
   showComputerKeys?: boolean;
   /** The C that the computer key "A" plays (default: first C of the range). */
   computerKeysFrom?: number;
+  /**
+   * false: display only — it still lights up notes from MIDI / microphone, but
+   * can't be played (when the learner is meant to use the real piano).
+   */
+  interactive?: boolean;
 }
 
 /**
@@ -34,6 +39,7 @@ export function VirtualKeyboard({
   computerKeys = true,
   showComputerKeys = false,
   computerKeysFrom,
+  interactive = true,
   ...keyboard
 }: Props) {
   const [held, setHeld] = useState<number[]>([]);
@@ -81,7 +87,7 @@ export function VirtualKeyboard({
   });
 
   useEffect(() => {
-    if (!computerKeys) return;
+    if (!computerKeys || !interactive) return;
     const typing = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
       return (
@@ -108,7 +114,7 @@ export function VirtualKeyboard({
       window.removeEventListener('keydown', down);
       window.removeEventListener('keyup', up);
     };
-  }, [computerKeys, baseC, keyboard.to]);
+  }, [computerKeys, interactive, baseC, keyboard.to]);
 
   // Show the real labels of the user's layout where the browser tells us (Chrome).
   useEffect(() => {
@@ -131,10 +137,10 @@ export function VirtualKeyboard({
     <PianoKeyboard
       {...keyboard}
       active={held}
-      onPress={press}
-      onRelease={release}
+      onPress={interactive ? press : undefined}
+      onRelease={interactive ? release : undefined}
       keyHint={
-        showComputerKeys && computerKeys
+        interactive && showComputerKeys && computerKeys
           ? (m) => {
               const code = SEMITONE_TO_CODE[m - baseC];
               return code ? codeLabel(code, layout) : undefined;

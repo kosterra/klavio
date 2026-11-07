@@ -100,10 +100,20 @@ describe('note tracker', () => {
     expect(ons.map((e) => e.midi)).toEqual([69]);
   });
 
+  it('still reports a key released and struck again', () => {
+    const signal = concat(
+      pianoTone(64, { duration: 0.35, seed: 1 }),
+      new Float32Array(Math.round(0.12 * SR)), // key up: the damper stops the string
+      pianoTone(64, { lead: 0, duration: 0.5, seed: 2 }),
+    );
+    const ons = runPipeline(signal, SR).events.filter((e) => e.type === 'note-on');
+    expect(ons.map((e) => e.midi)).toEqual([64, 64]);
+  });
+
   it('ignores a short dropout of the audio stream inside a held note', () => {
     const tone = pianoTone(69, { duration: 2 });
     const at = Math.round(1.5 * SR);
-    tone.fill(0, at, at + Math.round(0.03 * SR)); // 30 ms gap, then the note continues
+    tone.fill(0, at, at + Math.round(0.08 * SR)); // 80 ms gap, then the note continues
     const ons = runPipeline(tone, SR).events.filter((e) => e.type === 'note-on');
     expect(ons.map((e) => e.midi)).toEqual([69]);
   });

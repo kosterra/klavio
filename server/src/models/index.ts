@@ -90,6 +90,34 @@ export type ProfileDoc = InferSchemaType<typeof profileSchema> & { _id: Types.Ob
 export const Profile = model('Profile', profileSchema);
 
 // ---------------------------------------------------------------------------
+// Lesson progress per profile (best result; individual attempts are not kept)
+// ---------------------------------------------------------------------------
+const lessonProgressSchema = new Schema(
+  {
+    profileId: { type: Schema.Types.ObjectId, ref: 'Profile', required: true },
+    lessonId: { type: String, required: true },
+    bestStars: { type: Number, required: true },
+    completions: { type: Number, default: 0 },
+    lastCompletedAt: { type: Date, default: null },
+  },
+  { timestamps: true },
+);
+lessonProgressSchema.index({ profileId: 1, lessonId: 1 }, { unique: true });
+export const LessonProgress = model('LessonProgress', lessonProgressSchema);
+
+// ---------------------------------------------------------------------------
+// Practice time and XP per profile and local calendar day (daily goal)
+// ---------------------------------------------------------------------------
+const dailyActivitySchema = new Schema({
+  profileId: { type: Schema.Types.ObjectId, ref: 'Profile', required: true },
+  date: { type: String, required: true }, // YYYY-MM-DD, learner's local date
+  seconds: { type: Number, default: 0 },
+  xp: { type: Number, default: 0 },
+});
+dailyActivitySchema.index({ profileId: 1, date: 1 }, { unique: true });
+export const DailyActivity = model('DailyActivity', dailyActivitySchema);
+
+// ---------------------------------------------------------------------------
 // Short-lived WebAuthn challenge, referenced by an httpOnly cookie
 // ---------------------------------------------------------------------------
 const authChallengeSchema = new Schema({

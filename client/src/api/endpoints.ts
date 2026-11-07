@@ -1,4 +1,7 @@
 import type {
+  LessonCompleteInput,
+  LessonResultDto,
+  ProgressDto,
   AdminSettingsDto,
   MeResponse,
   PasskeyDto,
@@ -49,6 +52,10 @@ export const endpoints = {
   ) => api<ProfileDto>('PATCH', `/profiles/${id}`, body),
   deleteProfile: (id: string) => api('DELETE', `/profiles/${id}`),
   selectProfile: (profileId: string) => api('POST', '/profiles/select', { profileId }),
+
+  progress: (date: string) => api<ProgressDto>('GET', `/progress?date=${encodeURIComponent(date)}`),
+  completeLesson: (lessonId: string, body: LessonCompleteInput) =>
+    api<LessonResultDto>('POST', `/progress/lessons/${lessonId}`, body),
 
   adminSettings: () => api<AdminSettingsDto>('GET', '/admin/settings'),
   updateAdminSettings: (body: AdminSettingsDto) =>

@@ -3,3 +3,7 @@ export * from './schemas/auth.ts';
 export * from './schemas/profile.ts';
 export * from './music/notes.ts';
 export * from './music/noteEvent.ts';
+export * from './curriculum/types.ts';
+export * from './curriculum/curriculum.ts';
+export * from './curriculum/rewards.ts';
+export * from './schemas/progress.ts';

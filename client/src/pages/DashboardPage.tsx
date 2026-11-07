@@ -2,7 +2,9 @@ import {
   Alert,
   Button,
   Card,
+  Center,
   Group,
+  Loader,
   Paper,
   RingProgress,
   SimpleGrid,
@@ -11,19 +13,37 @@ import {
   Title,
 } from '@mantine/core';
 import { Link } from 'react-router';
-import { IconFlame, IconMicrophone, IconStar, IconTrophy } from '@tabler/icons-react';
+import {
+  IconFlame,
+  IconMicrophone,
+  IconPlayerPlay,
+  IconStar,
+  IconTrophy,
+} from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useSession } from '../auth/session';
 import { useMidi } from '../input/useMidi';
+import { LESSONS, nextLesson } from '@klavio/shared';
+import { LearningPath } from '../lesson/LearningPath';
+import { useProgress } from '../lesson/useProgress';
+import { useLocalized } from '../lesson/useLocalized';
 import { Mascot } from '../components/Mascot';
 import { PrivacyNote } from '../components/PrivacyNote';
 
-/** Empty dashboard scaffold — the learning path is filled in with the curriculum (step 6). */
+/** Home of a learner: greeting, stats, daily goal and the learning path. */
 export function DashboardPage() {
   const { t } = useTranslation();
   const { activeProfile } = useSession();
   const midi = useMidi();
+  const { progress, completed } = useProgress();
+  const loc = useLocalized();
   if (!activeProfile) return null;
+  const current = nextLesson(completed);
+  const todayMinutes = Math.floor((progress?.today.seconds ?? 0) / 60);
+  const goalPct = Math.min(
+    100,
+    ((progress?.today.seconds ?? 0) / (activeProfile.dailyGoalMinutes * 60)) * 100,
+  );
   const kids = activeProfile.uiMode === 'kids';
 
   return (
@@ -34,6 +54,23 @@ export function DashboardPage() {
           <Stack gap={4}>
             <Title order={1}>{t('dashboard.greeting', { name: activeProfile.name })}</Title>
             <Text fz="lg">{kids ? t('dashboard.mascotKids') : t('dashboard.mascotClassic')}</Text>
+            {progress && (
+              <Group mt="xs">
+                <Button
+                  size="lg"
+                  component={Link}
+                  to={`/lesson/${current.id}`}
+                  leftSection={<IconPlayerPlay />}
+                >
+                  {completed.size === 0
+                    ? t('dashboard.startFirst')
+                    : t('dashboard.continue', { lesson: loc(current.title) })}
+                </Button>
+              </Group>
+            )}
+            {progress && completed.size === LESSONS.length && (
+              <Text c="dimmed">{t('dashboard.allDone')}</Text>
+            )}
           </Stack>
         </Group>
       </Paper>
@@ -52,14 +89,34 @@ export function DashboardPage() {
         <Stat
           icon={<IconFlame color="var(--mantine-color-orange-6)" />}
           value={activeProfile.streak.current}
-          label={t('dashboard.streakLabel')}
+          label={t('dashboard.streakLabel', { count: activeProfile.streak.current })}
         />
         <Card withBorder radius="lg" padding="md">
           <Group gap="sm" wrap="nowrap">
-            <RingProgress size={64} thickness={8} sections={[{ value: 0, color: 'teal' }]} />
-            <Text fw={600}>
-              {t('dashboard.dailyGoal', { minutes: activeProfile.dailyGoalMinutes })}
-            </Text>
+            <RingProgress
+              size={64}
+              thickness={8}
+              roundCaps
+              sections={[{ value: goalPct, color: 'teal' }]}
+              role="img"
+              aria-label={t('dashboard.todayGoal', {
+                minutes: todayMinutes,
+                goal: activeProfile.dailyGoalMinutes,
+              })}
+            />
+            <div>
+              <Text fw={700}>
+                {goalPct >= 100
+                  ? t('dashboard.goalReached')
+                  : t('dashboard.dailyGoal', { minutes: activeProfile.dailyGoalMinutes })}
+              </Text>
+              <Text size="sm" c="dimmed">
+                {t('dashboard.todayGoal', {
+                  minutes: todayMinutes,
+                  goal: activeProfile.dailyGoalMinutes,
+                })}
+              </Text>
+            </div>
           </Group>
         </Card>
       </SimpleGrid>
@@ -81,10 +138,16 @@ export function DashboardPage() {
       )}
 
       <Card withBorder radius="xl" padding="lg">
-        <Title order={2} size="h3" mb="sm">
+        <Title order={2} size="h3" mb="lg">
           {t('dashboard.learnPath')}
         </Title>
-        <Text c="dimmed">{t('dashboard.comingSoon')}</Text>
+        {progress ? (
+          <LearningPath progress={progress.lessons} currentLessonId={current.id} />
+        ) : (
+          <Center py="xl">
+            <Loader aria-label={t('common.loading')} />
+          </Center>
+        )}
       </Card>
 
       <PrivacyNote />

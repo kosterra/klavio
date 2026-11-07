@@ -4,9 +4,9 @@ Progressive Web App, mit der Kinder (ab ca. 6 Jahren) und erwachsene Einsteiger 
 spielerisch Klavier lernen. Die App hört über das Mikrofon zu (oder liest ein Digitalpiano per MIDI)
 und wertet das Gespielte aus. Audio wird ausschliesslich lokal im Browser verarbeitet.
 
-> **Stand:** Schritt 5 des Plans – Projektgerüst, Registrierung per E-Mail-Code, Passkeys,
-> Kinderprofile, Tonerkennung über das Mikrofon, MIDI und Bildschirm-Klaviatur auf einer gemeinsamen
-> Eingabe-Schnittstelle. Lektionen folgen.
+> **Stand:** Schritt 6 des Plans – Registrierung per E-Mail-Code, Passkeys, Kinderprofile, Tonerkennung
+> über das Mikrofon, MIDI und Bildschirm-Klaviatur, Lernpfad mit den ersten Lektionen («Finde die
+> Taste», «Spiel nach»), Sterne, XP, Level, Streak und Tagesziel. Weitere Übungstypen folgen.
 
 Der Produktname ist ein Platzhalter. Er steht zentral in
 [`shared/src/config/app.ts`](shared/src/config/app.ts) und wird von UI, Manifest, WebAuthn und E-Mails verwendet.
@@ -99,6 +99,27 @@ npm run check        # Typecheck + ESLint + Prettier + Unit-Tests
   gelegentlich hängt.
 - **Barrierefreiheit:** axe-core prüft die Hauptseiten in Kids- und Classic-Darstellung auf WCAG 2.1 AA.
 
+## Lernpfad und Lektionen
+
+- **Lehrplan als Daten** (`shared/src/curriculum/`): Kapitel → Lektionen → Übungen. Lektions-IDs sind
+  stabil, weil der Fortschritt pro ID gespeichert wird. Heute 2 Kapitel mit 10 Lektionen, darunter
+  «Alle meine Entchen» (traditionell, gemeinfrei).
+- **Übungstypen:** «Finde die Taste» (Notenname → Taste; je nach Lektion jede Oktave oder genau eine)
+  und «Spiel nach» (Tonfolge nachspielen, die App wartet auf jeden Ton). Hilfen: markierte Taste nach
+  einem Fehler (Kids sofort), bei «Spiel nach» im Kids-Modus immer.
+- **Eingabe in der Lektion:** MIDI, sonst Mikrofon (startet mit «Los geht's», wegen iOS erst nach einem
+  Tippen), sonst Bildschirm-Klaviatur. Mit echter Eingabe zeigt die Bildschirm-Klaviatur nur an, was
+  erkannt wurde; umschalten lässt sich jederzeit.
+- **Belohnungen** (`rewards.ts`, auf dem Server berechnet – der Client schickt nur Fehlerzahl, Dauer
+  und sein lokales Datum): 3 Sterne ab 90 % Treffern, 2 ab 75 %, Abschliessen gibt immer 1.
+  Erstes Mal volle XP + 5 pro Stern, Wiederholungen halbe XP + 5 pro verbessertem Stern.
+  Level-Schwellen 50, 150, 300, 500 … XP. Der Streak zählt Tage nach dem lokalen Datum des Kindes;
+  ein verpasster Tag setzt nur den Streak zurück, XP gehen nie verloren.
+- **Freischalten:** Eine Lektion öffnet sich, wenn die vorherige abgeschlossen ist (auch serverseitig
+  geprüft). Abgeschlossene Lektionen lassen sich jederzeit wiederholen; der beste Wert zählt.
+- **Gespeichert** wird pro Profil nur das Beste je Lektion (Sterne, Anzahl Durchgänge) und die
+  Übungszeit pro Tag – keine einzelnen Versuche, keine Aufnahmen.
+
 ## Eingaben: MIDI, Mikrofon, Bildschirm-Klaviatur
 
 Alle Eingaben liefern dieselben `NoteEvent`s an `publishNote()` (`client/src/input/noteBus.ts`).
@@ -165,14 +186,16 @@ Einrichtung und Testseite.
 ## Projektstruktur
 
 ```
-shared/   Gemeinsamer Code: App-Konfiguration, zod-Schemas, Musik-Hilfsfunktionen (MIDI ↔ Frequenz)
+shared/   Gemeinsamer Code: App-Konfiguration, zod-Schemas, Musik-Hilfsfunktionen, Lehrplan, Belohnungsregeln
 server/   Fastify-API
-  src/routes/     auth, emailAuth, passkeys, account, profiles, admin, publicConfig
+  src/routes/     auth, emailAuth, passkeys, account, profiles, progress, admin, publicConfig
   src/lib/        Sessions, Challenges, E-Mail-Codes, Rate-Limits, WebAuthn-Wrapper
-  src/models/     Mongoose-Modelle (User, Passkey, Session, Profile, AuthChallenge, EmailCode, AppSettings)
+  src/models/     Mongoose-Modelle (User, Passkey, Session, Profile, LessonProgress, DailyActivity,
+                  AuthChallenge, EmailCode, AppSettings)
 client/   React-PWA
   src/audio/      Mikrofon, AudioWorklet, Tonerkennung (pitch/), Kalibrierung
   src/input/      Note-Bus und Input-Hub (Priorität), Web MIDI, Computertastatur
+  src/lesson/     Lernpfad, Lektionsablauf, Übungstypen, Fortschritt
   src/auth/       Session-Kontext, Passkey-Abläufe
   src/pages/      Willkommen, Registrierung/E-Mail-Login, Profilwahl, Dashboard, Eingabe,
                   Mikrofon-Test, Mikrofon-Einrichtung, Konto, Verwaltung

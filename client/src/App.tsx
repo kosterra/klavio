@@ -18,6 +18,7 @@ import { AdminPage } from './pages/AdminPage';
 import { MicTestPage } from './pages/MicTestPage';
 import { MicSetupPage } from './pages/MicSetupPage';
 import { InputPage } from './pages/InputPage';
+import { LessonPage } from './pages/LessonPage';
 import { useMidi } from './input/useMidi';
 
 /** Reconnects a previously allowed MIDI device as soon as the app starts. */
@@ -106,6 +107,9 @@ export function App() {
             </Route>
             <Route element={<RequireAuth />}>
               <Route path="/profiles" element={<ProfilesPage />} />
+              <Route element={<RequireProfile />}>
+                <Route path="/lesson/:lessonId" element={<LessonPage />} />
+              </Route>
               <Route element={<AppLayout />}>
                 <Route path="/account" element={<AccountPage />} />
                 <Route element={<RequireAdmin />}>

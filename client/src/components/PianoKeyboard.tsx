@@ -10,8 +10,9 @@ export interface PianoKeyboardProps {
   active?: readonly number[];
   /** Keys to point at (e.g. "play this one"). */
   hints?: readonly number[];
-  /** Keys to mark as wrong. */
+  /** Keys to mark as wrong / correct (short feedback flashes). */
   wrong?: readonly number[];
+  correct?: readonly number[];
   /** Show note names on the white keys (`'c'` = only on C). */
   labels?: 'all' | 'c' | 'none';
   height?: number;
@@ -32,6 +33,7 @@ export function PianoKeyboard({
   active = [],
   hints = [],
   wrong = [],
+  correct = [],
   labels = 'c',
   height = 140,
   keyHint,
@@ -48,6 +50,7 @@ export function PianoKeyboard({
   const stateClass = (m: number) =>
     [
       active.includes(m) && classes.active,
+      correct.includes(m) && classes.correct,
       wrong.includes(m) && classes.wrong,
       hints.includes(m) && classes.hint,
       interactive && classes.interactive,
