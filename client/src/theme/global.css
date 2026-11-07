@@ -16,6 +16,8 @@
   --klavio-ink: #000;
   /* destructive actions (delete, log out): ≥ 4.5:1 on the page and on cards */
   --klavio-danger: var(--mantine-color-red-9);
+  --klavio-flag-pole: var(--mantine-color-gray-7);
+  --klavio-locked-flag: var(--mantine-color-gray-3);
 }
 
 :root[data-mantine-color-scheme='dark'] {
@@ -34,6 +36,8 @@
   --klavio-avatar-bg-klavi: #283056;
   --klavio-ink: #e9ecef;
   --klavio-danger: var(--mantine-color-red-4);
+  --klavio-flag-pole: var(--mantine-color-gray-4);
+  --klavio-locked-flag: var(--mantine-color-dark-4);
 }
 
 html[data-ui-mode='kids'] body {

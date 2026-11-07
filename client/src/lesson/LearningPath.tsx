@@ -82,13 +82,142 @@ function roadPath(points: Point[], cell: number): string {
   return d;
 }
 
+/**
+ * Path from (x1, y1) down to (x2, y2) with round elbows: down, round turn,
+ * across, round turn, down — like the U-turns inside a chapter.
+ * Continues an existing path (no leading "M").
+ */
+function roundedStep(x1: number, y1: number, x2: number, y2: number, radius = 44): string {
+  if (Math.abs(x2 - x1) < 1) return ` L ${x2} ${y2}`;
+  if (Math.abs(x2 - x1) < radius * 2) {
+    // small offset: one gentle S-curve instead of two tight elbows
+    const mid = (y1 + y2) / 2;
+    return ` C ${x1} ${mid}, ${x2} ${mid}, ${x2} ${y2}`;
+  }
+  const mid = (y1 + y2) / 2;
+  const r = Math.min(radius, Math.abs(x2 - x1) / 2, (y2 - y1) / 2);
+  const dir = x2 > x1 ? 1 : -1;
+  // going down and turning towards x2, then turning down again
+  const sweep1 = dir < 0 ? 1 : 0;
+  const sweep2 = dir < 0 ? 0 : 1;
+  return (
+    ` L ${x1} ${mid - r}` +
+    ` A ${r} ${r} 0 0 ${sweep1} ${x1 + dir * r} ${mid}` +
+    ` L ${x2 - dir * r} ${mid}` +
+    ` A ${r} ${r} 0 0 ${sweep2} ${x2} ${mid + r}` +
+    ` L ${x2} ${y2}`
+  );
+}
+
 /** Path continuing from the first point (no leading "M"). */
 function continuePath(points: Point[], cell: number): string {
   return roadPath(points, cell).replace(/^M [^ ]+ [^ ]+/, '');
 }
 
 const HEADER = 92; // height of a chapter's signpost row
-const MARKER = 50;
+const FLAG_POLE_X = 12; // x of the pole inside the flag drawing
+
+/**
+ * Chapter signpost: a pole on the road with a pennant in the chapter colour
+ * (gold with a tick once finished, grey with a padlock while locked).
+ */
+function ChapterFlag({
+  number,
+  state,
+  waving,
+  style,
+}: {
+  number: number;
+  state: 'open' | 'done' | 'locked';
+  waving: boolean;
+  style: React.CSSProperties;
+}) {
+  const fill =
+    state === 'done'
+      ? 'url(#flag-gold)'
+      : state === 'locked'
+        ? 'var(--klavio-locked-flag)'
+        : `url(#flag-${number})`;
+  return (
+    <svg
+      className={classes.flag}
+      style={style}
+      width={60}
+      height={76}
+      viewBox="0 0 60 76"
+      overflow="visible"
+      aria-hidden
+    >
+      <defs>
+        <linearGradient id={`flag-${number}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="var(--chapter-light)" />
+          <stop offset="0.75" stopColor="var(--chapter-color)" />
+        </linearGradient>
+        <linearGradient id="flag-gold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="var(--mantine-color-yellow-4)" />
+          <stop offset="0.75" stopColor="var(--mantine-color-yellow-6)" />
+        </linearGradient>
+      </defs>
+      {/* base stone and pole */}
+      <ellipse cx={FLAG_POLE_X} cy="68" rx="11" ry="5" fill="var(--klavio-locked-border)" />
+      <rect
+        x={FLAG_POLE_X - 2.5}
+        y="4"
+        width="5"
+        height="65"
+        rx="2.5"
+        fill="var(--klavio-flag-pole)"
+      />
+      <circle cx={FLAG_POLE_X} cy="5" r="4.5" fill="var(--mantine-color-yellow-6)" />
+      {/* pennant */}
+      <g className={waving ? classes.flagWave : undefined}>
+        <path
+          d={`M${FLAG_POLE_X + 2} 9 Q30 3 54 12 Q46 24 54 36 Q30 29 ${FLAG_POLE_X + 2} 40 Z`}
+          fill={fill}
+          stroke={
+            state === 'done'
+              ? 'var(--mantine-color-yellow-8)'
+              : state === 'locked'
+                ? 'var(--klavio-locked-border)'
+                : 'var(--chapter-dark)'
+          }
+          strokeWidth="2"
+          strokeLinejoin="round"
+        />
+        <path
+          d={`M${FLAG_POLE_X + 6} 12 Q28 8 44 14`}
+          stroke="rgb(255 255 255 / 35%)"
+          strokeWidth="3"
+          fill="none"
+          strokeLinecap="round"
+        />
+        {state === 'done' ? (
+          <path
+            d="M23.5 21 l5 5 l10 -11"
+            stroke="#fff"
+            strokeWidth="4"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        ) : (
+          <text
+            x="31"
+            y="21"
+            textAnchor="middle"
+            dominantBaseline="central"
+            fontSize="18"
+            fontWeight="800"
+            fill={state === 'locked' ? 'var(--klavio-locked-fg)' : '#fff'}
+            fontFamily="inherit"
+          >
+            {number}
+          </text>
+        )}
+      </g>
+    </svg>
+  );
+}
 
 /**
  * The learning path as one continuous journey: a single road runs through all
@@ -157,15 +286,13 @@ export function LearningPath({
         let travelled = '';
         if (open) {
           const f = points[0]!;
-          const leadIn = ` C ${markerX} ${markerY + 60}, ${f.x} ${f.y - 80}, ${f.x} ${f.y}`;
+          const leadIn = roundedStep(markerX, markerY, f.x, f.y);
           road += leadIn + continuePath(points, cell);
           const goal = points[points.length - 1]!;
           // leave the trophy downwards and bend into the signpost lane below the titles
           const bendTop = goal.y + (narrow ? 100 : 85);
           if (!last) {
-            road +=
-              ` L ${goal.x} ${bendTop}` +
-              ` C ${goal.x} ${height}, ${markerX} ${bendTop}, ${markerX} ${height}`;
+            road += ` L ${goal.x} ${bendTop}` + roundedStep(goal.x, bendTop, markerX, height);
           }
           const reachedIndex = finished
             ? points.length - 1
@@ -260,19 +387,16 @@ export function LearningPath({
               />
             </svg>
 
-            {/* signpost: number on the road, title and status beside it */}
-            <span
-              className={`${classes.marker} ${sec.finished ? classes.markerDone : ''} ${
-                sec.reached ? '' : classes.markerLocked
-              }`}
-              style={{ left: markerX - MARKER / 2, top: markerY - MARKER / 2 }}
-              aria-hidden
-            >
-              {sec.finished ? <IconTrophy size={24} /> : ci + 1}
-            </span>
+            {/* signpost: a flag on the road, title and status beside it */}
+            <ChapterFlag
+              number={ci + 1}
+              state={sec.finished ? 'done' : sec.reached ? 'open' : 'locked'}
+              waving={sec.open && !sec.finished}
+              style={{ left: markerX - FLAG_POLE_X, top: markerY - 44 }}
+            />
             <UnstyledButton
               className={classes.signpost}
-              style={{ left: markerX + MARKER / 2 + 12, right: 0, top: 6 }}
+              style={{ left: markerX + 50, right: 0, top: 6 }}
               aria-expanded={sec.open}
               aria-controls={sec.open ? `chapter-board-${chapter.id}` : undefined}
               onClick={() => toggle(chapter.id)}
