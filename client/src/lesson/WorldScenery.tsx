@@ -219,9 +219,9 @@ export function Fog({ lifting = false }: { lifting?: boolean }) {
       data-testid={lifting ? 'fog-lifting' : 'fog'}
       aria-hidden
     >
-      {cloud('55%', 8, 0.9, 0)}
-      {cloud('74%', 30, 1.2, 1)}
-      {cloud('32%', 40, 0.7, 2)}
+      {cloud('42%', 8, 0.9, 0)}
+      {cloud('58%', 34, 1.1, 1)}
+      {cloud('30%', 52, 0.7, 2)}
     </div>
   );
 }

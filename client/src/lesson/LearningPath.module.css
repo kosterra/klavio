@@ -347,14 +347,19 @@ a.node:active {
   --world-bg: color-mix(in srgb, var(--chapter-color) 7%, var(--klavio-surface));
   --world-hill: color-mix(in srgb, var(--chapter-color) 16%, var(--klavio-surface));
   --world-hill-2: color-mix(in srgb, var(--chapter-color) 28%, var(--klavio-surface));
+  --world-sky: color-mix(in srgb, var(--chapter-color) 18%, var(--klavio-surface));
+  --world-outline: color-mix(in srgb, var(--chapter-dark) 45%, var(--klavio-surface));
 
-  background: var(--world-bg);
+  /* a stronger "sky" at the top of every world, fading into its ground colour */
+  background: linear-gradient(180deg, var(--world-sky) 0, var(--world-bg) 150px);
 }
 
 :global([data-mantine-color-scheme='dark']) .section {
   --world-bg: color-mix(in srgb, var(--chapter-color) 12%, var(--klavio-surface));
   --world-hill: color-mix(in srgb, var(--chapter-color) 24%, var(--klavio-surface));
   --world-hill-2: color-mix(in srgb, var(--chapter-color) 36%, var(--klavio-surface));
+  --world-sky: color-mix(in srgb, var(--chapter-color) 26%, var(--klavio-surface));
+  --world-outline: color-mix(in srgb, var(--chapter-light) 40%, var(--klavio-surface));
 }
 
 .scenery {
@@ -375,6 +380,7 @@ a.node:active {
 /* a world not reached yet is grey and lies under clouds */
 .foggy {
   --world-bg: var(--klavio-fog);
+  --world-sky: var(--klavio-fog);
   --world-hill: color-mix(in srgb, var(--chapter-color) 6%, var(--klavio-locked-border));
   --world-hill-2: var(--world-hill);
 }
@@ -388,6 +394,10 @@ a.node:active {
 .foggy .scenery {
   opacity: 0.45;
   filter: grayscale(1);
+}
+
+.foggy .landmark {
+  filter: grayscale(1) opacity(0.4);
 }
 
 .foggy .sticker {
@@ -513,4 +523,17 @@ a.node:active {
 
 .title.doneBadge {
   margin-top: 16px;
+}
+
+/* comic outlines on the landscape */
+.scenery path {
+  stroke: var(--world-outline);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.landmark {
+  position: absolute;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 0 rgb(0 0 0 / 12%));
 }

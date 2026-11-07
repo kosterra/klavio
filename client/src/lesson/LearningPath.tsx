@@ -24,6 +24,7 @@ import {
 import { Figure } from '../components/Figure';
 import { useLocalized } from './useLocalized';
 import { Sticker } from './Stickers';
+import { Landmark } from './Landmarks';
 import type { StickerKind } from './stickerKinds';
 import { Fog, Scenery, Snowfall, WorldGate } from './WorldScenery';
 import {
@@ -127,7 +128,8 @@ function chapterVars(color: string) {
   } as React.CSSProperties;
 }
 
-const HEADER = 92; // height of a chapter's signpost row
+const HEADER = 92; // height of a chapter's signpost row (phones)
+const HEADER_WIDE = 124; // wider screens: room for the world's landmark
 const FOOT = 36; // room at the bottom of every world for its landscape and the next gate
 const FLAG_POLE_X = 12; // x of the pole inside the flag drawing
 
@@ -272,6 +274,7 @@ export function LearningPath({
   const maxCols = Math.max(3, Math.min(6, Math.floor(width / 150)));
   const narrow = width / maxCols < 140;
   const rowHeight = narrow ? 172 : 156;
+  const header = narrow ? HEADER : HEADER_WIDE;
 
   // Lay out the chapters one after another: every chapter's road starts and ends
   // in the left lane where the signposts stand, so they join seamlessly.
@@ -297,13 +300,13 @@ export function LearningPath({
         const currentIndex = chapter.lessons.findIndex((l) => l.id === currentLessonId);
         const figureSpace = currentIndex >= 0 && currentIndex < cols ? 58 : 6;
         const points = open
-          ? layout(count, width, cols, HEADER + figureSpace + 50, rowHeight, markerX)
+          ? layout(count, width, cols, header + figureSpace + 50, rowHeight, markerX)
           : [];
-        const markerY = HEADER / 2;
+        const markerY = header / 2;
         // open chapters end with room below the last titles for the bend to the next signpost
         const height = open
           ? points[points.length - 1]!.y + (narrow ? 160 : 140) + FOOT
-          : HEADER + FOOT;
+          : header + FOOT;
 
         // road through this chapter
         // the road always arrives in the signpost lane (chapters bend into it at their end)
@@ -400,13 +403,6 @@ export function LearningPath({
         const kind = (k: number) => kinds[(ci * 2 + k) % kinds.length]!;
         const stickers: { kind: StickerKind; x: number; y: number; size: number; tilt: number }[] =
           [];
-        if (!narrow) {
-          // beside the flag, right of the signpost text
-          stickers.push(
-            { kind: kind(0), x: width - 70, y: markerY + 4, size: 44, tilt: -8 },
-            { kind: kind(3), x: width - 150, y: markerY - 14, size: 30, tilt: 10 },
-          );
-        }
         if (points.length) {
           // empty spots in the last row
           for (let k = 0; k < emptyCells; k++) {
@@ -446,6 +442,13 @@ export function LearningPath({
             aria-labelledby={`chapter-${chapter.id}`}
           >
             <Scenery world={world.id} chapterId={chapter.id} height={height} snowy={christmas} />
+            {!narrow && (
+              <Landmark
+                world={world.id}
+                name={t(`path.worlds.${world.id}`)}
+                style={{ right: 14, top: markerY - 72 }}
+              />
+            )}
             {stickers.map((st, k) => (
               <Sticker
                 key={k}
@@ -506,7 +509,7 @@ export function LearningPath({
             />
             <UnstyledButton
               className={classes.signpost}
-              style={{ left: markerX + 50, right: 0, top: 6 }}
+              style={{ left: markerX + 50, right: narrow ? 0 : 200, top: markerY - 40 }}
               aria-expanded={sec.open}
               aria-controls={sec.open ? `chapter-board-${chapter.id}` : undefined}
               onClick={() => toggle(chapter.id)}

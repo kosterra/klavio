@@ -1,0 +1,292 @@
+import type { CSSProperties, ReactNode } from 'react';
+import type { WorldId } from './worlds';
+import classes from './LearningPath.module.css';
+
+/*
+ * One big landmark per world, drawn comic-style (flat colours, dark outlines,
+ * white highlights) – own artwork. Colours come from the section's
+ * --chapter-* variables, so each world keeps its colour.
+ */
+
+const INK = 'var(--klavio-comic-line)';
+const C = 'var(--chapter-color)';
+const LIGHT = 'var(--chapter-light)';
+const DARK = 'var(--chapter-dark)';
+const GLOSS = 'rgb(255 255 255 / 55%)';
+const line = { stroke: INK, strokeWidth: 3, strokeLinejoin: 'round' as const };
+
+const Note = ({ x, y, s = 1 }: { x: number; y: number; s?: number }) => (
+  <g transform={`translate(${x} ${y}) scale(${s})`} fill={INK}>
+    <ellipse cx="0" cy="10" rx="5" ry="3.8" transform="rotate(-20 0 10)" />
+    <rect x="3.2" y="-6" width="2.2" height="16" rx="1" />
+    <path d="M5 -6 q7 2 6 9 q-2-4-6-4z" />
+  </g>
+);
+
+const Ground = () => <path d="M4 126 Q90 100 176 126 Z" fill="var(--world-hill-2)" {...line} />;
+
+const LANDMARKS: Record<WorldId, ReactNode> = {
+  // Tasten-Tal: a castle with piano-key battlements
+  keys: (
+    <>
+      <Ground />
+      {/* towers */}
+      <rect x="26" y="46" width="28" height="74" rx="3" fill={C} {...line} />
+      <rect x="126" y="46" width="28" height="74" rx="3" fill={C} {...line} />
+      <path d="M21 50 L40 14 L59 50 Z" fill="var(--mantine-color-orange-6)" {...line} />
+      <path d="M121 50 L140 14 L159 50 Z" fill="var(--mantine-color-orange-6)" {...line} />
+      <path
+        d="M40 14 V2 L52 6 L40 10"
+        fill="var(--mantine-color-yellow-5)"
+        {...line}
+        strokeWidth={2}
+      />
+      <path
+        d="M140 14 V2 L152 6 L140 10"
+        fill="var(--mantine-color-yellow-5)"
+        {...line}
+        strokeWidth={2}
+      />
+      <rect
+        x="35"
+        y="64"
+        width="10"
+        height="14"
+        rx="5"
+        fill="var(--mantine-color-yellow-3)"
+        {...line}
+        strokeWidth={2}
+      />
+      <rect
+        x="135"
+        y="64"
+        width="10"
+        height="14"
+        rx="5"
+        fill="var(--mantine-color-yellow-3)"
+        {...line}
+        strokeWidth={2}
+      />
+      {/* hall with a keyboard as battlements */}
+      <rect x="52" y="58" width="76" height="62" fill={LIGHT} {...line} />
+      {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+        <rect
+          key={i}
+          x={52 + i * 10.86}
+          y="40"
+          width="10.86"
+          height="20"
+          fill="#fff"
+          {...line}
+          strokeWidth={2}
+        />
+      ))}
+      {[1, 2, 4, 5, 6].map((i) => (
+        <rect key={i} x={52 + i * 10.86 - 3.5} y="40" width="7" height="12" rx="1" fill={INK} />
+      ))}
+      <path d="M78 120 V98 Q90 84 102 98 V120 Z" fill={DARK} {...line} />
+      <rect x="58" y="66" width="22" height="4" rx="2" fill={GLOSS} />
+      <rect x="30" y="52" width="4" height="22" rx="2" fill={GLOSS} />
+    </>
+  ),
+  // Hand-Wald: a big tree with a tree house
+  forest: (
+    <>
+      <Ground />
+      <path d="M78 122 Q84 92 80 70 H102 Q98 94 106 122 Z" fill="#a8743f" {...line} />
+      {[
+        [56, 56, 28],
+        [124, 58, 28],
+        [90, 36, 36],
+        [72, 74, 24],
+        [110, 76, 24],
+      ].map(([x, y, r], i) => (
+        <circle key={i} cx={x} cy={y} r={r} fill={i === 2 ? LIGHT : C} {...line} />
+      ))}
+      <circle cx="80" cy="24" r="10" fill={GLOSS} />
+      {/* tree house */}
+      <rect x="72" y="60" width="38" height="26" rx="3" fill="#f0c27a" {...line} />
+      <path d="M66 62 L91 42 L116 62 Z" fill="var(--mantine-color-red-6)" {...line} />
+      <rect x="84" y="68" width="12" height="18" rx="5" fill={DARK} {...line} strokeWidth={2} />
+      <path d="M90 86 V118" stroke={INK} strokeWidth="2" strokeDasharray="4 4" />
+      {/* mushrooms */}
+      <path
+        d="M20 118 Q20 104 32 104 Q44 104 44 118 Z"
+        fill="var(--mantine-color-red-6)"
+        {...line}
+        strokeWidth={2.5}
+      />
+      <circle cx="28" cy="110" r="2.5" fill="#fff" />
+      <circle cx="37" cy="112" r="2" fill="#fff" />
+      <path
+        d="M150 120 Q150 110 158 110 Q166 110 166 120 Z"
+        fill="var(--mantine-color-red-6)"
+        {...line}
+        strokeWidth={2.5}
+      />
+    </>
+  ),
+  // Noten-Meer: lighthouse on a rock, a whale spouting notes
+  sea: (
+    <>
+      <path d="M2 108 Q24 98 46 108 T90 108 T134 108 T178 108 V128 H2 Z" fill={LIGHT} {...line} />
+      <path d="M36 114 Q66 86 104 114 Z" fill="var(--mantine-color-gray-5)" {...line} />
+      <path d="M92 30 L156 14 L156 46 Z" fill="var(--mantine-color-yellow-3)" opacity="0.7" />
+      <path d="M60 104 L66 36 H86 L92 104 Z" fill="#fff" {...line} />
+      <path
+        d="M62.3 78 L63.4 64 H88.6 L89.7 78 Z"
+        fill="var(--mantine-color-red-6)"
+        {...line}
+        strokeWidth={2}
+      />
+      <path
+        d="M64.6 52 L65.4 42 H86.6 L87.4 52 Z"
+        fill="var(--mantine-color-red-6)"
+        {...line}
+        strokeWidth={2}
+      />
+      <rect
+        x="63"
+        y="22"
+        width="26"
+        height="15"
+        rx="2"
+        fill="var(--mantine-color-yellow-4)"
+        {...line}
+      />
+      <path d="M58 23 L76 6 L94 23 Z" fill="var(--mantine-color-red-6)" {...line} />
+      {/* whale */}
+      <path
+        d="M116 108 Q116 82 144 82 Q170 82 170 104 Q178 92 178 84 Q182 104 170 110 Z"
+        fill={C}
+        {...line}
+      />
+      <circle cx="132" cy="94" r="2.6" fill={INK} />
+      <path
+        d="M126 102 Q134 106 142 102"
+        stroke={INK}
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M140 82 Q138 70 134 64 M140 82 Q142 70 148 64"
+        stroke={LIGHT}
+        strokeWidth="3"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <Note x={128} y={44} s={0.9} />
+      <Note x={150} y={50} s={0.75} />
+    </>
+  ),
+  // Lieder-Dorf: houses and a church tower with a bell
+  village: (
+    <>
+      <Ground />
+      <rect x="98" y="62" width="42" height="58" fill="#f6e7c8" {...line} />
+      <rect x="106" y="32" width="26" height="34" fill="#f6e7c8" {...line} />
+      <path d="M102 34 L119 4 L136 34 Z" fill={C} {...line} />
+      <path
+        d="M113 44 Q113 38 119 38 Q125 38 125 44 L127 52 H111 Z"
+        fill="var(--mantine-color-yellow-5)"
+        {...line}
+        strokeWidth={2}
+      />
+      <path d="M110 120 V100 Q119 90 128 100 V120 Z" fill={DARK} {...line} />
+      <rect x="26" y="80" width="42" height="40" fill={LIGHT} {...line} />
+      <path d="M20 82 L47 56 L74 82 Z" fill="var(--mantine-color-red-6)" {...line} />
+      <rect
+        x="34"
+        y="90"
+        width="11"
+        height="11"
+        fill="var(--mantine-color-yellow-3)"
+        {...line}
+        strokeWidth={2}
+      />
+      <rect x="51" y="98" width="10" height="22" fill={DARK} {...line} strokeWidth={2} />
+      <rect x="146" y="90" width="28" height="30" fill={C} {...line} />
+      <path d="M142 92 L160 72 L178 92 Z" fill="var(--mantine-color-orange-6)" {...line} />
+      <Note x={78} y={30} />
+      <Note x={92} y={14} s={0.8} />
+    </>
+  ),
+  // Rhythmus-Berg: a volcano with a drum on top, puffing notes
+  mountain: (
+    <>
+      <path d="M118 124 L148 70 L178 124 Z" fill={LIGHT} {...line} />
+      <path
+        d="M140 84 L148 70 L156 84 L152 88 L148 82 L144 88 Z"
+        fill="#fff"
+        {...line}
+        strokeWidth={2}
+      />
+      <path d="M8 124 L60 46 H108 L156 124 Z" fill={C} {...line} />
+      <path
+        d="M60 46 Q84 58 108 46 L102 58 Q84 66 66 58 Z"
+        fill="var(--mantine-color-orange-5)"
+        {...line}
+        strokeWidth={2.5}
+      />
+      <path
+        d="M66 58 Q60 80 70 96"
+        stroke="var(--mantine-color-orange-5)"
+        strokeWidth="5"
+        fill="none"
+        strokeLinecap="round"
+      />
+      {/* drum */}
+      <path d="M66 26 V44 Q84 52 102 44 V26 Z" fill="var(--mantine-color-red-6)" {...line} />
+      <path d="M66 30 L75 44 L84 30 L93 46 L102 30" stroke="#fff" strokeWidth="2" fill="none" />
+      <ellipse cx="84" cy="26" rx="18" ry="6" fill="#fff" {...line} />
+      <path d="M70 6 L82 22 M100 4 L88 22" stroke={INK} strokeWidth="3.5" strokeLinecap="round" />
+      <Note x={118} y={18} />
+      <Note x={40} y={20} s={0.8} />
+    </>
+  ),
+};
+
+/** A world's landmark with a wooden name sign. */
+export function Landmark({
+  world,
+  name,
+  style,
+}: {
+  world: WorldId;
+  name: string;
+  style: CSSProperties;
+}) {
+  return (
+    <svg
+      className={classes.landmark}
+      style={style}
+      viewBox="0 0 180 150"
+      width={176}
+      height={147}
+      aria-hidden
+    >
+      {LANDMARKS[world]}
+      {/* name sign */}
+      <g transform="rotate(-3 90 138)">
+        <rect x="34" y="126" width="112" height="22" rx="5" fill="#f4d9a6" {...line} />
+        <text
+          x="90"
+          y="137.5"
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontSize="12.5"
+          fontWeight="900"
+          fill={INK}
+          fontFamily="inherit"
+          letterSpacing="0.06em"
+          // long names are squeezed to fit the sign
+          textLength={name.length > 12 ? 100 : undefined}
+          lengthAdjust="spacingAndGlyphs"
+        >
+          {name.toUpperCase()}
+        </text>
+      </g>
+    </svg>
+  );
+}
