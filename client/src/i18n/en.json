@@ -52,8 +52,6 @@
     "create": "Create profile",
     "empty": "Create a profile for everyone who learns – for example you and your kids.",
     "switch": "Switch profile",
-    "edit": "Edit profile",
-    "deleteConfirm": "Delete profile “{{name}}” and all its progress?",
     "limit": "Up to 8 profiles per account.",
     "passkeyNudge": "Tip: set up a passkey and next time you sign in with your fingerprint or face – no e-mail code needed.",
     "passkeyNudgeButton": "Set up passkey"
@@ -104,7 +102,14 @@
     "admin": "Administration",
     "logout": "Sign out",
     "menu": "Menu",
-    "input": "Input"
+    "input": "Input",
+    "profile": "My profile",
+    "colorScheme": "Colour scheme",
+    "scheme": {
+      "auto": "Automatic",
+      "light": "Light",
+      "dark": "Dark"
+    }
   },
   "account": {
     "title": "Account",
@@ -394,5 +399,14 @@
     "newPin": "New PIN (4 digits)",
     "repeatPin": "Repeat PIN",
     "mismatch": "The two PINs do not match."
+  },
+  "profileSettings": {
+    "title": "My profile",
+    "saved": "Profile saved.",
+    "figureOnly": "You can choose your figure yourself. Your parents change the name, display mode and daily goal.",
+    "openParent": "Open parent area",
+    "delete": "Delete profile",
+    "deleteHint": "Deletes the profile “{{name}}” with all progress and badges. This cannot be undone.",
+    "deleteConfirm": "Delete profile “{{name}}”?"
   }
 }

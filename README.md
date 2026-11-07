@@ -18,10 +18,13 @@ Der Produktname ist ein Platzhalter. Er steht zentral in
 - **Motivation ohne Druck:** Sterne, XP, Level, Tage in Folge, Tagesziel, Abzeichen, Maskottchen
   «Klavi». Nichts läuft ab, XP gehen nie verloren.
 - **Familien:** ein Konto, mehrere Profile mit eigenem Fortschritt und eigener Mikrofon-Einrichtung;
-  Darstellung «Kids» oder «Classic»; optionale Eltern-PIN schützt Konto und Profilverwaltung.
+  Darstellung «Kids» oder «Classic»; sieben Figuren (Klavi, Flo, Olli, Mimi, Brummi, Quaki, Walli) als
+  lebendige Begleiter, unter «Mein Profil» jederzeit wechselbar; optionale Eltern-PIN schützt Konto und
+  Profilverwaltung.
 - **Anmeldung:** Registrierung per E-Mail-Code, danach Passkeys (Fingerabdruck, Gesicht, Geräte-PIN).
 - **Offline:** installierbar, Lektionen funktionieren ohne Internet, Ergebnisse werden nachgereicht.
-- **Sprachen:** Deutsch (Schweiz) und Englisch. Barrierefreiheit nach WCAG 2.1 AA geprüft.
+- **Sprachen:** Deutsch (Schweiz) und Englisch. Helles und dunkles Farbschema (automatisch nach Gerät
+  oder wählbar). Barrierefreiheit nach WCAG 2.1 AA geprüft, in beiden Farbschemata.
 
 ## Dokumentation
 

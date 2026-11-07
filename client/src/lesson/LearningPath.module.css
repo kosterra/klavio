@@ -58,7 +58,7 @@
   margin-top: 2px;
   height: 8px;
   border-radius: 4px;
-  background: rgb(255 255 255 / 70%);
+  background: var(--klavio-bar);
   overflow: hidden;
 }
 
@@ -109,7 +109,7 @@
   text-decoration: none;
   cursor: pointer;
   color: var(--chapter-color);
-  background: #fff;
+  background: var(--klavio-surface);
   border: 4px solid var(--chapter-color);
   box-shadow: 0 5px 0 var(--chapter-dark);
 }
@@ -129,24 +129,24 @@
   height: 82px;
   color: #fff;
   background: var(--mantine-color-orange-7);
-  border-color: #fff;
+  border-color: var(--klavio-surface);
   box-shadow:
     0 5px 0 var(--mantine-color-orange-9),
     0 0 0 6px var(--mantine-color-orange-2);
 }
 
 .locked {
-  color: var(--mantine-color-gray-7);
-  background: var(--mantine-color-gray-1);
-  border-color: var(--mantine-color-gray-4);
-  box-shadow: 0 5px 0 var(--mantine-color-gray-4);
+  color: var(--klavio-locked-fg);
+  background: var(--klavio-locked-bg);
+  border-color: var(--klavio-locked-border);
+  box-shadow: 0 5px 0 var(--klavio-locked-border);
   cursor: default;
 }
 
 .goal {
-  color: var(--mantine-color-gray-7);
-  background: var(--mantine-color-gray-0);
-  border: 4px dashed var(--mantine-color-gray-5);
+  color: var(--klavio-locked-fg);
+  background: var(--klavio-locked-bg);
+  border: 4px dashed var(--klavio-locked-border);
   box-shadow: none;
   cursor: default;
 }
@@ -154,7 +154,7 @@
 .goalReached {
   color: #fff;
   background: var(--mantine-color-yellow-6);
-  border: 4px solid #fff;
+  border: 4px solid var(--klavio-surface);
   box-shadow:
     0 5px 0 var(--mantine-color-yellow-9),
     0 0 0 6px var(--mantine-color-yellow-2);
@@ -169,7 +169,7 @@
   gap: 1px;
   padding: 1px 4px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--klavio-surface);
   box-shadow: 0 1px 3px rgb(0 0 0 / 15%);
 }
 
@@ -241,4 +241,12 @@
       0 5px 0 var(--mantine-color-orange-9),
       0 0 0 12px rgb(255 216 168 / 40%);
   }
+}
+
+.travelled {
+  stroke: var(--chapter-road-light);
+}
+
+:global([data-mantine-color-scheme='dark']) .travelled {
+  stroke: var(--chapter-road-dark);
 }

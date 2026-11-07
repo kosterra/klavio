@@ -36,7 +36,8 @@ export function ProfileAvatar({
         borderRadius: '50%',
         // alive figures may pop out of the frame a little when they hop
         overflow: alive ? 'visible' : 'hidden',
-        background: avatar === 'klavi' ? '#e7ecff' : '#fff4e6',
+        background:
+          avatar === 'klavi' ? 'var(--klavio-avatar-bg-klavi)' : 'var(--klavio-avatar-bg)',
       }}
     >
       <Figure avatar={avatar} size={inner} still={!alive} mood={mood} />

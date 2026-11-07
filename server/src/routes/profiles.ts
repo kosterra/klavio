@@ -70,8 +70,10 @@ const profileRoutes: FastifyPluginAsyncZod = async (app) => {
     { schema: { params: idParams, body: profileUpdateSchema } },
     async (req, reply) => {
       const { calibration, ...rest } = req.body;
-      // Children may save their own microphone calibration; everything else is parent area.
-      if (Object.keys(rest).length > 0) await app.requireParent(req, reply);
+      // Children may pick their own figure and save their microphone calibration;
+      // name, display mode and daily goal are parent area.
+      const parentOnly = Object.keys(rest).filter((k) => k !== 'avatar');
+      if (parentOnly.length > 0) await app.requireParent(req, reply);
       const update: Record<string, unknown> = { ...rest };
       for (const [k, v] of Object.entries(calibration ?? {})) update[`calibration.${k}`] = v;
       const updated = await Profile.findOneAndUpdate(

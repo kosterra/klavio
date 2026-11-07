@@ -52,8 +52,6 @@
     "create": "Profil erstellen",
     "empty": "Lege ein Profil für jede Person an, die lernt – zum Beispiel für dich und deine Kinder.",
     "switch": "Profil wechseln",
-    "edit": "Profil bearbeiten",
-    "deleteConfirm": "Profil «{{name}}» mit allem Fortschritt löschen?",
     "limit": "Maximal 8 Profile pro Konto.",
     "passkeyNudge": "Tipp: Richte einen Passkey ein, dann meldest du dich beim nächsten Mal per Fingerabdruck oder Gesicht an – ohne E-Mail-Code.",
     "passkeyNudgeButton": "Passkey einrichten"
@@ -104,7 +102,14 @@
     "admin": "Verwaltung",
     "logout": "Abmelden",
     "menu": "Menü",
-    "input": "Eingabe"
+    "input": "Eingabe",
+    "profile": "Mein Profil",
+    "colorScheme": "Farbschema",
+    "scheme": {
+      "auto": "Automatisch",
+      "light": "Hell",
+      "dark": "Dunkel"
+    }
   },
   "account": {
     "title": "Konto",
@@ -394,5 +399,14 @@
     "newPin": "Neue PIN (4 Ziffern)",
     "repeatPin": "PIN wiederholen",
     "mismatch": "Die beiden PINs stimmen nicht überein."
+  },
+  "profileSettings": {
+    "title": "Mein Profil",
+    "saved": "Profil gespeichert.",
+    "figureOnly": "Deine Figur kannst du selbst wählen. Name, Darstellung und Tagesziel ändern deine Eltern.",
+    "openParent": "Elternbereich öffnen",
+    "delete": "Profil löschen",
+    "deleteHint": "Löscht das Profil «{{name}}» mit allem Fortschritt und allen Abzeichen. Das kann nicht rückgängig gemacht werden.",
+    "deleteConfirm": "Profil «{{name}}» löschen?"
   }
 }

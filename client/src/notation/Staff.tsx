@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Box, Loader } from '@mantine/core';
+import { Box, Loader, useComputedColorScheme } from '@mantine/core';
 import { loadVexFlow, midiToVexKey } from './vexflow';
 
 export interface StaffNote {
@@ -47,7 +47,8 @@ export function Staff({ clef, notes, bars: barsProp, time, height = 160, label }
     return () => ro.disconnect();
   }, []);
 
-  const key = JSON.stringify({ clef, bars, time, height, width });
+  const scheme = useComputedColorScheme('light');
+  const key = JSON.stringify({ clef, bars, time, height, width, scheme });
   useEffect(() => {
     const el = host.current;
     if (!el || width < 50) return;
@@ -58,6 +59,10 @@ export function Staff({ clef, notes, bars: barsProp, time, height = 160, label }
       const renderer = new VF.Renderer(el, VF.Renderer.Backends.SVG);
       renderer.resize(width, height);
       const ctx = renderer.getContext();
+      // VexFlow draws black by default – invisible on a dark background
+      const ink = scheme === 'dark' ? '#e9ecef' : '#000000';
+      ctx.setFillStyle(ink);
+      ctx.setStrokeStyle(ink);
       // VexFlow draws at 1:1; enlarge for readability on tablets
       const scale = Math.min(1.6, Math.max(1, height / 110));
       ctx.scale(scale, scale);

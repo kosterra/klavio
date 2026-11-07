@@ -52,9 +52,7 @@ export function LessonSummary({
                 <IconStarFilled
                   key={s}
                   size={56}
-                  color={
-                    s <= stars ? 'var(--mantine-color-yellow-6)' : 'var(--mantine-color-gray-3)'
-                  }
+                  color={s <= stars ? 'var(--mantine-color-yellow-6)' : 'var(--klavio-empty-star)'}
                   aria-hidden
                 />
               ))}

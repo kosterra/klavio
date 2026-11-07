@@ -121,7 +121,9 @@ export function LearningPath({
           const vars = {
             '--chapter-color': `var(--mantine-color-${color}-7)`,
             '--chapter-dark': `var(--mantine-color-${color}-9)`,
-            '--chapter-tint': `var(--mantine-color-${color}-0)`,
+            '--chapter-tint': `var(--mantine-color-${color}-light)`,
+            '--chapter-road-light': `var(--mantine-color-${color}-2)`,
+            '--chapter-road-dark': `var(--mantine-color-${color}-9)`,
           } as React.CSSProperties;
           const earned = chapter.lessons.reduce((n, l) => n + (progress[l.id]?.bestStars ?? 0), 0);
           const total = chapter.lessons.length * 3;
@@ -178,7 +180,7 @@ export function LearningPath({
                       size="xs"
                       fw={800}
                       tt="uppercase"
-                      c="gray.7"
+                      c="dimmed"
                     >
                       {t('path.chapter', { n: ci + 1 })}
                     </Text>
@@ -199,7 +201,7 @@ export function LearningPath({
                     </span>
                   </Box>
                   {!open && goalReached && (
-                    <Group component="span" gap={4} wrap="nowrap" c="gray.8">
+                    <Group component="span" gap={4} wrap="nowrap">
                       <IconTrophy size={22} color="var(--mantine-color-yellow-7)" aria-hidden />
                       <Text component="span" fw={800} size="sm" visibleFrom="xs">
                         {t('path.goalDone')}
@@ -207,7 +209,7 @@ export function LearningPath({
                     </Group>
                   )}
                   {!open && locked && (
-                    <Group component="span" gap={4} wrap="nowrap" c="gray.7">
+                    <Group component="span" gap={4} wrap="nowrap" c="dimmed">
                       <IconLock size={20} aria-hidden />
                       <Text component="span" fw={700} size="sm" visibleFrom="xs">
                         {t('path.lessonCount', { count: chapter.lessons.length })}
@@ -241,7 +243,7 @@ export function LearningPath({
                     <path
                       d={road}
                       fill="none"
-                      stroke="var(--mantine-color-gray-2)"
+                      stroke="var(--klavio-road)"
                       strokeWidth={30}
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -250,7 +252,7 @@ export function LearningPath({
                       <path
                         d={travelled}
                         fill="none"
-                        stroke={`var(--mantine-color-${color}-2)`}
+                        className={classes.travelled}
                         strokeWidth={30}
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -321,7 +323,7 @@ export function LearningPath({
                               color={
                                 s <= stars
                                   ? 'var(--mantine-color-yellow-6)'
-                                  : 'var(--mantine-color-gray-3)'
+                                  : 'var(--klavio-empty-star)'
                               }
                             />
                           ))}

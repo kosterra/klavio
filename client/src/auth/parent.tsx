@@ -163,7 +163,7 @@ export function ParentPinSettings() {
                 <Button
                   variant="subtle"
                   color="red"
-                  c="red.9"
+                  c="var(--klavio-danger)"
                   loading={busy}
                   onClick={() =>
                     run(async () => {

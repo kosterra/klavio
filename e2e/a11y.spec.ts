@@ -42,4 +42,20 @@ test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ p
   await page.goto('/account');
   await page.getByRole('heading', { name: 'Passkeys' }).waitFor();
   await audit(page);
+
+  // Dark colour scheme (follows the device by default): Classic …
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/');
+  await page.getByRole('heading', { name: 'Lernpfad' }).waitFor();
+  await audit(page);
+  await page.goto('/profile');
+  await page.getByRole('heading', { name: 'Mein Profil' }).waitFor();
+  await audit(page);
+  // … and Kids
+  await page.goto('/profiles');
+  await page.getByRole('button', { name: 'Kim' }).click();
+  await page.getByRole('heading', { name: 'Hallo Kim!' }).waitFor();
+  await audit(page);
+  await page.goto('/profiles');
+  await audit(page);
 });

@@ -240,8 +240,8 @@ export function RhythmExercise({
                   ? phase === 'countin'
                     ? 'var(--mantine-color-orange-6)'
                     : 'var(--mantine-color-indigo-7)'
-                  : 'var(--mantine-color-gray-2)',
-              color: counting && shownBeat === i ? '#fff' : 'var(--mantine-color-dark-6)',
+                  : 'var(--klavio-track)',
+              color: counting && shownBeat === i ? '#fff' : 'var(--mantine-color-text)',
             }}
           >
             {i + 1}

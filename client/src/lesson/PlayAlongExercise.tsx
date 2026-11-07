@@ -101,11 +101,11 @@ export function PlayAlongExercise({
                 fontSize: kids ? 26 : 20,
                 border: `3px solid ${now ? 'var(--mantine-color-orange-7)' : 'transparent'}`,
                 background: done
-                  ? 'var(--mantine-color-teal-1)'
+                  ? 'var(--mantine-color-teal-light)'
                   : now
-                    ? 'var(--mantine-color-orange-0)'
-                    : 'var(--mantine-color-gray-1)',
-                color: done ? 'var(--mantine-color-teal-9)' : 'var(--mantine-color-dark-7)',
+                    ? 'var(--mantine-color-orange-light)'
+                    : 'var(--klavio-track)',
+                color: done ? 'var(--mantine-color-teal-light-color)' : 'var(--mantine-color-text)',
               }}
             >
               {done && <IconCheck size={16} aria-hidden />}

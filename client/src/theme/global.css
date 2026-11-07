@@ -1,6 +1,39 @@
+/* App colours with a light and a dark value (Mantine sets data-mantine-color-scheme). */
 :root {
   --klavio-bg-kids: #fffaf2;
   --klavio-bg-classic: #f8f9fb;
+  --klavio-surface: #fff;
+  --klavio-track: var(--mantine-color-gray-2);
+  --klavio-road: var(--mantine-color-gray-2);
+  --klavio-road-line: #fff;
+  --klavio-bar: rgb(255 255 255 / 70%);
+  --klavio-locked-bg: var(--mantine-color-gray-1);
+  --klavio-locked-border: var(--mantine-color-gray-4);
+  --klavio-locked-fg: var(--mantine-color-gray-7);
+  --klavio-empty-star: var(--mantine-color-gray-3);
+  --klavio-avatar-bg: #fff4e6;
+  --klavio-avatar-bg-klavi: #e7ecff;
+  --klavio-ink: #000;
+  /* destructive actions (delete, log out): ≥ 4.5:1 on the page and on cards */
+  --klavio-danger: var(--mantine-color-red-9);
+}
+
+:root[data-mantine-color-scheme='dark'] {
+  --klavio-bg-kids: #191a24;
+  --klavio-bg-classic: var(--mantine-color-dark-8);
+  --klavio-surface: var(--mantine-color-dark-6);
+  --klavio-track: var(--mantine-color-dark-4);
+  --klavio-road: var(--mantine-color-dark-5);
+  --klavio-road-line: var(--mantine-color-dark-3);
+  --klavio-bar: rgb(255 255 255 / 14%);
+  --klavio-locked-bg: var(--mantine-color-dark-6);
+  --klavio-locked-border: var(--mantine-color-dark-3);
+  --klavio-locked-fg: var(--mantine-color-dark-1);
+  --klavio-empty-star: var(--mantine-color-dark-3);
+  --klavio-avatar-bg: #3a3128;
+  --klavio-avatar-bg-klavi: #283056;
+  --klavio-ink: #e9ecef;
+  --klavio-danger: var(--mantine-color-red-4);
 }
 
 html[data-ui-mode='kids'] body {
@@ -24,6 +57,11 @@ html[data-ui-mode='classic'] body {
 /* Mantine's default "dimmed" (gray-6) is ~3.3:1 on white; gray-7 meets WCAG AA (4.5:1). */
 :root[data-mantine-color-scheme='light'] {
   --mantine-color-dimmed: var(--mantine-color-gray-7);
+}
+
+/* Dark: Mantine's "dimmed" (dark-2) is ~3.5:1 on cards; dark-1 meets WCAG AA. */
+:root[data-mantine-color-scheme='dark'] {
+  --mantine-color-dimmed: var(--mantine-color-dark-1);
 }
 
 /* Teal "light" variant (privacy badge/alert): lighter background so teal-9 text reaches 4.5:1. */

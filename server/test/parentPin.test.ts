@@ -67,11 +67,18 @@ describe('parent PIN', () => {
     expect((await call(jar, 'DELETE', '/api/account/pin')).json()).toEqual(LOCKED);
     expect((await call(jar, 'PUT', '/api/account/pin', { pin: '1111' })).json()).toEqual(LOCKED);
 
-    // … but the child can still learn and set up the microphone
+    // … but the child can still learn, set up the microphone and pick a figure
     expect(
       (await call(jar, 'PATCH', `/api/profiles/${kid.id}`, { calibration: { a4Hz: 442 } }))
         .statusCode,
     ).toBe(200);
+    const fig = await call(jar, 'PATCH', `/api/profiles/${kid.id}`, { avatar: 'frog' });
+    expect(fig.json().avatar).toBe('frog');
+    expect(
+      (
+        await call(jar, 'PATCH', `/api/profiles/${kid.id}`, { avatar: 'owl', dailyGoalMinutes: 30 })
+      ).json(),
+    ).toEqual(LOCKED);
     expect((await call(jar, 'GET', '/api/profiles')).statusCode).toBe(200);
 
     // wrong PIN, then the right one

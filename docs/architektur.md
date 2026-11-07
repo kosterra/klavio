@@ -221,6 +221,12 @@ flowchart TB
 
 - Mantine 9 mit CSS Modules; zwei Themes pro Profil: **Kids** (grosse Schrift, runde Formen,
   Maskottchen gross) und **Classic** (ruhiger, kompakter). Gleiche Inhalte.
+- **Farbschema** hell, dunkel oder automatisch (pro Gerät gespeichert, Menü). Eigene Farben stehen als
+  Variablen mit hellem und dunklem Wert in `client/src/theme/global.css` (`--klavio-…`); neue
+  Komponenten bitte darüber statt mit festen Farben. VexFlow zeichnet die Noten in der passenden Tinte.
+- **Figuren** (`components/Figure.tsx`): alle Profilfiguren mit Stimmungen (happy, cheer, think, listen)
+  und Bewegung; `Buddy` zeigt die Figur des aktiven Profils als Begleiter, `ProfileAvatar` dieselbe
+  Figur im runden Rahmen.
 - Sprachen: de-CH (Schweizer Schreibweise, kein ß – ein Test prüft das) und en. Lehrplantexte stehen
   im Lehrplan selbst, UI-Texte in `client/src/i18n/`.
 - Barrierefreiheit: axe-core prüft die Hauptseiten in beiden Themes auf WCAG 2.1 AA (E2E). Klaviatur,
