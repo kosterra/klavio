@@ -1,5 +1,6 @@
 import { Group, Stack, Text, Title } from '@mantine/core';
 import {
+  IconFileMusic,
   IconLock,
   IconMusic,
   IconPiano,
@@ -19,6 +20,7 @@ const SWING = [0, 0.22, 0.32, 0.22, 0, -0.22, -0.32, -0.22]; // horizontal offse
 function KindIcon({ lesson, size }: { lesson: Lesson; size: number }) {
   if (lesson.kind === 'song') return <IconMusic size={size} aria-hidden />;
   if (lesson.kind === 'play') return <IconPlayerPlay size={size} aria-hidden />;
+  if (lesson.kind === 'read') return <IconFileMusic size={size} aria-hidden />;
   return <IconPiano size={size} aria-hidden />;
 }
 

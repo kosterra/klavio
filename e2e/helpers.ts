@@ -91,3 +91,26 @@ export async function logout(page: Page) {
   await page.getByRole('menuitem', { name: 'Abmelden' }).click();
   await expect(page.getByRole('heading', { name: /Willkommen bei Klavio/ })).toBeVisible();
 }
+
+/** Marks lessons as completed (3 stars) for the page's active profile, directly in the dev DB. */
+export async function seedCompletedLessons(page: Page, lessonIds: string[]) {
+  const profileId = await page.evaluate(async () => {
+    const me = await (await fetch('/api/auth/me')).json();
+    return me.activeProfileId as string;
+  });
+  const docs = lessonIds.map(
+    (id) =>
+      `{ profileId: ObjectId(${JSON.stringify(profileId)}), lessonId: ${JSON.stringify(id)}, bestStars: 3, completions: 1 }`,
+  );
+  execFileSync('docker', [
+    'compose',
+    'exec',
+    '-T',
+    'mongo',
+    'mongosh',
+    'klavio',
+    '--quiet',
+    '--eval',
+    `db.lessonprogresses.insertMany([${docs.join(',')}])`,
+  ]);
+}

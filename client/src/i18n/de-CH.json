@@ -294,6 +294,14 @@
     "retrySave": "Nochmals speichern",
     "next": "Nächste Lektion",
     "again": "Nochmals",
-    "toPath": "Zum Lernpfad"
+    "toPath": "Zum Lernpfad",
+    "readNote": "Welche Note ist das? Spiel sie!",
+    "staffLabel": "Notenlinien mit {{clef}} und einer Note",
+    "correctNote": "Richtig, das ist ein {{note}}!",
+    "itIs": "Das ist ein {{note}}.",
+    "clef": {
+      "treble": "Violinschlüssel",
+      "bass": "Bassschlüssel"
+    }
   }
 }

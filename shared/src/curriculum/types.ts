@@ -19,7 +19,15 @@ export interface PlayAlongExercise {
   sequences: number[][];
 }
 
-export type Exercise = FindKeyExercise | PlayAlongExercise;
+/** "Notenlesen": a note is shown on the staff; play exactly that key. */
+export interface ReadNoteExercise {
+  type: 'read-note';
+  clef: 'treble' | 'bass';
+  notes: number[];
+  rounds: number;
+}
+
+export type Exercise = FindKeyExercise | PlayAlongExercise | ReadNoteExercise;
 
 export interface Lesson {
   id: string;
@@ -33,7 +41,7 @@ export interface Lesson {
   /** Note names on the keys (beginners) or not (when finding the key is the point). */
   keyLabels: 'all' | 'c' | 'none';
   /** Song lessons are drawn differently on the learning path. */
-  kind: 'keys' | 'play' | 'song';
+  kind: 'keys' | 'play' | 'read' | 'song';
   exercises: Exercise[];
 }
 

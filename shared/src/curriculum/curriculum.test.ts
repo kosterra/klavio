@@ -29,7 +29,7 @@ describe('curriculum data', () => {
   it('only asks for keys that are on the visible keyboard', () => {
     for (const l of LESSONS) {
       for (const e of l.exercises) {
-        const notes = e.type === 'find-key' ? e.notes : e.sequences.flat();
+        const notes = e.type === 'play-along' ? e.sequences.flat() : e.notes;
         for (const n of notes) {
           if (e.type === 'find-key' && e.anyOctave) {
             // some octave of the pitch class must be visible

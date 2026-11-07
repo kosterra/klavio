@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
 import { Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { midiToName, midiToPitchName, type FindKeyExercise as Spec } from '@klavio/shared';
-import { useNoteEvents } from '../input/noteBus';
 import { Mascot } from '../components/Mascot';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
-import { FEEDBACK_MS, matchingKeys, shuffleRounds, type ExerciseProps } from './exercises';
+import { matchingKeys, type ExerciseProps } from './exercises';
+import { useRoundTask } from './useRoundTask';
 import { useNoteLang } from './useLocalized';
 
 /** "Finde die Taste": a note name is shown; play that key on the piano. */
@@ -20,39 +19,14 @@ export function FindKeyExercise({
 }: ExerciseProps<Spec>) {
   const { t } = useTranslation();
   const lang = useNoteLang();
-  const [targets] = useState(() => shuffleRounds(exercise.notes, exercise.rounds));
-  const [round, setRound] = useState(0);
-  const [wrongInRound, setWrongInRound] = useState(0);
-  const [feedback, setFeedback] = useState<{ midi: number; ok: boolean } | null>(null);
-  const busy = useRef(false);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  useEffect(() => () => clearTimeout(timer.current), []);
-
-  const target = targets[round]!;
   const { from, to } = lesson.keyboard;
-  const matches = (midi: number) =>
-    exercise.anyOctave ? midi % 12 === target % 12 : midi === target;
-
-  useNoteEvents((e) => {
-    if (e.type !== 'note-on' || busy.current) return;
-    if (matches(e.midi)) {
-      busy.current = true;
-      setFeedback({ midi: e.midi, ok: true });
-      onCorrect();
-      timer.current = setTimeout(() => {
-        busy.current = false;
-        setFeedback(null);
-        setWrongInRound(0);
-        if (round + 1 >= targets.length) onDone();
-        else setRound(round + 1);
-      }, FEEDBACK_MS);
-    } else {
-      onMistake();
-      setWrongInRound((w) => w + 1);
-      setFeedback({ midi: e.midi, ok: false });
-      clearTimeout(timer.current);
-      timer.current = setTimeout(() => setFeedback(null), FEEDBACK_MS);
-    }
+  const { target, round, total, wrongInRound, feedback } = useRoundTask({
+    notes: exercise.notes,
+    rounds: exercise.rounds,
+    matches: (played, t) => (exercise.anyOctave ? played % 12 === t % 12 : played === t),
+    onCorrect,
+    onMistake,
+    onDone,
   });
 
   // Help after two misses (kids: after the first).
@@ -81,7 +55,7 @@ export function FindKeyExercise({
         </Text>
       </div>
       <Text size="sm" c="dimmed">
-        {t('lesson.round', { n: round + 1, total: targets.length })}
+        {t('lesson.round', { n: round + 1, total })}
       </Text>
       <div style={{ width: '100%' }}>
         <VirtualKeyboard

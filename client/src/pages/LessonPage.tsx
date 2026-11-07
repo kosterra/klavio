@@ -32,6 +32,7 @@ import { Mascot } from '../components/Mascot';
 import { PrivacyBadge } from '../components/PrivacyNote';
 import { FindKeyExercise } from '../lesson/FindKeyExercise';
 import { PlayAlongExercise } from '../lesson/PlayAlongExercise';
+import { ReadNoteExercise } from '../lesson/ReadNoteExercise';
 import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
 import { useLocalized } from '../lesson/useLocalized';
@@ -194,6 +195,8 @@ function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void })
         {phase === 'play' &&
           (exercise.type === 'find-key' ? (
             <FindKeyExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+          ) : exercise.type === 'read-note' ? (
+            <ReadNoteExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
           ) : (
             <PlayAlongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
           ))}

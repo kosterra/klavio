@@ -206,6 +206,57 @@ export const CURRICULUM: Chapter[] = [
   },
 ];
 
+CURRICULUM.push({
+  id: 'read',
+  title: { 'de-CH': 'Noten lesen', en: 'Reading notes' },
+  lessons: [
+    {
+      id: 'read-c-d-e',
+      kind: 'read',
+      title: { 'de-CH': 'Noten: C, D, E', en: 'Notes: C, D, E' },
+      intro: {
+        'de-CH':
+          'Noten stehen auf fünf Linien. Das mittlere C hat seine eigene kleine Hilfslinie darunter. Das D hängt unter der untersten Linie, das E sitzt genau auf ihr.',
+        en: 'Notes sit on five lines. Middle C has its own small extra line below them. D hangs below the lowest line, E sits right on it.',
+      },
+      xp: 15,
+      keyboard: C4_C5,
+      keyLabels: 'all',
+      exercises: [{ type: 'read-note', clef: 'treble', notes: seq('C4 D4 E4'), rounds: 6 }],
+    },
+    {
+      id: 'read-f-g',
+      kind: 'read',
+      title: { 'de-CH': 'Noten: F und G', en: 'Notes: F and G' },
+      intro: {
+        'de-CH':
+          'Das F steht im ersten Zwischenraum, das G auf der zweiten Linie – dort, wo sich der Violinschlüssel einrollt.',
+        en: 'F sits in the first space, G on the second line – where the treble clef curls in.',
+      },
+      xp: 15,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [{ type: 'read-note', clef: 'treble', notes: seq('C4 D4 E4 F4 G4'), rounds: 8 }],
+    },
+    {
+      id: 'read-a-h-c',
+      kind: 'read',
+      title: { 'de-CH': 'Noten: A, H, C', en: 'Notes: A, B, C' },
+      intro: {
+        'de-CH':
+          'Immer abwechselnd Linie und Zwischenraum: A im zweiten Zwischenraum, H auf der Mittellinie, C im dritten Zwischenraum.',
+        en: 'Always line, space, line: A in the second space, B on the middle line, C in the third space.',
+      },
+      xp: 20,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        { type: 'read-note', clef: 'treble', notes: seq('C4 D4 E4 F4 G4 A4 H4 C5'), rounds: 10 },
+      ],
+    },
+  ],
+});
+
 /** All lessons in learning order. */
 export const LESSONS: Lesson[] = CURRICULUM.flatMap((c) => c.lessons);
 
@@ -221,7 +272,7 @@ export function chapterOf(lessonId: string) {
 export function lessonTargetCount(lesson: Lesson): number {
   return lesson.exercises.reduce(
     (n, e) =>
-      n + (e.type === 'find-key' ? e.rounds : e.sequences.reduce((m, s) => m + s.length, 0)),
+      n + (e.type === 'play-along' ? e.sequences.reduce((m, s) => m + s.length, 0) : e.rounds),
     0,
   );
 }

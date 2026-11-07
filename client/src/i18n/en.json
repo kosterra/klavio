@@ -294,6 +294,14 @@
     "retrySave": "Save again",
     "next": "Next lesson",
     "again": "Again",
-    "toPath": "To the learning path"
+    "toPath": "To the learning path",
+    "readNote": "Which note is this? Play it!",
+    "staffLabel": "Staff with {{clef}} and one note",
+    "correctNote": "Correct, that is {{note}}!",
+    "itIs": "That is {{note}}.",
+    "clef": {
+      "treble": "treble clef",
+      "bass": "bass clef"
+    }
   }
 }
