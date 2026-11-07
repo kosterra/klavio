@@ -6,6 +6,7 @@ import {
   isLessonUnlocked,
   lessonCompleteSchema,
   lessonTargetCount,
+  newlyEarnedBadges,
   levelForXp,
   nextStreak,
   progressQuerySchema,
@@ -99,6 +100,20 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
         localDate,
       );
       profile.set('streak', streak);
+
+      // Badges: computed from the updated progress; once earned, kept for good.
+      const all = await LessonProgress.find({ profileId }, { lessonId: 1, bestStars: 1 }).lean();
+      const owned = new Set((profile.badges ?? []).map((b) => b.id!));
+      const newBadges = newlyEarnedBadges(
+        {
+          lessons: Object.fromEntries(all.map((l) => [l.lessonId, l.bestStars])),
+          streak: streak.current,
+          todaySeconds: today!.seconds,
+          dailyGoalMinutes: profile.dailyGoalMinutes,
+        },
+        owned,
+      );
+      for (const id of newBadges) profile.badges.push({ id, earnedAt: new Date() });
       await profile.save();
 
       return {
@@ -111,6 +126,7 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
         leveledUp: profile.level > levelBefore,
         streak,
         today: { date: localDate, seconds: today!.seconds, xp: today!.xp },
+        newBadges,
       };
     },
   );

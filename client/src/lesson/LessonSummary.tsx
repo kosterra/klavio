@@ -3,6 +3,7 @@ import { IconFlame, IconRefresh, IconStarFilled, IconTrophy } from '@tabler/icon
 import { useTranslation } from 'react-i18next';
 import type { LessonResultDto } from '@klavio/shared';
 import { Mascot } from '../components/Mascot';
+import { NewBadges } from './Badges';
 
 interface Props {
   result: LessonResultDto | null;
@@ -56,6 +57,7 @@ export function LessonSummary({
             <Text fz={28} fw={800} c="indigo.8" data-testid="xp-gained">
               {t('lesson.xpGained', { xp: result.xpGained })}
             </Text>
+            <NewBadges ids={result.newBadges} />
             {result.leveledUp && (
               <Alert color="yellow" icon={<IconTrophy />} radius="lg" w="100%">
                 <Text fw={800}>{t('lesson.levelUp', { level: result.level })}</Text>

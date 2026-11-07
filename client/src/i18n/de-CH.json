@@ -326,5 +326,12 @@
       "extra": "{{count}} Ton zu viel",
       "extra_other": "{{count}} Töne zu viel"
     }
+  },
+  "badges": {
+    "title": "Abzeichen",
+    "count": "{{earned}} von {{total}}",
+    "new": "Neues Abzeichen!",
+    "new_other": "{{count}} neue Abzeichen!",
+    "earnedOn": "erhalten am {{date}}"
   }
 }

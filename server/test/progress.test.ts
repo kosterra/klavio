@@ -88,6 +88,25 @@ describe('lesson progress', () => {
     expect(profile).toMatchObject({ xp: first!.xp + 15, streak: { current: 1 } });
   });
 
+  it('awards badges once and lists them on the profile', async () => {
+    const { jar } = await learner();
+    const a = (await complete(jar, first!.id, { mistakes: 0 })).json();
+    expect(a.newBadges).toEqual(['first-lesson', 'perfect']);
+    const b = (await complete(jar, first!.id, { mistakes: 0 })).json();
+    expect(b.newBadges).toEqual([]);
+    const profile = (await call(jar, 'GET', '/api/profiles')).json()[0];
+    expect(profile.badges.map((x: { id: string }) => x.id)).toEqual(['first-lesson', 'perfect']);
+  });
+
+  it('awards the daily-goal badge when the practice time reaches the goal', async () => {
+    const { jar } = await learner();
+    // default goal: 10 minutes
+    const a = (await complete(jar, first!.id, { durationSec: 300 })).json();
+    expect(a.newBadges).not.toContain('daily-goal');
+    const b = (await complete(jar, first!.id, { durationSec: 300 })).json();
+    expect(b.newBadges).toContain('daily-goal');
+  });
+
   it('keeps later lessons locked until the previous one is done', async () => {
     const { jar } = await learner();
     expect((await complete(jar, second!.id)).json()).toEqual({ error: 'LESSON_LOCKED' });

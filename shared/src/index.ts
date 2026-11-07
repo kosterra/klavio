@@ -8,3 +8,4 @@ export * from './curriculum/curriculum.ts';
 export * from './curriculum/rewards.ts';
 export * from './schemas/progress.ts';
 export * from './curriculum/song.ts';
+export * from './curriculum/badges.ts';

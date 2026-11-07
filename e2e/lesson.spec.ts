@@ -85,6 +85,8 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await expect(page.getByRole('heading', { name: 'Sehr gut!' })).toBeVisible();
   await expect(page.getByTestId('xp-gained')).toHaveText('+20 XP');
   await expect(page.getByText('1 Tag in Folge')).toBeVisible();
+  await expect(page.getByTestId('new-badges')).toContainText('Neues Abzeichen!');
+  await expect(page.getByTestId('new-badges')).toContainText('Erste Lektion');
   await audit(page);
 
   // --- lesson 2 via "next", perfect → 3 stars
@@ -93,6 +95,7 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await solveFindKey(page);
   await expect(page.getByRole('heading', { name: 'Perfekt!' })).toBeVisible();
   await expect(page.getByTestId('xp-gained')).toHaveText('+25 XP');
+  await expect(page.getByTestId('new-badges')).toContainText('Perfekt!');
 
   // --- lessons 3 (find D/E) and 4 (play along C-D-E)
   await page.getByRole('button', { name: 'Nächste Lektion' }).click();
@@ -116,6 +119,9 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await expect(page.getByTestId('path-keys-f-g')).toHaveAttribute('aria-current', 'step');
   await expect(page.getByRole('link', { name: 'Weiter: F und G' })).toBeVisible();
   await expect(page.getByText('100', { exact: true })).toBeVisible(); // XP stat
+  await expect(page.getByTestId('badge-first-lesson')).toHaveAttribute('data-earned', 'true');
+  await expect(page.getByTestId('badge-perfect')).toHaveAttribute('data-earned', 'true');
+  await expect(page.getByTestId('badge-first-song')).toHaveAttribute('data-earned', 'false');
   if (process.env.E2E_SCREENSHOTS) {
     await page.screenshot({ path: `${process.env.E2E_SCREENSHOTS}/path.png`, fullPage: true });
   }

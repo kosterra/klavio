@@ -100,6 +100,36 @@ describe('song notation', () => {
   });
 });
 
+describe('badges', () => {
+  const none = { lessons: {}, streak: 0, todaySeconds: 0, dailyGoalMinutes: 10 };
+
+  it('has unique ids and translated texts', async () => {
+    const { BADGES } = await import('./badges.ts');
+    expect(new Set(BADGES.map((b) => b.id)).size).toBe(BADGES.length);
+    for (const b of BADGES) {
+      expect(b.title['de-CH'] + b.hint['de-CH']).not.toContain('ß');
+      expect(b.title.en && b.hint.en).toBeTruthy();
+    }
+  });
+
+  it('awards badges once, from the stats', async () => {
+    const { newlyEarnedBadges } = await import('./badges.ts');
+    expect(newlyEarnedBadges(none, new Set())).toEqual([]);
+    const first = newlyEarnedBadges({ ...none, lessons: { 'keys-c': 3 }, streak: 1 }, new Set());
+    expect(first).toEqual(['first-lesson', 'perfect']);
+    expect(newlyEarnedBadges({ ...none, lessons: { 'keys-c': 3 } }, new Set(first))).toEqual([]);
+    const chapter = Object.fromEntries(CURRICULUM[0]!.lessons.map((l) => [l.id, 1]));
+    expect(newlyEarnedBadges({ ...none, lessons: chapter }, new Set(first))).toContain(
+      'chapter-keys',
+    );
+    expect(newlyEarnedBadges({ ...none, streak: 7, todaySeconds: 600 }, new Set())).toEqual([
+      'streak-3',
+      'streak-7',
+      'daily-goal',
+    ]);
+  });
+});
+
 describe('rewards', () => {
   it('gives stars by accuracy, always at least one', () => {
     expect(starsFor(10, 0)).toBe(3);

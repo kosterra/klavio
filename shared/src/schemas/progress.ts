@@ -34,4 +34,6 @@ export interface LessonResultDto {
   leveledUp: boolean;
   streak: { current: number; longest: number; lastActiveDate: string | null };
   today: { date: string; seconds: number; xp: number };
+  /** Badge ids earned with this lesson. */
+  newBadges: string[];
 }

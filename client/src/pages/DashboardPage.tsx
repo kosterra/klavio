@@ -25,6 +25,7 @@ import { useSession } from '../auth/session';
 import { useMidi } from '../input/useMidi';
 import { LESSONS, nextLesson } from '@klavio/shared';
 import { LearningPath } from '../lesson/LearningPath';
+import { BadgeShelf } from '../lesson/Badges';
 import { useProgress } from '../lesson/useProgress';
 import { useLocalized } from '../lesson/useLocalized';
 import { Mascot } from '../components/Mascot';
@@ -149,6 +150,8 @@ export function DashboardPage() {
           </Center>
         )}
       </Card>
+
+      <BadgeShelf earned={activeProfile.badges} />
 
       <PrivacyNote />
     </Stack>

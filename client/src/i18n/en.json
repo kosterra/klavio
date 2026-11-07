@@ -326,5 +326,12 @@
       "extra": "{{count}} extra note",
       "extra_other": "{{count}} extra notes"
     }
+  },
+  "badges": {
+    "title": "Badges",
+    "count": "{{earned}} of {{total}}",
+    "new": "New badge!",
+    "new_other": "{{count}} new badges!",
+    "earnedOn": "earned on {{date}}"
   }
 }
