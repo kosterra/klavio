@@ -239,11 +239,6 @@ a.node:active {
   overflow-wrap: break-word;
 }
 
-.emblem {
-  position: absolute;
-  pointer-events: none;
-}
-
 .figure {
   position: absolute;
   bottom: calc(100% - 12px);
