@@ -450,6 +450,8 @@
     "countIn": "Count-in: {{n}}",
     "clapGood": "Great, right in time!",
     "clapAgain": "Almost! Listen to the clicks and try again.",
-    "clapAgainButton": "Again"
+    "clapAgainButton": "Again",
+    "staffLines": "Staff with the lines marked. Notes: {{notes}}",
+    "staffSpaces": "Staff with the spaces marked. Notes: {{notes}}"
   }
 }

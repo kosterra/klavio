@@ -190,6 +190,90 @@ export function HandPicture({
   );
 }
 
+/** Diatonic step of a white key (C4 = 28), for placing notes on the staff. */
+function diatonic(midi: number): number {
+  const steps = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6];
+  return Math.floor(midi / 12) * 7 + steps[midi % 12]!;
+}
+
+/**
+ * A plain staff diagram (own drawing) that can colour its lines or its spaces –
+ * used to explain "on a line" vs. "in a space". Treble clef positions.
+ */
+function StaffDiagram({ notes, highlight }: { notes: number[]; highlight: 'lines' | 'spaces' }) {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language.startsWith('de') ? 'de' : 'en';
+  const gap = 16;
+  const bottom = 100; // y of the lowest line (E4)
+  const lines = [0, 1, 2, 3, 4].map((i) => bottom - i * gap);
+  const yOf = (m: number) => bottom - ((diatonic(m) - diatonic(64)) * gap) / 2;
+  const width = 360;
+  const step = (width - 80) / Math.max(1, notes.length);
+  return (
+    <svg
+      viewBox={`0 0 ${width} 130`}
+      className={classes.staffDiagram}
+      role="img"
+      aria-label={t(highlight === 'lines' ? 'theory.staffLines' : 'theory.staffSpaces', {
+        notes: notes.map((m) => midiToName(m, lang)).join(', '),
+      })}
+    >
+      {highlight === 'spaces' &&
+        lines
+          .slice(0, 4)
+          .map((y) => (
+            <rect
+              key={y}
+              x="10"
+              y={y - gap + 2}
+              width={width - 20}
+              height={gap - 4}
+              rx="3"
+              fill="var(--mantine-color-orange-2)"
+            />
+          ))}
+      {lines.map((y) => (
+        <line
+          key={y}
+          x1="10"
+          x2={width - 10}
+          y1={y}
+          y2={y}
+          stroke={highlight === 'lines' ? 'var(--mantine-color-orange-6)' : 'var(--klavio-ink)'}
+          strokeWidth={highlight === 'lines' ? 4 : 1.5}
+          strokeLinecap="round"
+        />
+      ))}
+      {notes.map((m, i) => {
+        const x = 60 + i * step + step / 2;
+        const y = yOf(m);
+        return (
+          <g key={i}>
+            {y > bottom + gap / 2 - 1 && (
+              <line
+                x1={x - 18}
+                x2={x + 18}
+                y1={bottom + gap}
+                y2={bottom + gap}
+                stroke="var(--klavio-ink)"
+                strokeWidth="1.5"
+              />
+            )}
+            <ellipse
+              cx={x}
+              cy={y}
+              rx="10"
+              ry="7.5"
+              transform={`rotate(-20 ${x} ${y})`}
+              fill="var(--klavio-ink)"
+            />
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
 /** Draws a theory picture from its description. */
 export function TheoryPicture({ picture, kids }: { picture: Picture; kids: boolean }) {
   const { i18n } = useTranslation();
@@ -206,6 +290,9 @@ export function TheoryPicture({ picture, kids }: { picture: Picture; kids: boole
         </div>
       );
     case 'staff':
+      if (picture.highlight) {
+        return <StaffDiagram notes={picture.notes} highlight={picture.highlight} />;
+      }
       return (
         <Box className={classes.staffPicture} data-highlight={picture.highlight}>
           <Staff

@@ -450,6 +450,8 @@
     "countIn": "Einzählen: {{n}}",
     "clapGood": "Super im Takt!",
     "clapAgain": "Fast! Hör auf die Klicks und versuch es nochmals.",
-    "clapAgainButton": "Nochmals"
+    "clapAgainButton": "Nochmals",
+    "staffLines": "Notenlinien, die Linien sind markiert. Noten: {{notes}}",
+    "staffSpaces": "Notenlinien, die Zwischenräume sind markiert. Noten: {{notes}}"
   }
 }

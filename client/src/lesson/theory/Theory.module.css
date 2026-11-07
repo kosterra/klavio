@@ -187,3 +187,10 @@
 .clapButton:active {
   transform: scale(0.96);
 }
+
+.staffDiagram {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+}

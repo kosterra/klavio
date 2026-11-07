@@ -295,7 +295,10 @@ function Clap({ step, kids, onSolved, setFeedback }: StepProps<ClapStep>) {
       ) : (
         <Button
           size="xl"
-          color="orange"
+          // dark text on light orange: enough contrast for the big label
+          color="orange.4"
+          c="dark.9"
+          fw={800}
           className={classes.clapButton}
           leftSection={<IconHandStop />}
           onPointerDown={(e) => {

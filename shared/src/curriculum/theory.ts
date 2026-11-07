@@ -410,6 +410,331 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       rounds: [{ notes: [60, 62, 64, 65, 67, 67], answer: 0 }],
     },
   ],
+  // ------------------------------------------------------------ chapter 3
+  'read-c-d-e': [
+    {
+      type: 'explain',
+      text: L(
+        'Musik kann man aufschreiben – mit Noten. Sie stehen auf fünf Linien, dem Notensystem. Je höher eine Note steht, desto höher klingt sie und desto weiter rechts liegt ihre Taste.',
+        'Music can be written down – with notes. They sit on five lines, the staff. The higher a note sits, the higher it sounds and the further right its key is.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [60, 62, 64, 65, 67], names: true },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Eine Note sitzt entweder auf einer Linie – die Linie geht mitten durch sie hindurch …',
+        'A note either sits on a line – the line goes right through its middle …',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [64, 67, 71], highlight: 'lines' },
+    },
+    {
+      type: 'explain',
+      text: L(
+        '… oder in einem Zwischenraum, genau zwischen zwei Linien.',
+        '… or in a space, right between two lines.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [65, 69, 72], highlight: 'spaces' },
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Sitzt diese Note auf einer Linie oder in einem Zwischenraum?',
+        'Is this note on a line or in a space?',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [67] },
+      answers: [
+        { text: L('Auf einer Linie', 'On a line'), correct: true },
+        { text: L('In einem Zwischenraum', 'In a space') },
+      ],
+      hint: L(
+        'Schau genau: Geht eine Linie mitten durch die Note?',
+        'Look closely: does a line go through the middle of the note?',
+      ),
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Das mittlere C steht unter den fünf Linien, auf einer kleinen Extra-Linie – der Hilfslinie. Das D hängt direkt unter der untersten Linie, das E sitzt auf ihr.',
+        'Middle C sits below the five lines, on a little extra line – a ledger line. D hangs right below the bottom line, E sits on it.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [60, 62, 64], names: true },
+    },
+    {
+      type: 'quiz',
+      text: L('Welche Note klingt höher?', 'Which note sounds higher?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [64, 60] },
+      answers: [
+        { text: L('Die erste', 'The first one'), correct: true },
+        { text: L('Die zweite', 'The second one') },
+      ],
+      hint: L(
+        'Höher auf den Linien heisst höher im Klang.',
+        'Higher on the staff means higher in sound.',
+      ),
+    },
+  ],
+
+  'read-f-g': [
+    {
+      type: 'explain',
+      text: L(
+        'Über dem E geht es weiter: das F im ersten Zwischenraum, das G auf der zweiten Linie. Um diese Linie rollt sich der Notenschlüssel ein – darum heisst er G-Schlüssel oder Violinschlüssel.',
+        'Above E it goes on: F in the first space, G on the second line. The clef curls around this line – that is why it is called the G clef or treble clef.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [64, 65, 67], names: true },
+    },
+    {
+      type: 'quiz',
+      text: L('Wie heisst diese Note?', 'What is this note called?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [65] },
+      answers: [{ text: L('E', 'E') }, { text: L('F', 'F'), correct: true }, { text: L('G', 'G') }],
+      hint: L('Sie sitzt im ersten Zwischenraum.', 'It sits in the first space.'),
+    },
+    {
+      type: 'quiz',
+      text: L('Und diese?', 'And this one?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [67] },
+      answers: [{ text: L('F', 'F') }, { text: L('G', 'G'), correct: true }, { text: L('A', 'A') }],
+      hint: L('Um diese Linie rollt sich der G-Schlüssel.', 'The G clef curls around this line.'),
+    },
+  ],
+
+  'read-a-h-c': [
+    {
+      type: 'explain',
+      text: L(
+        'Noch höher: das A im zweiten Zwischenraum, das H auf der mittleren Linie, das C im dritten Zwischenraum. Linie, Zwischenraum, Linie – immer abwechselnd.',
+        'Even higher: A in the second space, B on the middle line, C in the third space. Line, space, line – always taking turns.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [69, 71, 72], names: true },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Von C bis C bilden die Noten eine Treppe – genau wie die weissen Tasten von links nach rechts.',
+        'From C to C the notes make a staircase – just like the white keys from left to right.',
+      ),
+      picture: {
+        kind: 'staff',
+        clef: 'treble',
+        notes: [60, 62, 64, 65, 67, 69, 71, 72],
+        names: true,
+      },
+    },
+    {
+      type: 'quiz',
+      text: L('Wie heisst diese Note?', 'What is this note called?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [71] },
+      answers: [{ text: L('A', 'A') }, { text: L('H', 'B'), correct: true }, { text: L('C', 'C') }],
+      hint: L('Sie sitzt genau auf der mittleren Linie.', 'It sits right on the middle line.'),
+    },
+    {
+      type: 'quiz',
+      text: L('Linie oder Zwischenraum?', 'Line or space?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [72] },
+      answers: [
+        { text: L('Auf einer Linie', 'On a line') },
+        { text: L('In einem Zwischenraum', 'In a space'), correct: true },
+      ],
+      hint: L(
+        'Schau, ob eine Linie durch die Note geht.',
+        'Check whether a line goes through the note.',
+      ),
+    },
+  ],
+
+  // ------------------------------------------------------------ chapter 4
+  'song-haenschen': [
+    {
+      type: 'explain',
+      text: L(
+        '«Hänschen klein» erzählt von einem Jungen, der allein in die weite Welt hinauszieht – und Jahre später zur Mutter zurückkommt. Das Lied ist fast 200 Jahre alt.',
+        '“Hänschen klein” tells of a boy who sets out alone into the wide world – and comes back to his mother years later. The song is almost 200 years old.',
+      ),
+      picture: { kind: 'sticker', sticker: 'boat' },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Diesmal stehen keine Namen unter den Noten – du liest sie selbst. Tipp: Tippe zuerst auf «Anhören», dann weisst du, wie es klingen soll.',
+        'This time there are no names below the notes – you read them yourself. Tip: tap “Listen” first, then you know how it should sound.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [67, 64, 64, 65, 62, 62] },
+    },
+    {
+      type: 'listen',
+      text: L(
+        'Hör dir den Anfang an: Geht die Melodie hinauf oder hinunter?',
+        'Listen to the beginning: does the melody go up or down?',
+      ),
+      answers: [L('Hinauf', 'Up'), L('Hinunter', 'Down')],
+      rounds: [
+        { notes: [67, 64, 64], answer: 1 },
+        { notes: [60, 62, 64, 65, 67], answer: 0 },
+      ],
+    },
+  ],
+
+  'song-freude': [
+    {
+      type: 'explain',
+      text: L(
+        'Diese Melodie hat Ludwig van Beethoven geschrieben, für seine 9. Sinfonie – vor über 200 Jahren. Heute ist sie die Hymne Europas.',
+        'Ludwig van Beethoven wrote this melody for his 9th Symphony – more than 200 years ago. Today it is the anthem of Europe.',
+      ),
+      picture: { kind: 'sticker', sticker: 'star' },
+    },
+    {
+      type: 'quiz',
+      text: L('Wer hat diese Melodie geschrieben?', 'Who wrote this melody?'),
+      answers: [
+        { text: L('Wolfgang Amadeus Mozart', 'Wolfgang Amadeus Mozart') },
+        { text: L('Ludwig van Beethoven', 'Ludwig van Beethoven'), correct: true },
+        { text: L('Johann Sebastian Bach', 'Johann Sebastian Bach') },
+      ],
+      hint: L('Lies nochmals oben nach.', 'Read the text above once more.'),
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Neu ist der Punkt hinter einer Note: Er macht sie um die Hälfte länger. Die Note danach ist dafür ganz kurz – es klingt wie «daaa-da».',
+        'New is the dot after a note: it makes the note half as long again. The note after it is very short instead – it sounds like “daaa-da”.',
+      ),
+    },
+    {
+      type: 'listen',
+      text: L(
+        'Hör zu: Geht die Melodie hinauf oder hinunter?',
+        'Listen: does the melody go up or down?',
+      ),
+      answers: [L('Hinauf', 'Up'), L('Hinunter', 'Down')],
+      rounds: [
+        { notes: [64, 64, 65, 67], answer: 0 },
+        { notes: [67, 65, 64, 62], answer: 1 },
+      ],
+    },
+  ],
+
+  'song-weihnachtsmann': [
+    {
+      type: 'explain',
+      text: L(
+        'Diese Melodie ist sehr alt und kommt aus Frankreich. Mozart hat Variationen darüber komponiert, und auf Englisch singt man dazu «Twinkle, Twinkle, Little Star».',
+        'This melody is very old and comes from France. Mozart composed variations on it, and in German it is sung as “Morgen kommt der Weihnachtsmann”.',
+      ),
+      picture: { kind: 'sticker', sticker: 'bell' },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Am Anfang springt die Melodie vom C zum G. Deine Hand bleibt ruhig liegen: Der Daumen spielt das C, der kleine Finger das G.',
+        'At the start the melody jumps from C to G. Your hand stays still: your thumb plays C, your little finger plays G.',
+      ),
+      picture: {
+        kind: 'keyboard',
+        ...C4_C5,
+        labels: 'all',
+        fingering: [
+          [60, 1],
+          [67, 5],
+        ],
+      },
+    },
+    {
+      type: 'listen',
+      text: L(
+        'Hör zu: Springt die Melodie oder geht sie Schritt für Schritt?',
+        'Listen: does the melody jump or go step by step?',
+      ),
+      answers: [L('Sie springt', 'It jumps'), L('Schritt für Schritt', 'Step by step')],
+      rounds: [
+        { notes: [60, 60, 67, 67], answer: 0 },
+        { notes: [60, 62, 64, 65], answer: 1 },
+        { notes: [64, 69], answer: 0 },
+      ],
+    },
+  ],
+
+  // ------------------------------------------------------------ chapter 5
+  'rhythm-quarters': [
+    {
+      type: 'explain',
+      text: L(
+        'Noten sagen dir nicht nur welcher Ton, sondern auch wie lange. Stell dir eine Pizza vor: Die Ganze ist die ganze Pizza, die Halbe eine halbe, die Viertel ein Viertel.',
+        'Notes tell you not only which note, but also how long. Think of a pizza: the whole note is the whole pizza, the half note half of it, the quarter note a quarter.',
+      ),
+      picture: { kind: 'note-values', values: ['w', 'h', 'q'], pizza: true },
+    },
+    {
+      type: 'quiz',
+      text: L('Welche Note dauert länger?', 'Which note lasts longer?'),
+      answers: [
+        { text: L('Die Halbe', 'The half note'), correct: true },
+        { text: L('Die Viertel', 'The quarter note') },
+      ],
+      hint: L(
+        'Ein halbes Stück Pizza ist grösser als ein Viertel.',
+        'Half a pizza is bigger than a quarter.',
+      ),
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Der Takt ist wie dein Herzschlag: immer gleichmässig. Zähl leise mit: 1, 2, 3, 4. Zuerst zähle ich vor, dann bist du dran.',
+        'The beat is like your heartbeat: always steady. Count quietly: 1, 2, 3, 4. First I count in, then it is your turn.',
+      ),
+    },
+    {
+      type: 'clap',
+      text: L(
+        'Klatsch mit: vier Viertel – auf jeden Schlag einmal.',
+        'Clap along: four quarters – once on every beat.',
+      ),
+      tempo: 72,
+      pattern: ['q', 'q', 'q', 'q'],
+    },
+    {
+      type: 'clap',
+      text: L(
+        'Und jetzt zwei Halbe: nur auf 1 und auf 3.',
+        'And now two halves: only on 1 and on 3.',
+      ),
+      tempo: 72,
+      pattern: ['h', 'h'],
+    },
+  ],
+
+  'rhythm-rests': [
+    {
+      type: 'explain',
+      text: L(
+        'Eine Ganze ist die ganze Pizza: Sie klingt alle vier Schläge lang. Drück die Taste und halte sie, bis du bis vier gezählt hast.',
+        'A whole note is the whole pizza: it sounds for all four beats. Press the key and hold it until you have counted to four.',
+      ),
+      picture: { kind: 'note-values', values: ['w'], pizza: true },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Eine Pause heisst: still sein! Sie zählt mit, aber du spielst nichts – ein leerer Teller. Die Viertelpause dauert einen Schlag.',
+        'A rest means: be quiet! It counts, but you play nothing – an empty plate. A quarter rest lasts one beat.',
+      ),
+      picture: { kind: 'note-values', values: ['q', 'qr'], pizza: true },
+    },
+    {
+      type: 'clap',
+      text: L('Klatsch mit – aber bei der Pause nicht!', 'Clap along – but not on the rest!'),
+      tempo: 72,
+      pattern: ['q', 'q', 'qr', 'q'],
+    },
+    {
+      type: 'quiz',
+      text: L('Wie viele Schläge dauert eine Ganze?', 'How many beats does a whole note last?'),
+      answers: [{ text: L('1', '1') }, { text: L('2', '2') }, { text: L('4', '4'), correct: true }],
+      hint: L('Denk an die ganze Pizza.', 'Think of the whole pizza.'),
+    },
+  ],
 };
 
 export function theoryFor(lessonId: string): TheoryStep[] {

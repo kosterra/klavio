@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { LESSONS } from '@klavio/shared';
 import { audit } from './audit';
 import { seedCompletedLessons, signUpWithEmail, uniqueEmail } from './helpers';
 
@@ -90,4 +91,48 @@ test('quiz: wrong answers get a hint, the right one unlocks "Weiter"', async ({ 
   await audit(page);
   await next.click();
   await expect(page.getByRole('button', { name: 'Los geht’s!' })).toBeVisible();
+});
+
+test('reading and rhythm theory: staff lines/spaces, pizza note values, clap game', async ({
+  page,
+}) => {
+  test.setTimeout(90_000);
+  await signUpWithEmail(page, uniqueEmail('theory2'), 'Familie Takt');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Mo');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
+  const ids = LESSONS.map((l) => l.id);
+  await seedCompletedLessons(page, ids.slice(0, ids.indexOf('rhythm-quarters')));
+
+  const next = page.getByTestId('theory-next');
+  const again = page.getByTestId('theory-again');
+
+  // reading: line / space pictures and the quiz (played lessons open via "again")
+  await page.goto('/lesson/read-c-d-e');
+  await again.click();
+  await next.click();
+  await expect(page.getByRole('img', { name: /Linien sind markiert/ })).toBeVisible();
+  await next.click();
+  await expect(page.getByRole('img', { name: /Zwischenräume sind markiert/ })).toBeVisible();
+  await next.click();
+  await page.getByRole('button', { name: 'In einem Zwischenraum' }).click();
+  await expect(page.getByRole('status')).toContainText('Linie mitten');
+  await page.getByRole('button', { name: 'Auf einer Linie' }).click();
+  await expect(page.getByRole('status')).toContainText('Genau!');
+  await audit(page);
+
+  // rhythm: pizza note values, then the clap game appears
+  await page.goto('/lesson/rhythm-quarters');
+  await expect(page.getByText('Ganze', { exact: true })).toBeVisible();
+  await expect(page.getByText('4 Schläge')).toBeVisible();
+  await audit(page);
+  await next.click();
+  await page.getByRole('button', { name: 'Die Halbe' }).click();
+  await next.click();
+  await next.click();
+  await expect(page.getByTestId('theory-text')).toContainText('vier Viertel');
+  await page.getByRole('button', { name: 'Start' }).click();
+  await expect(page.getByRole('button', { name: 'Klatsch!' })).toBeVisible();
+  await audit(page);
 });
