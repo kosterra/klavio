@@ -6,6 +6,11 @@
   --klavio-track: var(--mantine-color-gray-2);
   --klavio-road: var(--mantine-color-gray-2);
   --klavio-road-line: #fff;
+  --klavio-fog: var(--mantine-color-gray-1);
+  --klavio-fog-cloud: #fff;
+  --klavio-snow: #fff;
+  --klavio-snow-edge: var(--mantine-color-blue-1);
+  --klavio-snowflake: var(--mantine-color-blue-2);
   --klavio-bar: rgb(255 255 255 / 70%);
   --klavio-locked-bg: var(--mantine-color-gray-1);
   --klavio-locked-border: var(--mantine-color-gray-4);
@@ -27,6 +32,11 @@
   --klavio-track: var(--mantine-color-dark-4);
   --klavio-road: var(--mantine-color-dark-5);
   --klavio-road-line: var(--mantine-color-dark-3);
+  --klavio-fog: var(--mantine-color-dark-7);
+  --klavio-fog-cloud: var(--mantine-color-dark-4);
+  --klavio-snow: var(--mantine-color-gray-3);
+  --klavio-snow-edge: var(--mantine-color-gray-5);
+  --klavio-snowflake: #fff;
   --klavio-bar: rgb(255 255 255 / 14%);
   --klavio-locked-bg: var(--mantine-color-dark-6);
   --klavio-locked-border: var(--mantine-color-dark-3);

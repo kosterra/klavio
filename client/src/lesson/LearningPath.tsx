@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Box, Group, Text, UnstyledButton } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
 import {
@@ -24,7 +24,15 @@ import {
 import { Figure } from '../components/Figure';
 import { useLocalized } from './useLocalized';
 import { Sticker } from './Stickers';
-import { STICKER_KINDS, type StickerKind } from './stickerKinds';
+import type { StickerKind } from './stickerKinds';
+import { Fog, Scenery, Snowfall, WorldGate } from './WorldScenery';
+import {
+  CHRISTMAS_STICKERS,
+  isChristmasSeason,
+  loadRevealed,
+  saveRevealed,
+  worldOf,
+} from './worlds';
 import classes from './LearningPath.module.css';
 
 /** One colour per chapter (Mantine palette names), repeating. */
@@ -109,6 +117,7 @@ function continuePath(points: Point[]): string {
 }
 
 const HEADER = 92; // height of a chapter's signpost row
+const FOOT = 36; // room at the bottom of every world for its landscape and the next gate
 const FLAG_POLE_X = 12; // x of the pole inside the flag drawing
 
 /**
@@ -224,10 +233,12 @@ export function LearningPath({
   progress,
   currentLessonId,
   avatar,
+  profileId,
 }: {
   progress: ProgressDto['lessons'];
   currentLessonId: string;
   avatar: Avatar;
+  profileId: string;
 }) {
   const { t, i18n } = useTranslation();
   const loc = useLocalized();
@@ -240,6 +251,9 @@ export function LearningPath({
       else next.add(id);
       return next;
     });
+  const christmas = isChristmasSeason();
+  // worlds the fog has already lifted from (read once per profile, so the lift plays once)
+  const revealed = useMemo(() => loadRevealed(profileId), [profileId]);
   const completed = new Set(Object.keys(progress).filter((id) => progress[id]!.bestStars > 0));
   const maxCols = Math.max(3, Math.min(6, Math.floor(width / 150)));
   const narrow = width / maxCols < 140;
@@ -273,7 +287,9 @@ export function LearningPath({
           : [];
         const markerY = HEADER / 2;
         // open chapters end with room below the last titles for the bend to the next signpost
-        const height = open ? points[points.length - 1]!.y + (narrow ? 160 : 140) : HEADER;
+        const height = open
+          ? points[points.length - 1]!.y + (narrow ? 160 : 140) + FOOT
+          : HEADER + FOOT;
 
         // road through this chapter
         // the road always arrives in the signpost lane (chapters bend into it at their end)
@@ -288,7 +304,11 @@ export function LearningPath({
           // leave the trophy downwards and bend into the signpost lane below the titles
           const bendTop = goal.y + (narrow ? 100 : 85);
           if (!last) {
-            road += ` L ${goal.x} ${bendTop}` + roundedStep(goal.x, bendTop, markerX, height);
+            // …and run straight through the gate of the next world
+            road +=
+              ` L ${goal.x} ${bendTop}` +
+              roundedStep(goal.x, bendTop, markerX, height - FOOT) +
+              ` L ${markerX} ${height}`;
           }
           const reachedIndex = finished
             ? points.length - 1
@@ -312,6 +332,7 @@ export function LearningPath({
         });
         return {
           chapter,
+          world: worldOf(chapter.id, ci),
           ci,
           color,
           earned,
@@ -333,10 +354,20 @@ export function LearningPath({
       })
     : [];
 
+  // remember the worlds that are open now: their fog lifts only this once
+  const reachedIds = sections
+    .filter((s) => s.reached)
+    .map((s) => s.chapter.id)
+    .join(',');
+  useEffect(() => {
+    if (reachedIds) saveRevealed(profileId, reachedIds.split(','));
+  }, [profileId, reachedIds]);
+  const totalHeight = sections.reduce((h, s) => h + s.height, 0);
+
   return (
-    <div ref={ref}>
+    <div ref={ref} className={classes.map}>
       {sections.map((sec) => {
-        const { chapter, ci, color, cell, points, height, markerX, markerY } = sec;
+        const { chapter, world, ci, color, cell, points, height, markerX, markerY } = sec;
         // stones at the edges sit one margin from the border: keep their titles inside
         const labelWidth = Math.min(cell, 2 * markerX + 24);
         const vars = {
@@ -349,7 +380,8 @@ export function LearningPath({
         const rows = points.length ? points[points.length - 1]!.row + 1 : 0;
         const emptyCells = points.length ? rows * sec.cols - points.length : 0;
         // decoration stickers: free spots only, chosen deterministically per chapter
-        const kind = (k: number) => STICKER_KINDS[(ci * 2 + k) % STICKER_KINDS.length]!;
+        const kinds = christmas ? CHRISTMAS_STICKERS : world.stickers;
+        const kind = (k: number) => kinds[(ci * 2 + k) % kinds.length]!;
         const stickers: { kind: StickerKind; x: number; y: number; size: number; tilt: number }[] =
           [];
         if (!narrow) {
@@ -393,10 +425,28 @@ export function LearningPath({
         return (
           <section
             key={chapter.id}
-            className={classes.section}
+            className={`${classes.section} ${sec.reached ? '' : classes.foggy}`}
             style={{ ...vars, height }}
             aria-labelledby={`chapter-${chapter.id}`}
           >
+            <Scenery world={world.id} chapterId={chapter.id} height={height} snowy={christmas} />
+            {stickers.map((st, k) => (
+              <Sticker
+                key={k}
+                kind={st.kind}
+                size={st.size}
+                delay={(k * 0.7) % 3}
+                style={{
+                  left: st.x - st.size / 2,
+                  top: st.y - st.size / 2,
+                  transform: `rotate(${st.tilt}deg)`,
+                }}
+              />
+            ))}
+
+            {!sec.reached && <Fog />}
+            {sec.reached && ci > 0 && !revealed.has(chapter.id) && <Fog lifting />}
+
             <svg className={classes.road} aria-hidden>
               <path
                 d={sec.road}
@@ -416,15 +466,20 @@ export function LearningPath({
                   strokeLinejoin="round"
                 />
               )}
+              {/* every world has its own road surface */}
               <path
                 d={sec.road}
                 fill="none"
-                stroke="var(--klavio-road-line)"
-                strokeWidth={4}
-                strokeDasharray="10 12"
-                strokeLinecap="round"
+                stroke={world.road.color}
+                strokeOpacity={world.road.opacity}
+                strokeWidth={world.road.width}
+                strokeDasharray={world.road.dash}
+                strokeLinecap={world.road.cap}
               />
             </svg>
+            {ci > 0 && (
+              <WorldGate style={{ left: markerX - 32, top: -FOOT - 2 }} snowy={christmas} />
+            )}
 
             {/* signpost: a flag on the road, title and status beside it */}
             <ChapterFlag
@@ -443,7 +498,7 @@ export function LearningPath({
             >
               <Box component="span" className={classes.signpostText}>
                 <Text component="span" display="block" size="xs" fw={800} tt="uppercase" c="dimmed">
-                  {t('path.chapter', { n: ci + 1 })}
+                  {t('path.chapter', { n: ci + 1 })} · {t(`path.worlds.${world.id}`)}
                 </Text>
                 <Text
                   component="span"
@@ -489,20 +544,6 @@ export function LearningPath({
                 </Group>
               </Box>
             </UnstyledButton>
-
-            {stickers.map((st, k) => (
-              <Sticker
-                key={k}
-                kind={st.kind}
-                size={st.size}
-                delay={(k * 0.7) % 3}
-                style={{
-                  left: st.x - st.size / 2,
-                  top: st.y - st.size / 2,
-                  transform: `rotate(${st.tilt}deg)`,
-                }}
-              />
-            ))}
 
             {sec.open && (
               <>
@@ -634,6 +675,7 @@ export function LearningPath({
           </section>
         );
       })}
+      {christmas && totalHeight > 0 && <Snowfall height={totalHeight} />}
     </div>
   );
 }

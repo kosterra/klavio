@@ -231,7 +231,7 @@ a.node:active {
   margin-top: 18px;
   padding: 1px 8px;
   border-radius: var(--mantine-radius-sm);
-  background: var(--mantine-color-body);
+  background: var(--world-bg);
   font-weight: 700;
   line-height: 1.2;
   text-align: center;
@@ -326,5 +326,167 @@ a.node:active {
 
   50% {
     translate: 0 -5px;
+  }
+}
+
+/* ------------------------------------------------------------------ worlds */
+
+.map {
+  position: relative;
+  overflow: clip;
+  border-radius: var(--mantine-radius-lg);
+}
+
+.section {
+  --world-bg: color-mix(in srgb, var(--chapter-color) 7%, var(--klavio-surface));
+  --world-hill: color-mix(in srgb, var(--chapter-color) 16%, var(--klavio-surface));
+  --world-hill-2: color-mix(in srgb, var(--chapter-color) 28%, var(--klavio-surface));
+
+  background: var(--world-bg);
+}
+
+:global([data-mantine-color-scheme='dark']) .section {
+  --world-bg: color-mix(in srgb, var(--chapter-color) 12%, var(--klavio-surface));
+  --world-hill: color-mix(in srgb, var(--chapter-color) 24%, var(--klavio-surface));
+  --world-hill-2: color-mix(in srgb, var(--chapter-color) 36%, var(--klavio-surface));
+}
+
+.scenery {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.gate {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 18%));
+}
+
+/* a world not reached yet is grey and lies under clouds */
+.foggy {
+  --world-bg: var(--klavio-fog);
+  --world-hill: color-mix(in srgb, var(--chapter-color) 6%, var(--klavio-locked-border));
+  --world-hill-2: var(--world-hill);
+}
+
+:global([data-mantine-color-scheme='dark']) .foggy {
+  --world-bg: var(--klavio-fog);
+  --world-hill: color-mix(in srgb, var(--chapter-color) 10%, var(--klavio-locked-border));
+  --world-hill-2: var(--world-hill);
+}
+
+.foggy .scenery {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.foggy .sticker {
+  filter: grayscale(1) opacity(0.45);
+}
+
+.fog {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* the first visit after reaching a world: grey veil and clouds blow away */
+.fogLift {
+  background: var(--klavio-fog);
+}
+
+.cloud {
+  position: absolute;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cloud {
+    animation: drift 7s ease-in-out infinite;
+  }
+
+  .fogLift {
+    animation: fog-lift 2.2s ease-in 0.6s forwards;
+  }
+
+  .fogLift .cloud {
+    animation: cloud-away 2.2s ease-in 0.6s forwards;
+  }
+
+  .fogLift .cloud:nth-child(odd) {
+    animation-name: cloud-away-left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fogLift {
+    display: none;
+  }
+}
+
+@keyframes fog-lift {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes cloud-away {
+  to {
+    translate: 60vw -20px;
+    opacity: 0;
+  }
+}
+
+@keyframes cloud-away-left {
+  to {
+    translate: -60vw -20px;
+    opacity: 0;
+  }
+}
+
+/* Christmas season */
+.snowfall {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: clip;
+  z-index: 2;
+}
+
+.flake {
+  position: absolute;
+  top: -10px;
+  border-radius: 50%;
+  background: var(--klavio-snowflake);
+  opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flake {
+    animation: snow linear infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flake {
+    display: none;
+  }
+}
+
+@keyframes snow {
+  from {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(12px, calc(var(--fall) / 2));
+  }
+
+  to {
+    transform: translate(-4px, var(--fall));
   }
 }

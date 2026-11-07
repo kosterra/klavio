@@ -285,7 +285,14 @@
     "goalLabel": "Goal",
     "goalDone": "Done!",
     "lessonCount_one": "{{count}} lesson",
-    "lessonCount_other": "{{count}} lessons"
+    "lessonCount_other": "{{count}} lessons",
+    "worlds": {
+      "keys": "Key Valley",
+      "forest": "Hand Forest",
+      "sea": "Note Sea",
+      "village": "Song Village",
+      "mountain": "Rhythm Mountain"
+    }
   },
   "lesson": {
     "close": "End lesson",

@@ -149,6 +149,7 @@ export function DashboardPage() {
             progress={progress.lessons}
             currentLessonId={current.id}
             avatar={activeProfile.avatar}
+            profileId={activeProfile.id}
           />
         ) : (
           <Center py="xl">

@@ -48,14 +48,15 @@ wird nur ein HMAC mit dem Server-Geheimnis, und Eingabeversuche sind auf 5 pro 5
 
 ## Auf dem Gerät
 
-| Ort                  | Inhalt                                                                                     | Zweck                       | Löschung                                                     |
-| -------------------- | ------------------------------------------------------------------------------------------ | --------------------------- | ------------------------------------------------------------ |
-| Cookie `klavio_sid`  | zufälliges Session-Token (httpOnly, Secure, SameSite=Lax, nur für `/api`)                  | angemeldet bleiben          | Abmelden, nach 60 Tagen                                      |
-| Cookie `klavio_ch`   | zufälliges Token zur WebAuthn-Challenge                                                    | Passkey-Anmeldung           | nach Gebrauch, spätestens nach 5 Minuten                     |
-| `localStorage`       | letzter Stand von Konto (inkl. E-Mail-Adresse) und Profilen, Fortschritt je Profil         | Nutzung ohne Internet       | beim Abmelden                                                |
-| `localStorage`       | offline gespielte Ergebnisse (Lektions-ID, Fehlerzahl, Dauer, Datum, Konto- und Profil-ID) | spätere Übertragung         | nach erfolgreicher Übertragung; ältere als 14 Tage verworfen |
-| `localStorage`       | «Installationshinweis ausgeblendet»                                                        | Hinweis nicht erneut zeigen | Browserdaten löschen                                         |
-| Service-Worker-Cache | nur die Dateien der App                                                                    | schneller Start, offline    | Browserdaten löschen                                         |
+| Ort                  | Inhalt                                                                                     | Zweck                                    | Löschung                                                     |
+| -------------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------- | ------------------------------------------------------------ |
+| Cookie `klavio_sid`  | zufälliges Session-Token (httpOnly, Secure, SameSite=Lax, nur für `/api`)                  | angemeldet bleiben                       | Abmelden, nach 60 Tagen                                      |
+| Cookie `klavio_ch`   | zufälliges Token zur WebAuthn-Challenge                                                    | Passkey-Anmeldung                        | nach Gebrauch, spätestens nach 5 Minuten                     |
+| `localStorage`       | letzter Stand von Konto (inkl. E-Mail-Adresse) und Profilen, Fortschritt je Profil         | Nutzung ohne Internet                    | beim Abmelden                                                |
+| `localStorage`       | offline gespielte Ergebnisse (Lektions-ID, Fehlerzahl, Dauer, Datum, Konto- und Profil-ID) | spätere Übertragung                      | nach erfolgreicher Übertragung; ältere als 14 Tage verworfen |
+| `localStorage`       | «Installationshinweis ausgeblendet»                                                        | Hinweis nicht erneut zeigen              | Browserdaten löschen                                         |
+| `localStorage`       | Farbschema; je Profil-ID die Kapitel, deren «Nebel» sich schon gelichtet hat               | Einstellung, Animation nur einmal zeigen | Browserdaten löschen                                         |
+| Service-Worker-Cache | nur die Dateien der App                                                                    | schneller Start, offline                 | Browserdaten löschen                                         |
 
 Beide Cookies sind technisch notwendig; es gibt keine Tracking-Cookies. Mikrofon- und MIDI-Freigaben
 verwaltet der Browser. Passkeys selbst (private Schlüssel, Fingerabdruck, Gesicht) bleiben im Gerät
