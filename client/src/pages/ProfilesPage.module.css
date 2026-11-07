@@ -19,3 +19,22 @@
   color: var(--mantine-color-dimmed);
   min-height: 170px;
 }
+
+/* every profile has its own world colour */
+.profileCard {
+  border-width: 2px;
+  border-color: color-mix(in srgb, var(--chapter-color) 45%, var(--klavio-surface));
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--chapter-color) 22%, var(--klavio-surface)) 0%,
+    var(--klavio-surface) 75%
+  );
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--chapter-color) 35%, var(--klavio-surface));
+}
+
+/* phones: two profiles side by side */
+@media (max-width: 36em) {
+  .tile {
+    width: calc(50% - var(--mantine-spacing-lg) / 2);
+  }
+}
