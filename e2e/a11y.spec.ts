@@ -28,7 +28,7 @@ test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ p
   await audit(page);
   await page.getByRole('button', { name: 'Passkey hinzufügen' }).click();
   await page.getByRole('button', { name: /^Löschen:/ }).waitFor();
-  await page.getByRole('button', { name: 'Ändern' }).click();
+  await page.getByRole('button', { name: 'E-Mail-Adresse ändern' }).click();
   await audit(page);
 
   // Classic mode

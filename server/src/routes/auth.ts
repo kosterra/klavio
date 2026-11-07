@@ -51,6 +51,7 @@ const authRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, { c
 
   app.get('/me', { preHandler: app.requireAuth }, async (req): Promise<MeResponse> => {
     const { user, activeProfileId } = req.auth!;
+    // (parent PIN state below)
     return {
       user: {
         id: user._id.toString(),
@@ -58,6 +59,13 @@ const authRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, { c
         email: user.email ?? null,
         role: user.role as MeResponse['user']['role'],
         passkeyCount: await Passkey.countDocuments({ userId: user._id }),
+        parentPin: {
+          set: !!user.parentPinHash,
+          unlockedUntil:
+            user.parentPinHash && req.auth!.parentUnlocked
+              ? (req.auth!.parentUnlockedUntil?.toISOString() ?? null)
+              : null,
+        },
       },
       activeProfileId: activeProfileId?.toString() ?? null,
     };

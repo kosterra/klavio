@@ -5,6 +5,8 @@ import { Session } from '../models/index.js';
 import { randomToken, sha256 } from './crypto.js';
 
 export const SESSION_COOKIE = 'klavio_sid';
+/** How long the parent area stays open after the PIN or a login. */
+export const PARENT_UNLOCK_MS = 15 * 60 * 1000;
 export const CHALLENGE_COOKIE = 'klavio_ch';
 
 export function cookieBase(config: AppConfig) {
@@ -29,6 +31,7 @@ export async function createSession(
   await Session.create({
     tokenHash: sha256(token),
     userId,
+    parentUnlockedUntil: new Date(Date.now() + PARENT_UNLOCK_MS),
     expiresAt: new Date(Date.now() + maxAge * 1000),
   });
   reply.setCookie(SESSION_COOKIE, token, { ...cookieBase(config), maxAge });

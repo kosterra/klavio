@@ -87,7 +87,19 @@ export function SessionProvider({ children }: { children: ReactNode }) {
         // offline: switch locally, results carry their profile and sync later
         if (!(err instanceof ApiError && err.code === 'NETWORK')) throw err;
       }
-      update((s) => (s.me ? { ...s, me: { ...s.me, activeProfileId: id } } : s));
+      // Like the server: choosing a profile hands the device over → parent area locks.
+      update((s) =>
+        s.me
+          ? {
+              ...s,
+              me: {
+                ...s.me,
+                activeProfileId: id,
+                user: { ...s.me.user, parentPin: { ...s.me.user.parentPin, unlockedUntil: null } },
+              },
+            }
+          : s,
+      );
     },
     [update],
   );

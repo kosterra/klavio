@@ -117,7 +117,11 @@
     "emailChange": "Ändern",
     "emailNew": "Neue E-Mail-Adresse",
     "emailSendCode": "Code senden",
-    "emailChanged": "E-Mail-Adresse geändert."
+    "emailChanged": "E-Mail-Adresse geändert.",
+    "name": "Name des Kontos",
+    "nameHint": "Erscheint nur in der App, zum Beispiel «Familie Muster».",
+    "changeName": "Name ändern",
+    "changeEmail": "E-Mail-Adresse ändern"
   },
   "admin": {
     "title": "Verwaltung",
@@ -138,7 +142,9 @@
     "LESSON_LOCKED": "Diese Lektion ist noch gesperrt.",
     "BAD_DATE": "Das Datum auf deinem Gerät scheint nicht zu stimmen.",
     "NO_ACTIVE_PROFILE": "Bitte wähle zuerst ein Profil.",
-    "NETWORK": "Keine Verbindung zum Server. Prüfe das Internet und versuche es nochmals."
+    "NETWORK": "Keine Verbindung zum Server. Prüfe das Internet und versuche es nochmals.",
+    "PARENT_LOCKED": "Das ist Elternbereich. Bitte gib zuerst die Eltern-PIN ein.",
+    "PIN_WRONG": "Die PIN stimmt nicht."
   },
   "validation": {
     "name": "Bitte gib einen Namen ein (höchstens 40 Zeichen).",
@@ -349,5 +355,27 @@
   "update": {
     "title": "Neue Version verfügbar",
     "reload": "Neu laden"
+  },
+  "about": {
+    "title": "Über {{appName}}",
+    "text": "{{appName}} ist freie Software unter der GNU Affero General Public License (AGPL-3.0). Du darfst sie nutzen, anpassen und weitergeben; wer eine veränderte Version online anbietet, muss deren Quellcode ebenfalls zugänglich machen.",
+    "license": "Freie Software ({{license}})",
+    "source": "Quellcode"
+  },
+  "parent": {
+    "title": "Elternbereich",
+    "pin": "Eltern-PIN",
+    "enterPin": "Gib die Eltern-PIN ein.",
+    "open": "Öffnen",
+    "forgot": "PIN vergessen? Melde dich ab und mit Passkey oder E-Mail-Code wieder an – danach kannst du unter «Konto» eine neue festlegen.",
+    "explain": "Mit einer Eltern-PIN (4 Ziffern) schützt du Konto, Verwaltung und das Anlegen von Profilen vor Kinderhänden. Lernen und die Mikrofon-Einrichtung gehen ohne PIN.",
+    "isSet": "Die Eltern-PIN ist eingerichtet. Der Elternbereich schliesst sich, sobald ein Profil gewählt wird, und spätestens nach 15 Minuten.",
+    "set": "PIN festlegen",
+    "change": "PIN ändern",
+    "remove": "PIN entfernen",
+    "lockNow": "Jetzt sperren",
+    "newPin": "Neue PIN (4 Ziffern)",
+    "repeatPin": "PIN wiederholen",
+    "mismatch": "Die beiden PINs stimmen nicht überein."
   }
 }

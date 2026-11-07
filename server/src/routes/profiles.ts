@@ -52,44 +52,62 @@ const profileRoutes: FastifyPluginAsyncZod = async (app) => {
     return list.map(profileToDto);
   });
 
-  app.post('/', { schema: { body: profileCreateSchema } }, async (req, reply) => {
-    const userId = req.auth!.user._id;
-    if ((await Profile.countDocuments({ userId })) >= MAX_PROFILES_PER_ACCOUNT) {
-      throw new HttpError(400, 'PROFILE_LIMIT');
-    }
-    const created = await Profile.create({ ...req.body, userId });
-    return reply.code(201).send(profileToDto(created.toObject() as ProfileDoc));
-  });
+  app.post(
+    '/',
+    { schema: { body: profileCreateSchema }, preHandler: app.requireParent },
+    async (req, reply) => {
+      const userId = req.auth!.user._id;
+      if ((await Profile.countDocuments({ userId })) >= MAX_PROFILES_PER_ACCOUNT) {
+        throw new HttpError(400, 'PROFILE_LIMIT');
+      }
+      const created = await Profile.create({ ...req.body, userId });
+      return reply.code(201).send(profileToDto(created.toObject() as ProfileDoc));
+    },
+  );
 
-  app.patch('/:id', { schema: { params: idParams, body: profileUpdateSchema } }, async (req) => {
-    const { calibration, ...rest } = req.body;
-    const update: Record<string, unknown> = { ...rest };
-    for (const [k, v] of Object.entries(calibration ?? {})) update[`calibration.${k}`] = v;
-    const updated = await Profile.findOneAndUpdate(
-      { _id: req.params.id, userId: req.auth!.user._id },
-      { $set: update },
-      { returnDocument: 'after' },
-    ).lean<ProfileDoc>();
-    if (!updated) throw notFound();
-    return profileToDto(updated);
-  });
+  app.patch(
+    '/:id',
+    { schema: { params: idParams, body: profileUpdateSchema } },
+    async (req, reply) => {
+      const { calibration, ...rest } = req.body;
+      // Children may save their own microphone calibration; everything else is parent area.
+      if (Object.keys(rest).length > 0) await app.requireParent(req, reply);
+      const update: Record<string, unknown> = { ...rest };
+      for (const [k, v] of Object.entries(calibration ?? {})) update[`calibration.${k}`] = v;
+      const updated = await Profile.findOneAndUpdate(
+        { _id: req.params.id, userId: req.auth!.user._id },
+        { $set: update },
+        { returnDocument: 'after' },
+      ).lean<ProfileDoc>();
+      if (!updated) throw notFound();
+      return profileToDto(updated);
+    },
+  );
 
-  app.delete('/:id', { schema: { params: idParams } }, async (req, reply) => {
-    const res = await Profile.deleteOne({ _id: req.params.id, userId: req.auth!.user._id });
-    if (res.deletedCount === 0) throw notFound();
-    await Promise.all([
-      LessonProgress.deleteMany({ profileId: req.params.id }),
-      DailyActivity.deleteMany({ profileId: req.params.id }),
-    ]);
-    await Session.updateMany({ activeProfileId: req.params.id }, { activeProfileId: null });
-    return reply.code(204).send();
-  });
+  app.delete(
+    '/:id',
+    { schema: { params: idParams }, preHandler: app.requireParent },
+    async (req, reply) => {
+      const res = await Profile.deleteOne({ _id: req.params.id, userId: req.auth!.user._id });
+      if (res.deletedCount === 0) throw notFound();
+      await Promise.all([
+        LessonProgress.deleteMany({ profileId: req.params.id }),
+        DailyActivity.deleteMany({ profileId: req.params.id }),
+      ]);
+      await Session.updateMany({ activeProfileId: req.params.id }, { activeProfileId: null });
+      return reply.code(204).send();
+    },
+  );
 
   /** Select the active profile for this session (profile picker after login). */
   app.post('/select', { schema: { body: selectProfileSchema } }, async (req) => {
     const owns = await Profile.exists({ _id: req.body.profileId, userId: req.auth!.user._id });
     if (!owns) throw notFound();
-    await Session.updateOne({ _id: req.auth!.sessionId }, { activeProfileId: req.body.profileId });
+    // Choosing a learner's profile hands the device over: the parent area locks again.
+    await Session.updateOne(
+      { _id: req.auth!.sessionId },
+      { activeProfileId: req.body.profileId, parentUnlockedUntil: null },
+    );
     return { activeProfileId: req.body.profileId };
   });
 };

@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { SessionProvider } from './auth/SessionContext';
 import { useSession } from './auth/session';
+import { ParentGate } from './auth/parent';
 import { themes } from './theme/theme';
 import { AppLayout } from './components/AppLayout';
 import { ReloadPrompt } from './components/ReloadPrompt';
@@ -123,9 +124,23 @@ export function App() {
                   <Route path="/lesson/:lessonId" element={<LessonPage />} />
                 </Route>
                 <Route element={<AppLayout />}>
-                  <Route path="/account" element={<AccountPage />} />
+                  <Route
+                    path="/account"
+                    element={
+                      <ParentGate>
+                        <AccountPage />
+                      </ParentGate>
+                    }
+                  />
                   <Route element={<RequireAdmin />}>
-                    <Route path="/admin" element={<AdminPage />} />
+                    <Route
+                      path="/admin"
+                      element={
+                        <ParentGate>
+                          <AdminPage />
+                        </ParentGate>
+                      }
+                    />
                   </Route>
                   <Route element={<RequireProfile />}>
                     <Route path="/" element={<DashboardPage />} />

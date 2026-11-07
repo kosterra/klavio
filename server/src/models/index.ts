@@ -11,6 +11,7 @@ const userSchema = new Schema(
     /** Verified with a one-time code at sign-up; the account's fallback login. */
     email: { type: String, required: true },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    /** HMAC of the optional parent PIN (protects the parent area from children). */
     parentPinHash: { type: String, default: null },
     locale: { type: String, default: 'de-CH' },
   },
@@ -52,6 +53,8 @@ const sessionSchema = new Schema(
     tokenHash: { type: String, required: true, unique: true },
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     activeProfileId: { type: Schema.Types.ObjectId, ref: 'Profile', default: null },
+    /** Parent area (PIN-protected) open until then; set by entering the PIN or a fresh login. */
+    parentUnlockedUntil: { type: Date, default: null },
     expiresAt: { type: Date, required: true },
   },
   { timestamps: true },

@@ -29,7 +29,7 @@ function toDto(p: {
 
 /** Manage the passkeys of the logged-in account (list, add, rename, delete). */
 const passkeyRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, { config }) => {
-  app.addHook('preHandler', app.requireAuth);
+  app.addHook('preHandler', app.requireParent);
 
   app.get('/', async (req) => {
     const list = await Passkey.find({ userId: req.auth!.user._id }).sort({ createdAt: 1 }).lean();

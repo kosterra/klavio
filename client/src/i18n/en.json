@@ -117,7 +117,11 @@
     "emailChange": "Change",
     "emailNew": "New e-mail address",
     "emailSendCode": "Send code",
-    "emailChanged": "E-mail address changed."
+    "emailChanged": "E-mail address changed.",
+    "name": "Account name",
+    "nameHint": "Only shown in the app, for example “The Smiths”.",
+    "changeName": "Change name",
+    "changeEmail": "Change e-mail address"
   },
   "admin": {
     "title": "Administration",
@@ -138,7 +142,9 @@
     "LESSON_LOCKED": "This lesson is still locked.",
     "BAD_DATE": "The date on your device seems to be wrong.",
     "NO_ACTIVE_PROFILE": "Please choose a profile first.",
-    "NETWORK": "No connection to the server. Check the internet connection and try again."
+    "NETWORK": "No connection to the server. Check the internet connection and try again.",
+    "PARENT_LOCKED": "This is the parent area. Please enter the parent PIN first.",
+    "PIN_WRONG": "The PIN is not correct."
   },
   "validation": {
     "name": "Please enter a name (max. 40 characters).",
@@ -349,5 +355,27 @@
   "update": {
     "title": "New version available",
     "reload": "Reload"
+  },
+  "about": {
+    "title": "About {{appName}}",
+    "text": "{{appName}} is free software under the GNU Affero General Public License (AGPL-3.0). You may use, adapt and share it; anyone offering a modified version online must make its source code available too.",
+    "license": "Free software ({{license}})",
+    "source": "Source code"
+  },
+  "parent": {
+    "title": "Parent area",
+    "pin": "Parent PIN",
+    "enterPin": "Enter the parent PIN.",
+    "open": "Open",
+    "forgot": "Forgot the PIN? Sign out and sign in again with a passkey or e-mail code – then you can set a new one under “Account”.",
+    "explain": "A parent PIN (4 digits) protects the account, administration and creating profiles from little hands. Learning and the microphone setup work without the PIN.",
+    "isSet": "The parent PIN is set. The parent area closes as soon as a profile is chosen, and after 15 minutes at the latest.",
+    "set": "Set PIN",
+    "change": "Change PIN",
+    "remove": "Remove PIN",
+    "lockNow": "Lock now",
+    "newPin": "New PIN (4 digits)",
+    "repeatPin": "Repeat PIN",
+    "mismatch": "The two PINs do not match."
   }
 }

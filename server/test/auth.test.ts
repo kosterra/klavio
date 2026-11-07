@@ -382,6 +382,20 @@ describe('passkeys (added after sign-up)', () => {
   });
 });
 
+describe('account name', () => {
+  it('can be changed and is validated', async () => {
+    const jar = new CookieJar();
+    await signUp(jar);
+    const res = await call(jar, 'PATCH', '/api/account', { displayName: '  Familie Huber ' });
+    expect(res.json()).toEqual({ displayName: 'Familie Huber' });
+    expect((await call(jar, 'GET', '/api/auth/me')).json().user.displayName).toBe('Familie Huber');
+    expect((await call(jar, 'PATCH', '/api/account', { displayName: '' })).statusCode).toBe(400);
+    expect(
+      (await call(new CookieJar(), 'PATCH', '/api/account', { displayName: 'X' })).statusCode,
+    ).toBe(401);
+  });
+});
+
 describe('changing the e-mail address', () => {
   it('verifies the new address with a code', async () => {
     const jar = new CookieJar();

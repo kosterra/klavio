@@ -16,6 +16,8 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notify } from '../components/notify';
+import { AboutCard } from '../components/AboutApp';
+import { ParentPinSettings } from '../auth/parent';
 import {
   IconCloud,
   IconFingerprint,
@@ -26,7 +28,7 @@ import {
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { emailSchema, type PasskeyDto } from '@klavio/shared';
+import { displayNameSchema, emailSchema, type PasskeyDto } from '@klavio/shared';
 import { endpoints } from '../api/endpoints';
 import { useSession } from '../auth/session';
 import { addPasskey } from '../auth/passkey';
@@ -43,6 +45,7 @@ export function AccountPage() {
   const [renaming, setRenaming] = useState<PasskeyDto | null>(null);
   const [newName, setNewName] = useState('');
   const [email, setEmail] = useState('');
+  const [name, setName] = useState<string | null>(null);
   const [emailCode, setEmailCode] = useState('');
   const [emailStep, setEmailStep] = useState<'show' | 'edit' | 'code'>('show');
   const [confirmDelete, deleteModal] = useDisclosure(false);
@@ -75,6 +78,61 @@ export function AccountPage() {
           {error}
         </Alert>
       )}
+
+      {/* ---------------------------------------------------------- account name */}
+      <Card withBorder radius="lg" padding="lg">
+        <Stack gap="sm">
+          <Title order={2} size="h3">
+            {t('account.name')}
+          </Title>
+          <Text c="dimmed" size="sm">
+            {t('account.nameHint')}
+          </Text>
+          {name === null ? (
+            <Group justify="space-between">
+              <Text fw={700} data-testid="account-name">
+                {me.user.displayName}
+              </Text>
+              <Button
+                variant="subtle"
+                size="md"
+                aria-label={t('account.changeName')}
+                onClick={() => setName(me.user.displayName)}
+              >
+                {t('account.emailChange')}
+              </Button>
+            </Group>
+          ) : (
+            <Group align="flex-end">
+              <TextInput
+                style={{ flex: 1, minWidth: 220 }}
+                label={t('account.name')}
+                value={name}
+                maxLength={40}
+                autoComplete="nickname"
+                onChange={(e) => setName(e.currentTarget.value)}
+                data-autofocus
+              />
+              <Button variant="default" onClick={() => setName(null)}>
+                {t('common.cancel')}
+              </Button>
+              <Button
+                loading={busy === 'name'}
+                disabled={!displayNameSchema.safeParse(name).success}
+                onClick={() =>
+                  run('name', async () => {
+                    await endpoints.updateAccount(name.trim());
+                    setName(null);
+                    await refresh();
+                  })
+                }
+              >
+                {t('common.save')}
+              </Button>
+            </Group>
+          )}
+        </Stack>
+      </Card>
 
       {/* ------------------------------------------------------------ passkeys */}
       <Card withBorder radius="lg" padding="lg">
@@ -167,7 +225,12 @@ export function AccountPage() {
           {emailStep === 'show' ? (
             <Group justify="space-between">
               <Text fw={700}>{me.user.email ?? '—'}</Text>
-              <Button variant="subtle" size="md" onClick={() => setEmailStep('edit')}>
+              <Button
+                variant="subtle"
+                size="md"
+                aria-label={t('account.changeEmail')}
+                onClick={() => setEmailStep('edit')}
+              >
                 {t('account.emailChange')}
               </Button>
             </Group>
@@ -231,6 +294,10 @@ export function AccountPage() {
           )}
         </Stack>
       </Card>
+
+      <ParentPinSettings />
+
+      <AboutCard />
 
       {/* ------------------------------------------------------------- danger */}
       <Card

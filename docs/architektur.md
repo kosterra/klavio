@@ -100,16 +100,16 @@ Was davon personenbezogen ist und wie lange es bleibt: [datenschutz.md](datensch
 
 Alle Routen unter `/api`, JSON, Validierung mit zod (Schemas in `shared/src/schemas/`).
 
-| Bereich       | Routen                                                                                       |
-| ------------- | -------------------------------------------------------------------------------------------- |
-| öffentlich    | `GET /config`, `GET /health`                                                                 |
-| `/auth/email` | `POST /request` (Code senden), `POST /verify` (anmelden oder Konto anlegen)                  |
-| `/auth`       | `POST /login/options`, `POST /login/verify` (Passkey), `POST /logout`, `GET /me`             |
-| `/passkeys`   | `GET /`, `POST /options`, `POST /verify` (hinzufügen), `PATCH /:id`, `DELETE /:id`           |
-| `/account`    | `POST /email/request`, `POST /email/verify` (Adresse ändern), `DELETE /` (Konto löschen)     |
-| `/profiles`   | `GET /`, `POST /`, `PATCH /:id`, `DELETE /:id`, `POST /select`                               |
-| `/progress`   | `GET /?date=` (Fortschritt des aktiven Profils), `POST /lessons/:lessonId` (Lektion beendet) |
-| `/admin`      | `GET /settings`, `PUT /settings` (nur Rolle `admin`)                                         |
+| Bereich       | Routen                                                                                                                                                                             |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| öffentlich    | `GET /config`, `GET /health`                                                                                                                                                       |
+| `/auth/email` | `POST /request` (Code senden), `POST /verify` (anmelden oder Konto anlegen)                                                                                                        |
+| `/auth`       | `POST /login/options`, `POST /login/verify` (Passkey), `POST /logout`, `GET /me`                                                                                                   |
+| `/passkeys`   | `GET /`, `POST /options`, `POST /verify` (hinzufügen), `PATCH /:id`, `DELETE /:id`                                                                                                 |
+| `/account`    | `PATCH /` (Name), `POST /email/request`, `POST /email/verify` (Adresse ändern), `DELETE /` (Konto löschen), `PUT`/`DELETE /pin`, `POST /pin/verify`, `POST /pin/lock` (Eltern-PIN) |
+| `/profiles`   | `GET /`, `POST /`, `PATCH /:id`, `DELETE /:id`, `POST /select`                                                                                                                     |
+| `/progress`   | `GET /?date=` (Fortschritt des aktiven Profils), `POST /lessons/:lessonId` (Lektion beendet)                                                                                       |
+| `/admin`      | `GET /settings`, `PUT /settings` (nur Rolle `admin`)                                                                                                                               |
 
 Querschnitt (`server/src/app.ts`): Helmet mit strikter CSP für JSON, Cookies, Rate-Limits (global
 300/min, strenger für Anmeldung und E-Mail-Codes), Origin-Prüfung für alle zustandsändernden Anfragen
@@ -147,6 +147,12 @@ serverseitig und wird über ein kurzlebiges httpOnly-Cookie (`klavio_ch`) gefund
 **Session:** zufälliges Token im Cookie `klavio_sid` (httpOnly, `Secure`, `SameSite=Lax`,
 `Path=/api`, 60 Tage), in der Datenbank nur als SHA-256. Jede Anmeldung erzeugt ein neues Token. Die
 Session merkt sich das aktive Profil.
+
+**Elternbereich:** Ist eine Eltern-PIN gesetzt, verlangen Konto, Passkeys, Verwaltung sowie Anlegen,
+Ändern und Löschen von Profilen einen offenen Elternbereich (`requireParent`, Fehler
+`PARENT_LOCKED`). Er öffnet sich durch die PIN oder eine frische Anmeldung (das ist der Erwachsene) für
+15 Minuten und schliesst sich, sobald ein Profil gewählt wird – der Moment, in dem das Gerät an ein
+Kind geht. Lernen, Profil wählen und die Mikrofon-Kalibrierung bleiben ohne PIN möglich.
 
 ## Eingaben
 

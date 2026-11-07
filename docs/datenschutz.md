@@ -20,9 +20,9 @@ ersetzt keine Datenschutzerklärung.
 
 | Daten                   | Inhalt                                                                                                                                                                                               | Zweck                                        | Löschung                                 |
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- | ---------------------------------------- |
-| **Konto**               | Anzeigename (frei wählbar, z. B. «Familie Muster»), bestätigte E-Mail-Adresse, zufällige WebAuthn-Kennung, Rolle (user/admin), Zeitpunkte von Erstellung/Änderung                                    | Anmeldung, Wiederherstellung per E-Mail-Code | mit dem Konto                            |
+| **Konto**               | Anzeigename (frei wählbar, z. B. «Familie Muster»), bestätigte E-Mail-Adresse, zufällige WebAuthn-Kennung, Rolle (user/admin), HMAC der optionalen Eltern-PIN, Zeitpunkte von Erstellung/Änderung    | Anmeldung, Wiederherstellung per E-Mail-Code | mit dem Konto                            |
 | **Passkeys**            | öffentlicher Schlüssel, Credential-ID, Zähler, Transportwege, Gerätetyp, «synchronisiert ja/nein», Name des Anbieters (z. B. «iCloud-Schlüsselbund», umbenennbar), zuletzt verwendet                 | Anmeldung ohne Passwort                      | einzeln unter «Konto» oder mit dem Konto |
-| **Sessions**            | SHA-256 des Session-Tokens, Konto, aktives Profil, Ablaufzeit                                                                                                                                        | angemeldet bleiben                           | automatisch nach 60 Tagen, beim Abmelden |
+| **Sessions**            | SHA-256 des Session-Tokens, Konto, aktives Profil, bis wann der Elternbereich offen ist, Ablaufzeit                                                                                                  | angemeldet bleiben                           | automatisch nach 60 Tagen, beim Abmelden |
 | **Profile**             | Name, Figur, Darstellung (Kids/Classic), Tagesziel, Mikrofon-Kalibrierung (Kammerton in Hz, Raumrauschpegel in dB), XP, Level, Streak (Zahlen und Datum des letzten Übungstags), Abzeichen mit Datum | Lernen, Belohnungen                          | mit dem Profil oder Konto                |
 | **Lektionsfortschritt** | je Profil und Lektion: beste Sterne, Anzahl Durchgänge, letzter Abschluss                                                                                                                            | Lernpfad, Freischaltung                      | mit dem Profil oder Konto                |
 | **Übungstage**          | je Profil und Tag: Übungszeit in Sekunden, XP                                                                                                                                                        | Tagesziel, Streak                            | mit dem Profil oder Konto                |
@@ -33,8 +33,9 @@ ersetzt keine Datenschutzerklärung.
 **Nicht gespeichert:** Audio, einzelne gespielte Töne oder Versuche, Fehler im Detail (nur die Zahl
 fliesst in die Sterne ein und wird nicht aufbewahrt), IP-Adressen, Browser- oder Gerätekennungen.
 
-Die Felder `parentPinHash` und `locale` im Konto sind für spätere Funktionen vorgesehen
-(Eltern-PIN, Sprachwahl) und werden derzeit nicht befüllt bzw. stehen auf dem Standardwert.
+Das Feld `locale` im Konto ist für eine spätere Sprachwahl vorgesehen und steht derzeit auf dem
+Standardwert. Die **Eltern-PIN** ist kein Passwort, sondern ein Schutz vor Kinderhänden; gespeichert
+wird nur ein HMAC mit dem Server-Geheimnis, und Eingabeversuche sind auf 5 pro 5 Minuten begrenzt.
 
 ## In Logs und im Arbeitsspeicher
 
@@ -74,9 +75,8 @@ Keine weiteren Empfänger: keine Analyse-, Werbe- oder Fehlerberichtsdienste, ke
 ## Rechte der Nutzer
 
 - **Einsehen:** Konto, Passkeys, Profile, Fortschritt und Abzeichen sind in der App sichtbar.
-- **Berichtigen:** E-Mail-Adresse (mit Bestätigung an die neue Adresse), Profile, Passkey-Namen. Den
-  Anzeigenamen des Kontos kann die App derzeit nicht ändern (offener Punkt); bis dahin hilft der
-  Betreiber direkt in der Datenbank.
+- **Berichtigen:** Name des Kontos, E-Mail-Adresse (mit Bestätigung an die neue Adresse), Profile,
+  Passkey-Namen – alles unter «Konto» bzw. auf der Profilwahl.
 - **Löschen:**
   - Profil löschen entfernt Fortschritt, Übungstage und Abzeichen dieses Profils.
   - **Konto löschen** (unter «Konto») entfernt sofort Konto, Passkeys, Sessions, Profile, Fortschritt
@@ -86,6 +86,7 @@ Keine weiteren Empfänger: keine Analyse-, Werbe- oder Fehlerberichtsdienste, ke
 ## Hinweise für Betreiber
 
 - Kinder nutzen die App über das Konto eines Erwachsenen; die E-Mail-Adresse gehört dem Erwachsenen.
+  Mit der Eltern-PIN lässt sich verhindern, dass Kinder Konto, Profile oder Passkeys verändern.
 - Je nach Land (z. B. revDSG in der Schweiz, DSGVO in der EU) eine Datenschutzerklärung bereitstellen
   und die Aufbewahrung von Sicherungen und Logs festlegen.
 - Wer Fehlerberichte oder Statistiken ergänzen möchte, sollte das nur selbst gehostet und ohne

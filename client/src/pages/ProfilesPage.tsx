@@ -23,6 +23,8 @@ import { useErrorText } from '../auth/useErrorText';
 import { Mascot } from '../components/Mascot';
 import { ProfileAvatar } from '../components/ProfileAvatar';
 import { ProfileForm } from '../components/ProfileForm';
+import { ParentPinForm } from '../auth/parent';
+import { useParentUnlocked } from '../auth/useParentUnlocked';
 import classes from './ProfilesPage.module.css';
 
 /** "Who's playing today?" — shown after login and when switching profiles. */
@@ -35,6 +37,8 @@ export function ProfilesPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [nudgeDismissed, setNudgeDismissed] = useState(false);
+  const [unlocking, setUnlocking] = useState(false);
+  const parentUnlocked = useParentUnlocked();
   // Accounts start with e-mail login only; suggest a passkey until one exists.
   const showPasskeyNudge =
     !nudgeDismissed && me?.user.passkeyCount === 0 && browserSupportsWebAuthn();
@@ -95,7 +99,10 @@ export function ProfilesPage() {
             </UnstyledButton>
           ))}
           {profiles.length < MAX_PROFILES_PER_ACCOUNT && (
-            <UnstyledButton onClick={() => setCreating(true)} className={classes.tile}>
+            <UnstyledButton
+              onClick={() => (parentUnlocked ? setCreating(true) : setUnlocking(true))}
+              className={classes.tile}
+            >
               <Card withBorder radius="xl" padding="lg" h="100%" className={classes.add}>
                 <Center h="100%">
                   <Stack align="center" gap="xs">
@@ -132,6 +139,21 @@ export function ProfilesPage() {
           {t('nav.account')}
         </Button>
       </Stack>
+
+      <Modal
+        closeButtonProps={{ 'aria-label': t('common.close') }}
+        opened={unlocking}
+        onClose={() => setUnlocking(false)}
+        title={t('parent.title')}
+        radius="lg"
+      >
+        <ParentPinForm
+          onUnlocked={() => {
+            setUnlocking(false);
+            setCreating(true);
+          }}
+        />
+      </Modal>
 
       <Modal
         closeButtonProps={{ 'aria-label': t('common.close') }}

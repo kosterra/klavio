@@ -5,6 +5,7 @@ import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { Mascot } from '../components/Mascot';
+import { SourceLink } from '../components/AboutApp';
 import { useSession } from '../auth/session';
 import { loginWithPasskey } from '../auth/passkey';
 import { useErrorText } from '../auth/useErrorText';
@@ -100,6 +101,7 @@ export function WelcomePage() {
               {t('welcome.registrationClosed')}
             </Text>
           )}
+          <SourceLink size="xs" />
         </Stack>
       </Card>
     </Center>

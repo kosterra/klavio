@@ -18,7 +18,7 @@ Der Produktname ist ein Platzhalter. Er steht zentral in
 - **Motivation ohne Druck:** Sterne, XP, Level, Tage in Folge, Tagesziel, Abzeichen, Maskottchen
   «Klavi». Nichts läuft ab, XP gehen nie verloren.
 - **Familien:** ein Konto, mehrere Profile mit eigenem Fortschritt und eigener Mikrofon-Einrichtung;
-  Darstellung «Kids» oder «Classic».
+  Darstellung «Kids» oder «Classic»; optionale Eltern-PIN schützt Konto und Profilverwaltung.
 - **Anmeldung:** Registrierung per E-Mail-Code, danach Passkeys (Fingerabdruck, Gesicht, Geräte-PIN).
 - **Offline:** installierbar, Lektionen funktionieren ohne Internet, Ergebnisse werden nachgereicht.
 - **Sprachen:** Deutsch (Schweiz) und Englisch. Barrierefreiheit nach WCAG 2.1 AA geprüft.
@@ -135,4 +135,9 @@ docs/     Dokumentation
 
 ## Lizenz
 
-GPL-3.0, siehe [LICENSE](LICENSE).
+[GNU Affero General Public License v3.0](LICENSE) (AGPL-3.0-only). Wer eine veränderte Version als
+Online-Dienst anbietet, muss deren Quellcode den Nutzern zugänglich machen – dafür in
+[`shared/src/config/app.ts`](shared/src/config/app.ts) `sourceUrl` auf das eigene Repository setzen;
+die App verlinkt ihn auf der Startseite und unter «Konto». Alle verwendeten Bibliotheken stehen unter
+mit der AGPL vereinbaren Lizenzen (MIT, ISC, BSD, Apache-2.0, 0BSD; die Schrift Nunito unter der SIL
+Open Font License).

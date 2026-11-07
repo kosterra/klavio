@@ -42,7 +42,14 @@ export const endpoints = {
   accountEmailRequest: (email: string) => api('POST', '/account/email/request', { email }),
   accountEmailVerify: (code: string) =>
     api<{ email: string }>('POST', '/account/email/verify', { code }),
+  updateAccount: (displayName: string) =>
+    api<{ displayName: string }>('PATCH', '/account', { displayName }),
   deleteAccount: () => api('DELETE', '/account'),
+  setParentPin: (pin: string) => api('PUT', '/account/pin', { pin }),
+  removeParentPin: () => api('DELETE', '/account/pin'),
+  verifyParentPin: (pin: string) =>
+    api<{ unlockedUntil: string | null }>('POST', '/account/pin/verify', { pin }),
+  lockParentArea: () => api('POST', '/account/pin/lock'),
 
   profiles: () => api<ProfileDto[]>('GET', '/profiles'),
   createProfile: (body: ProfileInput) => api<ProfileDto>('POST', '/profiles', body),

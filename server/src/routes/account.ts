@@ -1,5 +1,11 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
-import { accountEmailVerifySchema, emailRequestSchema } from '@klavio/shared';
+import type { Types } from 'mongoose';
+import {
+  accountEmailVerifySchema,
+  accountUpdateSchema,
+  emailRequestSchema,
+  parentPinSchema,
+} from '@klavio/shared';
 import type { AppConfig } from '../config.js';
 import {
   DailyActivity,
@@ -13,13 +19,70 @@ import {
 import { HttpError, badRequest } from '../lib/errors.js';
 import { checkEmailCode, issueEmailCode } from '../lib/emailCodes.js';
 import { verifyEmailMail, type Mailer } from '../lib/mailer.js';
-import { destroySession } from '../lib/session.js';
+import { PARENT_UNLOCK_MS, destroySession } from '../lib/session.js';
+import { hmac, safeEqualHex } from '../lib/crypto.js';
 
 const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }> = async (
   app,
   { config, mailer },
 ) => {
-  app.addHook('preHandler', app.requireAuth);
+  // Everything here is parent area, except entering / locking the PIN itself.
+  app.addHook('preHandler', async (req, reply) => {
+    if ((req.routeOptions.config as { parentLockFree?: boolean }).parentLockFree) {
+      return app.requireAuth(req, reply);
+    }
+    return app.requireParent(req, reply);
+  });
+
+  // ------------------------------------------------------------- parent PIN
+  const pinHash = (userId: Types.ObjectId, pin: string) =>
+    hmac(config.AUTH_SECRET, `parent-pin:${userId.toString()}:${pin}`);
+  const unlock = (sessionId: Types.ObjectId, until: Date | null) =>
+    Session.updateOne({ _id: sessionId }, { parentUnlockedUntil: until });
+
+  app.put('/pin', { schema: { body: parentPinSchema } }, async (req, reply) => {
+    const { user, sessionId } = req.auth!;
+    await User.updateOne({ _id: user._id }, { parentPinHash: pinHash(user._id, req.body.pin) });
+    await unlock(sessionId, new Date(Date.now() + PARENT_UNLOCK_MS));
+    return reply.code(204).send();
+  });
+
+  app.delete('/pin', async (req, reply) => {
+    await User.updateOne({ _id: req.auth!.user._id }, { parentPinHash: null });
+    return reply.code(204).send();
+  });
+
+  app.post(
+    '/pin/verify',
+    {
+      schema: { body: parentPinSchema },
+      config: {
+        parentLockFree: true,
+        // 4 digits are guessable by trying – keep it slow (per account)
+        rateLimit: {
+          max: 5,
+          timeWindow: '5 minutes',
+          hook: 'preHandler', // after the session is known → per account, not per IP
+          keyGenerator: (req) => `pin:${req.auth?.user._id.toString() ?? req.ip}`,
+        },
+      },
+    },
+    async (req) => {
+      const { user, sessionId } = req.auth!;
+      if (!user.parentPinHash) return { unlockedUntil: null };
+      if (!safeEqualHex(user.parentPinHash, pinHash(user._id, req.body.pin))) {
+        throw new HttpError(403, 'PIN_WRONG');
+      }
+      const until = new Date(Date.now() + PARENT_UNLOCK_MS);
+      await unlock(sessionId, until);
+      return { unlockedUntil: until.toISOString() };
+    },
+  );
+
+  app.post('/pin/lock', { config: { parentLockFree: true } }, async (req, reply) => {
+    await unlock(req.auth!.sessionId, null);
+    return reply.code(204).send();
+  });
 
   // -------------------------------------------- change the e-mail address
   app.post(
@@ -72,6 +135,13 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
       return { email: pending.email };
     },
   );
+
+  // ------------------------------------------------------------ display name
+  app.patch('/', { schema: { body: accountUpdateSchema } }, async (req) => {
+    const { displayName } = req.body;
+    await User.updateOne({ _id: req.auth!.user._id }, { displayName });
+    return { displayName };
+  });
 
   // ------------------------------------------------- delete account entirely
   app.delete('/', async (req, reply) => {
