@@ -1,31 +1,60 @@
-.chapter {
+.section {
   position: relative;
 }
 
-.heading {
-  margin: 0 0 var(--mantine-spacing-xs);
-  font-size: inherit;
-}
-
-.banner {
-  width: 100%;
+.marker {
+  position: absolute;
+  z-index: 1;
   display: flex;
   align-items: center;
-  gap: var(--mantine-spacing-md);
-  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
-  border-radius: var(--mantine-radius-xl);
-  background: var(--chapter-tint);
-  text-align: left;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--chapter-color);
+  color: #fff;
+  font-weight: 800;
+  font-size: 22px;
+  border: 4px solid var(--klavio-surface);
+  box-shadow: 0 4px 0 var(--chapter-dark);
 }
 
-.banner:focus-visible {
+.markerDone {
+  background: var(--mantine-color-yellow-6);
+  box-shadow: 0 4px 0 var(--mantine-color-yellow-9);
+}
+
+.markerLocked {
+  background: var(--klavio-locked-bg);
+  color: var(--klavio-locked-fg);
+  box-shadow: 0 4px 0 var(--klavio-locked-border);
+}
+
+.signpost {
+  position: absolute;
+  display: flex;
+  min-height: 80px;
+  align-items: center;
+  border-radius: var(--mantine-radius-lg);
+  padding: 4px 8px;
+}
+
+.signpost:focus-visible {
   outline: 3px solid var(--mantine-color-orange-6);
   outline-offset: 2px;
 }
 
+.signpostText {
+  min-width: 0;
+}
+
+.signpostMeta {
+  margin-top: 2px;
+}
+
 .chevron {
   flex: none;
-  color: var(--mantine-color-gray-7);
+  color: var(--mantine-color-dimmed);
 }
 
 .chevron[data-open] {
@@ -36,41 +65,6 @@
   .chevron {
     transition: transform 150ms ease;
   }
-}
-
-.bannerNumber {
-  flex: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--chapter-color);
-  color: #fff;
-  font-weight: 800;
-  font-size: 22px;
-  box-shadow: 0 4px 0 var(--chapter-dark);
-}
-
-.bannerBar {
-  display: block;
-  margin-top: 2px;
-  height: 8px;
-  border-radius: 4px;
-  background: var(--klavio-bar);
-  overflow: hidden;
-}
-
-.bannerBarFill {
-  display: block;
-  height: 100%;
-  border-radius: 4px;
-  background: var(--chapter-color);
-}
-
-.board {
-  position: relative;
 }
 
 .road {
@@ -103,78 +97,137 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 68px;
-  height: 68px;
-  border-radius: 50%;
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
   text-decoration: none;
   cursor: pointer;
-  color: var(--chapter-color);
-  background: var(--klavio-surface);
-  border: 4px solid var(--chapter-color);
-  box-shadow: 0 5px 0 var(--chapter-dark);
+  color: #fff;
+  /* stepping stone: lighter top, chapter colour, darker 3D edge */
+  background: linear-gradient(180deg, var(--chapter-light) 0%, var(--chapter-color) 70%);
+  box-shadow:
+    0 7px 0 var(--chapter-dark),
+    0 10px 14px rgb(0 0 0 / 18%);
+}
+
+/* glossy highlight on the top of every stone */
+.node::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 14%;
+  width: 72%;
+  height: 30%;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 28%);
+  pointer-events: none;
 }
 
 .node:focus-visible {
   outline: 3px solid var(--mantine-color-orange-6);
-  outline-offset: 4px;
+  outline-offset: 6px;
+}
+
+a.node:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 3px 0 var(--chapter-dark),
+    0 5px 8px rgb(0 0 0 / 18%);
 }
 
 .done {
-  color: #fff;
-  background: var(--chapter-color);
+  /* default stone look */
+}
+
+.open {
+  color: var(--chapter-color);
+  background: var(--klavio-surface);
+  border: 4px solid var(--chapter-color);
 }
 
 .current {
-  width: 82px;
-  height: 82px;
-  color: #fff;
-  background: var(--mantine-color-orange-7);
-  border-color: var(--klavio-surface);
+  width: 88px;
+  height: 88px;
+  border-radius: 28px;
+  background: linear-gradient(
+    180deg,
+    var(--mantine-color-orange-5) 0%,
+    var(--mantine-color-orange-7) 70%
+  );
   box-shadow:
-    0 5px 0 var(--mantine-color-orange-9),
-    0 0 0 6px var(--mantine-color-orange-2);
+    0 8px 0 var(--mantine-color-orange-9),
+    0 0 0 7px rgb(255 192 120 / 45%),
+    0 12px 18px rgb(0 0 0 / 22%);
 }
 
+/* locked: a faded stone that still shows what is inside, with a padlock badge */
 .locked {
-  color: var(--klavio-locked-fg);
-  background: var(--klavio-locked-bg);
-  border-color: var(--klavio-locked-border);
-  box-shadow: 0 5px 0 var(--klavio-locked-border);
   cursor: default;
+  color: color-mix(in srgb, var(--chapter-color) 45%, var(--klavio-surface));
+  background: color-mix(in srgb, var(--chapter-color) 14%, var(--klavio-surface));
+  box-shadow: 0 7px 0 color-mix(in srgb, var(--chapter-color) 30%, var(--klavio-surface));
+}
+
+.locked::before {
+  background: rgb(255 255 255 / 35%);
+}
+
+.lockBadge {
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--klavio-locked-fg);
+  background: var(--klavio-surface);
+  border: 2px solid var(--klavio-locked-border);
 }
 
 .goal {
+  cursor: default;
   color: var(--klavio-locked-fg);
   background: var(--klavio-locked-bg);
   border: 4px dashed var(--klavio-locked-border);
   box-shadow: none;
-  cursor: default;
+}
+
+.goal::before {
+  display: none;
 }
 
 .goalReached {
-  color: #fff;
-  background: var(--mantine-color-yellow-6);
-  border: 4px solid var(--klavio-surface);
+  cursor: default;
+  background: linear-gradient(
+    180deg,
+    var(--mantine-color-yellow-4) 0%,
+    var(--mantine-color-yellow-6) 70%
+  );
   box-shadow:
-    0 5px 0 var(--mantine-color-yellow-9),
-    0 0 0 6px var(--mantine-color-yellow-2);
+    0 7px 0 var(--mantine-color-yellow-9),
+    0 0 0 6px rgb(255 224 102 / 45%),
+    0 10px 14px rgb(0 0 0 / 18%);
 }
 
+/* stars on a little ribbon across the bottom edge of the stone */
 .stars {
   position: absolute;
-  bottom: -10px;
+  bottom: -13px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   gap: 1px;
-  padding: 1px 4px;
+  padding: 2px 6px;
   border-radius: 999px;
   background: var(--klavio-surface);
-  box-shadow: 0 1px 3px rgb(0 0 0 / 15%);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
 }
 
 .title {
-  margin-top: 14px;
+  margin-top: 18px;
   padding: 1px 8px;
   border-radius: var(--mantine-radius-sm);
   background: var(--mantine-color-body);
@@ -208,7 +261,7 @@
     animation: glow 2s ease-in-out infinite;
   }
 
-  .node:not(.locked, .goal):hover {
+  a.node:hover {
     transform: translateY(-2px);
   }
 }
@@ -232,14 +285,16 @@
   0%,
   100% {
     box-shadow:
-      0 5px 0 var(--mantine-color-orange-9),
-      0 0 0 6px var(--mantine-color-orange-2);
+      0 8px 0 var(--mantine-color-orange-9),
+      0 0 0 7px rgb(255 192 120 / 45%),
+      0 12px 18px rgb(0 0 0 / 22%);
   }
 
   50% {
     box-shadow:
-      0 5px 0 var(--mantine-color-orange-9),
-      0 0 0 12px rgb(255 216 168 / 40%);
+      0 8px 0 var(--mantine-color-orange-9),
+      0 0 0 13px rgb(255 192 120 / 25%),
+      0 12px 18px rgb(0 0 0 / 22%);
   }
 }
 
@@ -249,4 +304,8 @@
 
 :global([data-mantine-color-scheme='dark']) .travelled {
   stroke: var(--chapter-road-dark);
+}
+
+.titleCurrent {
+  box-shadow: inset 0 -3px 0 var(--mantine-color-orange-6);
 }
