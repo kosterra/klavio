@@ -1,0 +1,77 @@
+.shelf {
+  /* a wooden shelf feeling: warm tint */
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mantine-color-yellow-4) 14%, var(--klavio-surface)) 0%,
+    var(--klavio-surface) 60%
+  );
+}
+
+.count {
+  padding: 2px 12px;
+  border-radius: 999px;
+  background: var(--mantine-color-yellow-4);
+  color: var(--mantine-color-dark-9);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: var(--mantine-spacing-md) var(--mantine-spacing-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.medalButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 6px 4px;
+  border-radius: var(--mantine-radius-md);
+}
+
+.medalButton:focus-visible {
+  outline: 3px solid var(--mantine-color-orange-6);
+}
+
+.medal {
+  position: relative;
+  display: block;
+  filter: drop-shadow(0 3px 2px rgb(0 0 0 / 15%));
+}
+
+.medalButton:not([data-earned]) .medal {
+  filter: none;
+  opacity: 0.8;
+}
+
+.medalIcon {
+  position: absolute;
+  left: 50%;
+  display: flex;
+  transform: translate(-50%, -50%);
+}
+
+.medalTitle {
+  hyphens: auto;
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .medalButton[data-earned]:hover .medal {
+    animation: wiggle 0.6s ease-in-out;
+  }
+}
+
+@keyframes wiggle {
+  25% {
+    transform: rotate(-8deg);
+  }
+
+  75% {
+    transform: rotate(8deg);
+  }
+}
