@@ -278,7 +278,9 @@
     "goal": "Ziel von Kapitel {{n}}: noch nicht erreicht",
     "goalReached": "Ziel von Kapitel {{n}}: erreicht",
     "goalLabel": "Ziel",
-    "goalDone": "Geschafft!"
+    "goalDone": "Geschafft!",
+    "lessonCount_one": "{{count}} Lektion",
+    "lessonCount_other": "{{count}} Lektionen"
   },
   "lesson": {
     "close": "Lektion beenden",

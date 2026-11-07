@@ -1,6 +1,8 @@
-import { Box, Group, Stack, Text } from '@mantine/core';
+import { useState } from 'react';
+import { Box, Collapse, Group, Stack, Text, UnstyledButton } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
 import {
+  IconChevronDown,
   IconFileMusic,
   IconHandFinger,
   IconLock,
@@ -102,6 +104,14 @@ export function LearningPath({
   const narrow = width / maxCols < 140;
   const rowHeight = narrow ? 172 : 156;
   let lessonNumber = 0;
+  const [toggled, setToggled] = useState<ReadonlySet<string>>(new Set());
+  const toggle = (id: string) =>
+    setToggled((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
 
   return (
     <Stack gap="lg" ref={ref}>
@@ -117,6 +127,10 @@ export function LearningPath({
           const total = chapter.lessons.length * 3;
           const done = chapter.lessons.filter((l) => completed.has(l.id)).length;
           const goalReached = done === chapter.lessons.length;
+          const locked = !isLessonUnlocked(chapter.lessons[0]!.id, completed);
+          // the chapter with the next lesson is open; finished and locked ones start closed
+          const defaultOpen = chapter.lessons.some((l) => l.id === currentLessonId);
+          const open = defaultOpen !== toggled.has(chapter.id);
 
           // lessons + the trophy at the end of the chapter; short chapters use the full width
           const count = chapter.lessons.length + 1;
@@ -146,211 +160,257 @@ export function LearningPath({
               style={vars}
               aria-labelledby={`chapter-${chapter.id}`}
             >
-              <div className={classes.banner}>
-                <div className={classes.bannerNumber} aria-hidden>
-                  {ci + 1}
-                </div>
-                <Box style={{ flex: 1, minWidth: 0 }}>
-                  <Text size="xs" fw={800} tt="uppercase" c="gray.7">
-                    {t('path.chapter', { n: ci + 1 })}
-                  </Text>
-                  <Text fw={800} fz="lg" id={`chapter-${chapter.id}`} component="h3" m={0}>
-                    {loc(chapter.title)}
-                  </Text>
-                  <div className={classes.bannerBar} aria-hidden>
-                    <div
-                      className={classes.bannerBarFill}
-                      style={{ width: `${(done / chapter.lessons.length) * 100}%` }}
-                    />
-                  </div>
-                </Box>
-                <Group
-                  gap={4}
-                  wrap="nowrap"
-                  role="img"
-                  aria-label={t('path.starsEarned', { earned, total })}
+              <h3 className={classes.heading}>
+                <UnstyledButton
+                  className={classes.banner}
+                  aria-expanded={open}
+                  aria-controls={`chapter-board-${chapter.id}`}
+                  onClick={() => toggle(chapter.id)}
+                  data-testid={`chapter-${chapter.id}`}
                 >
-                  <IconStarFilled size={20} color="var(--mantine-color-yellow-6)" aria-hidden />
-                  <Text fw={800} aria-hidden>
-                    {earned}/{total}
-                  </Text>
-                </Group>
-              </div>
-
-              <div className={classes.board} style={{ height }}>
-                <svg className={classes.road} aria-hidden>
-                  <path
-                    d={road}
-                    fill="none"
-                    stroke="var(--mantine-color-gray-2)"
-                    strokeWidth={30}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                  <span className={classes.bannerNumber} aria-hidden>
+                    {ci + 1}
+                  </span>
+                  <Box component="span" style={{ flex: 1, minWidth: 0 }}>
+                    <Text
+                      component="span"
+                      display="block"
+                      size="xs"
+                      fw={800}
+                      tt="uppercase"
+                      c="gray.7"
+                    >
+                      {t('path.chapter', { n: ci + 1 })}
+                    </Text>
+                    <Text
+                      component="span"
+                      display="block"
+                      fw={800}
+                      fz="lg"
+                      id={`chapter-${chapter.id}`}
+                    >
+                      {loc(chapter.title)}
+                    </Text>
+                    <span className={classes.bannerBar} aria-hidden>
+                      <span
+                        className={classes.bannerBarFill}
+                        style={{ width: `${(done / chapter.lessons.length) * 100}%` }}
+                      />
+                    </span>
+                  </Box>
+                  {!open && goalReached && (
+                    <Group component="span" gap={4} wrap="nowrap" c="gray.8">
+                      <IconTrophy size={22} color="var(--mantine-color-yellow-7)" aria-hidden />
+                      <Text component="span" fw={800} size="sm" visibleFrom="xs">
+                        {t('path.goalDone')}
+                      </Text>
+                    </Group>
+                  )}
+                  {!open && locked && (
+                    <Group component="span" gap={4} wrap="nowrap" c="gray.7">
+                      <IconLock size={20} aria-hidden />
+                      <Text component="span" fw={700} size="sm" visibleFrom="xs">
+                        {t('path.lessonCount', { count: chapter.lessons.length })}
+                      </Text>
+                    </Group>
+                  )}
+                  <Group
+                    component="span"
+                    gap={4}
+                    wrap="nowrap"
+                    role="img"
+                    aria-label={t('path.starsEarned', { earned, total })}
+                  >
+                    <IconStarFilled size={20} color="var(--mantine-color-yellow-6)" aria-hidden />
+                    <Text component="span" fw={800} aria-hidden>
+                      {earned}/{total}
+                    </Text>
+                  </Group>
+                  <IconChevronDown
+                    size={22}
+                    aria-hidden
+                    className={classes.chevron}
+                    data-open={open || undefined}
                   />
-                  {travelled && (
+                </UnstyledButton>
+              </h3>
+
+              <Collapse expanded={open} id={`chapter-board-${chapter.id}`}>
+                <div className={classes.board} style={{ height }}>
+                  <svg className={classes.road} aria-hidden>
                     <path
-                      d={travelled}
+                      d={road}
                       fill="none"
-                      stroke={`var(--mantine-color-${color}-2)`}
+                      stroke="var(--mantine-color-gray-2)"
                       strokeWidth={30}
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     />
-                  )}
-                  <path
-                    d={road}
-                    fill="none"
-                    stroke="#fff"
-                    strokeWidth={4}
-                    strokeDasharray="10 12"
-                    strokeLinecap="round"
-                  />
-                </svg>
-
-                {/* playful decoration in the empty spots of the last row */}
-                {Array.from({ length: emptyCells }, (_, k) => {
-                  const lastRow = rows - 1;
-                  const c = cols - 1 - k;
-                  const col = lastRow % 2 === 0 ? c : cols - 1 - c;
-                  return (
-                    <Emblem
-                      key={k}
-                      aria-hidden
-                      className={classes.emblem}
-                      size={Math.min(64, cell * 0.5)}
-                      style={{
-                        left: (col + 0.5) * cell,
-                        top: top + lastRow * rowHeight,
-                        color: `var(--mantine-color-${color}-2)`,
-                        transform: `translate(-50%, -50%) rotate(${k % 2 ? 12 : -10}deg)`,
-                      }}
+                    {travelled && (
+                      <path
+                        d={travelled}
+                        fill="none"
+                        stroke={`var(--mantine-color-${color}-2)`}
+                        strokeWidth={30}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    )}
+                    <path
+                      d={road}
+                      fill="none"
+                      stroke="#fff"
+                      strokeWidth={4}
+                      strokeDasharray="10 12"
+                      strokeLinecap="round"
                     />
-                  );
-                })}
+                  </svg>
 
-                <ol className={classes.list}>
-                  {chapter.lessons.map((lesson, i) => {
-                    lessonNumber++;
-                    const p = points[i]!;
-                    const stars = progress[lesson.id]?.bestStars ?? 0;
-                    const unlocked = isLessonUnlocked(lesson.id, completed);
-                    const current = lesson.id === currentLessonId && !completed.has(lesson.id);
-                    const state = current
-                      ? 'current'
-                      : stars > 0
-                        ? 'done'
-                        : unlocked
-                          ? 'open'
-                          : 'locked';
-                    const title = loc(lesson.title);
-                    const label = [
-                      t('path.lessonN', { n: lessonNumber }),
-                      title,
-                      state === 'locked'
-                        ? t('path.locked')
-                        : stars > 0
-                          ? t('path.stars', { count: stars })
-                          : t('path.notStarted'),
-                    ].join(', ');
-                    const half = (current ? NODE_CURRENT : NODE) / 2;
-                    const starRow = stars > 0 && (
-                      <span className={classes.stars} aria-hidden>
-                        {[1, 2, 3].map((s) => (
-                          <IconStarFilled
-                            key={s}
-                            size={15}
-                            color={
-                              s <= stars
-                                ? 'var(--mantine-color-yellow-6)'
-                                : 'var(--mantine-color-gray-3)'
-                            }
-                          />
-                        ))}
-                      </span>
-                    );
+                  {/* playful decoration in the empty spots of the last row */}
+                  {Array.from({ length: emptyCells }, (_, k) => {
+                    const lastRow = rows - 1;
+                    const c = cols - 1 - k;
+                    const col = lastRow % 2 === 0 ? c : cols - 1 - c;
                     return (
-                      <li
-                        key={lesson.id}
-                        className={classes.stop}
+                      <Emblem
+                        key={k}
+                        aria-hidden
+                        className={classes.emblem}
+                        size={Math.min(64, cell * 0.5)}
                         style={{
-                          left: p.x,
-                          top: p.y - half,
-                          transform: 'translateX(-50%)',
-                          width: cell,
+                          left: (col + 0.5) * cell,
+                          top: top + lastRow * rowHeight,
+                          color: `var(--mantine-color-${color}-2)`,
+                          transform: `translate(-50%, -50%) rotate(${k % 2 ? 12 : -10}deg)`,
                         }}
-                      >
-                        {state === 'locked' ? (
-                          <span
-                            className={`${classes.node} ${classes.locked}`}
-                            role="img"
-                            aria-label={label}
-                          >
-                            <IconLock size={26} aria-hidden />
-                          </span>
-                        ) : (
-                          <Link
-                            to={`/lesson/${lesson.id}`}
-                            className={`${classes.node} ${classes[state]}`}
-                            aria-label={label}
-                            aria-current={current ? 'step' : undefined}
-                            data-testid={`path-${lesson.id}`}
-                          >
-                            <KindIcon lesson={lesson} size={current ? 38 : 30} />
-                            {starRow}
-                          </Link>
-                        )}
-                        {current && (
-                          <span className={classes.figure} data-testid="path-figure">
-                            <ProfileAvatar avatar={avatar} size={58} />
-                          </span>
-                        )}
-                        <Text
-                          className={classes.title}
-                          maw={cell - 6}
-                          fz={narrow ? 12 : 'sm'}
-                          lang={i18n.language}
-                          aria-hidden
-                        >
-                          {title}
-                        </Text>
-                      </li>
+                      />
                     );
                   })}
-                  {(() => {
-                    const p = points[points.length - 1]!;
-                    return (
-                      <li
-                        className={classes.stop}
-                        style={{
-                          left: p.x,
-                          top: p.y - NODE / 2,
-                          transform: 'translateX(-50%)',
-                          width: cell,
-                        }}
-                      >
-                        <span
-                          className={`${classes.node} ${goalReached ? classes.goalReached : classes.goal}`}
-                          role="img"
-                          aria-label={t(goalReached ? 'path.goalReached' : 'path.goal', {
-                            n: ci + 1,
-                          })}
-                          data-testid={`path-goal-${chapter.id}`}
-                        >
-                          <IconTrophy size={30} aria-hidden />
+
+                  <ol className={classes.list}>
+                    {chapter.lessons.map((lesson, i) => {
+                      lessonNumber++;
+                      const p = points[i]!;
+                      const stars = progress[lesson.id]?.bestStars ?? 0;
+                      const unlocked = isLessonUnlocked(lesson.id, completed);
+                      const current = lesson.id === currentLessonId && !completed.has(lesson.id);
+                      const state = current
+                        ? 'current'
+                        : stars > 0
+                          ? 'done'
+                          : unlocked
+                            ? 'open'
+                            : 'locked';
+                      const title = loc(lesson.title);
+                      const label = [
+                        t('path.lessonN', { n: lessonNumber }),
+                        title,
+                        state === 'locked'
+                          ? t('path.locked')
+                          : stars > 0
+                            ? t('path.stars', { count: stars })
+                            : t('path.notStarted'),
+                      ].join(', ');
+                      const half = (current ? NODE_CURRENT : NODE) / 2;
+                      const starRow = stars > 0 && (
+                        <span className={classes.stars} aria-hidden>
+                          {[1, 2, 3].map((s) => (
+                            <IconStarFilled
+                              key={s}
+                              size={15}
+                              color={
+                                s <= stars
+                                  ? 'var(--mantine-color-yellow-6)'
+                                  : 'var(--mantine-color-gray-3)'
+                              }
+                            />
+                          ))}
                         </span>
-                        <Text
-                          className={classes.title}
-                          maw={cell - 6}
-                          fz={narrow ? 12 : 'sm'}
-                          aria-hidden
+                      );
+                      return (
+                        <li
+                          key={lesson.id}
+                          className={classes.stop}
+                          style={{
+                            left: p.x,
+                            top: p.y - half,
+                            transform: 'translateX(-50%)',
+                            width: cell,
+                          }}
                         >
-                          {goalReached ? t('path.goalDone') : t('path.goalLabel')}
-                        </Text>
-                      </li>
-                    );
-                  })()}
-                </ol>
-              </div>
+                          {state === 'locked' ? (
+                            <span
+                              className={`${classes.node} ${classes.locked}`}
+                              role="img"
+                              aria-label={label}
+                            >
+                              <IconLock size={26} aria-hidden />
+                            </span>
+                          ) : (
+                            <Link
+                              to={`/lesson/${lesson.id}`}
+                              className={`${classes.node} ${classes[state]}`}
+                              aria-label={label}
+                              aria-current={current ? 'step' : undefined}
+                              data-testid={`path-${lesson.id}`}
+                            >
+                              <KindIcon lesson={lesson} size={current ? 38 : 30} />
+                              {starRow}
+                            </Link>
+                          )}
+                          {current && (
+                            <span className={classes.figure} data-testid="path-figure">
+                              <ProfileAvatar avatar={avatar} size={58} />
+                            </span>
+                          )}
+                          <Text
+                            className={classes.title}
+                            maw={cell - 6}
+                            fz={narrow ? 12 : 'sm'}
+                            lang={i18n.language}
+                            aria-hidden
+                          >
+                            {title}
+                          </Text>
+                        </li>
+                      );
+                    })}
+                    {(() => {
+                      const p = points[points.length - 1]!;
+                      return (
+                        <li
+                          className={classes.stop}
+                          style={{
+                            left: p.x,
+                            top: p.y - NODE / 2,
+                            transform: 'translateX(-50%)',
+                            width: cell,
+                          }}
+                        >
+                          <span
+                            className={`${classes.node} ${goalReached ? classes.goalReached : classes.goal}`}
+                            role="img"
+                            aria-label={t(goalReached ? 'path.goalReached' : 'path.goal', {
+                              n: ci + 1,
+                            })}
+                            data-testid={`path-goal-${chapter.id}`}
+                          >
+                            <IconTrophy size={30} aria-hidden />
+                          </span>
+                          <Text
+                            className={classes.title}
+                            maw={cell - 6}
+                            fz={narrow ? 12 : 'sm'}
+                            aria-hidden
+                          >
+                            {goalReached ? t('path.goalDone') : t('path.goalLabel')}
+                          </Text>
+                        </li>
+                      );
+                    })()}
+                  </ol>
+                </div>
+              </Collapse>
             </section>
           );
         })}

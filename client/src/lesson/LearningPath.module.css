@@ -2,14 +2,40 @@
   position: relative;
 }
 
+.heading {
+  margin: 0 0 var(--mantine-spacing-xs);
+  font-size: inherit;
+}
+
 .banner {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: var(--mantine-spacing-md);
   padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
   border-radius: var(--mantine-radius-xl);
   background: var(--chapter-tint);
-  margin-bottom: var(--mantine-spacing-xs);
+  text-align: left;
+}
+
+.banner:focus-visible {
+  outline: 3px solid var(--mantine-color-orange-6);
+  outline-offset: 2px;
+}
+
+.chevron {
+  flex: none;
+  color: var(--mantine-color-gray-7);
+}
+
+.chevron[data-open] {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .chevron {
+    transition: transform 150ms ease;
+  }
 }
 
 .bannerNumber {
@@ -28,6 +54,8 @@
 }
 
 .bannerBar {
+  display: block;
+  margin-top: 2px;
   height: 8px;
   border-radius: 4px;
   background: rgb(255 255 255 / 70%);
@@ -35,6 +63,7 @@
 }
 
 .bannerBarFill {
+  display: block;
   height: 100%;
   border-radius: 4px;
   background: var(--chapter-color);

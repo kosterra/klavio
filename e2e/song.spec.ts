@@ -28,6 +28,18 @@ test('song mode waits for every note; "listen" plays the song first', async ({ p
   await seedCompletedLessons(page, before('hand-entchen'));
   await page.reload();
 
+  // finished chapter 1 is collapsed, the current chapter 2 open; chapter 1 opens on tap
+  const ch1 = page.getByTestId('chapter-keys');
+  await expect(ch1).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.getByTestId('chapter-hand')).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.getByTestId('chapter-read')).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.getByTestId('path-keys-c')).toBeHidden();
+  await audit(page); // collapsed banners ("Geschafft!", locked chapters)
+  await ch1.click();
+  await expect(ch1).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.getByTestId('path-keys-c')).toBeVisible();
+  await audit(page);
+
   await page.getByTestId('path-hand-entchen').click();
   await page.getByRole('button', { name: 'Los geht’s!' }).click();
   const staff = page.getByRole('img', { name: /Noten des Lieds, Zeile 1 von 3/ });
