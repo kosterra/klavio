@@ -252,14 +252,16 @@ export function Landmark({
   world,
   name,
   style,
+  className,
 }: {
   world: WorldId;
   name: string;
   style: CSSProperties;
+  className?: string;
 }) {
   return (
     <svg
-      className={classes.landmark}
+      className={`${classes.landmark} ${className ?? ''}`}
       style={style}
       viewBox="0 0 180 150"
       width={176}

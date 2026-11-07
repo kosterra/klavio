@@ -53,7 +53,7 @@ test('lessons work offline; results are synced when back online', async ({ page,
   await expect(page.getByTestId('offline-badge')).toBeVisible();
   await expect(page.getByTestId('path-keys-c')).toHaveAccessibleName(/3 von 3 Sternen/);
   await expect(page.getByTestId('path-keys-middle-c')).toHaveAttribute('aria-current', 'step');
-  await expect(page.getByText('25', { exact: true })).toBeVisible(); // XP, computed locally
+  await expect(page.getByTestId('xp-total')).toHaveText('25 XP'); // computed locally
 
   if (process.env.E2E_BASE_URL?.startsWith('https')) {
     // with the service worker (production build) the app even starts offline
@@ -70,5 +70,5 @@ test('lessons work offline; results are synced when back online', async ({ page,
   await expect(page.getByTestId('offline-badge')).toHaveCount(0);
   await expect(page.getByTestId('badge-first-lesson')).toHaveAttribute('data-earned', 'true');
   await expect(page.getByTestId('path-keys-c')).toHaveAccessibleName(/3 von 3 Sternen/);
-  await expect(page.getByText('25', { exact: true })).toBeVisible(); // XP, now from the server
+  await expect(page.getByTestId('xp-total')).toHaveText('25 XP'); // now from the server
 });

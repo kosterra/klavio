@@ -28,16 +28,15 @@ import { Landmark } from './Landmarks';
 import type { StickerKind } from './stickerKinds';
 import { Fog, Scenery, Snowfall, WorldGate } from './WorldScenery';
 import {
+  CHAPTER_COLORS,
   CHRISTMAS_STICKERS,
+  chapterVars,
   isChristmasSeason,
   loadRevealed,
   saveRevealed,
   worldOf,
 } from './worlds';
 import classes from './LearningPath.module.css';
-
-/** One colour per chapter (Mantine palette names), repeating. */
-const CHAPTER_COLORS = ['indigo', 'teal', 'grape', 'orange', 'cyan'];
 
 const NODE = 72;
 const NODE_CURRENT = 88;
@@ -115,17 +114,6 @@ function roundedStep(x1: number, y1: number, x2: number, y2: number, radius = 44
 /** Path continuing from the first point (no leading "M"). */
 function continuePath(points: Point[]): string {
   return roadPath(points).replace(/^M [^ ]+ [^ ]+/, '');
-}
-
-/** CSS variables that colour a chapter's world. */
-function chapterVars(color: string) {
-  return {
-    '--chapter-color': `var(--mantine-color-${color}-7)`,
-    '--chapter-light': `var(--mantine-color-${color}-5)`,
-    '--chapter-dark': `var(--mantine-color-${color}-9)`,
-    '--chapter-road-light': `var(--mantine-color-${color}-2)`,
-    '--chapter-road-dark': `var(--mantine-color-${color}-9)`,
-  } as React.CSSProperties;
 }
 
 const HEADER = 92; // height of a chapter's signpost row (phones)

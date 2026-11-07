@@ -1,0 +1,254 @@
+/* ---------------------------------------------------------------- hero */
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--mantine-radius-xl);
+  padding: var(--mantine-spacing-xl) var(--mantine-spacing-xl) 64px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--chapter-color) 24%, var(--klavio-surface)) 0%,
+    color-mix(in srgb, var(--chapter-color) 9%, var(--klavio-surface)) 100%
+  );
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--chapter-color) 25%, transparent);
+
+  --world-hill: color-mix(in srgb, var(--chapter-color) 22%, var(--klavio-surface));
+  --world-hill-2: color-mix(in srgb, var(--chapter-color) 34%, var(--klavio-surface));
+  --world-outline: color-mix(in srgb, var(--chapter-dark) 45%, var(--klavio-surface));
+}
+
+.heroScenery {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40px;
+}
+
+.heroLandmark {
+  display: none;
+}
+
+@media (min-width: 48em) {
+  .heroLandmark {
+    display: block;
+  }
+
+  .heroContent {
+    max-width: calc(100% - 200px);
+  }
+}
+
+.heroContent {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-lg);
+}
+
+.heroTalk {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+}
+
+.heroFigure {
+  flex: none;
+  filter: drop-shadow(0 4px 2px rgb(0 0 0 / 15%));
+}
+
+@media (max-width: 36em) {
+  .hero {
+    padding: var(--mantine-spacing-md) var(--mantine-spacing-md) 56px;
+  }
+}
+
+.heroBubble {
+  position: relative;
+  min-width: 0;
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-lg);
+  border-radius: var(--mantine-radius-lg);
+  background: var(--klavio-surface);
+  box-shadow: 0 3px 0 rgb(0 0 0 / 8%);
+}
+
+.heroBubble::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -12px;
+  margin-top: -12px;
+  border: 12px solid transparent;
+  border-left: 0;
+  border-right-color: var(--klavio-surface);
+}
+
+.heroTitle {
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  overflow-wrap: anywhere;
+}
+
+/* the big play button: a stepping stone like on the path */
+.playStone {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+  align-self: flex-start;
+  max-width: 100%;
+  padding: 14px 26px 14px 14px;
+  border-radius: 22px;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(
+    180deg,
+    var(--mantine-color-orange-7) 0%,
+    var(--mantine-color-orange-9) 80%
+  );
+  box-shadow:
+    0 7px 0 #a63a09,
+    0 12px 18px rgb(0 0 0 / 20%);
+}
+
+.playStone:focus-visible {
+  outline: 4px solid var(--mantine-color-indigo-5);
+  outline-offset: 4px;
+}
+
+.playStone:active {
+  transform: translateY(5px);
+  box-shadow:
+    0 2px 0 #a63a09,
+    0 5px 8px rgb(0 0 0 / 20%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .playStone:hover {
+    transform: translateY(-2px);
+  }
+
+  .playIcon {
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.playIcon {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 25%);
+}
+
+.playText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.playWorld {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.playLabel {
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 36em) {
+  .playStone {
+    align-self: stretch;
+  }
+
+  .playLabel {
+    font-size: 1.25rem;
+  }
+}
+
+/* ---------------------------------------------------------------- tiles */
+.tile {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-md);
+  border: 1px solid;
+  border-radius: var(--mantine-radius-lg);
+}
+
+.tileBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.levelBar {
+  background: var(--klavio-surface);
+}
+
+.flameBox {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+}
+
+.flame {
+  color: var(--mantine-color-orange-6);
+  filter: drop-shadow(0 0 6px rgb(255 146 43 / 60%));
+}
+
+.flameOut {
+  color: var(--mantine-color-gray-5);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flame {
+    animation: flicker 1.4s ease-in-out infinite;
+    transform-origin: bottom center;
+  }
+
+  .goalStar {
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    transform: scale(1) rotate(-2deg);
+  }
+
+  50% {
+    transform: scale(1.08, 1.12) rotate(2deg);
+  }
+}
+
+/* ------------------------------------------------------------- mic hint */
+.micHint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-lg);
+  background: var(--klavio-surface);
+  border: 1px dashed var(--mantine-color-blue-light-hover);
+}
+
+.micText {
+  flex: 1;
+  min-width: 180px;
+}

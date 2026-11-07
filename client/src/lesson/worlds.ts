@@ -1,4 +1,31 @@
+import type { CSSProperties } from 'react';
+import { CURRICULUM } from '@klavio/shared';
 import type { StickerKind } from './stickerKinds';
+
+/** One colour per chapter (Mantine palette names), repeating. */
+export const CHAPTER_COLORS = ['indigo', 'teal', 'grape', 'orange', 'cyan'];
+
+/** CSS variables that colour a chapter's world. */
+export function chapterVars(color: string): CSSProperties {
+  return {
+    '--chapter-color': `var(--mantine-color-${color}-7)`,
+    '--chapter-light': `var(--mantine-color-${color}-5)`,
+    '--chapter-dark': `var(--mantine-color-${color}-9)`,
+    '--chapter-road-light': `var(--mantine-color-${color}-2)`,
+    '--chapter-road-dark': `var(--mantine-color-${color}-9)`,
+  } as CSSProperties;
+}
+
+/** World, colour and index of the chapter a lesson belongs to. */
+export function worldOfLesson(lessonId: string) {
+  const ci = Math.max(
+    0,
+    CURRICULUM.findIndex((c) => c.lessons.some((l) => l.id === lessonId)),
+  );
+  const chapter = CURRICULUM[ci]!;
+  const color = CHAPTER_COLORS[ci % CHAPTER_COLORS.length]!;
+  return { chapter, index: ci, color, world: worldOf(chapter.id, ci), vars: chapterVars(color) };
+}
 
 export type WorldId = 'keys' | 'forest' | 'sea' | 'village' | 'mountain';
 

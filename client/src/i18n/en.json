@@ -81,7 +81,6 @@
     "mascotClassic": "Welcome back.",
     "xp": "XP",
     "level": "Level {{level}}",
-    "streak": "{{count}} day in a row",
     "streak_other": "{{count}} days in a row",
     "dailyGoal": "Daily goal: {{minutes}} minutes",
     "learnPath": "Learning path",
@@ -94,7 +93,14 @@
     "goalReached": "Daily goal reached!",
     "allDone": "You have finished all lessons! New ones are coming soon.",
     "streakLabel_one": "day in a row",
-    "streakLabel_other": "days in a row"
+    "streakLabel_other": "days in a row",
+    "xpToNext": "{{xp}} XP to level {{next}}",
+    "streakKeep": "Play again tomorrow and your fire grows!",
+    "streakZero": "Play today – and your fire starts burning!",
+    "streak_one": "{{count}} day in a row",
+    "micSetupShort": "Set up the microphone once – then I can hear your piano better.",
+    "hideHint": "Hide this hint",
+    "xpTotal": "{{xp}} XP"
   },
   "nav": {
     "home": "Home",

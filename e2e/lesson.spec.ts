@@ -119,7 +119,7 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await expect(page.getByTestId('path-keys-cde')).toHaveAccessibleName(/3 von 3 Sternen/);
   await expect(page.getByTestId('path-keys-f-g')).toHaveAttribute('aria-current', 'step');
   await expect(page.getByRole('link', { name: 'Weiter: F und G' })).toBeVisible();
-  await expect(page.getByText('100', { exact: true })).toBeVisible(); // XP stat
+  await expect(page.getByTestId('xp-total')).toHaveText('100 XP');
   await expect(page.getByTestId('badge-first-lesson')).toHaveAttribute('data-earned', 'true');
   await expect(page.getByTestId('badge-perfect')).toHaveAttribute('data-earned', 'true');
   await expect(page.getByTestId('badge-first-song')).toHaveAttribute('data-earned', 'false');

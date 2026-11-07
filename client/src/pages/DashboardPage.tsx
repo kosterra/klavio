@@ -1,26 +1,6 @@
-import {
-  Alert,
-  Button,
-  Card,
-  Center,
-  Group,
-  Loader,
-  Paper,
-  RingProgress,
-  SimpleGrid,
-  Stack,
-  Text,
-  ThemeIcon,
-  Title,
-} from '@mantine/core';
+import { Button, Card, Center, Flex, Loader, Paper, Stack, Text, Title } from '@mantine/core';
 import { Link } from 'react-router';
-import {
-  IconFlame,
-  IconMicrophone,
-  IconPlayerPlay,
-  IconStar,
-  IconTrophy,
-} from '@tabler/icons-react';
+import { IconPlayerPlay } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useSession } from '../auth/session';
 import { useMidi } from '../input/useMidi';
@@ -32,6 +12,9 @@ import { useProgress } from '../lesson/useProgress';
 import { useLocalized } from '../lesson/useLocalized';
 import { Buddy } from '../components/Buddy';
 import { PrivacyNote } from '../components/PrivacyNote';
+import { HeroStage } from '../dashboard/HeroStage';
+import { StatTiles } from '../dashboard/StatTiles';
+import { MicHint } from '../dashboard/MicHint';
 
 /** Home of a learner: greeting, stats, daily goal and the learning path. */
 export function DashboardPage() {
@@ -43,10 +26,6 @@ export function DashboardPage() {
   if (!activeProfile) return null;
   const current = nextLesson(completed);
   const todayMinutes = Math.floor((progress?.today.seconds ?? 0) / 60);
-  const goalPct = Math.min(
-    100,
-    ((progress?.today.seconds ?? 0) / (activeProfile.dailyGoalMinutes * 60)) * 100,
-  );
   const kids = activeProfile.uiMode === 'kids';
 
   const pathTitle = (
@@ -57,97 +36,64 @@ export function DashboardPage() {
   return (
     <Stack gap="lg" maw={1100} mx="auto">
       <InstallHint />
-      <Paper withBorder radius="xl" p="lg">
-        <Group wrap="nowrap" align="center">
-          <Buddy mood="happy" size={kids ? 110 : 64} />
-          <Stack gap={4}>
-            <Title order={1}>{t('dashboard.greeting', { name: activeProfile.name })}</Title>
-            <Text fz="lg">{kids ? t('dashboard.mascotKids') : t('dashboard.mascotClassic')}</Text>
-            {progress && (
-              <Group mt="xs">
+      {kids ? (
+        <HeroStage
+          name={activeProfile.name}
+          lesson={progress ? current : null}
+          firstTime={completed.size === 0}
+          allDone={!!progress && completed.size === LESSONS.length}
+          greeting={t('dashboard.mascotKids')}
+        />
+      ) : (
+        <Paper withBorder radius="xl" p="lg">
+          {/* stacks on phones, so the button never runs off the card */}
+          <Flex
+            direction={{ base: 'column', xs: 'row' }}
+            gap="md"
+            align={{ base: 'flex-start', xs: 'center' }}
+          >
+            <Buddy mood="happy" size={64} />
+            <Stack gap={4} miw={0}>
+              <Title order={1} style={{ overflowWrap: 'anywhere' }}>
+                {t('dashboard.greeting', { name: activeProfile.name })}
+              </Title>
+              <Text fz="lg">{t('dashboard.mascotClassic')}</Text>
+              {progress && completed.size < LESSONS.length && (
                 <Button
+                  mt="xs"
                   size="lg"
                   component={Link}
                   to={`/lesson/${current.id}`}
                   leftSection={<IconPlayerPlay />}
+                  maw="100%"
+                  styles={{
+                    label: { whiteSpace: 'normal' },
+                    root: { height: 'auto', minHeight: 50 },
+                  }}
                 >
                   {completed.size === 0
                     ? t('dashboard.startFirst')
                     : t('dashboard.continue', { lesson: loc(current.title) })}
                 </Button>
-              </Group>
-            )}
-            {progress && completed.size === LESSONS.length && (
-              <Text c="dimmed">{t('dashboard.allDone')}</Text>
-            )}
-          </Stack>
-        </Group>
-      </Paper>
+              )}
+              {progress && completed.size === LESSONS.length && (
+                <Text c="dimmed">{t('dashboard.allDone')}</Text>
+              )}
+            </Stack>
+          </Flex>
+        </Paper>
+      )}
 
-      <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
-        <Stat
-          color="yellow"
-          icon={<IconStar />}
-          value={activeProfile.xp}
-          label={t('dashboard.xp')}
-        />
-        <Stat
-          color="indigo"
-          icon={<IconTrophy />}
-          value={activeProfile.level}
-          label={t('dashboard.levelLabel')}
-        />
-        <Stat
-          color="orange"
-          icon={<IconFlame />}
-          value={activeProfile.streak.current}
-          label={t('dashboard.streakLabel', { count: activeProfile.streak.current })}
-        />
-        <Card withBorder radius="lg" padding="md" style={tileStyle('teal')}>
-          <Group gap="sm" wrap="nowrap">
-            <RingProgress
-              size={64}
-              thickness={8}
-              roundCaps
-              sections={[{ value: goalPct, color: 'teal' }]}
-              rootColor="var(--klavio-surface)"
-              role="img"
-              aria-label={t('dashboard.todayGoal', {
-                minutes: todayMinutes,
-                goal: activeProfile.dailyGoalMinutes,
-              })}
-            />
-            <div>
-              <Text fw={700}>
-                {goalPct >= 100
-                  ? t('dashboard.goalReached')
-                  : t('dashboard.dailyGoal', { minutes: activeProfile.dailyGoalMinutes })}
-              </Text>
-              <Text size="sm" fw={600}>
-                {t('dashboard.todayGoal', {
-                  minutes: todayMinutes,
-                  goal: activeProfile.dailyGoalMinutes,
-                })}
-              </Text>
-            </div>
-          </Group>
-        </Card>
-      </SimpleGrid>
+      <StatTiles
+        xp={activeProfile.xp}
+        level={activeProfile.level}
+        streak={activeProfile.streak.current}
+        todayMinutes={todayMinutes}
+        goalMinutes={activeProfile.dailyGoalMinutes}
+      />
 
       {activeProfile.calibration.noiseFloorDb === null && midi.devices.length === 0 && (
-        <Alert color="blue" variant="light" icon={<IconMicrophone />} radius="lg">
-          <Group justify="space-between" gap="sm">
-            <Text>{t('dashboard.micSetup')}</Text>
-            <Group gap="xs">
-              <Button component={Link} to="/mic-setup">
-                {t('mic.setup')}
-              </Button>
-              <Button variant="subtle" component={Link} to="/input">
-                {t('dashboard.otherInputs')}
-              </Button>
-            </Group>
-          </Group>
-        </Alert>
+        <MicHint profileId={activeProfile.id} />
       )}
 
       {/* the path's worlds fill the whole panel, the heading sits on the first one */}
@@ -174,44 +120,5 @@ export function DashboardPage() {
 
       <PrivacyNote />
     </Stack>
-  );
-}
-
-/** Tiles in a soft tint of their colour, with a matching border. */
-function tileStyle(color: string): React.CSSProperties {
-  return {
-    background: `var(--mantine-color-${color}-light)`,
-    borderColor: `var(--mantine-color-${color}-light-hover)`,
-  };
-}
-
-function Stat({
-  color,
-  icon,
-  value,
-  label,
-}: {
-  color: string;
-  icon: React.ReactNode;
-  value: number;
-  label: string;
-}) {
-  return (
-    <Card withBorder radius="lg" padding="md" style={tileStyle(color)}>
-      <Group gap="sm" wrap="nowrap">
-        <ThemeIcon size={48} radius="xl" color={color} variant="filled" aria-hidden>
-          {icon}
-        </ThemeIcon>
-        <div>
-          <Text fz={28} fw={800} lh={1}>
-            {value}
-          </Text>
-          {/* normal text colour: grey is too faint on the tinted tiles */}
-          <Text size="sm" fw={600}>
-            {label}
-          </Text>
-        </div>
-      </Group>
-    </Card>
   );
 }
