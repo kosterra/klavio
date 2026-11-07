@@ -1,0 +1,9 @@
+dist
+dev-dist
+coverage
+package-lock.json
+LICENSE
+.claude
+skills-lock.json
+test-results
+playwright-report

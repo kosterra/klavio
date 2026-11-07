@@ -1,0 +1,16 @@
+.avatar {
+  display: flex;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 999px;
+  border: 3px solid transparent;
+
+  &[data-selected] {
+    border-color: var(--mantine-primary-color-filled);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--mantine-primary-color-filled);
+    outline-offset: 2px;
+  }
+}

@@ -1,0 +1,30 @@
+{$SITE_ADDRESS:localhost} {
+	# "internal" = Caddy's local CA (development); an e-mail address = Let's Encrypt
+	tls {$CADDY_TLS:internal}
+	encode zstd gzip
+
+	handle /api/* {
+		reverse_proxy server:3100
+	}
+
+	handle {
+		root * /srv
+		header /assets/* Cache-Control "public, max-age=31536000, immutable"
+		header /sw.js Cache-Control "no-cache"
+		header /index.html Cache-Control "no-cache"
+		try_files {path} /index.html
+		file_server
+	}
+
+	header {
+		# Mantine injects <style> tags at runtime → style-src needs 'unsafe-inline'.
+		# Scripts stay strict ('self' only; wasm for future pitch/ML modules).
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' blob:; connect-src 'self'; worker-src 'self' blob:; manifest-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		Permissions-Policy "microphone=(self), midi=(self), camera=(), geolocation=(), payment=()"
+		Cross-Origin-Opener-Policy "same-origin"
+		-Server
+	}
+}

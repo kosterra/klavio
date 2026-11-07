@@ -1,0 +1,155 @@
+{
+  "common": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "continue": "Continue",
+    "close": "Close",
+    "loading": "One moment …",
+    "error": "Something went wrong. Please try again."
+  },
+  "privacy": {
+    "audioLocal": "What you play stays on your device. We never send or store audio.",
+    "audioLocalShort": "Audio stays on your device"
+  },
+  "welcome": {
+    "title": "Welcome to {{appName}}!",
+    "subtitle": "Learn to play the piano – on your real piano. I'll listen and help you along.",
+    "login": "Sign in",
+    "loginHint": "With fingerprint, face or device PIN – no password needed.",
+    "register": "New account",
+    "registerTitle": "Create a new account",
+    "displayName": "What's your name?",
+    "displayNameHint": "Only shown inside the app. For a family account e.g. “The Smiths”.",
+    "createPasskey": "Create passkey",
+    "whatIsPasskey": "A passkey replaces your password. It is stored securely on your device or in your password manager.",
+    "emailLogin": "Sign in with e-mail code",
+    "recovery": "Use a recovery code",
+    "noPasskeySupport": "This browser does not support passkeys. Please use an up-to-date browser."
+  },
+  "email": {
+    "title": "Sign in with e-mail",
+    "address": "E-mail address",
+    "sendCode": "Send code",
+    "codeSent": "If the address is valid, we've sent you a 6-digit code.",
+    "code": "Code from the e-mail",
+    "verify": "Sign in",
+    "needsName": "There's no account for this address yet. What's your name?",
+    "createAccount": "Create account"
+  },
+  "recoveryLogin": {
+    "title": "Recovery code",
+    "hint": "Enter one of your recovery codes. Each code works only once.",
+    "code": "Code (e.g. ABCDE-FGH23)",
+    "submit": "Sign in",
+    "afterLogin": "You're signed in. Add a new passkey under “Account” now."
+  },
+  "recoveryCodes": {
+    "title": "Your recovery codes",
+    "intro": "If you ever lose access to your passkey, one of these codes gets you back in. Each code works only once.",
+    "warning": "Print the codes or store them safely. They are only shown now.",
+    "print": "Print",
+    "copy": "Copy",
+    "copied": "Copied",
+    "confirm": "I've saved the codes"
+  },
+  "profiles": {
+    "title": "Who's playing today?",
+    "add": "Add profile",
+    "createTitle": "New profile",
+    "name": "Name",
+    "avatar": "Character",
+    "mode": "Style",
+    "modeKids": "Kids",
+    "modeClassic": "Classic",
+    "modeHint": "Lessons are the same in both styles.",
+    "dailyGoal": "Daily goal (minutes)",
+    "create": "Create profile",
+    "empty": "Create a profile for everyone who learns – for example you and your kids.",
+    "switch": "Switch profile",
+    "edit": "Edit profile",
+    "deleteConfirm": "Delete profile “{{name}}” and all its progress?",
+    "limit": "Up to 8 profiles per account."
+  },
+  "avatars": {
+    "fox": "Fox",
+    "owl": "Owl",
+    "cat": "Cat",
+    "bear": "Bear",
+    "frog": "Frog",
+    "whale": "Whale"
+  },
+  "dashboard": {
+    "greeting": "Hi {{name}}!",
+    "mascotKids": "Great to see you! Your first lesson is coming soon.",
+    "mascotClassic": "Welcome back.",
+    "xp": "XP",
+    "level": "Level {{level}}",
+    "streak": "{{count}} day in a row",
+    "streak_other": "{{count}} days in a row",
+    "dailyGoal": "Daily goal: {{minutes}} minutes",
+    "comingSoon": "Lessons are in the works.",
+    "learnPath": "Learning path",
+    "levelLabel": "Level",
+    "streakLabel": "days in a row"
+  },
+  "nav": {
+    "home": "Home",
+    "account": "Account",
+    "admin": "Administration",
+    "logout": "Sign out",
+    "menu": "Menu"
+  },
+  "account": {
+    "title": "Account",
+    "userId": "Account ID",
+    "passkeys": "Passkeys",
+    "passkeysHint": "Each passkey can sign you in. Add a second one, e.g. on your phone, so you never get locked out.",
+    "addPasskey": "Add passkey",
+    "rename": "Rename",
+    "synced": "synced",
+    "lastUsed": "last used {{date}}",
+    "neverUsed": "never used",
+    "deleteConfirm": "Delete passkey “{{name}}”?",
+    "email": "E-mail address (optional)",
+    "emailHint": "Only needed if you also want to sign in with an e-mail code.",
+    "emailNone": "No e-mail address on file.",
+    "emailAdd": "Add e-mail",
+    "emailRemove": "Remove e-mail",
+    "emailVerify": "Confirm",
+    "recoveryCodes": "Recovery codes",
+    "recoveryRemaining": "{{count}} unused codes left.",
+    "recoveryRegenerate": "Generate new codes",
+    "recoveryRegenerateConfirm": "Generate new codes? The old codes stop working.",
+    "danger": "Delete account",
+    "dangerHint": "Deletes your account with all profiles and progress. This cannot be undone.",
+    "deleteAccount": "Delete account permanently",
+    "deleteAccountConfirm": "Really delete everything?"
+  },
+  "admin": {
+    "title": "Administration",
+    "emailLogin": "Allow sign-in with e-mail code",
+    "emailLoginHint": "When off, only passkeys and recovery codes can be used to sign in."
+  },
+  "errors": {
+    "EMAIL_LOGIN_DISABLED": "Sign-in by e-mail is currently disabled.",
+    "EMAIL_CODE_INVALID": "The code is wrong or has expired.",
+    "EMAIL_IN_USE": "This e-mail address is already in use.",
+    "TOO_MANY_CODES": "Too many codes requested. Please wait a few minutes.",
+    "RECOVERY_CODE_INVALID": "This recovery code is invalid or has already been used.",
+    "PASSKEY_UNKNOWN": "We don't know this passkey. Maybe it was deleted?",
+    "PASSKEY_ALREADY_REGISTERED": "This passkey is already registered.",
+    "LAST_LOGIN_METHOD": "This is your last way to sign in – it can't be removed.",
+    "PROFILE_LIMIT": "Up to 8 profiles per account.",
+    "RATE_LIMITED": "Too many attempts. Please wait a moment.",
+    "WEBAUTHN_CANCELLED": "The action was cancelled.",
+    "VALIDATION": "Please check your input."
+  },
+  "validation": {
+    "name": "Please enter a name (max. 40 characters).",
+    "email": "Please enter a valid e-mail address.",
+    "code": "The code has 6 digits.",
+    "recovery": "A code has 10 characters, e.g. ABCDE-FGH23."
+  }
+}
