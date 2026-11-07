@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  ThemeIcon,
   Title,
 } from '@mantine/core';
 import { Link } from 'react-router';
@@ -85,27 +86,31 @@ export function DashboardPage() {
 
       <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
         <Stat
-          icon={<IconStar color="var(--mantine-color-yellow-6)" />}
+          color="yellow"
+          icon={<IconStar />}
           value={activeProfile.xp}
           label={t('dashboard.xp')}
         />
         <Stat
-          icon={<IconTrophy color="var(--mantine-color-indigo-6)" />}
+          color="indigo"
+          icon={<IconTrophy />}
           value={activeProfile.level}
           label={t('dashboard.levelLabel')}
         />
         <Stat
-          icon={<IconFlame color="var(--mantine-color-orange-6)" />}
+          color="orange"
+          icon={<IconFlame />}
           value={activeProfile.streak.current}
           label={t('dashboard.streakLabel', { count: activeProfile.streak.current })}
         />
-        <Card withBorder radius="lg" padding="md">
+        <Card withBorder radius="lg" padding="md" style={tileStyle('teal')}>
           <Group gap="sm" wrap="nowrap">
             <RingProgress
               size={64}
               thickness={8}
               roundCaps
               sections={[{ value: goalPct, color: 'teal' }]}
+              rootColor="var(--klavio-surface)"
               role="img"
               aria-label={t('dashboard.todayGoal', {
                 minutes: todayMinutes,
@@ -118,7 +123,7 @@ export function DashboardPage() {
                   ? t('dashboard.goalReached')
                   : t('dashboard.dailyGoal', { minutes: activeProfile.dailyGoalMinutes })}
               </Text>
-              <Text size="sm" c="dimmed">
+              <Text size="sm" fw={600}>
                 {t('dashboard.todayGoal', {
                   minutes: todayMinutes,
                   goal: activeProfile.dailyGoalMinutes,
@@ -172,16 +177,37 @@ export function DashboardPage() {
   );
 }
 
-function Stat({ icon, value, label }: { icon: React.ReactNode; value: number; label: string }) {
+/** Tiles in a soft tint of their colour, with a matching border. */
+function tileStyle(color: string): React.CSSProperties {
+  return {
+    background: `var(--mantine-color-${color}-light)`,
+    borderColor: `var(--mantine-color-${color}-light-hover)`,
+  };
+}
+
+function Stat({
+  color,
+  icon,
+  value,
+  label,
+}: {
+  color: string;
+  icon: React.ReactNode;
+  value: number;
+  label: string;
+}) {
   return (
-    <Card withBorder radius="lg" padding="md">
+    <Card withBorder radius="lg" padding="md" style={tileStyle(color)}>
       <Group gap="sm" wrap="nowrap">
-        {icon}
+        <ThemeIcon size={48} radius="xl" color={color} variant="filled" aria-hidden>
+          {icon}
+        </ThemeIcon>
         <div>
           <Text fz={28} fw={800} lh={1}>
             {value}
           </Text>
-          <Text size="sm" c="dimmed">
+          {/* normal text colour: grey is too faint on the tinted tiles */}
+          <Text size="sm" fw={600}>
             {label}
           </Text>
         </div>
