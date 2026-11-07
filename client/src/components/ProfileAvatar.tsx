@@ -1,6 +1,6 @@
 import type { Avatar } from '@klavio/shared';
 
-const COLORS: Record<Avatar, { face: string; ear: string }> = {
+const COLORS: Record<Exclude<Avatar, 'klavi'>, { face: string; ear: string }> = {
   fox: { face: '#f08c00', ear: '#d9480f' },
   owl: { face: '#a47148', ear: '#7f5539' },
   cat: { face: '#868e96', ear: '#495057' },
@@ -19,8 +19,9 @@ export function ProfileAvatar({
   size?: number;
   label?: string;
 }) {
-  const c = COLORS[avatar];
   const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true };
+  if (avatar === 'klavi') return <KlaviAvatar size={size} a11y={a11y} />;
+  const c = COLORS[avatar];
   return (
     <svg viewBox="0 0 100 100" width={size} height={size} {...a11y}>
       <circle cx="50" cy="50" r="50" fill="#fff4e6" />
@@ -84,6 +85,32 @@ export function ProfileAvatar({
           strokeLinecap="round"
         />
       )}
+    </svg>
+  );
+}
+
+/** Klavi, the app's mascot, as a round profile figure (same artwork as <Mascot>). */
+function KlaviAvatar({ size, a11y }: { size: number; a11y: Record<string, unknown> }) {
+  return (
+    <svg viewBox="0 0 100 100" width={size} height={size} {...a11y}>
+      <circle cx="50" cy="50" r="50" fill="#e7ecff" />
+      <rect x="66" y="10" width="5.5" height="48" rx="2.75" fill="#1c2559" />
+      <path d="M71.5 12 q17 6 11 23 q-3-11-11-11z" fill="#ffb703" />
+      <ellipse cx="46" cy="64" rx="33" ry="28" fill="#3b5bdb" />
+      <ellipse cx="38" cy="52" rx="13" ry="7" fill="#5c7cfa" opacity="0.6" />
+      <circle cx="26" cy="72" r="5" fill="#ff8fab" opacity="0.7" />
+      <circle cx="66" cy="72" r="5" fill="#ff8fab" opacity="0.7" />
+      <circle cx="35" cy="62" r="6.5" fill="#fff" />
+      <circle cx="57" cy="62" r="6.5" fill="#fff" />
+      <circle cx="36" cy="63" r="3.3" fill="#1c2559" />
+      <circle cx="58" cy="63" r="3.3" fill="#1c2559" />
+      <path
+        d="M37 75 q9 9 18 0"
+        stroke="#1c2559"
+        strokeWidth="3"
+        fill="none"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }

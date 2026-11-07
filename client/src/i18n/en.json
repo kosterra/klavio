@@ -59,12 +59,23 @@
     "passkeyNudgeButton": "Set up passkey"
   },
   "avatars": {
-    "fox": "Fox",
-    "owl": "Owl",
-    "cat": "Cat",
-    "bear": "Bear",
-    "frog": "Frog",
-    "whale": "Whale"
+    "klavi": "the note head",
+    "fox": "the fox",
+    "owl": "the owl",
+    "cat": "the cat",
+    "bear": "the bear",
+    "frog": "the frog",
+    "whale": "the whale",
+    "label": "{{name}}, {{kind}}",
+    "names": {
+      "klavi": "Klavi",
+      "fox": "Flo",
+      "owl": "Olli",
+      "cat": "Mimi",
+      "bear": "Brummi",
+      "frog": "Quaki",
+      "whale": "Walli"
+    }
   },
   "dashboard": {
     "greeting": "Hi {{name}}!",
@@ -263,7 +274,11 @@
     "notStarted": "not played yet",
     "stars": "{{count}} of 3 stars",
     "stars_one": "{{count}} of 3 stars",
-    "starsEarned": "{{earned}} of {{total}} stars"
+    "starsEarned": "{{earned}} of {{total}} stars",
+    "goal": "Goal of chapter {{n}}: not reached yet",
+    "goalReached": "Goal of chapter {{n}}: reached",
+    "goalLabel": "Goal",
+    "goalDone": "Done!"
   },
   "lesson": {
     "close": "End lesson",
