@@ -22,7 +22,7 @@ import {
   type Lesson,
   type ProgressDto,
 } from '@klavio/shared';
-import { ProfileAvatar } from '../components/ProfileAvatar';
+import { Figure } from '../components/Figure';
 import { useLocalized } from './useLocalized';
 import classes from './LearningPath.module.css';
 
@@ -360,7 +360,7 @@ export function LearningPath({
                           )}
                           {current && (
                             <span className={classes.figure} data-testid="path-figure">
-                              <ProfileAvatar avatar={avatar} size={58} />
+                              <Figure avatar={avatar} mood="happy" size={62} />
                             </span>
                           )}
                           <Text

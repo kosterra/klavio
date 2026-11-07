@@ -26,7 +26,7 @@ import { A4Calibrator, CALIBRATION_MIDI, estimateNoiseFloor } from '../audio/cal
 import { gateFromNoiseFloor } from '../audio/pitch/tracker';
 import { useRawNoteEvents } from '../input/noteBus';
 import { LevelMeter } from '../components/Meters';
-import { Mascot } from '../components/Mascot';
+import { Buddy } from '../components/Buddy';
 import { PianoKeyboard } from '../components/PianoKeyboard';
 import { PrivacyNote } from '../components/PrivacyNote';
 
@@ -125,7 +125,7 @@ export function MicSetupPage() {
   return (
     <Stack gap="lg" maw={860} mx="auto">
       <Group wrap="nowrap">
-        <Mascot mood="listen" size={80} />
+        <Buddy mood="listen" size={80} />
         <div>
           <Title order={1}>{t('micSetup.title')}</Title>
           <Text c="dimmed">{t('micSetup.intro')}</Text>

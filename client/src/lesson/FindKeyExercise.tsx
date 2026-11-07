@@ -1,7 +1,7 @@
 import { Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { midiToName, midiToPitchName, type FindKeyExercise as Spec } from '@klavio/shared';
-import { Mascot } from '../components/Mascot';
+import { Buddy } from '../components/Buddy';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { matchingKeys, type ExerciseProps } from './exercises';
 import { useRoundTask } from './useRoundTask';
@@ -35,10 +35,7 @@ export function FindKeyExercise({
 
   return (
     <Stack align="center" gap="lg" w="100%">
-      <Mascot
-        mood={feedback?.ok ? 'cheer' : feedback ? 'think' : 'listen'}
-        size={kids ? 110 : 72}
-      />
+      <Buddy mood={feedback?.ok ? 'cheer' : feedback ? 'think' : 'listen'} size={kids ? 110 : 72} />
       <div aria-live="polite" aria-atomic style={{ textAlign: 'center' }}>
         <Text fz={kids ? 36 : 28} fw={800} data-testid="prompt">
           {t('lesson.findKey', { note: name })}

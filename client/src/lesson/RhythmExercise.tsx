@@ -13,7 +13,7 @@ import {
 import { inputHub, useNoteEvents } from '../input/noteBus';
 import { runMetronome, type MetronomeRun } from '../audio/metronome';
 import { playNote } from '../audio/synth';
-import { Mascot } from '../components/Mascot';
+import { Buddy } from '../components/Buddy';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { Staff, type StaffNote } from '../notation/Staff';
 import type { ExerciseProps } from './exercises';
@@ -203,7 +203,7 @@ export function RhythmExercise({
       data-beat-ms={beatMs}
     >
       <Group gap="md" wrap="nowrap" justify="center">
-        <Mascot
+        <Buddy
           mood={perfect ? 'cheer' : phase === 'result' ? 'think' : 'listen'}
           size={kids ? 80 : 56}
         />

@@ -51,7 +51,7 @@ export function Mascot({ mood = 'happy', size = 120, label }: Props) {
           />
         </>
       ) : (
-        <>
+        <g className={`${classes.part} ${classes.blink}`}>
           <circle cx="42" cy="90" r="9" fill="#fff" />
           <circle cx="74" cy="90" r="9" fill="#fff" />
           <circle
@@ -66,7 +66,7 @@ export function Mascot({ mood = 'happy', size = 120, label }: Props) {
             r="4.5"
             fill="#1c2559"
           />
-        </>
+        </g>
       )}
       {/* mouth */}
       {mood === 'think' ? (

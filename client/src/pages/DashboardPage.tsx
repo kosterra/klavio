@@ -29,7 +29,7 @@ import { BadgeShelf } from '../lesson/Badges';
 import { InstallHint } from '../components/InstallHint';
 import { useProgress } from '../lesson/useProgress';
 import { useLocalized } from '../lesson/useLocalized';
-import { Mascot } from '../components/Mascot';
+import { Buddy } from '../components/Buddy';
 import { PrivacyNote } from '../components/PrivacyNote';
 
 /** Home of a learner: greeting, stats, daily goal and the learning path. */
@@ -53,7 +53,7 @@ export function DashboardPage() {
       <InstallHint />
       <Paper withBorder radius="xl" p="lg">
         <Group wrap="nowrap" align="center">
-          <Mascot mood="happy" size={kids ? 110 : 64} />
+          <Buddy mood="happy" size={kids ? 110 : 64} />
           <Stack gap={4}>
             <Title order={1}>{t('dashboard.greeting', { name: activeProfile.name })}</Title>
             <Text fz="lg">{kids ? t('dashboard.mascotKids') : t('dashboard.mascotClassic')}</Text>

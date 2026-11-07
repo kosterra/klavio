@@ -8,7 +8,7 @@ import {
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import type { LessonResultDto } from '@klavio/shared';
-import { Mascot } from '../components/Mascot';
+import { Buddy } from '../components/Buddy';
 import { NewBadges } from './Badges';
 
 interface Props {
@@ -40,7 +40,7 @@ export function LessonSummary({
   return (
     <Card withBorder radius="xl" padding="xl" maw={560} mx="auto" w="100%">
       <Stack align="center" gap="md">
-        <Mascot mood="cheer" size={120} />
+        <Buddy mood="cheer" size={120} />
         <Title order={1} ta="center">
           {result ? t(`lesson.result${stars}`) : t('lesson.finished')}
         </Title>

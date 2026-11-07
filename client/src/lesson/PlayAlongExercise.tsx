@@ -4,7 +4,7 @@ import { IconCheck } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { midiToPitchName, type PlayAlongExercise as Spec } from '@klavio/shared';
 import { useNoteEvents } from '../input/noteBus';
-import { Mascot } from '../components/Mascot';
+import { Buddy } from '../components/Buddy';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { FEEDBACK_MS, type ExerciseProps } from './exercises';
 import { useNoteLang } from './useLocalized';
@@ -66,7 +66,7 @@ export function PlayAlongExercise({
 
   return (
     <Stack align="center" gap="lg" w="100%">
-      <Mascot
+      <Buddy
         mood={finishedSeq ? 'cheer' : wrong !== null ? 'think' : 'listen'}
         size={kids ? 100 : 64}
       />

@@ -36,7 +36,7 @@ import { endpoints } from '../api/endpoints';
 import { useSession } from '../auth/session';
 import { useErrorText } from '../auth/useErrorText';
 import { useMicErrorText } from '../audio/micErrorText';
-import { Mascot } from '../components/Mascot';
+import { Buddy } from '../components/Buddy';
 import { PrivacyBadge } from '../components/PrivacyNote';
 import { FindKeyExercise } from '../lesson/FindKeyExercise';
 import { PlayAlongExercise } from '../lesson/PlayAlongExercise';
@@ -221,7 +221,7 @@ function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void })
         {phase === 'intro' && (
           <Card withBorder radius="xl" padding="xl" maw={640} mx="auto" w="100%">
             <Stack align="center" gap="md">
-              <Mascot mood="happy" size={kids ? 120 : 80} />
+              <Buddy mood="happy" size={kids ? 120 : 80} />
               {chapter && (
                 <Text size="sm" fw={700} c="indigo.8" tt="uppercase">
                   {loc(chapter.title)}

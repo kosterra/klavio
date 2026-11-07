@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { beatsOf, midiToPitchName, type SongExercise as Spec } from '@klavio/shared';
 import { inputHub, useNoteEvents } from '../input/noteBus';
 import { playMelody, type Playback } from '../audio/synth';
-import { Mascot } from '../components/Mascot';
+import { Buddy } from '../components/Buddy';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { Staff, type StaffNote } from '../notation/Staff';
 import { FEEDBACK_MS, type ExerciseProps } from './exercises';
@@ -126,7 +126,7 @@ export function SongExercise({
   return (
     <Stack align="center" gap="md" w="100%">
       <Group justify="center" gap="md" wrap="nowrap">
-        <Mascot
+        <Buddy
           mood={
             finished
               ? 'cheer'

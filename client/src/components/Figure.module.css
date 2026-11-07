@@ -1,0 +1,113 @@
+/* All motion only when the user has not asked for reduced motion. */
+.part {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .idle {
+    animation: breathe 4s ease-in-out infinite;
+  }
+
+  .cheer {
+    animation: hop 0.8s ease-in-out infinite;
+  }
+
+  .think {
+    animation: ponder 3s ease-in-out infinite;
+  }
+
+  .listen {
+    animation: breathe 2.4s ease-in-out infinite;
+  }
+
+  .blink {
+    animation: blink 5.5s infinite;
+  }
+
+  .glance {
+    animation: glance 7s ease-in-out infinite;
+  }
+
+  .earsListen {
+    animation: twitch 1.2s ease-in-out infinite;
+  }
+
+  .spout {
+    animation: spout 0.8s ease-in-out infinite;
+  }
+}
+
+@keyframes breathe {
+  50% {
+    transform: translateY(-3px) scale(1.02);
+  }
+}
+
+@keyframes hop {
+  50% {
+    transform: translateY(-10%) scale(1.04);
+  }
+}
+
+@keyframes ponder {
+  0%,
+  100% {
+    transform: rotate(-6deg);
+  }
+
+  50% {
+    transform: rotate(-3deg) translateY(-2px);
+  }
+}
+
+@keyframes blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes glance {
+  0%,
+  35%,
+  100% {
+    transform: translateX(0);
+  }
+
+  45%,
+  60% {
+    transform: translateX(-2px);
+  }
+
+  70%,
+  85% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes twitch {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  30% {
+    transform: rotate(-6deg);
+  }
+
+  60% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes spout {
+  50% {
+    transform: translateY(-5px) scaleY(1.3);
+  }
+}
