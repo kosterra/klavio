@@ -15,6 +15,8 @@ export interface PianoKeyboardProps {
   /** Show note names on the white keys (`'c'` = only on C). */
   labels?: 'all' | 'c' | 'none';
   height?: number;
+  /** Small extra label per key, e.g. the computer key that plays it. */
+  keyHint?: (midi: number) => string | undefined;
   /** When set, keys become buttons (on-screen keyboard input). */
   onPress?: (midi: number) => void;
   onRelease?: (midi: number) => void;
@@ -32,6 +34,7 @@ export function PianoKeyboard({
   wrong = [],
   labels = 'c',
   height = 140,
+  keyHint,
   onPress,
   onRelease,
 }: PianoKeyboardProps) {
@@ -102,7 +105,14 @@ export function PianoKeyboard({
     >
       {whites.map((m) => (
         <Tag key={m} className={`${classes.white} ${stateClass(m)}`} {...keyProps(m)}>
-          {label(m)}
+          <span className={classes.labels}>
+            {keyHint?.(m) && (
+              <kbd className={classes.hintKey} aria-hidden>
+                {keyHint(m)}
+              </kbd>
+            )}
+            {label(m)}
+          </span>
         </Tag>
       ))}
       {whites.map((m, i) => {
@@ -114,7 +124,13 @@ export function PianoKeyboard({
             className={`${classes.black} ${stateClass(black)}`}
             style={{ left: `${(i + 1) * keyWidth - keyWidth * 0.3}%`, width: `${keyWidth * 0.6}%` }}
             {...keyProps(black)}
-          />
+          >
+            {keyHint?.(black) && (
+              <kbd className={classes.hintKey} aria-hidden>
+                {keyHint(black)}
+              </kbd>
+            )}
+          </Tag>
         );
       })}
     </div>

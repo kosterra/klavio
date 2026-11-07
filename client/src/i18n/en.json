@@ -79,7 +79,8 @@
     "learnPath": "Learning path",
     "levelLabel": "Level",
     "streakLabel": "days in a row",
-    "micSetup": "First set up the microphone so I can hear your piano well. It takes about a minute."
+    "micSetup": "First set up the microphone so I can hear your piano well. It takes about a minute.",
+    "otherInputs": "Digital piano (MIDI)?"
   },
   "nav": {
     "home": "Home",
@@ -87,7 +88,7 @@
     "admin": "Administration",
     "logout": "Sign out",
     "menu": "Menu",
-    "micTest": "Microphone test"
+    "input": "Input"
   },
   "account": {
     "title": "Account",
@@ -200,5 +201,44 @@
     "testOk": "Great, I can hear you well!",
     "finish": "Save and finish",
     "saved": "Microphone set up."
+  },
+  "input": {
+    "title": "How do you play?",
+    "intro": "Klavio listens through the microphone or reads your digital piano via MIDI. The on-screen keyboard always works.",
+    "activeNow": "Active: {{source}}",
+    "priority": "If a MIDI device is connected, it takes priority. The microphone is then ignored, because it would hear the digital piano a second time.",
+    "connected": "connected",
+    "alwaysOn": "always available",
+    "lastPlayed": "Last played",
+    "ignored": "{{note}} from {{source}} ignored: {{reason}}",
+    "ignoredMidi": "MIDI takes priority.",
+    "ignoredEcho": "that was the sound of the on-screen keyboard.",
+    "source": {
+      "midi": "MIDI",
+      "microphone": "Microphone",
+      "keyboard": "Screen"
+    },
+    "midi": {
+      "title": "Digital piano (MIDI)",
+      "text": "Most accurate: connect your digital piano via USB or Bluetooth.",
+      "connect": "Connect MIDI",
+      "none": "No MIDI device found. Connect your digital piano and switch it on – it will appear automatically.",
+      "unsupported": "This browser does not support MIDI (e.g. Safari on iPad and iPhone, or Firefox). Use the microphone, or Chrome or Edge.",
+      "denied": "Access to MIDI was denied. Allow it in the browser settings."
+    },
+    "mic": {
+      "title": "Microphone",
+      "text": "For an acoustic piano: the device listens when no MIDI device is connected.",
+      "start": "Test here",
+      "on": "listening",
+      "standby": "paused (MIDI)",
+      "calibrated": "Set up, concert pitch A = {{hz}} Hz.",
+      "notCalibrated": "Not set up yet."
+    },
+    "screen": {
+      "title": "On-screen keyboard",
+      "text": "Tap the keys – to try things out or when no piano is around.",
+      "keys": "On a computer the keyboard plays too: A S D F G H J K are the white keys from middle C, W E T Y U the black ones."
+    }
   }
 }

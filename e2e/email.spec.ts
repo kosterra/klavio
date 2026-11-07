@@ -1,5 +1,9 @@
 import { expect, test, type Page } from '@playwright/test';
 import { grantAdmin, loginWithEmail, logout, signUpWithEmail, uniqueEmail } from './helpers';
+import { reopenRegistration } from './global-setup';
+
+// Even if the test is aborted mid-way, never leave registration closed for the next specs.
+test.afterEach(() => reopenRegistration());
 
 async function setRegistrationOpen(page: Page, open: boolean) {
   await page.goto('/admin');

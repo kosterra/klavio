@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { frequencyToMidiFloat } from '@klavio/shared';
-import { noteBus } from '../input/noteBus';
+import { publishNote } from '../input/noteBus';
 import {
   MicError,
   openMicrophone,
@@ -102,7 +102,7 @@ export function usePitchDetection(settings: PitchSettings) {
       s.onFrame((frame) => {
         // The worklet clock has 1 ms resolution in Chrome → show a running average.
         avgCost = avgCost === 0 ? frame.costMs : avgCost * 0.95 + frame.costMs * 0.05;
-        for (const e of t.process(frame)) noteBus.emit(e);
+        for (const e of t.process(frame)) publishNote(e);
         for (const l of frameListeners.current) l(frame);
         const c = frame.candidates[0];
         const freq = c?.frequency ?? null;

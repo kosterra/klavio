@@ -4,9 +4,9 @@ Progressive Web App, mit der Kinder (ab ca. 6 Jahren) und erwachsene Einsteiger 
 spielerisch Klavier lernen. Die App hört über das Mikrofon zu (oder liest ein Digitalpiano per MIDI)
 und wertet das Gespielte aus. Audio wird ausschliesslich lokal im Browser verarbeitet.
 
-> **Stand:** Schritt 4 des Plans – Projektgerüst, Registrierung per E-Mail-Code, Passkeys,
-> Kinderprofile, Tonerkennung über das Mikrofon mit Testseite und Einrichtungsassistent.
-> MIDI, virtuelle Klaviatur als Eingabe und Lektionen folgen.
+> **Stand:** Schritt 5 des Plans – Projektgerüst, Registrierung per E-Mail-Code, Passkeys,
+> Kinderprofile, Tonerkennung über das Mikrofon, MIDI und Bildschirm-Klaviatur auf einer gemeinsamen
+> Eingabe-Schnittstelle. Lektionen folgen.
 
 Der Produktname ist ein Platzhalter. Er steht zentral in
 [`shared/src/config/app.ts`](shared/src/config/app.ts) und wird von UI, Manifest, WebAuthn und E-Mails verwendet.
@@ -92,10 +92,30 @@ npm run check        # Typecheck + ESLint + Prettier + Unit-Tests
   Admin-Schalter, E-Mail-Änderung, Profile und Kontolöschung ab. Nur die WebAuthn-Kryptografie wird
   dort gemockt.
 - **E2E-Tests** nutzen den virtuellen WebAuthn-Authenticator von Chromium, also echte Passkey-Kryptografie,
-  sowie Mailpit für den E-Mail-Code. Sie laufen nacheinander, weil ein Test die Registrierung kurz
-  schliesst. Pro Lauf werden rund zehn Codes angefordert; nach etwa drei Läufen innert zehn Minuten
-  greift das Rate-Limit pro IP (Server neu starten setzt es zurück).
+  sowie Mailpit für den E-Mail-Code, ein virtuelles Mikrofon (WAV-Datei) und ein simuliertes MIDI-Gerät.
+  Sie laufen nacheinander, weil ein Test die Registrierung kurz schliesst. Im Entwicklungsmodus sind
+  Anfragen von localhost von den IP-Limits für E-Mail-Codes ausgenommen. Gegen den Docker-Stack laufen
+  sie stabiler und schneller, weil der Vite-Dev-Server Module erst bei Bedarf übersetzt und unter Last
+  gelegentlich hängt.
 - **Barrierefreiheit:** axe-core prüft die Hauptseiten in Kids- und Classic-Darstellung auf WCAG 2.1 AA.
+
+## Eingaben: MIDI, Mikrofon, Bildschirm-Klaviatur
+
+Alle Eingaben liefern dieselben `NoteEvent`s an `publishNote()` (`client/src/input/noteBus.ts`).
+Der Input-Hub entscheidet, was bei den Übungen ankommt:
+
+1. **MIDI** (Digitalpiano per USB/Bluetooth) hat Vorrang. Solange ein MIDI-Gerät verbunden ist, werden
+   Mikrofon-Töne ignoriert – das Mikrofon würde das Digitalpiano sonst doppelt hören. Geräte werden beim
+   Ein-/Ausstecken erkannt; war MIDI einmal erlaubt, verbindet die App beim Start automatisch.
+2. **Mikrofon** für echte Klaviere (siehe unten).
+3. **Bildschirm-Klaviatur** (`VirtualKeyboard`), immer verfügbar: Touch, Maus, Tastatur-Fokus und am
+   Computer die Tasten A S D F G H J K (weiss) bzw. W E T Z U (schwarz), nach physischer Position –
+   gleich auf Schweizer QWERTZ und US-Tastaturen. Sie spielt einen eigenen Klang; Mikrofon-Töne kurz
+   danach werden als Echo verworfen. Sie leuchtet auch bei Tönen von MIDI und Mikrofon auf.
+
+Die Seite **Eingabe** (`/input`, Menü) zeigt Status und Priorität aller Eingaben und live, welcher Ton
+von wo kam bzw. warum ein Ton ignoriert wurde. Web MIDI gibt es nicht in Safari (iPad/iPhone) und
+Firefox; dort bleiben Mikrofon und Bildschirm-Klaviatur.
 
 ## Tonerkennung (Mikrofon)
 
@@ -152,13 +172,13 @@ server/   Fastify-API
   src/models/     Mongoose-Modelle (User, Passkey, Session, Profile, AuthChallenge, EmailCode, AppSettings)
 client/   React-PWA
   src/audio/      Mikrofon, AudioWorklet, Tonerkennung (pitch/), Kalibrierung
-  src/input/      Note-Bus: gemeinsame Schnittstelle aller Eingaben
+  src/input/      Note-Bus und Input-Hub (Priorität), Web MIDI, Computertastatur
   src/auth/       Session-Kontext, Passkey-Abläufe
-  src/pages/      Willkommen, Registrierung/E-Mail-Login, Profilwahl, Dashboard, Mikrofon-Test,
-                  Mikrofon-Einrichtung, Konto, Verwaltung
+  src/pages/      Willkommen, Registrierung/E-Mail-Login, Profilwahl, Dashboard, Eingabe,
+                  Mikrofon-Test, Mikrofon-Einrichtung, Konto, Verwaltung
   src/components/ Maskottchen «Klavi», Profilfiguren, Layout, Datenschutzhinweis
   src/i18n/       de-CH (Schweizer Schreibweise, kein ß) und en
-e2e/      Playwright-Tests (inkl. virtuellem Mikrofon)
+e2e/      Playwright-Tests (inkl. virtuellem Mikrofon und simuliertem MIDI-Gerät)
 scripts/  Hilfsskripte (Klavieraufnahmen für den Genauigkeitstest laden)
 ```
 

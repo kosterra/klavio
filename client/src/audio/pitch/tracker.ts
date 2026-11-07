@@ -20,8 +20,10 @@ export interface TrackerOptions {
   stableFrames?: number;
   /** Silent frames before a note-off. */
   releaseFrames?: number;
-  /** Level rise (dB) that counts as a new attack, e.g. the same key struck again. */
+  /** Rise of the high-frequency level (dB) that counts as a new attack. */
   onsetDb?: number;
+  /** Overall level rise (dB) needed before the same key counts as struck again. */
+  restrikeRiseDb?: number;
   /** Lowest / highest MIDI note reported. */
   minMidi?: number;
   maxMidi?: number;
@@ -53,6 +55,9 @@ export class NoteTracker {
   private unclearCount = 0;
   private pendingOnset = false;
   private peakDb = -120;
+  /** Levels of the last few frames, and the loudest of them before the latest attack. */
+  private readonly recentLevels: number[] = [];
+  private onsetBaseDb = -120;
   private lastReleased: { midi: number; time: number } | null = null;
 
   constructor(options: TrackerOptions = {}) {
@@ -67,6 +72,7 @@ export class NoteTracker {
       stableFrames: 2,
       releaseFrames: 4,
       onsetDb: 6,
+      restrikeRiseDb: 2,
       minMidi: 33, // A1
       maxMidi: 96, // C7
       toEventTime: (t) => t * 1000,
@@ -98,6 +104,11 @@ export class NoteTracker {
     const events: NoteEvent[] = [];
     const time = o.toEventTime(frame.time);
 
+    // Loudest level of the last ~55 ms: a dropout dips and comes back to it,
+    // a real strike of the same key goes above it.
+    const recentMaxDb = this.recentLevels.length ? Math.max(...this.recentLevels) : -120;
+    this.recentLevels.push(frame.levelDb);
+    if (this.recentLevels.length > 5) this.recentLevels.shift();
     const gate = this.current !== null ? o.gateDb - o.releaseHysteresisDb : o.gateDb;
     if (frame.levelDb < gate) {
       this.candidate = null;
@@ -116,6 +127,7 @@ export class NoteTracker {
       this.candidate = null;
       this.candidateCount = 0;
       this.peakDb = frame.levelDb;
+      this.onsetBaseDb = recentMaxDb;
     } else {
       this.peakDb = Math.max(this.peakDb, frame.levelDb);
     }
@@ -158,6 +170,12 @@ export class NoteTracker {
 
     const isNew = midi !== this.current;
     if (!isNew && !this.pendingOnset) return events;
+    // Same key again: a real hammer strike makes the note louder than it was.
+    // A click or a short dropout of the audio stream does not.
+    if (!isNew && this.peakDb < this.onsetBaseDb + o.restrikeRiseDb) {
+      if (this.candidateCount >= o.stableFrames) this.pendingOnset = false;
+      return events;
+    }
     // The note we just released, coming back without a new attack, is the same
     // string still ringing (level swell), not a new key press.
     if (

@@ -17,6 +17,14 @@ import { AccountPage } from './pages/AccountPage';
 import { AdminPage } from './pages/AdminPage';
 import { MicTestPage } from './pages/MicTestPage';
 import { MicSetupPage } from './pages/MicSetupPage';
+import { InputPage } from './pages/InputPage';
+import { useMidi } from './input/useMidi';
+
+/** Reconnects a previously allowed MIDI device as soon as the app starts. */
+function MidiAutoConnect() {
+  useMidi();
+  return null;
+}
 
 /** Theme follows the active profile's Kids/Classic choice. */
 function ThemedApp({ children }: { children: ReactNode }) {
@@ -28,6 +36,7 @@ function ThemedApp({ children }: { children: ReactNode }) {
   return (
     <MantineProvider theme={themes[mode]} defaultColorScheme="light">
       <Notifications position="top-center" />
+      <MidiAutoConnect />
       {children}
       <ReloadPrompt />
     </MantineProvider>
@@ -106,6 +115,7 @@ export function App() {
                   <Route path="/" element={<DashboardPage />} />
                   <Route path="/mic-test" element={<MicTestPage />} />
                   <Route path="/mic-setup" element={<MicSetupPage />} />
+                  <Route path="/input" element={<InputPage />} />
                 </Route>
               </Route>
             </Route>

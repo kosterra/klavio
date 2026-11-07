@@ -79,7 +79,8 @@
     "learnPath": "Lernpfad",
     "levelLabel": "Level",
     "streakLabel": "Tage in Folge",
-    "micSetup": "Richte zuerst das Mikrofon ein, damit ich dein Klavier gut hören kann. Das dauert eine Minute."
+    "micSetup": "Richte zuerst das Mikrofon ein, damit ich dein Klavier gut hören kann. Das dauert eine Minute.",
+    "otherInputs": "Digitalpiano (MIDI)?"
   },
   "nav": {
     "home": "Start",
@@ -87,7 +88,7 @@
     "admin": "Verwaltung",
     "logout": "Abmelden",
     "menu": "Menü",
-    "micTest": "Mikrofon-Test"
+    "input": "Eingabe"
   },
   "account": {
     "title": "Konto",
@@ -200,5 +201,44 @@
     "testOk": "Super, ich höre dich gut!",
     "finish": "Speichern und fertig",
     "saved": "Mikrofon eingerichtet."
+  },
+  "input": {
+    "title": "Wie spielst du?",
+    "intro": "Klavio hört dir über das Mikrofon zu oder liest dein Digitalpiano per MIDI. Die Klaviatur auf dem Bildschirm geht immer.",
+    "activeNow": "Aktiv: {{source}}",
+    "priority": "Ist ein MIDI-Gerät verbunden, hat es Vorrang. Das Mikrofon wird dann ignoriert, weil es das Digitalpiano sonst doppelt hören würde.",
+    "connected": "verbunden",
+    "alwaysOn": "immer verfügbar",
+    "lastPlayed": "Zuletzt gespielt",
+    "ignored": "{{note}} vom {{source}} ignoriert: {{reason}}",
+    "ignoredMidi": "MIDI hat Vorrang.",
+    "ignoredEcho": "das war der Klang der Bildschirm-Klaviatur.",
+    "source": {
+      "midi": "MIDI",
+      "microphone": "Mikrofon",
+      "keyboard": "Bildschirm"
+    },
+    "midi": {
+      "title": "Digitalpiano (MIDI)",
+      "text": "Am genauesten: Schliesse dein Digitalpiano per USB oder Bluetooth an.",
+      "connect": "MIDI verbinden",
+      "none": "Kein MIDI-Gerät gefunden. Schliesse dein Digitalpiano an und schalte es ein – es erscheint dann automatisch.",
+      "unsupported": "Dieser Browser unterstützt kein MIDI (z. B. Safari auf iPad und iPhone oder Firefox). Nutze das Mikrofon oder Chrome bzw. Edge.",
+      "denied": "Der Zugriff auf MIDI wurde verweigert. Erlaube ihn in den Einstellungen des Browsers."
+    },
+    "mic": {
+      "title": "Mikrofon",
+      "text": "Für ein echtes Klavier: Das Gerät hört zu, wenn kein MIDI-Gerät verbunden ist.",
+      "start": "Hier testen",
+      "on": "hört zu",
+      "standby": "pausiert (MIDI)",
+      "calibrated": "Eingerichtet, Kammerton A = {{hz}} Hz.",
+      "notCalibrated": "Noch nicht eingerichtet."
+    },
+    "screen": {
+      "title": "Bildschirm-Klaviatur",
+      "text": "Tippe auf die Tasten – zum Ausprobieren oder wenn gerade kein Klavier da ist.",
+      "keys": "Am Computer spielt auch die Tastatur: A S D F G H J K sind die weissen Tasten ab dem mittleren C, W E T Z U die schwarzen."
+    }
   }
 }

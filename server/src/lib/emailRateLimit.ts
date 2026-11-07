@@ -2,6 +2,7 @@ import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { HttpError } from './errors.js';
 
 const WINDOW = '10 minutes';
+const LOOPBACK = ['127.0.0.1', '::1', '::ffff:127.0.0.1'];
 
 /**
  * Two limits for the e-mail code endpoints:
@@ -14,12 +15,20 @@ const WINDOW = '10 minutes';
 export function emailRateLimit(
   app: FastifyInstance,
   name: string,
-  { perAddress, perIp }: { perAddress: number; perIp: number },
+  {
+    perAddress,
+    perIp,
+    exemptLoopback = false,
+  }: { perAddress: number; perIp: number; exemptLoopback?: boolean },
 ) {
+  // Development only: requests from this machine (E2E runs) are not limited.
+  // (`allowList` as an array is compared with the generated key, so use a function.)
+  const allowList = (req: FastifyRequest) => exemptLoopback && LOOPBACK.includes(req.ip);
   const ipLimit = app.hasDecorator('createRateLimit')
     ? app.createRateLimit({
         max: perIp,
         timeWindow: WINDOW,
+        allowList,
         keyGenerator: (req) => `${name}:${req.ip}`,
       })
     : null;
@@ -30,6 +39,7 @@ export function emailRateLimit(
         max: perAddress,
         timeWindow: WINDOW,
         hook: 'preHandler' as const, // after validation → the normalised address is available
+        allowList,
         keyGenerator: (req: FastifyRequest) =>
           `${name}:${req.ip}|${(req.body as { email?: string }).email ?? ''}`,
       },

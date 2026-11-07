@@ -4,9 +4,8 @@ import { writeMicFixture } from './fixtures/micAudio';
 
 export const MIC_FIXTURE = join(import.meta.dirname, '..', 'test-results', 'mic-fixture.wav');
 
-/** A previously aborted run may have left registration closed; reopen it. */
-export default function globalSetup() {
-  writeMicFixture(MIC_FIXTURE);
+/** Reopens registration directly in the dev database (no browser needed). */
+export function reopenRegistration() {
   execFileSync('docker', [
     'compose',
     'exec',
@@ -18,4 +17,10 @@ export default function globalSetup() {
     '--eval',
     `db.appsettings.updateOne({ _id: 'global' }, { $set: { registrationOpen: true } })`,
   ]);
+}
+
+/** A previously aborted run may have left registration closed; reopen it. */
+export default function globalSetup() {
+  writeMicFixture(MIC_FIXTURE);
+  reopenRegistration();
 }

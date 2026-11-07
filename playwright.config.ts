@@ -7,7 +7,8 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: 'e2e',
-  timeout: 30_000,
+  // generous: the a11y spec runs many axe audits, and the dev server compiles on demand
+  timeout: 60_000,
   // Specs share one database and the global "registration open" switch → run serially.
   workers: 1,
   globalSetup: './e2e/global-setup.ts',

@@ -14,6 +14,7 @@ import { Link } from 'react-router';
 import { IconFlame, IconMicrophone, IconStar, IconTrophy } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useSession } from '../auth/session';
+import { useMidi } from '../input/useMidi';
 import { Mascot } from '../components/Mascot';
 import { PrivacyNote } from '../components/PrivacyNote';
 
@@ -21,6 +22,7 @@ import { PrivacyNote } from '../components/PrivacyNote';
 export function DashboardPage() {
   const { t } = useTranslation();
   const { activeProfile } = useSession();
+  const midi = useMidi();
   if (!activeProfile) return null;
   const kids = activeProfile.uiMode === 'kids';
 
@@ -62,13 +64,18 @@ export function DashboardPage() {
         </Card>
       </SimpleGrid>
 
-      {activeProfile.calibration.noiseFloorDb === null && (
+      {activeProfile.calibration.noiseFloorDb === null && midi.devices.length === 0 && (
         <Alert color="blue" variant="light" icon={<IconMicrophone />} radius="lg">
           <Group justify="space-between" gap="sm">
             <Text>{t('dashboard.micSetup')}</Text>
-            <Button component={Link} to="/mic-setup">
-              {t('mic.setup')}
-            </Button>
+            <Group gap="xs">
+              <Button component={Link} to="/mic-setup">
+                {t('mic.setup')}
+              </Button>
+              <Button variant="subtle" component={Link} to="/input">
+                {t('dashboard.otherInputs')}
+              </Button>
+            </Group>
           </Group>
         </Alert>
       )}

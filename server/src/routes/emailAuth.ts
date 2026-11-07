@@ -23,8 +23,17 @@ const emailAuthRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer
 ) => {
   const registrationOpen = async () => (await getSettings(config)).registrationOpen;
 
-  const requestLimit = emailRateLimit(app, 'email-request', { perAddress: 5, perIp: 30 });
-  const verifyLimit = emailRateLimit(app, 'email-verify', { perAddress: 10, perIp: 60 });
+  const exemptLoopback = config.NODE_ENV === 'development';
+  const requestLimit = emailRateLimit(app, 'email-request', {
+    perAddress: 5,
+    perIp: 30,
+    exemptLoopback,
+  });
+  const verifyLimit = emailRateLimit(app, 'email-verify', {
+    perAddress: 10,
+    perIp: 60,
+    exemptLoopback,
+  });
 
   app.post(
     '/request',

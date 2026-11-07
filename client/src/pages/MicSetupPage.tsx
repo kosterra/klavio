@@ -24,7 +24,7 @@ import { microphoneSupported } from '../audio/microphone';
 import { useMicErrorText } from '../audio/micErrorText';
 import { A4Calibrator, CALIBRATION_MIDI, estimateNoiseFloor } from '../audio/calibration';
 import { gateFromNoiseFloor } from '../audio/pitch/tracker';
-import { useNoteEvents } from '../input/noteBus';
+import { useRawNoteEvents } from '../input/noteBus';
 import { LevelMeter } from '../components/Meters';
 import { Mascot } from '../components/Mascot';
 import { PianoKeyboard } from '../components/PianoKeyboard';
@@ -94,7 +94,7 @@ export function MicSetupPage() {
   }, [step, a4, noiseFloorDb, onFrame]);
 
   // Step 4: play a few notes.
-  useNoteEvents((e) => {
+  useRawNoteEvents((e) => {
     if (step === 3 && e.type === 'note-on' && e.source === 'microphone') {
       setHeard((h) => (h.includes(e.midi) ? h : [...h, e.midi]));
     }

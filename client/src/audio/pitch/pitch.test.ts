@@ -91,6 +91,23 @@ describe('note tracker', () => {
     expect(ons.map((e) => e.midi)).toEqual(notes);
   });
 
+  it('ignores a click from a dropped audio buffer inside a held note', () => {
+    const tone = pianoTone(69, { duration: 2 });
+    // A dropout makes the waveform jump: a click with lots of high-frequency
+    // energy but hardly any change of the overall level.
+    tone[Math.round(1.2 * SR)]! += 0.25;
+    const ons = runPipeline(tone, SR).events.filter((e) => e.type === 'note-on');
+    expect(ons.map((e) => e.midi)).toEqual([69]);
+  });
+
+  it('ignores a short dropout of the audio stream inside a held note', () => {
+    const tone = pianoTone(69, { duration: 2 });
+    const at = Math.round(1.5 * SR);
+    tone.fill(0, at, at + Math.round(0.03 * SR)); // 30 ms gap, then the note continues
+    const ons = runPipeline(tone, SR).events.filter((e) => e.type === 'note-on');
+    expect(ons.map((e) => e.midi)).toEqual([69]);
+  });
+
   it('applies the A4 calibration', () => {
     // A piano tuned to A4 = 452 Hz is ~47 cents sharp: without calibration its
     // notes fall between two keys and are rejected; with it they are recognised.

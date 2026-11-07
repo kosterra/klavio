@@ -8,7 +8,7 @@ import { useSession } from '../auth/session';
 import { usePitchDetection } from '../audio/usePitchDetection';
 import { microphoneSupported } from '../audio/microphone';
 import { useMicErrorText } from '../audio/micErrorText';
-import { useNoteEvents } from '../input/noteBus';
+import { useRawNoteEvents } from '../input/noteBus';
 import { PianoKeyboard } from '../components/PianoKeyboard';
 import { CentsMeter, LevelMeter } from '../components/Meters';
 import { PrivacyNote } from '../components/PrivacyNote';
@@ -30,7 +30,7 @@ export function MicTestPage() {
   const [log, setLog] = useState<(NoteEvent & { at: number })[]>([]);
   const [startedAt, setStartedAt] = useState(0);
 
-  useNoteEvents((e) => {
+  useRawNoteEvents((e) => {
     if (e.type === 'note-on' && e.source === 'microphone') {
       setLog((l) => [{ ...e, at: e.time - startedAt }, ...l].slice(0, 12));
     }
