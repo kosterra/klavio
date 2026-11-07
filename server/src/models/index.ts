@@ -53,7 +53,6 @@ const sessionSchema = new Schema(
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     activeProfileId: { type: Schema.Types.ObjectId, ref: 'Profile', default: null },
     expiresAt: { type: Date, required: true },
-    userAgent: { type: String, default: '' },
   },
   { timestamps: true },
 );

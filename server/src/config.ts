@@ -7,8 +7,14 @@ const envSchema = z.object({
   HOST: z.string().default('0.0.0.0'),
   PORT: z.coerce.number().int().default(3100),
   MONGO_URL: z.string().default('mongodb://localhost:27017/klavio'),
-  /** Origin the browser sees, e.g. https://localhost:8443 — used for WebAuthn + CSRF origin check. */
-  APP_ORIGIN: z.url().default('http://localhost:5173'),
+  /**
+   * Origin the browser sees, e.g. https://localhost:8443 — used for WebAuthn + CSRF origin check.
+   * Normalised like the browser's Origin header ("https://klavio.ch:443" → "https://klavio.ch").
+   */
+  APP_ORIGIN: z
+    .url()
+    .default('http://localhost:5173')
+    .transform((u) => new URL(u).origin),
   /** WebAuthn relying-party ID: the registrable domain (no scheme, no port). */
   RP_ID: z.string().default('localhost'),
   /** Server-side secret (>= 32 chars) used to HMAC e-mail codes. */

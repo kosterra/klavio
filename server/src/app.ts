@@ -31,7 +31,21 @@ const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 
 export async function buildApp({ config, mailer, rateLimit: withRateLimit = true }: BuildOptions) {
   const app = Fastify({
-    logger: config.NODE_ENV === 'test' ? false : { level: config.LOG_LEVEL },
+    logger:
+      config.NODE_ENV === 'test'
+        ? false
+        : {
+            level: config.LOG_LEVEL,
+            // Data minimisation: no client IP addresses in the logs (rate limits
+            // only keep them in memory for the time window).
+            serializers: {
+              req: (req: { method: string; url: string; id: string }) => ({
+                id: req.id,
+                method: req.method,
+                url: req.url,
+              }),
+            },
+          },
     trustProxy: config.TRUST_PROXY,
     bodyLimit: 64 * 1024,
   }).withTypeProvider<ZodTypeProvider>();

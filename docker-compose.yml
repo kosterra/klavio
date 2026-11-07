@@ -35,10 +35,12 @@ services:
     environment:
       NODE_ENV: production
       MONGO_URL: mongodb://mongo:27017/klavio
-      APP_ORIGIN: https://${SITE_ADDRESS:-localhost}:${HTTPS_PORT:-8443}
+      # The origin the browser sees; set PUBLIC_ORIGIN when it differs (e.g. behind another proxy).
+      APP_ORIGIN: ${PUBLIC_ORIGIN:-https://${SITE_ADDRESS:-localhost}:${HTTPS_PORT:-8443}}
       RP_ID: ${SITE_ADDRESS:-localhost}
       COOKIE_SECURE: 'true'
       TRUST_PROXY: 'true'
+      # Mail goes to Mailpit unless a real SMTP server is configured (see docs/betrieb.md).
       SMTP_HOST: ${SMTP_HOST_DOCKER:-mailpit}
       SMTP_PORT: ${SMTP_PORT_DOCKER:-1025}
     depends_on:

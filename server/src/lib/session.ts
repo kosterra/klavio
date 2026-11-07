@@ -30,7 +30,6 @@ export async function createSession(
     tokenHash: sha256(token),
     userId,
     expiresAt: new Date(Date.now() + maxAge * 1000),
-    userAgent: (req.headers['user-agent'] ?? '').slice(0, 300),
   });
   reply.setCookie(SESSION_COOKIE, token, { ...cookieBase(config), maxAge });
 }
