@@ -145,7 +145,12 @@ function Listen({ step, kids, onSolved, setFeedback }: StepProps<ListenStep>) {
   const play = () => {
     playback.current?.stop();
     const p = playMelody(
-      r.notes.map((m) => ({ midi: m, beats: 1 })),
+      r.notes.map((m) => ({
+        midi: m,
+        beats: 1,
+        velocity: r.velocity,
+        hold: r.touch === 'staccato' ? 0.25 : r.touch === 'legato' ? 1 : undefined,
+      })),
       tempo,
       (i) => setPlaying(i),
     );

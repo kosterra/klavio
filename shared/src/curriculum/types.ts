@@ -240,7 +240,14 @@ export interface ListenStep {
   type: 'listen';
   text: Localized;
   answers: [Localized, Localized];
-  rounds: { notes: number[]; answer: 0 | 1 }[];
+  rounds: {
+    notes: number[];
+    answer: 0 | 1;
+    /** how the notes sound: connected (legato) or short (staccato) */
+    touch?: 'legato' | 'staccato';
+    /** how hard the keys are struck, 0–1 (loud and soft) */
+    velocity?: number;
+  }[];
 }
 
 /** Tap along on the screen with a metronome: one bar, any rhythm values (rests = don't tap). */

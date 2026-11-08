@@ -61,8 +61,8 @@ test('Klavi reads tasks and explanations aloud – automatically for Kids, switc
 
   // Kids profile: the first explanation is read on its own
   await page.getByRole('link', { name: 'Erste Lektion starten' }).click();
-  await expect(page.getByTestId('theory-text')).toContainText('weisse und schwarze');
-  await expect.poll(() => spoken(page)).toEqual([expect.stringContaining('weisse und schwarze')]);
+  await expect(page.getByTestId('theory-text')).toContainText('So sitzt du gut');
+  await expect.poll(() => spoken(page)).toEqual([expect.stringContaining('So sitzt du gut')]);
   const button = page.getByTestId('read-aloud');
   await expect(button).toHaveAttribute('aria-pressed', 'true');
   // tap: stop; tap again: read again

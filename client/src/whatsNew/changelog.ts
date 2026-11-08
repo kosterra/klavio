@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Neues zum Entdecken: wie du gut am Klavier sitzt, gebunden und kurz spielen (legato, staccato), laut und leise (forte, piano) mit Hörspielen, die punktierte Viertel zum Mitklatschen – und Erklärungen zu Achteln und zum Walzer.',
+        'More to discover: how to sit well at the piano, playing connected and short (legato, staccato), loud and soft (forte, piano) with listening games, the dotted quarter to tap along – and explanations of eighths and the waltz.',
+      ),
+      L(
         'Lieder «Im Takt»: Nach dem Kennenlernen spielst du jedes Lied nochmals – mit Einzählen und Metronom. Jetzt zählt auch, ob der Ton zur richtigen Zeit kommt.',
         'Songs «In time»: after getting to know a song, you play it once more – with a count-in and the metronome. Now it also counts whether each note comes at the right time.',
       ),

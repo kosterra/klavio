@@ -674,7 +674,12 @@
       "w": "Whole",
       "h": "Half",
       "q": "Quarter",
-      "qr": "Quarter rest"
+      "qr": "Quarter rest",
+      "qd": "dotted quarter",
+      "hd": "dotted half",
+      "8": "eighth",
+      "hr": "half rest",
+      "wr": "whole rest"
     },
     "beats_one": "{{count}} beat",
     "beats_other": "{{count}} beats",

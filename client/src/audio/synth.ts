@@ -118,7 +118,14 @@ export interface Playback {
  * `onNote(index)` is called as each note starts (for highlighting).
  */
 export function playMelody(
-  notes: { midi: number; beats: number }[],
+  notes: {
+    midi: number;
+    beats: number;
+    /** 0–1, how hard the key is struck */
+    velocity?: number;
+    /** share of the note's length the key is held (staccato ≈ 0.3, legato 1) */
+    hold?: number;
+  }[],
   tempo: number,
   onNote?: (index: number) => void,
 ): Playback {
@@ -135,9 +142,9 @@ export function playMelody(
       setTimeout(() => {
         onNote?.(i);
         // a negative pitch is a rest: keep the time, play nothing
-        voices[i] = n.midi >= 0 ? playNote(n.midi, 0.7) : null;
+        voices[i] = n.midi >= 0 ? playNote(n.midi, n.velocity ?? 0.7) : null;
       }, start),
-      setTimeout(() => voices[i]?.release(), start + length * 0.9),
+      setTimeout(() => voices[i]?.release(), start + length * (n.hold ?? 0.9)),
     );
     t += length;
   });

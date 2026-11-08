@@ -18,6 +18,9 @@ test('the first lesson starts with "Entdecken": explanations, games and a quiz',
   const next = page.getByTestId('theory-next');
   const status = page.getByRole('status');
 
+  // 0 how to sit at the piano
+  await expect(text).toContainText('So sitzt du gut am Klavier');
+  await next.click();
   // 1 explanation with the groups of black keys
   await expect(text).toContainText('weisse und schwarze');
   await audit(page);
@@ -64,7 +67,7 @@ test('the first lesson starts with "Entdecken": explanations, games and a quiz',
   await expect(page.getByTestId('lesson-start')).toBeVisible();
   // the theory can be opened again from the start card
   await page.getByTestId('theory-again').click();
-  await expect(text).toContainText('weisse und schwarze');
+  await expect(text).toContainText('So sitzt du gut am Klavier');
 });
 
 test('quiz: wrong answers get a hint, the right one unlocks "Weiter"', async ({ page }) => {

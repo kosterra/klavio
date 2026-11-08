@@ -11,8 +11,52 @@ const C4_C5 = { from: 60, to: 72 };
  * steps with pictures, games and quizzes. Keyed by lesson id.
  */
 export const LESSON_THEORY: Record<string, TheoryStep[]> = {
+  'meter-eighths': [
+    {
+      type: 'explain',
+      text: L(
+        'Eine Achtelnote hat ein Fähnchen – zwei Achtel hintereinander bekommen einen Balken. Sie sind halb so lang wie eine Viertel. Zähl «eins-und, zwei-und»: Die Achtel kommen auf die Zahl und auf das «und».',
+        'An eighth note has a little flag – two eighths in a row get a beam. They are half as long as a quarter. Count «one-and, two-and»: the eighths come on the number and on the «and».',
+      ),
+    },
+    {
+      type: 'clap',
+      text: L(
+        'Klatsch mit: Viertel, zwei schnelle Achtel, Viertel, Viertel.',
+        'Tap along: quarter, two quick eighths, quarter, quarter.',
+      ),
+      tempo: 72,
+      pattern: ['q', '8', '8', 'q', 'q'],
+    },
+  ],
+  'meter-waltz': [
+    {
+      type: 'explain',
+      text: L(
+        'Der Walzer hat nur drei Schläge pro Takt: «eins, zwei, drei». Der erste ist der schwere – so wiegt sich die Musik hin und her. Eine halbe Note mit Punkt dauert drei Schläge und füllt einen ganzen Takt.',
+        'A waltz has only three beats per bar: «one, two, three». The first one is heavy – that is how the music sways. A dotted half note lasts three beats and fills a whole bar.',
+      ),
+    },
+    {
+      type: 'clap',
+      text: L(
+        'Klatsch mit: eine Halbe und eine Viertel – «eins-zwei, drei».',
+        'Tap along: a half and a quarter – «one-two, three».',
+      ),
+      tempo: 92,
+      pattern: ['h', 'q'],
+    },
+  ],
   // ------------------------------------------------------------ chapter 1
   'keys-c': [
+    {
+      type: 'explain',
+      text: L(
+        'Bevor es losgeht: So sitzt du gut am Klavier. Setz dich vor die Mitte der Tasten, nur auf die vordere Hälfte des Stuhls. Deine Unterarme sind ungefähr waagrecht, die Schultern locker, die Füsse stehen auf dem Boden – oder auf einem Hocker.',
+        'Before we start: this is how you sit well at the piano. Sit in front of the middle of the keys, only on the front half of the chair. Your forearms are about level, your shoulders relaxed, your feet on the floor – or on a stool.',
+      ),
+      picture: { kind: 'sticker', sticker: 'piano' },
+    },
     {
       type: 'explain',
       text: L(
@@ -388,6 +432,27 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     {
       type: 'explain',
       text: L(
+        'Töne kann man verschieden spielen: gebunden (legato) – ein Ton geht weich in den nächsten über, du lässt die Taste erst los, wenn die nächste klingt. Oder kurz (staccato) – die Taste springt sofort wieder hoch. In den Noten steht dafür ein Bogen oder ein Punkt über der Note.',
+        'Notes can be played in different ways: connected (legato) – one note flows softly into the next, you let go of a key only when the next one sounds. Or short (staccato) – the key springs straight back up. In the music this is a curved line or a dot above the note.',
+      ),
+    },
+    {
+      type: 'listen',
+      text: L(
+        'Hör zu: Klingt das gebunden oder kurz?',
+        'Listen: does it sound connected or short?',
+      ),
+      answers: [L('Gebunden', 'Connected'), L('Kurz', 'Short')],
+      rounds: [
+        { notes: [60, 62, 64, 65, 67], answer: 0, touch: 'legato' },
+        { notes: [67, 65, 64, 62, 60], answer: 1, touch: 'staccato' },
+        { notes: [64, 64, 65, 67], answer: 1, touch: 'staccato' },
+        { notes: [67, 65, 64, 62], answer: 0, touch: 'legato' },
+      ],
+    },
+    {
+      type: 'explain',
+      text: L(
         '«Alle meine Entchen» ist ein sehr altes Kinderlied – niemand weiss genau, wer es erfunden hat. Kennst du es? Dann sing beim Spielen mit!',
         '“Alle meine Entchen” is a very old German children’s song – nobody knows exactly who made it up. Do you know it? Then sing along while you play!',
       ),
@@ -604,6 +669,15 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       ),
     },
     {
+      type: 'clap',
+      text: L(
+        'Klatsch mit: zwei Viertel, dann «daaa-da» – die punktierte Viertel und die kurze Achtel.',
+        'Tap along: two quarters, then «daaa-da» – the dotted quarter and the short eighth.',
+      ),
+      tempo: 72,
+      pattern: ['q', 'q', 'qd', '8'],
+    },
+    {
       type: 'listen',
       text: L(
         'Hör zu: Geht die Melodie hinauf oder hinunter?',
@@ -618,6 +692,24 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
   ],
 
   'song-weihnachtsmann': [
+    {
+      type: 'explain',
+      text: L(
+        'Das Klavier heisst eigentlich «Pianoforte»: piano heisst leise, forte heisst laut. Je kräftiger du die Taste drückst, desto lauter klingt sie. In den Noten steht p für leise und f für laut.',
+        'The piano is really called «pianoforte»: piano means soft, forte means loud. The harder you press a key, the louder it sounds. In the music, p means soft and f means loud.',
+      ),
+    },
+    {
+      type: 'listen',
+      text: L('Hör zu: Klingt das laut (f) oder leise (p)?', 'Listen: is it loud (f) or soft (p)?'),
+      answers: [L('Laut (f)', 'Loud (f)'), L('Leise (p)', 'Soft (p)')],
+      rounds: [
+        { notes: [60, 60, 67, 67], answer: 0, velocity: 1 },
+        { notes: [69, 69, 67], answer: 1, velocity: 0.15 },
+        { notes: [65, 65, 64, 64], answer: 1, velocity: 0.15 },
+        { notes: [62, 62, 60], answer: 0, velocity: 1 },
+      ],
+    },
     {
       type: 'explain',
       text: L(

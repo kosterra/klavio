@@ -1,5 +1,6 @@
 import { Group, Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
+import { Staff } from '../../notation/Staff';
 import type { RhythmValue } from '@klavio/shared';
 import classes from './Theory.module.css';
 
@@ -110,6 +111,19 @@ export function NoteValues({ values, pizza = false }: { values: Value[]; pizza?:
 /** One bar as a row of note symbols (for clapping along). */
 export function NoteRow({ pattern }: { pattern: RhythmValue[] }) {
   const { t } = useTranslation();
+  // dotted notes and eighths: real notation (the big symbols only know w, h, q and the rest)
+  if (pattern.some((v) => v === 'qd' || v === 'hd' || v === '8')) {
+    return (
+      <div style={{ width: 'min(100%, 420px)' }}>
+        <Staff
+          clef="treble"
+          bars={[pattern.map((v) => ({ midi: 72, duration: v }))]}
+          height={150}
+          label={pattern.map((v) => t(`theory.values.${v}`, { defaultValue: v })).join(', ')}
+        />
+      </div>
+    );
+  }
   const shown = pattern.map((v): Value =>
     v === 'qr' ? 'qr' : v === 'w' ? 'w' : v.startsWith('h') ? 'h' : 'q',
   );

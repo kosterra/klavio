@@ -674,7 +674,12 @@
       "w": "Ganze",
       "h": "Halbe",
       "q": "Viertel",
-      "qr": "Viertelpause"
+      "qr": "Viertelpause",
+      "qd": "punktierte Viertel",
+      "hd": "punktierte Halbe",
+      "8": "Achtel",
+      "hr": "halbe Pause",
+      "wr": "ganze Pause"
     },
     "beats_one": "{{count}} Schlag",
     "beats_other": "{{count}} Schläge",
