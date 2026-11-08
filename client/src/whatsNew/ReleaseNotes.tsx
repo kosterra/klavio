@@ -26,7 +26,7 @@ function Change({ text }: { text: string }) {
         className={classes.kind}
         // the badges are dark enough on their light background (contrast)
         styles={{
-          label: { color: fix ? 'var(--mantine-color-orange-9)' : 'var(--mantine-color-teal-9)' },
+          label: { color: fix ? '#9c3608' : 'var(--mantine-color-teal-9)' },
         }}
       >
         {fix ? t('whatsNew.fix') : t('whatsNew.new')}
