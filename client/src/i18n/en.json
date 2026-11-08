@@ -522,7 +522,7 @@
   },
   "landing": {
     "headline": "Learn piano – on a real piano, like a game.",
-    "lead": "Klavio listens while you play, shows you step by step what comes next and guides you through five colourful worlds – from your first key to your first song.",
+    "lead": "Klavio listens while you play, shows you step by step what comes next and guides you through colourful worlds – from your first key to playing with both hands.",
     "cta": "Get started",
     "how": "How it works",
     "login": "Log in",
@@ -551,8 +551,8 @@
         "text": "Note detection with the microphone, MIDI for digital pianos, or the on-screen keyboard."
       },
       "worlds": {
-        "title": "Five worlds",
-        "text": "From Key Valley to Rhythm Mountain: a learning path like a board game."
+        "title": "{{count}} worlds",
+        "text": "From Key Valley to Starry Night: a learning path like a board game."
       },
       "discover": {
         "title": "Discover & knowledge",
@@ -571,7 +571,7 @@
         "text": "Several profiles, a kids and a classic look, a parents' area with a PIN."
       }
     },
-    "worldsTitle": "Five worlds are waiting for you",
+    "worldsTitle": "{{count}} worlds are waiting for you",
     "worldsText": "Every chapter is a world of its own. Worlds you haven't reached yet lie in the fog – until you discover them.",
     "tryTitle": "Try it right now",
     "tryText": "Tap or click the keys.",
@@ -627,7 +627,7 @@
     "editorTitle": "My dream song",
     "editorIntro": "Which song would you like to play one day? Klavio shows you along the way how close you are.",
     "songTitle": "Title",
-    "songTitleHint": "For example “Nothing Else Matters – Metallica”",
+    "songTitleHint": "Start typing – Klavio suggests well-known songs. For example “Nothing Else Matters”.",
     "songTitlePlaceholder": "Song – artist",
     "style": "What kind of piece is it?",
     "styles": {
@@ -638,7 +638,7 @@
       "melody": "Melody with accompaniment"
     },
     "needs": "What does the song need?",
-    "needsHint": "A suggestion for this kind of piece – adjust it as you like. Basics like reading notes are always included.",
+    "needsHint": "A suggestion for this song – adjust it as you like. Basics like reading notes are always included.",
     "later": "later",
     "copyright": "Klavio only stores the title – no notes. You get the sheet music of your dream song yourself later, for example as an “easy piano” edition.",
     "save": "Save dream song",
@@ -647,6 +647,13 @@
     "removed": "Dream song removed.",
     "closer": "One step closer to “{{title}}”!",
     "nowYouCan": "New skills: {{skills}}",
-    "percentOfWay": "{{percent}} % of the way done"
+    "percentOfWay": "{{percent}} % of the way done",
+    "recognized": "Recognised: “{{title}}” by {{artist}} – kind of piece and skills are suggested. You can adjust them.",
+    "recognizedNoArtist": "Recognised: “{{title}}” – kind of piece and skills are suggested. You can adjust them.",
+    "guessed": "Klavio doesn't know this song exactly but made a suggestion from the title. Give it a quick check.",
+    "unknown": "Klavio doesn't know this song – choose the kind of piece and what it needs below.",
+    "fuzzy": "Do you mean “{{title}}” by {{artist}}? Kind of piece and skills are suggested.",
+    "fuzzyNoArtist": "Do you mean “{{title}}”? Kind of piece and skills are suggested.",
+    "useTitle": "Use this title"
   }
 }

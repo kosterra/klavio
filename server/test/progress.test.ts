@@ -191,6 +191,7 @@ describe('repetition', () => {
 
     const review = (await complete(jar, first!.id)).json();
     expect(review.review).toBe(true);
+    expect(review.newBadges).toContain('review-first'); // the first repetition medal
     // replay XP (half) + 5 per new star (none) + review bonus
     expect(review.xpGained).toBe(Math.round(first!.xp / 2) + 5);
 

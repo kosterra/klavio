@@ -522,7 +522,7 @@
   },
   "landing": {
     "headline": "Klavier lernen – am echten Klavier, wie im Spiel.",
-    "lead": "Klavio hört dir beim Spielen zu, zeigt dir Schritt für Schritt, was als Nächstes kommt, und führt dich durch fünf bunte Welten – von der ersten Taste bis zum ersten Lied.",
+    "lead": "Klavio hört dir beim Spielen zu, zeigt dir Schritt für Schritt, was als Nächstes kommt, und führt dich durch bunte Welten – von der ersten Taste bis zum Spiel mit beiden Händen.",
     "cta": "Jetzt loslegen",
     "how": "So funktioniert’s",
     "login": "Anmelden",
@@ -551,8 +551,8 @@
         "text": "Tonerkennung über das Mikrofon, MIDI fürs Digitalpiano oder die Bildschirm-Klaviatur."
       },
       "worlds": {
-        "title": "Fünf Welten",
-        "text": "Vom Tasten-Tal bis zum Rhythmus-Berg: ein Lernpfad wie ein Spielbrett."
+        "title": "{{count}} Welten",
+        "text": "Vom Tasten-Tal bis zur Sternen-Nacht: ein Lernpfad wie ein Spielbrett."
       },
       "discover": {
         "title": "Entdecken & Wissen",
@@ -571,7 +571,7 @@
         "text": "Mehrere Profile, Kinder- und Classic-Darstellung, Eltern-Bereich mit PIN."
       }
     },
-    "worldsTitle": "Fünf Welten warten auf dich",
+    "worldsTitle": "{{count}} Welten warten auf dich",
     "worldsText": "Jedes Kapitel ist eine eigene Welt. Noch nicht erreichte Welten liegen im Nebel – bis du sie entdeckst.",
     "tryTitle": "Probier’s gleich aus",
     "tryText": "Tippe auf die Tasten oder klicke sie an.",
@@ -627,7 +627,7 @@
     "editorTitle": "Mein Traumlied",
     "editorIntro": "Welches Lied möchtest du eines Tages spielen? Klavio zeigt dir unterwegs, wie nah du ihm schon bist.",
     "songTitle": "Titel",
-    "songTitleHint": "Zum Beispiel «Nothing Else Matters – Metallica»",
+    "songTitleHint": "Tippe los – Klavio schlägt bekannte Lieder vor. Zum Beispiel «Nothing Else Matters».",
     "songTitlePlaceholder": "Lied – Interpret",
     "style": "Was für ein Stück ist es?",
     "styles": {
@@ -638,7 +638,7 @@
       "melody": "Melodie mit Begleitung"
     },
     "needs": "Was braucht das Lied?",
-    "needsHint": "Vorschlag passend zur Art – du kannst anpassen. Grundlagen wie Noten lesen sind immer dabei.",
+    "needsHint": "Vorschlag passend zum Lied – du kannst anpassen. Grundlagen wie Noten lesen sind immer dabei.",
     "later": "später",
     "copyright": "Klavio speichert nur den Titel – keine Noten. Die Noten deines Traumlieds besorgst du dir später selbst, zum Beispiel als «Easy Piano»-Ausgabe.",
     "save": "Traumlied speichern",
@@ -647,6 +647,13 @@
     "removed": "Traumlied entfernt.",
     "closer": "Ein Schritt näher an «{{title}}»!",
     "nowYouCan": "Neu kannst du: {{skills}}",
-    "percentOfWay": "{{percent}} % des Weges geschafft"
+    "percentOfWay": "{{percent}} % des Weges geschafft",
+    "recognized": "Erkannt: «{{title}}» von {{artist}} – Art und Fähigkeiten sind vorgeschlagen. Du kannst sie anpassen.",
+    "recognizedNoArtist": "Erkannt: «{{title}}» – Art und Fähigkeiten sind vorgeschlagen. Du kannst sie anpassen.",
+    "guessed": "Klavio kennt dieses Lied nicht genau, hat aber aus dem Titel einen Vorschlag gemacht. Prüf ihn kurz.",
+    "unknown": "Dieses Lied kennt Klavio nicht – wähl unten die Art und was es braucht.",
+    "fuzzy": "Meinst du «{{title}}» von {{artist}}? Art und Fähigkeiten sind vorgeschlagen.",
+    "fuzzyNoArtist": "Meinst du «{{title}}»? Art und Fähigkeiten sind vorgeschlagen.",
+    "useTitle": "Titel übernehmen"
   }
 }

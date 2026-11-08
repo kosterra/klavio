@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button, Card, Chip, Group, Select, Stack, Text, TextInput, Title } from '@mantine/core';
-import { IconMusicHeart } from '@tabler/icons-react';
+import { Autocomplete, Button, Card, Chip, Group, Select, Stack, Text, Title } from '@mantine/core';
+import { IconMusicHeart, IconSparkles } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import {
   BASE_SKILLS,
@@ -9,6 +9,9 @@ import {
   SKILL_IDS,
   SKILL_NAMES,
   isSkillTaught,
+  recognizeSong,
+  searchSongs,
+  songLabel,
   type GoalSong,
   type GoalStyle,
   type SkillId,
@@ -35,6 +38,22 @@ export function GoalSongEditor({
   const [style, setStyle] = useState<GoalStyle>(initial?.style ?? 'ballad');
   const [skills, setSkills] = useState<SkillId[]>(initial?.skills ?? GOAL_STYLE_SKILLS.ballad);
   const choosable = SKILL_IDS.filter((s) => !BASE_SKILLS.includes(s));
+  const guess = recognizeSong(title);
+  const suggestions = searchSongs(title);
+  const guessKey = (g: typeof guess) => (g ? (g.song?.title ?? `words:${g.skills.join()}`) : '');
+  // the suggestion last applied – a saved goal keeps its own choice until the title changes
+  const [applied, setApplied] = useState(() => guessKey(recognizeSong(initial?.title ?? '')));
+
+  const changeTitle = (value: string) => {
+    setTitle(value);
+    const next = recognizeSong(value);
+    const key = guessKey(next);
+    if (next && key !== applied) {
+      setStyle(next.style);
+      setSkills(next.skills);
+    }
+    setApplied(key);
+  };
 
   return (
     <Card withBorder radius="lg" padding="lg" id="goal">
@@ -52,14 +71,70 @@ export function GoalSongEditor({
             </Title>
           </Group>
           <Text>{t('goal.editorIntro')}</Text>
-          <TextInput
+          <Autocomplete
             label={t('goal.songTitle')}
             description={t('goal.songTitleHint')}
             placeholder={t('goal.songTitlePlaceholder')}
             maxLength={80}
             value={title}
-            onChange={(e) => setTitle(e.currentTarget.value)}
+            onChange={changeTitle}
+            // our own search: typos, German titles and artists – no further filtering
+            data={suggestions.map(songLabel)}
+            filter={({ options }) => options}
+            limit={8}
+            comboboxProps={{ shadow: 'md' }}
+            renderOption={({ option }) => {
+              const song = suggestions.find((s) => songLabel(s) === option.value);
+              return (
+                <div>
+                  <Text size="sm" fw={600}>
+                    {song?.title ?? option.value}
+                  </Text>
+                  {song?.artist && (
+                    <Text size="xs" c="dimmed">
+                      {song.artist}
+                    </Text>
+                  )}
+                </div>
+              );
+            }}
           />
+          <Text size="sm" aria-live="polite" data-testid="goal-recognized" mt={-8}>
+            {title.trim().length >= 3 &&
+              (guess?.song && guess.fuzzy ? (
+                <Group gap={6} align="baseline">
+                  <span>
+                    <IconSparkles size={14} aria-hidden />{' '}
+                    {t(guess.song.artist ? 'goal.fuzzy' : 'goal.fuzzyNoArtist', {
+                      title: guess.song.title,
+                      artist: guess.song.artist,
+                    })}
+                  </span>
+                  <Button
+                    size="compact-sm"
+                    variant="outline"
+                    color="pink.8"
+                    onClick={() => changeTitle(songLabel(guess.song!))}
+                  >
+                    {t('goal.useTitle')}
+                  </Button>
+                </Group>
+              ) : guess?.song ? (
+                <>
+                  <IconSparkles size={14} aria-hidden />{' '}
+                  {t(guess.song.artist ? 'goal.recognized' : 'goal.recognizedNoArtist', {
+                    title: guess.song.title,
+                    artist: guess.song.artist,
+                  })}
+                </>
+              ) : guess ? (
+                t('goal.guessed')
+              ) : (
+                <Text span c="dimmed" inherit>
+                  {t('goal.unknown')}
+                </Text>
+              ))}
+          </Text>
           <Select
             label={t('goal.style')}
             data={GOAL_STYLES.map((s) => ({ value: s, label: t(`goal.styles.${s}`) }))}

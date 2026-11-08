@@ -135,6 +135,16 @@ Karte. Jede Lektion lehrt eine oder mehrere Fähigkeiten (`LESSON_SKILLS` in
 ist erreicht, wenn alle Lektionen dazu geschafft sind. Fähigkeiten ohne Lektion gelten als «kommt
 später». Der Test verlangt für jede Lektion mindestens eine Fähigkeit.
 
+### Liederliste fürs Traumlied
+
+`shared/src/curriculum/songCatalog.ts` kennt rund 90 bekannte Lieder (Pop, Rock, Film, Klassik,
+Volks- und Kinderlieder) mit Art und Fähigkeiten einer typischen «Easy Piano»-Fassung. Tippt man
+den Titel, erkennt `recognizeSong()` das Lied lokal (ohne Gross-/Kleinschreibung, Akzente und
+Satzzeichen; auch deutsche Titel als `aliases`) und schlägt Art und Fähigkeiten vor. Kennt Klavio
+das Lied nicht, rät es aus Wörtern im Titel («Walzer» → Dreivierteltakt, «Moll» → Moll-Tonarten,
+Komponistennamen → Klassik). Die Liste enthält nur Titel und musikalische Merkmale – keine Noten.
+Neue Lieder: eine Zeile in `ROWS` mit Kurzcodes für die Fähigkeiten.
+
 ## Neues Kapitel
 
 ```ts

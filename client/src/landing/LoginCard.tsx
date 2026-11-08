@@ -67,6 +67,7 @@ export function LoginCard({ onMascotTap }: { onMascotTap?: () => void }) {
             <>
               <Button
                 fullWidth
+                className={landing.wrapButton}
                 size="xl"
                 leftSection={<IconFingerprint />}
                 onClick={onPasskeyLogin}
@@ -81,6 +82,7 @@ export function LoginCard({ onMascotTap }: { onMascotTap?: () => void }) {
           )}
           <Button
             fullWidth
+            className={landing.wrapButton}
             size={passkeysSupported ? 'lg' : 'xl'}
             variant={passkeysSupported ? 'light' : 'filled'}
             leftSection={<IconMail />}
@@ -96,6 +98,7 @@ export function LoginCard({ onMascotTap }: { onMascotTap?: () => void }) {
         {registrationOpen ? (
           <Button
             fullWidth
+            className={landing.wrapButton}
             variant="default"
             size="lg"
             leftSection={<IconUserPlus />}

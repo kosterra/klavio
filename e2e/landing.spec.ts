@@ -10,7 +10,7 @@ test('landing page: sections, login card and easter eggs', async ({ page }) => {
   for (const name of [
     'So funktioniert’s',
     'Was Klavio kann',
-    'Fünf Welten warten auf dich',
+    '8 Welten warten auf dich',
     'Sicher und ehrlich',
     'Häufige Fragen',
   ]) {
@@ -21,6 +21,14 @@ test('landing page: sections, login card and easter eggs', async ({ page }) => {
     '/register',
   );
   await audit(page);
+
+  // visitors can switch light / dark
+  await page.getByRole('button', { name: /Farbschema/ }).click();
+  await page.getByRole('menuitem', { name: 'Dunkel' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-mantine-color-scheme', 'dark');
+  await page.getByRole('button', { name: /Farbschema/ }).click();
+  await page.getByRole('menuitem', { name: 'Hell' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-mantine-color-scheme', 'light');
 
   const status = page.getByRole('status').filter({ hasText: /./ });
 

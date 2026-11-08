@@ -318,3 +318,26 @@
     display: none;
   }
 }
+
+/* login buttons: long labels wrap on narrow phones instead of being cut off */
+.wrapButton {
+  height: auto;
+  min-height: var(--button-height);
+  padding-block: 6px;
+}
+
+.wrapButton :global(.mantine-Button-label) {
+  white-space: normal;
+  text-align: center;
+  line-height: 1.25;
+}
+
+/* light / dark switch in the top right corner of the hero */
+.themeSwitch {
+  position: absolute;
+  top: var(--mantine-spacing-md);
+  right: var(--mantine-spacing-md);
+  z-index: 3;
+  color: var(--mantine-color-indigo-8);
+  box-shadow: 0 3px 0 rgb(0 0 0 / 18%);
+}

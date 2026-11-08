@@ -1,8 +1,6 @@
 .panorama {
   position: relative;
   width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
   padding-top: var(--mantine-spacing-md);
   pointer-events: none;
 
@@ -21,13 +19,15 @@
 .row {
   position: relative;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: flex-end;
-  padding-bottom: 10px;
+  gap: var(--mantine-spacing-xs);
+  padding: 0 var(--mantine-spacing-md) 10px;
 }
 
 .item {
-  flex: 0 1 176px;
+  flex: 1 1 0;
+  max-width: 200px;
   min-width: 0;
 }
 

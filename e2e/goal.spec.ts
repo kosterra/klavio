@@ -16,8 +16,23 @@ test('dream song: set it in the profile, see progress and the next step on the d
 
   // adults are invited to set a dream song
   await page.getByTestId('goal-prompt').getByRole('link', { name: 'Traumlied festlegen' }).click();
-  await page.getByLabel('Titel').fill('Nothing Else Matters – Metallica');
-  await expect(page.getByRole('checkbox', { name: /Pedal/ })).toBeChecked(); // ballad suggestion
+  const titleInput = page.getByRole('combobox', { name: 'Titel' });
+  // a typo is recognised and can be corrected with one tap
+  await titleInput.fill('Nothing Else Matter');
+  await expect(page.getByTestId('goal-recognized')).toContainText(
+    'Meinst du «Nothing Else Matters»',
+  );
+  await page.getByRole('button', { name: 'Titel übernehmen' }).click();
+  await expect(titleInput).toHaveValue('Nothing Else Matters – Metallica');
+  // the dropdown suggests songs while typing
+  await titleInput.fill('metall');
+  await page.getByRole('option', { name: /Nothing Else Matters/ }).click();
+  await expect(titleInput).toHaveValue('Nothing Else Matters – Metallica');
+  // recognised from the built-in song list: minor, 6/8, broken chords, pedal
+  await expect(page.getByTestId('goal-recognized')).toContainText('von Metallica');
+  await expect(page.getByRole('checkbox', { name: /Pedal/ })).toBeChecked();
+  await expect(page.getByRole('checkbox', { name: /Sechsachteltakt/ })).toBeChecked();
+  await expect(page.getByRole('checkbox', { name: /Improvisieren/ })).not.toBeChecked();
   await audit(page);
   await page.getByRole('button', { name: 'Traumlied speichern' }).click();
   await expect(page.getByText('Traumlied gespeichert.')).toBeVisible();

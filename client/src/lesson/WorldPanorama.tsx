@@ -5,7 +5,7 @@ import { CHAPTER_COLORS, chapterVars, worldOf } from './worlds';
 import classes from './WorldPanorama.module.css';
 
 /**
- * All five worlds side by side on rolling hills – a peek at the journey on
+ * All worlds side by side on rolling hills – a peek at the journey on
  * the welcome and profile screens. Purely decorative.
  */
 export function WorldPanorama() {

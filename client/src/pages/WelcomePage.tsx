@@ -35,6 +35,7 @@ import { CHAPTER_COLORS, chapterVars, worldOf } from '../lesson/worlds';
 import { useLocalized } from '../lesson/useLocalized';
 import { LoginCard } from '../landing/LoginCard';
 import { TryKeyboard } from '../landing/TryKeyboard';
+import { ThemeSwitch } from '../landing/ThemeSwitch';
 import { DuckParade, NoteRain } from '../landing/Effects';
 import { tapCounter, useKonami } from '../landing/easterEggs';
 import classes from '../landing/Landing.module.css';
@@ -58,7 +59,7 @@ const STEPS = [
 const ELISE = [76, 75, 76, 75, 76, 71, 74, 72, 69];
 
 /**
- * Public landing page: what Klavio is, how it works, the five worlds and the
+ * Public landing page: what Klavio is, how it works, all the worlds and the
  * privacy promise – with the login card in the hero. A few easter eggs hide
  * here: the Konami code, tapping Klavi and a children's song on the keyboard.
  */
@@ -104,6 +105,7 @@ export function WelcomePage() {
 
       {/* ----------------------------------------------------------- hero */}
       <header className={classes.hero}>
+        <ThemeSwitch />
         <Container size="lg">
           <div className={classes.heroGrid}>
             <div className={classes.heroText}>
@@ -200,7 +202,7 @@ export function WelcomePage() {
                   <f.icon size={28} />
                 </ThemeIcon>
                 <Title order={3} size="h4" mt="sm">
-                  {t(`landing.features.${f.key}.title`)}
+                  {t(`landing.features.${f.key}.title`, { count: CURRICULUM.length })}
                 </Title>
                 <Text>{t(`landing.features.${f.key}.text`)}</Text>
               </div>
@@ -213,7 +215,7 @@ export function WelcomePage() {
       <section className={classes.section} aria-labelledby="worlds-title">
         <Container size="lg">
           <Title order={2} ta="center" id="worlds-title" className={classes.sectionTitle}>
-            {t('landing.worldsTitle')}
+            {t('landing.worldsTitle', { count: CURRICULUM.length })}
           </Title>
           <Text ta="center" fz="lg" maw={640} mx="auto">
             {t('landing.worldsText')}
@@ -262,7 +264,7 @@ export function WelcomePage() {
 
       {/* --------------------------------------------------------- privacy */}
       <section className={classes.section} aria-labelledby="privacy-title">
-        <Container size="md">
+        <Container size="lg">
           <div className={classes.privacy}>
             <ThemeIcon size={72} radius="xl" color="teal" aria-hidden>
               <IconShieldLock size={40} />

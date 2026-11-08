@@ -2,6 +2,7 @@ import { useId } from 'react';
 import { Card, Group, Popover, Stack, Text, Title, UnstyledButton } from '@mantine/core';
 import {
   IconBook,
+  IconBrain,
   IconFlame,
   IconMetronome,
   IconMusic,
@@ -26,6 +27,7 @@ const ICONS: Record<BadgeDef['icon'], typeof IconStarFilled> = {
   book: IconBook,
   sparkles: IconSparkles,
   repeat: IconRepeat,
+  brain: IconBrain,
 };
 
 const COLORS: Record<BadgeDef['icon'], string> = {
@@ -38,6 +40,7 @@ const COLORS: Record<BadgeDef['icon'], string> = {
   book: 'blue.8',
   sparkles: 'pink.7',
   repeat: 'lime.8',
+  brain: 'violet.7',
 };
 
 /** "Neues Abzeichen!" block in the lesson summary. */

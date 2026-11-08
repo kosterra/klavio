@@ -16,6 +16,7 @@ const shared: MantineThemeOverride = {
   components: {
     Button: { defaultProps: { size: 'lg' } },
     TextInput: { defaultProps: { size: 'lg' } },
+    Autocomplete: { defaultProps: { size: 'lg' } },
     PinInput: { defaultProps: { size: 'lg' } },
     ActionIcon: { defaultProps: { size: 'xl' } },
     Switch: { defaultProps: { size: 'lg' } },

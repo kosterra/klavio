@@ -11,6 +11,7 @@ import {
   levelForXp,
   nextStreak,
   progressQuerySchema,
+  REVIEW_INTERVALS,
   starsFor,
   xpFor,
   type LessonProgressDto,
@@ -140,7 +141,7 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
       // Badges: computed from the updated progress; once earned, kept for good.
       const all = await LessonProgress.find(
         { profileId },
-        { lessonId: 1, bestStars: 1, reviews: 1 },
+        { lessonId: 1, bestStars: 1, reviews: 1, reviewBox: 1 },
       ).lean();
       const owned = new Set((profile.badges ?? []).map((b) => b.id!));
       const newBadges = newlyEarnedBadges(
@@ -150,6 +151,7 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
           todaySeconds: today!.seconds,
           dailyGoalMinutes: profile.dailyGoalMinutes,
           reviews: all.reduce((n, l) => n + (l.reviews ?? 0), 0),
+          longTerm: all.filter((l) => (l.reviewBox ?? 0) >= REVIEW_INTERVALS.length - 1).length,
         },
         owned,
       );

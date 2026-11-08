@@ -226,7 +226,7 @@ allen gespielten Lektionen (nicht bewertet).
 ## Startseite und Easter Eggs
 
 `/welcome` ist die öffentliche Startseite (`pages/WelcomePage.tsx`): Kopfbereich mit Anmeldekarte
-(`landing/LoginCard.tsx`), «So funktioniert's», Funktionen, die fünf Welten, eine Klaviatur zum
+(`landing/LoginCard.tsx`), «So funktioniert's», Funktionen, alle Welten, eine Klaviatur zum
 Ausprobieren, Datenschutz und Fragen. Versteckt (`landing/easterEggs.ts`, getestet in
 `e2e/landing.spec.ts`):
 

@@ -10,13 +10,24 @@ export interface BadgeStats {
   dailyGoalMinutes: number;
   /** reviews done while a lesson was due (all lessons together) */
   reviews: number;
+  /** lessons repeated up to the monthly step of the schedule (remembered for good) */
+  longTerm: number;
 }
 
 export interface BadgeDef {
   id: string;
   /** Icon key, mapped to an icon in the client. */
   icon:
-    'star' | 'trophy' | 'music' | 'metronome' | 'flame' | 'target' | 'book' | 'sparkles' | 'repeat';
+    | 'star'
+    | 'trophy'
+    | 'music'
+    | 'metronome'
+    | 'flame'
+    | 'target'
+    | 'book'
+    | 'sparkles'
+    | 'repeat'
+    | 'brain';
   title: Localized;
   /** How to earn it (shown while it is still open). */
   hint: Localized;
@@ -123,6 +134,17 @@ export const BADGES: BadgeDef[] = [
     hint: { 'de-CH': 'Sammle insgesamt 30 Sterne.', en: 'Collect 30 stars in total.' },
     earned: (s) => totalStars(s) >= 30,
   },
+  // repetition: a whole series, so diligent reviewing keeps paying off
+  {
+    id: 'review-first',
+    icon: 'repeat',
+    title: { 'de-CH': 'Gut erinnert', en: 'Well remembered' },
+    hint: {
+      'de-CH': 'Wiederhole eine Lektion, wenn sie fällig ist.',
+      en: 'Review a lesson when it is due.',
+    },
+    earned: (s) => s.reviews >= 1,
+  },
   {
     id: 'memory-pro',
     icon: 'repeat',
@@ -132,6 +154,46 @@ export const BADGES: BadgeDef[] = [
       en: 'Review a lesson ten times when it is due.',
     },
     earned: (s) => s.reviews >= 10,
+  },
+  {
+    id: 'review-25',
+    icon: 'repeat',
+    title: { 'de-CH': 'Fleissig wiederholt', en: 'Diligent reviewer' },
+    hint: {
+      'de-CH': 'Wiederhole 25-mal eine fällige Lektion.',
+      en: 'Review due lessons 25 times.',
+    },
+    earned: (s) => s.reviews >= 25,
+  },
+  {
+    id: 'review-50',
+    icon: 'brain',
+    title: { 'de-CH': 'Elefanten-Gedächtnis', en: 'Memory like an elephant' },
+    hint: {
+      'de-CH': 'Wiederhole 50-mal eine fällige Lektion.',
+      en: 'Review due lessons 50 times.',
+    },
+    earned: (s) => s.reviews >= 50,
+  },
+  {
+    id: 'long-term',
+    icon: 'brain',
+    title: { 'de-CH': 'Für immer gemerkt', en: 'Remembered for good' },
+    hint: {
+      'de-CH': 'Wiederhole eine Lektion so lange, bis sie nur noch einmal im Monat fällig ist.',
+      en: 'Keep reviewing a lesson until it is only due once a month.',
+    },
+    earned: (s) => s.longTerm >= 1,
+  },
+  {
+    id: 'long-term-10',
+    icon: 'brain',
+    title: { 'de-CH': 'Schatzkammer im Kopf', en: 'Treasure chest in your head' },
+    hint: {
+      'de-CH': 'Bring zehn Lektionen bis zum Monats-Takt.',
+      en: 'Bring ten lessons to the monthly step.',
+    },
+    earned: (s) => s.longTerm >= 10,
   },
 ];
 
