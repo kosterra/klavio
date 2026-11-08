@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { signUpWithEmail, uniqueEmail } from './helpers';
+import { addVirtualAuthenticator, signUpWithEmail, uniqueEmail } from './helpers';
 import { audit } from './audit';
 
 /** Types into a Mantine PinInput (first box focused → digits move on by themselves). */
@@ -79,4 +79,47 @@ test('account name and parent PIN protect the parent area', async ({ page }) => 
   );
   await expect(page.getByRole('button', { name: 'Profil löschen' })).toHaveCount(0);
   await audit(page);
+});
+
+test('the input setup belongs to the parent area; a passkey can open it instead of the PIN', async ({
+  page,
+  context,
+}) => {
+  test.setTimeout(90_000);
+  await addVirtualAuthenticator(context, page);
+  await signUpWithEmail(page, uniqueEmail('parentkey'), 'Familie Schlüssel');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Tim');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await expect(page.getByRole('heading', { name: 'Hallo Tim!' })).toBeVisible();
+
+  // parent: a passkey, a PIN, and the passkey switch
+  await page.goto('/account');
+  await page.getByRole('button', { name: 'Passkey hinzufügen' }).click();
+  await expect(page.getByRole('button', { name: /^Löschen:/ })).toHaveCount(1);
+  await page.getByRole('button', { name: 'PIN festlegen' }).click();
+  const pinCard = page
+    .locator('div')
+    .filter({ has: page.getByRole('heading', { name: 'Elternbereich' }) })
+    .last();
+  await typePin(page, pinCard, '1212');
+  await page.getByRole('button', { name: 'Weiter' }).click();
+  await typePin(page, pinCard, '1212');
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
+  const toggle = page.getByRole('switch', { name: 'Elternbereich auch mit Passkey öffnen' });
+  await expect(toggle).not.toBeChecked();
+  await toggle.click({ force: true });
+  await expect(toggle).toBeChecked();
+  await audit(page);
+
+  // the child: the input setup asks for the parents
+  await page.getByRole('button', { name: 'Jetzt sperren' }).click();
+  await page.getByRole('button', { name: 'Tim' }).click();
+  await page.goto('/input');
+  await expect(page.getByText('Gib die Eltern-PIN ein.')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Wie spielst du?' })).toHaveCount(0);
+
+  // a parent opens it with the passkey
+  await page.getByRole('button', { name: 'Mit Passkey öffnen' }).click();
+  await expect(page.getByRole('heading', { name: 'Wie spielst du?' })).toBeVisible();
 });

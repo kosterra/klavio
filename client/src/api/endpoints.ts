@@ -50,6 +50,11 @@ export const endpoints = {
   verifyParentPin: (pin: string) =>
     api<{ unlockedUntil: string | null }>('POST', '/account/pin/verify', { pin }),
   lockParentArea: () => api('POST', '/account/pin/lock'),
+  setParentPasskey: (enabled: boolean) => api('PUT', '/account/pin/passkey', { enabled }),
+  parentPasskeyOptions: () =>
+    api<PublicKeyCredentialRequestOptionsJSON>('POST', '/account/pin/passkey/options'),
+  parentPasskeyVerify: (response: AuthenticationResponseJSON) =>
+    api<{ unlockedUntil: string | null }>('POST', '/account/pin/passkey/verify', { response }),
 
   profiles: () => api<ProfileDto[]>('GET', '/profiles'),
   createProfile: (body: ProfileInput) => api<ProfileDto>('POST', '/profiles', body),

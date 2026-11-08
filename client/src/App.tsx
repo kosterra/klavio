@@ -18,6 +18,7 @@ import { themes } from './theme/theme';
 import { AppLayout } from './components/AppLayout';
 import { ReloadPrompt } from './components/ReloadPrompt';
 import { Mascot } from './components/Mascot';
+import { WhatsNewPage } from './whatsNew/WhatsNewPage';
 import { WelcomePage } from './pages/WelcomePage';
 import { EmailLoginPage } from './pages/EmailLoginPage';
 import { ProfilesPage } from './pages/ProfilesPage';
@@ -169,14 +170,37 @@ export function App() {
                   </Route>
                   <Route element={<RequireProfile />}>
                     <Route path="/" element={<DashboardPage />} />
-                    <Route path="/mic-test" element={<MicTestPage />} />
-                    <Route path="/mic-setup" element={<MicSetupPage />} />
-                    <Route path="/input" element={<InputPage />} />
+                    <Route
+                      path="/mic-test"
+                      element={
+                        <ParentGate>
+                          <MicTestPage />
+                        </ParentGate>
+                      }
+                    />
+                    <Route
+                      path="/mic-setup"
+                      element={
+                        <ParentGate>
+                          <MicSetupPage />
+                        </ParentGate>
+                      }
+                    />
+                    <Route
+                      path="/input"
+                      element={
+                        <ParentGate>
+                          <InputPage />
+                        </ParentGate>
+                      }
+                    />
                     <Route path="/profile" element={<ProfileSettingsPage />} />
                     <Route path="/knowledge" element={<KnowledgePage />} />
                   </Route>
                 </Route>
               </Route>
+              {/* for visitors and learners alike */}
+              <Route path="/whats-new" element={<WhatsNewPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>

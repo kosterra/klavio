@@ -108,6 +108,7 @@ export function ImproviseExercise({
         mood={phase === 'done' ? 'cheer' : phase === 'play' ? 'happy' : 'listen'}
         size={kids ? 90 : 64}
         kids={kids}
+        say={t('lesson.improvise.ready')}
       >
         <Text fz={kids ? 26 : 22} fw={800} ta="center" aria-live="polite">
           {phase === 'ready'

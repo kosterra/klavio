@@ -10,6 +10,7 @@ import {
 } from 'fastify-type-provider-zod';
 import type { AppConfig } from './config.js';
 import authPlugin from './plugins/auth.js';
+import { registerWeb } from './plugins/web.js';
 import { HttpError } from './lib/errors.js';
 import { createMailer, type Mailer } from './lib/mailer.js';
 import authRoutes from './routes/auth.js';
@@ -63,7 +64,13 @@ export async function buildApp({ config, mailer, rateLimit: withRateLimit = true
   });
   await app.register(cookie);
   if (withRateLimit) {
-    await app.register(rateLimit, { global: true, max: 300, timeWindow: '1 minute' });
+    await app.register(rateLimit, {
+      global: true,
+      max: 300,
+      timeWindow: '1 minute',
+      // only the API: the app's own files (one page load fetches dozens) are not counted
+      allowList: (req) => !req.url.startsWith('/api/'),
+    });
   }
 
   // CSRF defence in depth (cookies are SameSite=Lax already): state-changing
@@ -111,6 +118,9 @@ export async function buildApp({ config, mailer, rateLimit: withRateLimit = true
     },
     { prefix: '/api' },
   );
+
+  // the Docker image: one server for app and API
+  if (config.STATIC_DIR) await registerWeb(app, config, config.STATIC_DIR);
 
   return app;
 }

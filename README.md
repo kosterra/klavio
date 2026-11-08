@@ -23,6 +23,8 @@ Der Produktname ist ein Platzhalter. Er steht zentral in
   wieder («Heute wiederholen», Markierung im Lernpfad, Bonus-XP); dazu die «Schnelle Runde» mit
   gemischten Fragen aus allen gespielten Lektionen. Fleissiges Wiederholen bringt eigene Medaillen
   (1, 10, 25 und 50 Wiederholungen; «Für immer gemerkt», wenn eine Lektion beim Monats-Takt ist).
+- **Klavi liest vor:** Aufgaben und Erklärungen auf Knopfdruck oder automatisch (für Kids-Profile
+  voreingestellt) – mit Stimmen, die auf dem Gerät installiert sind; das Mikrofon pausiert dabei.
 - **Übungen:** Finde die Taste, Spiel nach, Notenlesen, Lied spielen mit «Warte auf mich»,
   Rhythmus mit Metronom.
 - **Eingaben:** Tonerkennung über das Mikrofon (98,6 % der Töne C2–C6 korrekt und innert 100 ms
@@ -35,6 +37,7 @@ Der Produktname ist ein Platzhalter. Er steht zentral in
   Profilverwaltung.
 - **Anmeldung:** Registrierung per E-Mail-Code, danach Passkeys (Fingerabdruck, Gesicht, Geräte-PIN).
 - **Offline:** installierbar, Lektionen funktionieren ohne Internet, Ergebnisse werden nachgereicht.
+- **Was ist neu:** `/whats-new` zeigt die Versionen mit ihren Änderungen (auch im Menü).
 - **Sprachen:** Deutsch (Schweiz) und Englisch. Helles und dunkles Farbschema (automatisch nach Gerät
   oder wählbar). Barrierefreiheit nach WCAG 2.1 AA geprüft, in beiden Farbschemata.
 
@@ -48,6 +51,21 @@ Der Produktname ist ein Platzhalter. Er steht zentral in
 | [Betrieb](docs/betrieb.md)             | Eigene Instanz mit Domain, Konfiguration, Sicherung, Updates, Sicherheit |
 | [Datenschutz](docs/datenschutz.md)     | Welche Daten wo liegen, was nicht gespeichert wird, Löschung             |
 
+## Versionen und Images
+
+Versionen heissen `{Jahr}.{Monat}.{Folge}` (z. B. `2026.11.0`) und stehen in der `package.json` im
+Hauptverzeichnis (`node scripts/version.mjs next` setzt die nächste). GitHub Actions:
+
+- **checks** – Typen, Lint, Formatierung, Unit-Tests, Builds und die Browser-Tests (Playwright gegen
+  Server, MongoDB und Mailpit); für Pull Requests nach `develop` und von den anderen Workflows.
+- **develop** – jeder Push auf `develop`: Checks, dann das Image `kosterra/klavio:develop`.
+- **release** – jeder Merge nach `main`: Git-Tag der Version, Image `kosterra/klavio:<version>` und
+  `:latest`, signiert (cosign) mit Provenienz und SBOM.
+
+Die Secrets `DOCKERHUB_USER` und `DOCKERHUB_PASSWORD` (Access Token) stehen in den
+Repository-Einstellungen. Ablauf und Regeln: `.claude/skills/versioning`, «Was ist neu»:
+`.claude/skills/whats-new`.
+
 ## Stack
 
 | Bereich  | Technologie                                                                             |
@@ -57,7 +75,7 @@ Der Produktname ist ein Platzhalter. Er steht zentral in
 | PWA      | vite-plugin-pwa (Workbox)                                                               |
 | Backend  | Node 24, Fastify 5, zod 4, Mongoose 9 / MongoDB 8                                       |
 | Auth     | Passkeys mit `@simplewebauthn` 14, E-Mail-Codes, httpOnly-Session-Cookies               |
-| Betrieb  | Docker Compose: Caddy (TLS, statische Dateien, Reverse Proxy), Server, MongoDB          |
+| Betrieb  | Ein Image `kosterra/klavio` (App + API), davor Caddy für TLS; MongoDB; GitHub Actions   |
 | Tests    | Vitest, `mongodb-memory-server`, Playwright, axe-core                                   |
 
 Statt PrimeReact wird Mantine verwendet: PrimeReact 11 und PrimeIcons 8 stehen unter einer
@@ -84,8 +102,8 @@ npm run dev                         # API :3100, App http://localhost:5173
 ### Kompletter Stack mit HTTPS
 
 ```bash
-docker compose up -d --build        # https://localhost:8443
-docker compose cp web:/data/caddy/pki/authorities/local/root.crt ./caddy-root.crt
+docker compose up -d --build mongo mailpit app caddy   # https://localhost:8443
+docker compose cp caddy:/data/caddy/pki/authorities/local/root.crt ./caddy-root.crt
 ```
 
 Caddy stellt mit seiner lokalen CA ein Zertifikat aus. Browser verweigern Passkeys und Service Worker

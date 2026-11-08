@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import rootPackage from '../package.json' with { type: 'json' };
 import { audit } from './audit';
 import { signUpWithEmail, uniqueEmail } from './helpers';
 
@@ -78,4 +79,62 @@ test('profile page: the own figure plays its tune after five taps', async ({ pag
   await page.screenshot({
     path: `${process.env.E2E_SCREENSHOTS ?? 'test-results'}/egg-profile.png`,
   });
+});
+
+test('language: switch on the landing page, remembered on this device, also in the app menu', async ({
+  page,
+}) => {
+  await page.goto('/welcome');
+  await page.getByRole('button', { name: 'English' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: /Learn piano/ })).toBeVisible();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await page.reload();
+  await expect(page.getByRole('heading', { level: 1, name: /Learn piano/ })).toBeVisible();
+
+  // link previews: description and image are in the page head
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    'content',
+    /og-image\.jpg$/,
+  );
+  const image = await page.request.get('/og-image.jpg');
+  expect(image.headers()['content-type']).toContain('image/jpeg');
+
+  await page.getByRole('button', { name: 'Deutsch' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: /Klavier lernen/ })).toBeVisible();
+
+  // in the app: the profile menu offers the languages too
+  await signUpWithEmail(page, uniqueEmail('lang'), 'Familie Sprache');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Mia');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
+  await page.getByRole('button', { name: 'Menü' }).click();
+  await page.getByRole('menuitem', { name: 'English' }).click();
+  await expect(page.getByRole('heading', { name: 'Learning path' })).toBeVisible();
+  await page.getByRole('menuitem', { name: 'Deutsch' }).click();
+  await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
+});
+
+test('«Was ist neu»: reachable from the start page, the versions with their changes', async ({
+  page,
+}) => {
+  const version = rootPackage.version;
+  await page.goto('/welcome');
+  await page.getByRole('link', { name: 'Was ist neu' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Was ist neu' })).toBeVisible();
+  await expect(page.getByTestId('app-version')).toHaveText(`Diese Version: ${version}`);
+  // the version of this build has its entry; a development build may show «Kommt bald» above it
+  const release = page.getByTestId(`release-${version}`);
+  await expect(release).toContainText(`Version ${version}`);
+  const upcoming = page.getByTestId('release-Next release');
+  if (await upcoming.count()) await expect(upcoming).toContainText('Kommt bald');
+  else await expect(release).toContainText('Neueste');
+  await audit(page);
+  // folded and unfolded
+  const first = release.getByRole('listitem').first();
+  await expect(first).toBeVisible();
+  await release.getByRole('button').click();
+  await expect(first).toBeHidden();
+  await page.getByRole('link', { name: 'Zur Startseite' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: /Klavier lernen/ })).toBeVisible();
 });

@@ -131,6 +131,7 @@ export function SongExercise({
         }
         size={kids ? 80 : 56}
         kids={kids}
+        say={t('lesson.playSong')}
         classicRow
       >
         <Text fz={kids ? 26 : 22} fw={800} aria-live="polite">

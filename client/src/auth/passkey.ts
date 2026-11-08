@@ -32,6 +32,15 @@ export function loginWithPasskey() {
   });
 }
 
+/** Opens the parent area with one of the account's passkeys (the device checks who is there). */
+export function unlockParentWithPasskey() {
+  return guard(async () => {
+    const optionsJSON = await endpoints.parentPasskeyOptions();
+    const response = await startAuthentication({ optionsJSON });
+    await endpoints.parentPasskeyVerify(response);
+  });
+}
+
 export function addPasskey() {
   return guard(async () => {
     const optionsJSON = await endpoints.addPasskeyOptions();

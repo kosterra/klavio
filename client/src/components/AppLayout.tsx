@@ -12,11 +12,14 @@ import {
   IconCheck,
   IconCloudOff,
   IconDeviceDesktop,
+  IconLanguage,
+  IconLock,
   IconMoon,
   IconSun,
   IconLogout,
   IconPiano,
   IconSettings,
+  IconSparkles,
   IconShield,
   IconUserCircle,
   IconBulb,
@@ -26,11 +29,13 @@ import { Link, Outlet, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { APP_CONFIG } from '@klavio/shared';
 import { useSession } from '../auth/session';
+import { useParentUnlocked } from '../auth/useParentUnlocked';
 import { ProfileAvatar } from './ProfileAvatar';
 import { PrivacyBadge } from './PrivacyNote';
 
 export function AppLayout() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const parentUnlocked = useParentUnlocked();
   const { me, activeProfile, logout, offline } = useSession();
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const navigate = useNavigate();
@@ -98,6 +103,10 @@ export function AppLayout() {
                 {activeProfile && (
                   <Menu.Item
                     leftSection={<IconPiano size={18} />}
+                    // parent area: the input setup
+                    rightSection={
+                      parentUnlocked ? null : <IconLock size={14} aria-label={t('parent.title')} />
+                    }
                     onClick={() => navigate('/input')}
                   >
                     {t('nav.input')}
@@ -108,6 +117,12 @@ export function AppLayout() {
                   onClick={() => navigate('/account')}
                 >
                   {t('nav.account')}
+                </Menu.Item>
+                <Menu.Item
+                  leftSection={<IconSparkles size={18} />}
+                  onClick={() => navigate('/whats-new')}
+                >
+                  {t('whatsNew.link')}
                 </Menu.Item>
                 {me?.user.role === 'admin' && (
                   <Menu.Item
@@ -138,6 +153,27 @@ export function AppLayout() {
                     onClick={() => setColorScheme(scheme)}
                   >
                     {t(`nav.scheme.${scheme}`)}
+                  </Menu.Item>
+                ))}
+                <Menu.Divider />
+                <Menu.Label>{t('nav.language')}</Menu.Label>
+                {(
+                  [
+                    ['de-CH', 'Deutsch'],
+                    ['en', 'English'],
+                  ] as const
+                ).map(([lng, name]) => (
+                  <Menu.Item
+                    key={lng}
+                    lang={lng}
+                    closeMenuOnClick={false}
+                    leftSection={<IconLanguage size={18} />}
+                    rightSection={i18n.language === lng ? <IconCheck size={16} /> : null}
+                    aria-checked={i18n.language === lng}
+                    role="menuitemradio"
+                    onClick={() => void i18n.changeLanguage(lng)}
+                  >
+                    {name}
                   </Menu.Item>
                 ))}
                 <Menu.Divider />

@@ -13,6 +13,8 @@ import {
   type TheoryStep,
 } from '@klavio/shared';
 import { Buddy } from '../../components/Buddy';
+import { ReadAloudButton } from '../../components/ReadAloud';
+import { useAutoRead } from '../../components/useReadAloud';
 import { PianoKeyboard } from '../../components/PianoKeyboard';
 import { playMelody, playNote, type Playback } from '../../audio/synth';
 import { runMetronome, type MetronomeRun } from '../../audio/metronome';
@@ -348,6 +350,7 @@ export function TheorySteps({
   const { t } = useTranslation();
   const loc = useLocalized();
   const narrow = useMediaQuery('(max-width: 36em)') ?? false;
+  const [autoRead] = useAutoRead();
   const [index, setIndex] = useState(0);
   const [solved, setSolved] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>(null);
@@ -417,6 +420,7 @@ export function TheorySteps({
               {loc(step.text)}
             </Text>
           </div>
+          <ReadAloudButton key={index} text={loc(step.text)} auto={autoRead} />
         </Group>
 
         <div key={index}>

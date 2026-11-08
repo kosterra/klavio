@@ -116,7 +116,8 @@
       "light": "Hell",
       "dark": "Dunkel"
     },
-    "knowledge": "Wissen"
+    "knowledge": "Wissen",
+    "language": "Sprache"
   },
   "account": {
     "title": "Konto",
@@ -167,7 +168,8 @@
     "NO_ACTIVE_PROFILE": "Bitte wähle zuerst ein Profil.",
     "NETWORK": "Keine Verbindung zum Server. Prüfe das Internet und versuche es nochmals.",
     "PARENT_LOCKED": "Das ist Elternbereich. Bitte gib zuerst die Eltern-PIN ein.",
-    "PIN_WRONG": "Die PIN stimmt nicht."
+    "PIN_WRONG": "Die PIN stimmt nicht.",
+    "PASSKEY_UNLOCK_OFF": "Der Elternbereich lässt sich hier nur mit der PIN öffnen."
   },
   "validation": {
     "name": "Bitte gib einen Namen ein (höchstens 40 Zeichen).",
@@ -438,7 +440,12 @@
     "lockNow": "Jetzt sperren",
     "newPin": "Neue PIN (4 Ziffern)",
     "repeatPin": "PIN wiederholen",
-    "mismatch": "Die beiden PINs stimmen nicht überein."
+    "mismatch": "Die beiden PINs stimmen nicht überein.",
+    "withPasskey": "Mit Passkey öffnen",
+    "orPin": "oder mit der PIN:",
+    "passkeySetting": "Elternbereich auch mit Passkey öffnen",
+    "passkeySettingHint": "Statt der PIN genügt dann Fingerabdruck, Gesicht oder die Geräte-PIN eines Passkeys dieses Kontos. Nur einschalten, wenn die Kinder dieses Gerät nicht selbst entsperren können.",
+    "passkeySettingNeedsPasskey": "Richte dafür zuerst oben einen Passkey ein."
   },
   "profileSettings": {
     "title": "Mein Profil",
@@ -655,5 +662,34 @@
     "fuzzy": "Meinst du «{{title}}» von {{artist}}? Art und Fähigkeiten sind vorgeschlagen.",
     "fuzzyNoArtist": "Meinst du «{{title}}»? Art und Fähigkeiten sind vorgeschlagen.",
     "useTitle": "Titel übernehmen"
+  },
+  "speech": {
+    "read": "Vorlesen",
+    "stop": "Vorlesen stoppen",
+    "auto": "Klavi liest vor",
+    "autoHint": "Aufgaben und Erklärungen werden automatisch vorgelesen – praktisch für Kinder, die noch nicht lesen können. Die Stimme kommt vom Gerät, der Text verlässt es nicht. Während Klavi spricht, hört das Mikrofon kurz weg.",
+    "noVoice": "Auf diesem Gerät ist keine Stimme für diese Sprache installiert. In den Einstellungen des Geräts lässt sich eine Sprachausgabe hinzufügen."
+  },
+  "whatsNew": {
+    "title": "Was ist neu",
+    "lead": "Klavio wächst: neue Welten, Lektionen und Ideen, Version für Version.",
+    "thisVersion": "Diese Version: {{version}}",
+    "upcoming": "Nächste Version",
+    "soon": "Kommt bald",
+    "latest": "Neueste",
+    "version": "Version {{version}}",
+    "new": "Neu",
+    "fix": "Korrektur",
+    "countNew_one": "{{count}} Neuerung",
+    "countNew_other": "{{count}} Neuerungen",
+    "countFix_one": "{{count}} Korrektur",
+    "countFix_other": "{{count}} Korrekturen",
+    "all": "Alle {{count}} Versionen zeigen",
+    "fewer": "Nur die neuesten Versionen",
+    "backApp": "Zur App",
+    "backHome": "Zur Startseite",
+    "open": "Klavio entsteht offen:",
+    "history": "alle Änderungen auf GitHub",
+    "link": "Was ist neu"
   }
 }

@@ -7,6 +7,11 @@
   position: relative;
   padding-top: var(--mantine-spacing-xl);
   color: #fff;
+  /* exactly one screen high: the worlds sit on its lower edge, the next section starts below */
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   background:
     radial-gradient(circle at 15% 20%, rgb(255 255 255 / 18%), transparent 30%),
     radial-gradient(circle at 85% 10%, rgb(255 212 59 / 35%), transparent 28%),
@@ -240,7 +245,16 @@
   color: #fff;
 }
 
+.footer {
+  padding-block: var(--mantine-spacing-lg);
+  color: #fff;
+  background: var(--mantine-color-indigo-9);
+}
+
 .footerLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: #fff;
   font-weight: 700;
 }
@@ -324,6 +338,10 @@
   height: auto;
   min-height: var(--button-height);
   padding-block: 6px;
+  /* the label stays centred in the button however many lines it takes */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .wrapButton :global(.mantine-Button-label) {
@@ -332,12 +350,19 @@
   line-height: 1.25;
 }
 
-/* light / dark switch in the top right corner of the hero */
-.themeSwitch {
-  position: absolute;
-  top: var(--mantine-spacing-md);
-  right: var(--mantine-spacing-md);
+/* language and light / dark switches: a row at the top of the hero */
+.cornerTools {
+  position: relative;
   z-index: 3;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--mantine-spacing-xs);
+  padding: 0 var(--mantine-spacing-md);
+  margin-top: calc(var(--mantine-spacing-xl) * -0.5);
+}
+
+.themeSwitch,
+.cornerButton {
   color: var(--mantine-color-indigo-8);
   box-shadow: 0 3px 0 rgb(0 0 0 / 18%);
 }

@@ -1,0 +1,101 @@
+name: klavio
+# The actions are pinned to commit SHAs (the tag they stand for is in the comment), so a
+# moved or hijacked tag cannot change what runs here; Dependabot (.github/dependabot.yml)
+# proposes the bumps. The image is signed keyless with Sigstore (cosign, the workflow's
+# OIDC identity) and carries BuildKit's provenance and SBOM attestations;
+# docs/betrieb.md says how to verify them.
+permissions:
+  contents: write
+  id-token: write
+
+on:
+  push:
+    branches:
+      - main
+  # rebuild and re-push the current release on demand – e.g. to pick up a patched
+  # base image (Node/Alpine security release) between releases, without a version bump
+  workflow_dispatch:
+
+jobs:
+  # tests, lint, types, formatting, the browser tests and both builds: nothing is released
+  # without them. A merge into main brings commits develop has checked already (main's
+  # branch protection requires their results), so only a manual rebuild runs them again
+  checks:
+    if: github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/checks.yml
+
+  build_and_release:
+    runs-on: ubuntu-24.04
+    needs: checks
+    # also when the checks were skipped (a merge), never when they failed
+    if: ${{ !cancelled() && (needs.checks.result == 'success' || needs.checks.result == 'skipped') }}
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Get package info
+        id: package
+        run: |
+          echo "name=$(jq -r .name package.json)" >> "$GITHUB_OUTPUT"
+          echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag
+        uses: rickstaa/action-create-tag@a1c7777fcb2fee4f19b0f283ba888afa11678b72 # v1.7.2
+        with:
+          tag: ${{ steps.package.outputs.version }}
+          message: 'Release ${{ steps.package.outputs.version }}'
+          # Move the tag to this commit if it already exists
+          force_push_tag: true
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        with:
+          images: ${{ secrets.DOCKERHUB_USER }}/${{ steps.package.outputs.name }}
+          tags: |
+            type=raw,value=${{ steps.package.outputs.version }}
+            type=raw,value=latest
+
+      - name: Login to Dockerhub
+        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Build and push
+        id: build
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          file: ./Dockerfile
+          target: production
+          # SLSA provenance and an SPDX SBOM of the image, attached to the image index
+          provenance: mode=max
+          sbom: true
+          # the version of this build is out: «Was ist neu» shows it as released
+          build-args: |
+            APP_RELEASED=true
+          # always fetch the base image fresh so a rebuild picks up the newest
+          # Alpine security packages (apk upgrade) rather than a cached layer
+          pull: true
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USER }}/${{ steps.package.outputs.name }}:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USER }}/${{ steps.package.outputs.name }}:buildcache,mode=max
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Sign the image
+        env:
+          IMAGE: ${{ secrets.DOCKERHUB_USER }}/${{ steps.package.outputs.name }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+        # keyless: the signature is bound to this workflow's identity in the Sigstore log
+        run: cosign sign --yes "${IMAGE}@${DIGEST}"

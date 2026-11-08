@@ -11,6 +11,7 @@ import {
 } from '@mantine/core';
 import {
   IconArrowRight,
+  IconBrandGithub,
   IconBulb,
   IconCode,
   IconDeviceTablet,
@@ -36,6 +37,7 @@ import { useLocalized } from '../lesson/useLocalized';
 import { LoginCard } from '../landing/LoginCard';
 import { TryKeyboard } from '../landing/TryKeyboard';
 import { ThemeSwitch } from '../landing/ThemeSwitch';
+import { LanguageSwitch } from '../landing/LanguageSwitch';
 import { DuckParade, NoteRain } from '../landing/Effects';
 import { tapCounter, useKonami } from '../landing/easterEggs';
 import classes from '../landing/Landing.module.css';
@@ -105,7 +107,10 @@ export function WelcomePage() {
 
       {/* ----------------------------------------------------------- hero */}
       <header className={classes.hero}>
-        <ThemeSwitch />
+        <div className={classes.cornerTools}>
+          <LanguageSwitch />
+          <ThemeSwitch />
+        </div>
         <Container size="lg">
           <div className={classes.heroGrid}>
             <div className={classes.heroText}>
@@ -312,14 +317,34 @@ export function WelcomePage() {
               {t('landing.login')}
             </Button>
           </Group>
-          <Text size="sm" mt="xl">
-            {t('landing.footer')}{' '}
-            <a href={APP_CONFIG.sourceUrl} className={classes.footerLink}>
-              {t('landing.source')}
-            </a>
-          </Text>
         </Container>
       </section>
+
+      {/* ---------------------------------------------------------- footer */}
+      <footer className={classes.footer}>
+        <Container size="lg">
+          <Group justify="space-between" gap="sm">
+            <Group gap="xs">
+              <IconPiano size={20} aria-hidden />
+              <Text fw={800}>{APP_CONFIG.name}</Text>
+              <Text size="sm">{t('about.license', { license: APP_CONFIG.license })}</Text>
+            </Group>
+            <Group gap="lg">
+              <Link to="/whats-new" className={classes.footerLink}>
+                {t('whatsNew.link')}
+              </Link>
+              <a
+                href={APP_CONFIG.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={classes.footerLink}
+              >
+                <IconBrandGithub size={18} aria-hidden /> {t('about.source')}
+              </a>
+            </Group>
+          </Group>
+        </Container>
+      </footer>
     </div>
   );
 }

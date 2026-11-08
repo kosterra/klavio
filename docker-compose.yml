@@ -28,12 +28,14 @@ services:
       - '127.0.0.1:8026:8025'
       - '127.0.0.1:1026:1025'
 
-  server:
-    build: { context: ., target: server }
+  # Klavio: app and API in one image (kosterra/klavio). `docker compose build`
+  # builds it locally; KLAVIO_VERSION picks a published version instead.
+  app:
+    image: kosterra/klavio:${KLAVIO_VERSION:-latest}
+    build: { context: ., target: production }
     restart: unless-stopped
     env_file: .env
     environment:
-      NODE_ENV: production
       MONGO_URL: mongodb://mongo:27017/klavio
       # The origin the browser sees; set PUBLIC_ORIGIN when it differs (e.g. behind another proxy).
       APP_ORIGIN: ${PUBLIC_ORIGIN:-https://${SITE_ADDRESS:-localhost}:${HTTPS_PORT:-8443}}
@@ -47,8 +49,9 @@ services:
       mongo:
         condition: service_healthy
 
-  web:
-    build: { context: ., target: web }
+  # TLS (Let's Encrypt or a local CA) in front of the app
+  caddy:
+    image: caddy:2-alpine
     restart: unless-stopped
     environment:
       SITE_ADDRESS: ${SITE_ADDRESS:-localhost}
@@ -56,9 +59,10 @@ services:
     ports:
       - '${HTTPS_PORT:-8443}:443'
     volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
     depends_on:
-      - server
+      - app
 
 volumes:
   mongo_data:

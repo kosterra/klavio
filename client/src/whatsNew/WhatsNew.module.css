@@ -1,0 +1,89 @@
+.page {
+  min-height: 100dvh;
+  background: var(--klavio-page-bg, var(--mantine-color-body));
+}
+
+.hero {
+  color: #fff;
+  padding: var(--mantine-spacing-md) 0 var(--mantine-spacing-xl);
+  background:
+    radial-gradient(circle at 85% 10%, rgb(255 212 59 / 35%), transparent 30%),
+    linear-gradient(
+      160deg,
+      var(--mantine-color-indigo-7) 0%,
+      var(--mantine-color-grape-7) 60%,
+      var(--mantine-color-orange-6) 100%
+    );
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+  color: #fff;
+  text-decoration: none;
+}
+
+.title {
+  color: #fff;
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1.1;
+  margin-top: var(--mantine-spacing-lg);
+}
+
+.releases {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+}
+
+.release {
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-lg);
+  background: var(--klavio-surface, var(--mantine-color-body));
+  overflow: hidden;
+}
+
+.release[data-upcoming] {
+  border-color: var(--mantine-color-orange-4);
+  border-style: dashed;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--mantine-spacing-sm);
+  width: 100%;
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
+}
+
+.head:hover {
+  background: var(--mantine-color-default-hover);
+}
+
+.count {
+  margin-right: auto;
+}
+
+.changes {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--mantine-spacing-lg) var(--mantine-spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-sm);
+}
+
+.change {
+  display: flex;
+  align-items: baseline;
+  gap: var(--mantine-spacing-sm);
+  line-height: 1.5;
+}
+
+.kind {
+  flex: none;
+  min-width: 4.6rem;
+  justify-content: center;
+}

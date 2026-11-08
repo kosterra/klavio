@@ -1,19 +1,32 @@
 import { useState, type ReactNode } from 'react';
-import { Alert, Button, Card, Center, Group, PinInput, Stack, Text, Title } from '@mantine/core';
-import { IconLock } from '@tabler/icons-react';
+import {
+  Alert,
+  Button,
+  Card,
+  Center,
+  Group,
+  PinInput,
+  Stack,
+  Switch,
+  Text,
+  Title,
+} from '@mantine/core';
+import { IconFingerprint, IconLock } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { endpoints } from '../api/endpoints';
 import { useSession } from './session';
 import { useErrorText } from './useErrorText';
 import { useParentUnlocked } from './useParentUnlocked';
+import { unlockParentWithPasskey } from './passkey';
 
 /** PIN entry; calls `onUnlocked` after the server accepted it. */
 export function ParentPinForm({ onUnlocked }: { onUnlocked?: () => void }) {
   const { t } = useTranslation();
-  const { refresh, logout } = useSession();
+  const { me, refresh, logout } = useSession();
   const navigate = useNavigate();
   const errorText = useErrorText();
+  const withPasskey = me?.user.parentPin.passkey ?? false;
   const [pin, setPin] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -42,6 +55,33 @@ export function ParentPinForm({ onUnlocked }: { onUnlocked?: () => void }) {
       }}
     >
       <Stack gap="md" align="center">
+        {withPasskey && (
+          <>
+            <Button
+              size="lg"
+              leftSection={<IconFingerprint />}
+              loading={busy}
+              onClick={async () => {
+                setBusy(true);
+                setError(null);
+                try {
+                  await unlockParentWithPasskey();
+                  await refresh();
+                  onUnlocked?.();
+                } catch (err) {
+                  setError(errorText(err));
+                } finally {
+                  setBusy(false);
+                }
+              }}
+            >
+              {t('parent.withPasskey')}
+            </Button>
+            <Text size="sm" c="dimmed">
+              {t('parent.orPin')}
+            </Text>
+          </>
+        )}
         <Text ta="center">{t('parent.enterPin')}</Text>
         <PinInput
           length={4}
@@ -52,7 +92,7 @@ export function ParentPinForm({ onUnlocked }: { onUnlocked?: () => void }) {
           onChange={setPin}
           onComplete={(v) => void submit(v)}
           aria-label={t('parent.pin')}
-          autoFocus
+          autoFocus={!withPasskey}
         />
         {error && (
           <Alert color="red" role="alert" w="100%">
@@ -134,6 +174,25 @@ export function ParentPinSettings() {
         <Text c="dimmed" size="sm">
           {set ? t('parent.isSet') : t('parent.explain')}
         </Text>
+        {set && (
+          <Switch
+            label={t('parent.passkeySetting')}
+            description={
+              (me?.user.passkeyCount ?? 0) > 0
+                ? t('parent.passkeySettingHint')
+                : t('parent.passkeySettingNeedsPasskey')
+            }
+            checked={me?.user.parentPin.passkeyEnabled ?? false}
+            disabled={busy || (me?.user.passkeyCount ?? 0) === 0}
+            onChange={(e) => {
+              const enabled = e.currentTarget.checked;
+              void run(async () => {
+                await endpoints.setParentPasskey(enabled);
+                await refresh();
+              });
+            }}
+          />
+        )}
         {error && (
           <Alert color="red" role="alert">
             {error}

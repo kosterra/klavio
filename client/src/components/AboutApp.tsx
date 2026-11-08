@@ -1,5 +1,6 @@
 import { Anchor, Card, Stack, Text, Title } from '@mantine/core';
-import { IconBrandGithub } from '@tabler/icons-react';
+import { IconBrandGithub, IconSparkles } from '@tabler/icons-react';
+import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { APP_CONFIG } from '@klavio/shared';
 
@@ -31,6 +32,15 @@ export function AboutCard() {
           {t('about.title', { appName: APP_CONFIG.name })}
         </Title>
         <Text size="sm">{t('about.text')}</Text>
+        <Anchor
+          component={Link}
+          to="/whats-new"
+          size="sm"
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+        >
+          <IconSparkles size={18} aria-hidden />
+          {t('whatsNew.link')} · {t('whatsNew.version', { version: __APP_VERSION__ })}
+        </Anchor>
         <Anchor
           href={APP_CONFIG.sourceUrl}
           target="_blank"

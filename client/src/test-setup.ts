@@ -1,4 +1,7 @@
-import '../src/i18n';
+import i18n from '../src/i18n';
+
+// tests are written against the Swiss German texts, whatever the test browser says
+void i18n.changeLanguage('de-CH');
 
 // jsdom lacks these browser APIs used by Mantine (skipped in `@vitest-environment node` files)
 if (typeof window !== 'undefined') installDomStubs();

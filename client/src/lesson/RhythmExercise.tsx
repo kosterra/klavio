@@ -206,6 +206,7 @@ export function RhythmExercise({
         mood={perfect ? 'cheer' : phase === 'result' ? 'think' : 'listen'}
         size={kids ? 80 : 56}
         kids={kids}
+        say={t('lesson.rhythm.ready')}
         classicRow
       >
         <Text fz={kids ? 26 : 22} fw={800} aria-live="polite" data-testid="rhythm-status">

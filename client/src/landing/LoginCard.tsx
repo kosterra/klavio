@@ -6,7 +6,6 @@ import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import landing from './Landing.module.css';
 import { Mascot } from '../components/Mascot';
-import { SourceLink } from '../components/AboutApp';
 import { useSession } from '../auth/session';
 import { loginWithPasskey } from '../auth/passkey';
 import { useErrorText } from '../auth/useErrorText';
@@ -112,7 +111,6 @@ export function LoginCard({ onMascotTap }: { onMascotTap?: () => void }) {
             {t('welcome.registrationClosed')}
           </Text>
         )}
-        <SourceLink size="xs" />
       </Stack>
     </Card>
   );
