@@ -245,7 +245,16 @@
   color: #fff;
 }
 
+.footer {
+  padding-block: var(--mantine-spacing-lg);
+  color: #fff;
+  background: var(--mantine-color-indigo-9);
+}
+
 .footerLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: #fff;
   font-weight: 700;
 }
@@ -329,6 +338,10 @@
   height: auto;
   min-height: var(--button-height);
   padding-block: 6px;
+  /* the label stays centred in the button however many lines it takes */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .wrapButton :global(.mantine-Button-label) {

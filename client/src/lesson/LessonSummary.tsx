@@ -130,11 +130,22 @@ export function LessonSummary({
               {t('lesson.next')}
             </Button>
           )}
-          <Group grow>
-            <Button variant="light" onClick={onAgain} disabled={saving}>
+          {/* side by side when both labels fit, otherwise one below the other (long texts, English) */}
+          <Group gap="sm">
+            <Button
+              variant="light"
+              onClick={onAgain}
+              disabled={saving}
+              style={{ flex: '1 1 auto' }}
+            >
               {t('lesson.again')}
             </Button>
-            <Button variant="default" onClick={onPath} disabled={saving}>
+            <Button
+              variant="default"
+              onClick={onPath}
+              disabled={saving}
+              style={{ flex: '1 1 auto' }}
+            >
               {t('lesson.toPath')}
             </Button>
           </Group>
