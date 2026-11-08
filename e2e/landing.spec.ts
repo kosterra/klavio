@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import rootPackage from '../package.json' with { type: 'json' };
 import { audit } from './audit';
 import { signUpWithEmail, uniqueEmail } from './helpers';
 
@@ -114,20 +115,26 @@ test('language: switch on the landing page, remembered on this device, also in t
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
 });
 
-test('«Was ist neu»: reachable from the start page, upcoming changes marked as coming soon', async ({
+test('«Was ist neu»: reachable from the start page, the versions with their changes', async ({
   page,
 }) => {
+  const version = rootPackage.version;
   await page.goto('/welcome');
   await page.getByRole('link', { name: 'Was ist neu' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Was ist neu' })).toBeVisible();
-  await expect(page.getByTestId('app-version')).toContainText('Diese Version:');
+  await expect(page.getByTestId('app-version')).toHaveText(`Diese Version: ${version}`);
+  // the version of this build has its entry; a development build may show «Kommt bald» above it
+  const release = page.getByTestId(`release-${version}`);
+  await expect(release).toContainText(`Version ${version}`);
   const upcoming = page.getByTestId('release-Next release');
-  await expect(upcoming).toContainText('Kommt bald');
-  await expect(upcoming).toContainText('Klavi liest vor');
+  if (await upcoming.count()) await expect(upcoming).toContainText('Kommt bald');
+  else await expect(release).toContainText('Neueste');
   await audit(page);
   // folded and unfolded
-  await upcoming.getByRole('button').click();
-  await expect(upcoming.getByText('Klavi liest vor')).toBeHidden();
+  const first = release.getByRole('listitem').first();
+  await expect(first).toBeVisible();
+  await release.getByRole('button').click();
+  await expect(first).toBeHidden();
   await page.getByRole('link', { name: 'Zur Startseite' }).click();
   await expect(page.getByRole('heading', { level: 1, name: /Klavier lernen/ })).toBeVisible();
 });
