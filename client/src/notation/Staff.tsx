@@ -10,6 +10,8 @@ export interface StaffNote {
   state?: 'current' | 'done' | 'wrong';
   /** Small text below the note (e.g. its name). */
   label?: string;
+  /** Finger number above the note (1 = thumb … 5 = little finger). */
+  finger?: number;
 }
 
 interface Props {
@@ -102,6 +104,14 @@ export function Staff({ clef, notes, bars: barsProp, time, height = 160, label }
               new VF.Annotation(n.label)
                 .setFont('Nunito Variable', 13, 'bold')
                 .setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM),
+              0,
+            );
+          }
+          if (n.finger && !rest) {
+            note.addModifier(
+              new VF.Annotation(String(n.finger))
+                .setFont('Nunito Variable', 12, 'bold')
+                .setVerticalJustification(VF.Annotation.VerticalJustify.TOP),
               0,
             );
           }

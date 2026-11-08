@@ -574,7 +574,8 @@
     "playPiano": "Auf meinem Klavier",
     "playScreen": "Auf dem Bildschirm",
     "playPianoHint": "Auf dem Klavier höre ich dir über das Mikrofon zu – der Ton bleibt auf deinem Gerät.",
-    "waitingForNote": "Ich höre zu – spiel los!"
+    "waitingForNote": "Ich höre zu – spiel los!",
+    "finger": "Finger {{n}}"
   },
   "badges": {
     "title": "Abzeichen",

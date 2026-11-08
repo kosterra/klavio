@@ -103,6 +103,7 @@ export function SongExercise({
           midi: n.midi,
           duration: n.value,
           label: exercise.showNames ? midiToPitchName(n.midi, lang) : undefined,
+          finger: n.finger,
           state:
             playingIndex !== null
               ? i === playingIndex
@@ -181,6 +182,9 @@ export function SongExercise({
         height={kids ? 180 : 160}
         interactive={inputMode === 'screen'}
         hints={hint}
+        fingers={
+          hint.length && notes[pos]?.finger ? { [hint[0]!]: notes[pos]!.finger! } : undefined
+        }
         wrong={wrong !== null ? [wrong] : []}
       />
     </Stack>

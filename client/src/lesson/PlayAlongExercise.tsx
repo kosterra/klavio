@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Group, Stack, Text } from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+import classes from './PlayAlong.module.css';
 import { midiToPitchName, type PlayAlongExercise as Spec } from '@klavio/shared';
 import { useNoteEvents } from '../input/noteBus';
 import { BuddySays } from '../components/BuddySays';
@@ -30,6 +31,7 @@ export function PlayAlongExercise({
   useEffect(() => () => clearTimeout(timer.current), []);
 
   const sequence = exercise.sequences[seqIndex]!;
+  const fingers = exercise.fingers?.[seqIndex];
   const expected = sequence[pos];
   const finishedSeq = pos >= sequence.length;
 
@@ -113,6 +115,11 @@ export function PlayAlongExercise({
             >
               {done && <IconCheck size={16} aria-hidden />}
               {midiToPitchName(m, lang)}
+              {fingers?.[i] && (
+                <sup className={classes.finger} aria-label={t('lesson.finger', { n: fingers[i] })}>
+                  {fingers[i]}
+                </sup>
+              )}
             </div>
           );
         })}
@@ -130,6 +137,7 @@ export function PlayAlongExercise({
         height={kids ? 200 : 170}
         interactive={inputMode === 'screen'}
         hints={hint}
+        fingers={hint.length && fingers?.[pos] ? { [hint[0]!]: fingers[pos]! } : undefined}
         wrong={wrong !== null ? [wrong] : []}
       />
     </Stack>

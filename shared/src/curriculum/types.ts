@@ -17,6 +17,8 @@ export interface FindKeyExercise {
 export interface PlayAlongExercise {
   type: 'play-along';
   sequences: number[][];
+  /** finger numbers per note (1 = thumb … 5 = little finger), same shape as `sequences` */
+  fingers?: number[][];
 }
 
 /** "Notenlesen": a note is shown on the staff; play exactly that key. */
@@ -34,6 +36,8 @@ export type NoteValue = 'w' | 'h' | 'hd' | 'q' | 'qd' | '8';
 export interface SongNote {
   midi: number;
   value: NoteValue;
+  /** finger (1 = thumb … 5 = little finger), shown above the note */
+  finger?: number;
 }
 
 /**

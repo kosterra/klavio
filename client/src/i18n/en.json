@@ -574,7 +574,8 @@
     "playPiano": "On my piano",
     "playScreen": "On the screen",
     "playPianoHint": "On the piano I listen through the microphone – the sound stays on your device.",
-    "waitingForNote": "I’m listening – go ahead!"
+    "waitingForNote": "I’m listening – go ahead!",
+    "finger": "finger {{n}}"
   },
   "badges": {
     "title": "Badges",

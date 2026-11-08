@@ -147,3 +147,26 @@
     var(--klavio-dock-bg, var(--mantine-color-body)) 14px
   );
 }
+
+/* the finger to use on a marked key (1 = thumb … 5 = little finger) */
+.finger {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  margin-bottom: 4px;
+  border-radius: 50%;
+  background: var(--mantine-color-orange-7);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.fingerOnBlack {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+}

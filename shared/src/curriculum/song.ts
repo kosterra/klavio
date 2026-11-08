@@ -46,8 +46,32 @@ export function rhythmOnsets(pattern: RhythmValue[]): number[] {
   return out;
 }
 
+/** Position of a white key counted along the keyboard (black keys: the white key below). */
+function whiteIndex(midi: number): number {
+  const octave = Math.floor(midi / 12);
+  const inOctave = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6][midi % 12]!;
+  return octave * 7 + inOctave;
+}
+
+/** A hand in a five-finger position: which hand, and the key under the thumb. */
+export interface HandPosition {
+  hand: 'right' | 'left';
+  thumb: string;
+}
+
 /**
- * Compact melody notation: notes as "pitch/value", bars separated by "|".
+ * The finger for a white key in a five-finger position (right: thumb on the
+ * lowest key; left: thumb on the highest). Undefined outside the position.
+ */
+export function fingerInPosition(midi: number, position: HandPosition): number | undefined {
+  const thumb = whiteIndex(noteNameToMidi(position.thumb));
+  const f = position.hand === 'right' ? whiteIndex(midi) - thumb + 1 : thumb - whiteIndex(midi) + 1;
+  return f >= 1 && f <= 5 ? f : undefined;
+}
+
+/**
+ * Compact melody notation: notes as "pitch/value", bars separated by "|",
+ * an optional finger after a colon ("E4/q:3").
  *   "C4/q D4/q E4/q F4/q | G4/h G4/h"
  * German "H" is accepted. Every bar must be full (checked against `time`).
  */
@@ -59,11 +83,20 @@ export function parseSong(melody: string, time: string): SongNote[][] {
     .filter(Boolean)
     .map((bar, i) => {
       const notes = bar.split(/\s+/).map((token) => {
-        const [pitch, value = 'q'] = token.split('/');
+        const [note, fingerText] = token.split(':');
+        const [pitch, value = 'q'] = note!.split('/');
         if (!(value in VALUES) || value.endsWith('r')) {
           throw new Error(`Unknown note value "${value}" in bar ${i + 1}`);
         }
-        return { midi: noteNameToMidi(pitch!), value: value as NoteValue };
+        const finger = fingerText === undefined ? undefined : Number(fingerText);
+        if (finger !== undefined && !(finger >= 1 && finger <= 5)) {
+          throw new Error(`Unknown finger "${fingerText}" in bar ${i + 1}`);
+        }
+        return {
+          midi: noteNameToMidi(pitch!),
+          value: value as NoteValue,
+          ...(finger ? { finger } : {}),
+        };
       });
       const beats = notes.reduce((n, x) => n + VALUES[x.value], 0);
       if (beats !== beatsPerBar) {
@@ -75,16 +108,26 @@ export function parseSong(melody: string, time: string): SongNote[][] {
 
 export function song(
   melody: string,
-  opts: Partial<Omit<SongExercise, 'type' | 'bars'>> = {},
+  opts: Partial<Omit<SongExercise, 'type' | 'bars'>> & {
+    /** fingers for the notes from a five-finger position (explicit «:n» wins) */
+    position?: HandPosition;
+  } = {},
 ): SongExercise {
   const time = opts.time ?? '4/4';
+  const position = opts.position;
+  const bars = parseSong(melody, time).map((bar) =>
+    bar.map((n) => {
+      const finger = n.finger ?? (position ? fingerInPosition(n.midi, position) : undefined);
+      return finger ? { ...n, finger } : n;
+    }),
+  );
   return {
     type: 'song',
     clef: opts.clef ?? 'treble',
     time,
     tempo: opts.tempo ?? 96,
     showNames: opts.showNames ?? false,
-    bars: parseSong(melody, time),
+    bars,
   };
 }
 

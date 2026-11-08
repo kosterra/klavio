@@ -1,0 +1,8 @@
+/* the finger for a note, small at its top right (1 = thumb … 5 = little finger) */
+.finger {
+  align-self: flex-start;
+  margin-top: 6px;
+  font-size: 0.6em;
+  font-weight: 900;
+  color: var(--mantine-color-dimmed);
+}

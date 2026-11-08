@@ -1,11 +1,30 @@
 import { noteNameToMidi } from '../music/notes.ts';
 import type { Chapter, Lesson } from './types.ts';
-import { piece, pieceSteps, rhythm, rhythmOnsets, song } from './song.ts';
+import {
+  fingerInPosition,
+  piece,
+  pieceSteps,
+  rhythm,
+  rhythmOnsets,
+  song,
+  type HandPosition,
+} from './song.ts';
 
 /** "C4 D4 E4" → [60, 62, 64]; German "H" is accepted. */
 const seq = (s: string) => s.trim().split(/\s+/).map(noteNameToMidi);
 /** Pitch classes for "any octave" exercises, given in the 4th octave. */
 const pcs = (s: string) => seq(s.replace(/\S+/g, (n) => `${n}4`));
+
+/** Five-finger positions: right thumb on middle C, left little finger on the C below. */
+const RH_C4: HandPosition = { hand: 'right', thumb: 'C4' };
+const LH_C3: HandPosition = { hand: 'left', thumb: 'G3' };
+
+/** «Spiel nach» in a five-finger position: the finger for every note comes with it. */
+const playIn = (position: HandPosition, sequences: number[][]) => ({
+  type: 'play-along' as const,
+  sequences,
+  fingers: sequences.map((s) => s.map((m) => fingerInPosition(m, position)!)),
+});
 
 const C3_C5 = { from: 48, to: 72 };
 const C4_C5 = { from: 60, to: 72 };
@@ -76,16 +95,13 @@ export const CURRICULUM: Chapter[] = [
         keyboard: C4_C5,
         keyLabels: 'all',
         exercises: [
-          {
-            type: 'play-along',
-            sequences: [
-              seq('C4 D4 E4'),
-              seq('E4 D4 C4'),
-              seq('C4 E4 D4'),
-              seq('D4 C4 E4'),
-              seq('C4 D4 E4 D4 C4'),
-            ],
-          },
+          playIn(RH_C4, [
+            seq('C4 D4 E4'),
+            seq('E4 D4 C4'),
+            seq('C4 E4 D4'),
+            seq('D4 C4 E4'),
+            seq('C4 D4 E4 D4 C4'),
+          ]),
         ],
       },
       {
@@ -114,16 +130,13 @@ export const CURRICULUM: Chapter[] = [
         keyboard: C4_C5,
         keyLabels: 'all',
         exercises: [
-          {
-            type: 'play-along',
-            sequences: [
-              seq('C4 D4 E4 F4 G4'),
-              seq('G4 F4 E4 D4 C4'),
-              seq('C4 E4 G4'),
-              seq('E4 F4 G4 F4 E4'),
-              seq('C4 D4 E4 F4 G4 F4 E4 D4 C4'),
-            ],
-          },
+          playIn(RH_C4, [
+            seq('C4 D4 E4 F4 G4'),
+            seq('G4 F4 E4 D4 C4'),
+            seq('C4 E4 G4'),
+            seq('E4 F4 G4 F4 E4'),
+            seq('C4 D4 E4 F4 G4 F4 E4 D4 C4'),
+          ]),
         ],
       },
     ],
@@ -177,6 +190,11 @@ export const CURRICULUM: Chapter[] = [
           {
             type: 'play-along',
             sequences: [seq('C4 D4 E4 F4 G4 A4 H4 C5'), seq('C5 H4 A4 G4 F4 E4 D4 C4')],
+            // the thumb passes under after E (up) – and the middle finger crosses over on the way down
+            fingers: [
+              [1, 2, 3, 1, 2, 3, 4, 5],
+              [5, 4, 3, 2, 1, 3, 2, 1],
+            ],
           },
         ],
       },
@@ -275,7 +293,7 @@ CURRICULUM.push({
       exercises: [
         song(
           'G4/q E4/q E4/h | F4/q D4/q D4/h | C4/q D4/q E4/q F4/q | G4/q G4/q G4/h | G4/q E4/q E4/h | F4/q D4/q D4/h | C4/q E4/q G4/q G4/q | C4/w',
-          { tempo: 100 },
+          { tempo: 100, position: RH_C4 },
         ),
       ],
     },
@@ -294,7 +312,7 @@ CURRICULUM.push({
       exercises: [
         song(
           'E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | E4/qd D4/8 D4/h | E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | D4/qd C4/8 C4/h',
-          { tempo: 104 },
+          { tempo: 104, position: RH_C4 },
         ),
       ],
     },
@@ -354,7 +372,7 @@ CURRICULUM.push({
       exercises: [
         song(
           'E4/q E4/q E4/h | E4/q E4/q E4/h | E4/q G4/q C4/qd D4/8 | E4/w | F4/q F4/q F4/qd F4/8 | F4/q E4/q E4/q E4/8 E4/8 | E4/q D4/q D4/q E4/q | D4/h G4/h',
-          { tempo: 112 },
+          { tempo: 112, position: RH_C4 },
         ),
       ],
     },
@@ -439,16 +457,13 @@ CURRICULUM.push({
       keyboard: C3_C4,
       keyLabels: 'all',
       exercises: [
-        {
-          type: 'play-along',
-          sequences: [
-            seq('C3 D3 E3 F3 G3'),
-            seq('G3 F3 E3 D3 C3'),
-            seq('C3 E3 G3'),
-            seq('G3 E3 C3'),
-            seq('C3 D3 E3 D3 C3'),
-          ],
-        },
+        playIn(LH_C3, [
+          seq('C3 D3 E3 F3 G3'),
+          seq('G3 F3 E3 D3 C3'),
+          seq('C3 E3 G3'),
+          seq('G3 E3 C3'),
+          seq('C3 D3 E3 D3 C3'),
+        ]),
       ],
     },
     {
@@ -496,7 +511,7 @@ CURRICULUM.push({
       exercises: [
         song(
           'E3/q D3/q C3/q D3/q | E3/q E3/q E3/h | D3/q D3/q D3/h | E3/q G3/q G3/h | E3/q D3/q C3/q D3/q | E3/q E3/q E3/q E3/q | D3/q D3/q E3/q D3/q | C3/w',
-          { clef: 'bass', tempo: 96 },
+          { clef: 'bass', tempo: 96, position: LH_C3 },
         ),
       ],
     },
@@ -650,7 +665,7 @@ CURRICULUM.push({
       keyLabels: 'c',
       exercises: [
         song(
-          'A#4/q G#4/q F#4/q G#4/q | A#4/q A#4/q A#4/h | G#4/q G#4/q G#4/h | A#4/q C#5/q C#5/h | A#4/q G#4/q F#4/q G#4/q | A#4/q A#4/q A#4/q A#4/q | G#4/q G#4/q A#4/q G#4/q | F#4/w',
+          'A#4/q:4 G#4/q:3 F#4/q:2 G#4/q:3 | A#4/q:4 A#4/q:4 A#4/h:4 | G#4/q:3 G#4/q:3 G#4/h:3 | A#4/q:4 C#5/q:5 C#5/h:5 | A#4/q:4 G#4/q:3 F#4/q:2 G#4/q:3 | A#4/q:4 A#4/q:4 A#4/q:4 A#4/q:4 | G#4/q:3 G#4/q:3 A#4/q:4 G#4/q:3 | F#4/w:2',
           { tempo: 96, showNames: true },
         ),
       ],

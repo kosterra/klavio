@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Fingersatz: Über den Noten und auf der markierten Taste steht, welcher Finger spielt – in den Fünf-Finger-Lektionen, bei der C-Dur-Tonleiter (Daumen untersetzen!) und in den ersten Liedern.',
+        'Fingering: above the notes and on the marked key it shows which finger plays – in the five-finger lessons, in the C major scale (thumb under!) and in the first songs.',
+      ),
+      L(
         'Vor jeder Lektion fragt Klavio: «Auf meinem Klavier» oder «Auf dem Bildschirm»? Mit einem Digitalpiano geht es mit der ersten Taste los. Während der Lektion zeigt «Ich höre: E», dass dein Ton angekommen ist.',
         'Before each lesson Klavio asks: «On my piano» or «On the screen»? With a digital piano the first key starts the lesson. During the lesson «I hear: E» shows that your note arrived.',
       ),
