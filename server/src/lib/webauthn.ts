@@ -7,6 +7,12 @@ import {
   type RegistrationResponseJSON,
 } from '@simplewebauthn/server';
 import { APP_CONFIG } from '@klavio/shared';
+
+type Transports = NonNullable<
+  NonNullable<
+    Parameters<typeof generateAuthenticationOptions>[0]['allowCredentials']
+  >[number]['transports']
+>;
 import type { AppConfig } from '../config.js';
 import { badRequest } from './errors.js';
 
@@ -63,8 +69,21 @@ export const webauthn = {
     };
   },
 
-  authenticationOptions(config: AppConfig) {
-    return generateAuthenticationOptions({ rpID: config.RP_ID, userVerification: 'preferred' });
+  authenticationOptions(
+    config: AppConfig,
+    /** only these passkeys, and the device must check who is there (parent unlock) */
+    only?: { credentialId: string; transports: string[] }[],
+  ) {
+    return generateAuthenticationOptions({
+      rpID: config.RP_ID,
+      userVerification: only ? 'required' : 'preferred',
+      ...(only && {
+        allowCredentials: only.map((c) => ({
+          id: c.credentialId,
+          transports: c.transports as Transports,
+        })),
+      }),
+    });
   },
 
   async verifyAuthentication(
@@ -72,6 +91,7 @@ export const webauthn = {
     response: unknown,
     expectedChallenge: string,
     credential: { credentialId: string; publicKey: Buffer; counter: number; transports: string[] },
+    requireUserVerification = false,
   ) {
     let result;
     try {
@@ -86,7 +106,7 @@ export const webauthn = {
           counter: credential.counter,
           transports: credential.transports,
         },
-        requireUserVerification: false,
+        requireUserVerification,
       });
     } catch {
       throw badRequest('WEBAUTHN_VERIFICATION_FAILED');

@@ -8,7 +8,7 @@ import { badRequest } from './errors.js';
 
 const CHALLENGE_TTL_MS = 5 * 60 * 1000;
 
-type Purpose = 'login' | 'add-passkey';
+type Purpose = 'login' | 'add-passkey' | 'parent-unlock';
 
 export async function storeChallenge(
   config: AppConfig,

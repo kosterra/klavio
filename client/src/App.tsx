@@ -170,9 +170,30 @@ export function App() {
                   </Route>
                   <Route element={<RequireProfile />}>
                     <Route path="/" element={<DashboardPage />} />
-                    <Route path="/mic-test" element={<MicTestPage />} />
-                    <Route path="/mic-setup" element={<MicSetupPage />} />
-                    <Route path="/input" element={<InputPage />} />
+                    <Route
+                      path="/mic-test"
+                      element={
+                        <ParentGate>
+                          <MicTestPage />
+                        </ParentGate>
+                      }
+                    />
+                    <Route
+                      path="/mic-setup"
+                      element={
+                        <ParentGate>
+                          <MicSetupPage />
+                        </ParentGate>
+                      }
+                    />
+                    <Route
+                      path="/input"
+                      element={
+                        <ParentGate>
+                          <InputPage />
+                        </ParentGate>
+                      }
+                    />
                     <Route path="/profile" element={<ProfileSettingsPage />} />
                     <Route path="/knowledge" element={<KnowledgePage />} />
                   </Route>

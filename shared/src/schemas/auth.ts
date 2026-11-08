@@ -45,6 +45,7 @@ export const accountUpdateSchema = z.object({ displayName: displayNameSchema });
 
 /** Parent PIN: 4–6 digits, protects the parent area from children (not an account password). */
 export const parentPinSchema = z.object({ pin: z.string().regex(/^\d{4,6}$/) });
+export const parentPasskeySettingSchema = z.object({ enabled: z.boolean() });
 
 export type UserRole = 'user' | 'admin';
 
@@ -57,7 +58,14 @@ export interface MeResponse {
     role: UserRole;
     passkeyCount: number;
     /** Parent PIN set, and until when this session has the parent area unlocked. */
-    parentPin: { set: boolean; unlockedUntil: string | null };
+    parentPin: {
+      set: boolean;
+      unlockedUntil: string | null;
+      /** the parent area can also be opened with a passkey (switched on, and a passkey exists) */
+      passkey: boolean;
+      /** the setting itself (also when there is no passkey yet) */
+      passkeyEnabled: boolean;
+    };
   };
   activeProfileId: string | null;
 }

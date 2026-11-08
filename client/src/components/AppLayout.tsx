@@ -13,6 +13,7 @@ import {
   IconCloudOff,
   IconDeviceDesktop,
   IconLanguage,
+  IconLock,
   IconMoon,
   IconSun,
   IconLogout,
@@ -28,11 +29,13 @@ import { Link, Outlet, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { APP_CONFIG } from '@klavio/shared';
 import { useSession } from '../auth/session';
+import { useParentUnlocked } from '../auth/useParentUnlocked';
 import { ProfileAvatar } from './ProfileAvatar';
 import { PrivacyBadge } from './PrivacyNote';
 
 export function AppLayout() {
   const { t, i18n } = useTranslation();
+  const parentUnlocked = useParentUnlocked();
   const { me, activeProfile, logout, offline } = useSession();
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const navigate = useNavigate();
@@ -100,6 +103,10 @@ export function AppLayout() {
                 {activeProfile && (
                   <Menu.Item
                     leftSection={<IconPiano size={18} />}
+                    // parent area: the input setup
+                    rightSection={
+                      parentUnlocked ? null : <IconLock size={14} aria-label={t('parent.title')} />
+                    }
                     onClick={() => navigate('/input')}
                   >
                     {t('nav.input')}

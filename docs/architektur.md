@@ -100,16 +100,16 @@ Was davon personenbezogen ist und wie lange es bleibt: [datenschutz.md](datensch
 
 Alle Routen unter `/api`, JSON, Validierung mit zod (Schemas in `shared/src/schemas/`).
 
-| Bereich       | Routen                                                                                                                                                                             |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| öffentlich    | `GET /config`, `GET /health`                                                                                                                                                       |
-| `/auth/email` | `POST /request` (Code senden), `POST /verify` (anmelden oder Konto anlegen)                                                                                                        |
-| `/auth`       | `POST /login/options`, `POST /login/verify` (Passkey), `POST /logout`, `GET /me`                                                                                                   |
-| `/passkeys`   | `GET /`, `POST /options`, `POST /verify` (hinzufügen), `PATCH /:id`, `DELETE /:id`                                                                                                 |
-| `/account`    | `PATCH /` (Name), `POST /email/request`, `POST /email/verify` (Adresse ändern), `DELETE /` (Konto löschen), `PUT`/`DELETE /pin`, `POST /pin/verify`, `POST /pin/lock` (Eltern-PIN) |
-| `/profiles`   | `GET /`, `POST /`, `PATCH /:id`, `DELETE /:id`, `POST /select`                                                                                                                     |
-| `/progress`   | `GET /?date=` (Fortschritt des aktiven Profils), `POST /lessons/:lessonId` (Lektion beendet)                                                                                       |
-| `/admin`      | `GET /settings`, `PUT /settings` (nur Rolle `admin`)                                                                                                                               |
+| Bereich       | Routen                                                                                                                                                                                                                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| öffentlich    | `GET /config`, `GET /health`                                                                                                                                                                                                                                                                |
+| `/auth/email` | `POST /request` (Code senden), `POST /verify` (anmelden oder Konto anlegen)                                                                                                                                                                                                                 |
+| `/auth`       | `POST /login/options`, `POST /login/verify` (Passkey), `POST /logout`, `GET /me`                                                                                                                                                                                                            |
+| `/passkeys`   | `GET /`, `POST /options`, `POST /verify` (hinzufügen), `PATCH /:id`, `DELETE /:id`                                                                                                                                                                                                          |
+| `/account`    | `PATCH /` (Name), `POST /email/request`, `POST /email/verify` (Adresse ändern), `DELETE /` (Konto löschen), `PUT`/`DELETE /pin`, `POST /pin/verify`, `POST /pin/lock` (Eltern-PIN), `PUT /pin/passkey`, `POST /pin/passkey/options`, `POST /pin/passkey/verify` (Elternbereich mit Passkey) |
+| `/profiles`   | `GET /`, `POST /`, `PATCH /:id`, `DELETE /:id`, `POST /select`                                                                                                                                                                                                                              |
+| `/progress`   | `GET /?date=` (Fortschritt des aktiven Profils), `POST /lessons/:lessonId` (Lektion beendet)                                                                                                                                                                                                |
+| `/admin`      | `GET /settings`, `PUT /settings` (nur Rolle `admin`)                                                                                                                                                                                                                                        |
 
 Querschnitt (`server/src/app.ts`): Helmet mit strikter CSP für JSON, Cookies, Rate-Limits (global
 300/min, strenger für Anmeldung und E-Mail-Codes), Origin-Prüfung für alle zustandsändernden Anfragen
@@ -152,7 +152,11 @@ Session merkt sich das aktive Profil.
 Ändern und Löschen von Profilen einen offenen Elternbereich (`requireParent`, Fehler
 `PARENT_LOCKED`). Er öffnet sich durch die PIN oder eine frische Anmeldung (das ist der Erwachsene) für
 15 Minuten und schliesst sich, sobald ein Profil gewählt wird – der Moment, in dem das Gerät an ein
-Kind geht. Lernen, Profil wählen und die Mikrofon-Kalibrierung bleiben ohne PIN möglich.
+Kind geht. Lernen, Profil wählen und die eigene Figur bleiben ohne PIN möglich; die Einrichtung von
+Mikrofon und MIDI (`/input`, `/mic-setup`, `/mic-test`) gehört zum Elternbereich. Auf Wunsch (Schalter
+unter «Elternbereich») öffnet ihn auch ein Passkey des Kontos: nur die eigenen Passkeys
+(`allowCredentials`), mit Prüfung am Gerät (`userVerification: required`), eigene Challenge
+(`parent-unlock`).
 
 ## Eingaben
 

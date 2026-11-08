@@ -4,7 +4,9 @@ import {
   accountEmailVerifySchema,
   accountUpdateSchema,
   emailRequestSchema,
+  parentPasskeySettingSchema,
   parentPinSchema,
+  webauthnVerifyRequestSchema,
 } from '@klavio/shared';
 import type { AppConfig } from '../config.js';
 import {
@@ -21,6 +23,8 @@ import { checkEmailCode, issueEmailCode } from '../lib/emailCodes.js';
 import { verifyEmailMail, type Mailer } from '../lib/mailer.js';
 import { PARENT_UNLOCK_MS, destroySession } from '../lib/session.js';
 import { hmac, safeEqualHex } from '../lib/crypto.js';
+import { consumeChallenge, storeChallenge } from '../lib/challenge.js';
+import { webauthn } from '../lib/webauthn.js';
 
 const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }> = async (
   app,
@@ -73,6 +77,81 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
       if (!safeEqualHex(user.parentPinHash, pinHash(user._id, req.body.pin))) {
         throw new HttpError(403, 'PIN_WRONG');
       }
+      const until = new Date(Date.now() + PARENT_UNLOCK_MS);
+      await unlock(sessionId, until);
+      return { unlockedUntil: until.toISOString() };
+    },
+  );
+
+  // ------------------------------------------- open the parent area with a passkey
+  app.put('/pin/passkey', { schema: { body: parentPasskeySettingSchema } }, async (req, reply) => {
+    await User.updateOne({ _id: req.auth!.user._id }, { parentPasskeyUnlock: req.body.enabled });
+    return reply.code(204).send();
+  });
+
+  const passkeyUnlockAllowed = async (user: {
+    _id: Types.ObjectId;
+    parentPinHash?: string | null;
+    parentPasskeyUnlock?: boolean | null;
+  }) => {
+    if (!user.parentPinHash || !user.parentPasskeyUnlock)
+      throw new HttpError(403, 'PASSKEY_UNLOCK_OFF');
+    const passkeys = await Passkey.find({ userId: user._id }).lean();
+    if (!passkeys.length) throw new HttpError(403, 'PASSKEY_UNLOCK_OFF');
+    return passkeys;
+  };
+
+  app.post(
+    '/pin/passkey/options',
+    { config: { parentLockFree: true, rateLimit: { max: 20, timeWindow: '5 minutes' } } },
+    async (req, reply) => {
+      const { user } = req.auth!;
+      const passkeys = await passkeyUnlockAllowed(user);
+      // only this account's passkeys, and the device must check who is there
+      const options = await webauthn.authenticationOptions(
+        config,
+        passkeys.map((p) => ({ credentialId: p.credentialId, transports: p.transports ?? [] })),
+      );
+      await storeChallenge(config, reply, {
+        challenge: options.challenge,
+        purpose: 'parent-unlock',
+        userId: user._id,
+      });
+      return options;
+    },
+  );
+
+  app.post(
+    '/pin/passkey/verify',
+    {
+      schema: { body: webauthnVerifyRequestSchema },
+      config: { parentLockFree: true, rateLimit: { max: 20, timeWindow: '5 minutes' } },
+    },
+    async (req, reply) => {
+      const { user, sessionId } = req.auth!;
+      await passkeyUnlockAllowed(user);
+      const ch = await consumeChallenge(config, req, reply, 'parent-unlock');
+      if (!ch.userId || !ch.userId.equals(user._id)) throw new HttpError(403, 'PASSKEY_UNKNOWN');
+      const passkey = await Passkey.findOne({
+        credentialId: req.body.response.id,
+        userId: user._id,
+      });
+      if (!passkey) throw new HttpError(403, 'PASSKEY_UNKNOWN');
+      const result = await webauthn.verifyAuthentication(
+        config,
+        req.body.response,
+        ch.challenge,
+        {
+          credentialId: passkey.credentialId,
+          publicKey: passkey.publicKey,
+          counter: passkey.counter,
+          transports: passkey.transports,
+        },
+        true,
+      );
+      passkey.counter = result.newCounter;
+      passkey.lastUsedAt = new Date();
+      await passkey.save();
       const until = new Date(Date.now() + PARENT_UNLOCK_MS);
       await unlock(sessionId, until);
       return { unlockedUntil: until.toISOString() };

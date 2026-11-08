@@ -168,7 +168,8 @@
     "NO_ACTIVE_PROFILE": "Please choose a profile first.",
     "NETWORK": "No connection to the server. Check the internet connection and try again.",
     "PARENT_LOCKED": "This is the parent area. Please enter the parent PIN first.",
-    "PIN_WRONG": "The PIN is not correct."
+    "PIN_WRONG": "The PIN is not correct.",
+    "PASSKEY_UNLOCK_OFF": "The parent area can only be opened with the PIN here."
   },
   "validation": {
     "name": "Please enter a name (max. 40 characters).",
@@ -439,7 +440,12 @@
     "lockNow": "Lock now",
     "newPin": "New PIN (4 digits)",
     "repeatPin": "Repeat PIN",
-    "mismatch": "The two PINs do not match."
+    "mismatch": "The two PINs do not match.",
+    "withPasskey": "Open with passkey",
+    "orPin": "or with the PIN:",
+    "passkeySetting": "Also open the parent area with a passkey",
+    "passkeySettingHint": "Instead of the PIN, a fingerprint, face or device PIN of one of this account's passkeys is enough. Only switch this on if the children can't unlock this device themselves.",
+    "passkeySettingNeedsPasskey": "Set up a passkey above first."
   },
   "profileSettings": {
     "title": "My profile",

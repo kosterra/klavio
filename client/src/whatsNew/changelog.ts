@@ -35,6 +35,14 @@ export const CHANGELOG: Release[] = [
         'What’s new: this page shows what changes in Klavio – version by version.',
       ),
       L(
+        'Elternbereich: Eltern öffnen ihn auf Wunsch auch mit einem Passkey statt mit der PIN – einschalten unter «Konto» → «Elternbereich». Die Einrichtung von Mikrofon und Digitalpiano gehört jetzt zum Elternbereich.',
+        'Parent area: parents can also open it with a passkey instead of the PIN – switch it on under “Account” → “Parent area”. Setting up the microphone and digital piano now belongs to the parent area.',
+      ),
+      L(
+        'Korrektur: «Zum Lernpfad» wird auf dem Ergebnis-Bildschirm nicht mehr abgeschnitten.',
+        'Fix: “To the learning path” on the result screen is no longer cut off.',
+      ),
+      L(
         'Geteilte Links: Ein Link zu Klavio zeigt in Nachrichten-Apps jetzt Titel, Beschreibung und ein Bild der Welten.',
         'Shared links: a link to Klavio now shows a title, a description and a picture of the worlds in messaging apps.',
       ),

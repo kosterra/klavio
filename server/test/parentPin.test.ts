@@ -42,7 +42,12 @@ describe('parent PIN', () => {
     const { jar, kid } = await family();
     await call(jar, 'POST', '/api/profiles/select', { profileId: kid.id });
     const me = (await call(jar, 'GET', '/api/auth/me')).json();
-    expect(me.user.parentPin).toEqual({ set: false, unlockedUntil: null });
+    expect(me.user.parentPin).toEqual({
+      set: false,
+      unlockedUntil: null,
+      passkey: false,
+      passkeyEnabled: false,
+    });
     expect((await call(jar, 'GET', '/api/passkeys')).statusCode).toBe(200);
   });
 

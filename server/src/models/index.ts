@@ -13,6 +13,8 @@ const userSchema = new Schema(
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     /** HMAC of the optional parent PIN (protects the parent area from children). */
     parentPinHash: { type: String, default: null },
+    /** the parent area may also be opened with one of the account's passkeys */
+    parentPasskeyUnlock: { type: Boolean, default: false },
     locale: { type: String, default: 'de-CH' },
   },
   { timestamps: true },
@@ -139,7 +141,7 @@ const authChallengeSchema = new Schema({
   /** SHA-256 of the random token stored in the challenge cookie. */
   tokenHash: { type: String, required: true, unique: true },
   challenge: { type: String, required: true },
-  purpose: { type: String, enum: ['login', 'add-passkey'], required: true },
+  purpose: { type: String, enum: ['login', 'add-passkey', 'parent-unlock'], required: true },
   /** add-passkey: the logged-in user. */
   userId: { type: Schema.Types.ObjectId, default: null },
   expiresAt: { type: Date, required: true },

@@ -168,7 +168,8 @@
     "NO_ACTIVE_PROFILE": "Bitte wähle zuerst ein Profil.",
     "NETWORK": "Keine Verbindung zum Server. Prüfe das Internet und versuche es nochmals.",
     "PARENT_LOCKED": "Das ist Elternbereich. Bitte gib zuerst die Eltern-PIN ein.",
-    "PIN_WRONG": "Die PIN stimmt nicht."
+    "PIN_WRONG": "Die PIN stimmt nicht.",
+    "PASSKEY_UNLOCK_OFF": "Der Elternbereich lässt sich hier nur mit der PIN öffnen."
   },
   "validation": {
     "name": "Bitte gib einen Namen ein (höchstens 40 Zeichen).",
@@ -439,7 +440,12 @@
     "lockNow": "Jetzt sperren",
     "newPin": "Neue PIN (4 Ziffern)",
     "repeatPin": "PIN wiederholen",
-    "mismatch": "Die beiden PINs stimmen nicht überein."
+    "mismatch": "Die beiden PINs stimmen nicht überein.",
+    "withPasskey": "Mit Passkey öffnen",
+    "orPin": "oder mit der PIN:",
+    "passkeySetting": "Elternbereich auch mit Passkey öffnen",
+    "passkeySettingHint": "Statt der PIN genügt dann Fingerabdruck, Gesicht oder die Geräte-PIN eines Passkeys dieses Kontos. Nur einschalten, wenn die Kinder dieses Gerät nicht selbst entsperren können.",
+    "passkeySettingNeedsPasskey": "Richte dafür zuerst oben einen Passkey ein."
   },
   "profileSettings": {
     "title": "Mein Profil",
