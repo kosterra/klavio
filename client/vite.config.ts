@@ -2,19 +2,20 @@ import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { APP_CONFIG } from '@klavio/shared';
+import rootPackage from '../package.json' with { type: 'json' };
+
+// the version of Klavio lives in the root package.json (scripts/version.mjs)
+const appVersion = process.env.APP_VERSION ?? rootPackage.version;
 
 export default defineConfig({
   plugins: [
     react(),
     {
-      // Link previews need absolute URLs. Behind Caddy the address is filled in per
-      // request (Caddyfile: `templates`); during development relative is enough.
+      // Link previews need absolute URLs: the server puts in its APP_ORIGIN when it
+      // serves the page (server/src/plugins/web.ts); during development relative is enough.
       name: 'klavio-origin',
       transformIndexHtml: (html, ctx) =>
-        html.replaceAll(
-          '%ORIGIN%',
-          ctx.server ? '' : (process.env.PUBLIC_ORIGIN ?? 'https://{{.Host}}'),
-        ),
+        html.replaceAll('%ORIGIN%', ctx.server ? '' : '__KLAVIO_ORIGIN__'),
     },
     VitePWA({
       registerType: 'prompt',
@@ -46,6 +47,12 @@ export default defineConfig({
       devOptions: { enabled: false },
     }),
   ],
+  define: {
+    __APP_VERSION__: JSON.stringify(appVersion),
+    // only the release build of main is the version itself; any other build (develop,
+    // local) shows the changes of «Next release» as coming soon
+    __APP_RELEASED__: JSON.stringify(process.env.APP_RELEASED === 'true'),
+  },
   server: {
     port: 5173,
     proxy: { '/api': 'http://localhost:3100' },

@@ -113,3 +113,21 @@ test('language: switch on the landing page, remembered on this device, also in t
   await page.getByRole('menuitem', { name: 'Deutsch' }).click();
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
 });
+
+test('«Was ist neu»: reachable from the start page, upcoming changes marked as coming soon', async ({
+  page,
+}) => {
+  await page.goto('/welcome');
+  await page.getByRole('link', { name: 'Was ist neu' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Was ist neu' })).toBeVisible();
+  await expect(page.getByTestId('app-version')).toContainText('Diese Version:');
+  const upcoming = page.getByTestId('release-Next release');
+  await expect(upcoming).toContainText('Kommt bald');
+  await expect(upcoming).toContainText('Klavi liest vor');
+  await audit(page);
+  // folded and unfolded
+  await upcoming.getByRole('button').click();
+  await expect(upcoming.getByText('Klavi liest vor')).toBeHidden();
+  await page.getByRole('link', { name: 'Zur Startseite' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: /Klavier lernen/ })).toBeVisible();
+});

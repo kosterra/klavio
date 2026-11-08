@@ -18,6 +18,7 @@ import { themes } from './theme/theme';
 import { AppLayout } from './components/AppLayout';
 import { ReloadPrompt } from './components/ReloadPrompt';
 import { Mascot } from './components/Mascot';
+import { WhatsNewPage } from './whatsNew/WhatsNewPage';
 import { WelcomePage } from './pages/WelcomePage';
 import { EmailLoginPage } from './pages/EmailLoginPage';
 import { ProfilesPage } from './pages/ProfilesPage';
@@ -177,6 +178,8 @@ export function App() {
                   </Route>
                 </Route>
               </Route>
+              {/* for visitors and learners alike */}
+              <Route path="/whats-new" element={<WhatsNewPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>

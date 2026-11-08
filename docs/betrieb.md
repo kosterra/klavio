@@ -13,7 +13,32 @@ Klavio auf einem eigenen Server mit eigener Domain betreiben. Für die lokale En
   Port 80 ist optional, nur für die Umleitung von `http://` auf `https://`.
 - Ein **SMTP-Konto** für die E-Mail-Codes (Anmeldung und Registrierung laufen darüber).
 
+## Das Image
+
+Klavio kommt als **ein Docker-Image** für App und API: `kosterra/klavio` auf Docker Hub. Der Server
+beantwortet `/api` und liefert die gebaute App selbst aus (mit eigenen Sicherheits-Headern: CSP,
+HSTS, Permissions-Policy). Davor gehört nur ein Reverse Proxy für TLS – in `docker-compose.yml` ist
+das Caddy.
+
+| Tag         | Inhalt                                                                          |
+| ----------- | ------------------------------------------------------------------------------- |
+| `latest`    | die neueste Version (jeder Merge nach `main`)                                   |
+| `2026.11.0` | eine bestimmte Version (`{Jahr}.{Monat}.{Folge}`, siehe «Was ist neu»)          |
+| `develop`   | der neueste Entwicklungsstand, für Testserver; «Was ist neu» zeigt «Kommt bald» |
+
+Die Versionen sind mit Sigstore signiert (keyless, an den Release-Workflow gebunden) und tragen
+Provenienz und SBOM:
+
+```bash
+cosign verify kosterra/klavio:2026.11.0 \
+  --certificate-identity-regexp 'https://github.com/kosterra/klavio/.github/workflows/release.yml@.*' \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com
+docker buildx imagetools inspect kosterra/klavio:2026.11.0 --format '{{ json .SBOM }}'
+```
+
 ## Einrichten
+
+Es braucht nur `docker-compose.yml`, `Caddyfile` und `.env` (aus diesem Repository):
 
 ```bash
 git clone <repo> klavio && cd klavio
@@ -50,7 +75,8 @@ den Container-Betrieb.
 Starten – **ohne Mailpit**, das nur zum Testen gedacht ist:
 
 ```bash
-docker compose up -d --build mongo server web
+docker compose pull app
+docker compose up -d mongo app caddy
 docker compose ps
 curl https://klavio.example.ch/api/health      # {"ok":true}
 ```
@@ -60,7 +86,7 @@ Caddy holt beim ersten Aufruf das Zertifikat. Für die Umleitung von Port 80 ein
 
 ```yaml
 services:
-  web:
+  caddy:
     ports:
       - '80:80'
 ```
@@ -70,8 +96,8 @@ services:
 In der App ein Konto registrieren, dann:
 
 ```bash
-docker compose exec server node server/dist/scripts/grantAdmin.js admin@example.ch
-docker compose exec server node server/dist/scripts/grantAdmin.js admin@example.ch --revoke
+docker compose exec app node server/dist/scripts/grantAdmin.js admin@example.ch
+docker compose exec app node server/dist/scripts/grantAdmin.js admin@example.ch --revoke
 ```
 
 Statt der E-Mail-Adresse geht auch die Konto-ID (steht in der App unter «Konto»). Admins sehen im
@@ -127,9 +153,8 @@ Docker Compose (`docker-compose.yml`):
 
 Wird ein Link zu Klavio geteilt (WhatsApp, Signal, soziale Medien), zeigen die Dienste Titel,
 Beschreibung und das Bild `client/public/og-image.jpg` (1200 × 630). Diese Dienste verlangen absolute
-Adressen: Caddy setzt dafür in `index.html` die aufgerufene Domain ein (`templates` im `Caddyfile`).
-Wer Klavio ohne Caddy ausliefert, baut den Client mit `PUBLIC_ORIGIN=https://example.ch`; dann steht
-die Adresse fest im Build. `robots.txt` erlaubt Suchmaschinen die Startseite und sperrt `/api/`.
+Adressen: Der Server setzt beim Ausliefern von `index.html` seine `APP_ORIGIN` ein. `robots.txt`
+erlaubt Suchmaschinen die Startseite und sperrt `/api/`.
 
 Der Produktname ist ein Platzhalter und steht zentral in `shared/src/config/app.ts` (UI, Manifest,
 WebAuthn, E-Mails); eine Änderung braucht einen neuen Build.
@@ -155,9 +180,13 @@ aufbewahren, siehe [datenschutz.md](datenschutz.md).
 ## Aktualisieren
 
 ```bash
-git pull
-docker compose up -d --build mongo server web
+git pull                       # neue docker-compose.yml / Caddyfile, falls geändert
+docker compose pull app
+docker compose up -d mongo app caddy
 ```
+
+Eine bestimmte Version statt `latest`: `KLAVIO_VERSION=2026.11.0` in `.env`. Selbst bauen statt
+herunterladen: `docker compose build app`.
 
 Indizes legt der Server beim Start selbst an; Migrationen sind bisher nicht nötig. Geöffnete Apps
 laden die neue Version im Hintergrund und zeigen ein Banner «Neue Version verfügbar – Neu laden».
@@ -166,7 +195,7 @@ Vorher eine Sicherung machen.
 ## Überwachen
 
 - **Gesundheit:** `GET /api/health` → `{"ok":true}`.
-- **Logs:** `docker compose logs -f server` (JSON, eine Zeile pro Anfrage: Methode, Pfad, Status,
+- **Logs:** `docker compose logs -f app` (JSON, eine Zeile pro Anfrage: Methode, Pfad, Status,
   Dauer – **ohne IP-Adressen**). Caddy schreibt kein Zugriffsprotokoll. Fehler enthalten den
   Stacktrace.
 - **Container-Neustart** ist mit `restart: unless-stopped` eingerichtet.

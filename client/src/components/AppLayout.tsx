@@ -18,6 +18,7 @@ import {
   IconLogout,
   IconPiano,
   IconSettings,
+  IconSparkles,
   IconShield,
   IconUserCircle,
   IconBulb,
@@ -109,6 +110,12 @@ export function AppLayout() {
                   onClick={() => navigate('/account')}
                 >
                   {t('nav.account')}
+                </Menu.Item>
+                <Menu.Item
+                  leftSection={<IconSparkles size={18} />}
+                  onClick={() => navigate('/whats-new')}
+                >
+                  {t('whatsNew.link')}
                 </Menu.Item>
                 {me?.user.role === 'admin' && (
                   <Menu.Item

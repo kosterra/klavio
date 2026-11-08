@@ -31,6 +31,8 @@ const envSchema = z.object({
   SMTP_PASS: z.string().optional(),
   MAIL_FROM: z.string().default('Klavio <no-reply@localhost>'),
   TRUST_PROXY: bool.default(false),
+  /** The built client (index.html, assets) – set in the Docker image, unset in development (Vite serves it). */
+  STATIC_DIR: z.string().optional(),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
 });
 

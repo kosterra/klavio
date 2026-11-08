@@ -663,5 +663,27 @@
     "auto": "Klavi liest vor",
     "autoHint": "Aufgaben und Erklärungen werden automatisch vorgelesen – praktisch für Kinder, die noch nicht lesen können. Die Stimme kommt vom Gerät, der Text verlässt es nicht. Während Klavi spricht, hört das Mikrofon kurz weg.",
     "noVoice": "Auf diesem Gerät ist keine Stimme für diese Sprache installiert. In den Einstellungen des Geräts lässt sich eine Sprachausgabe hinzufügen."
+  },
+  "whatsNew": {
+    "title": "Was ist neu",
+    "lead": "Klavio wächst: neue Welten, Lektionen und Ideen, Version für Version.",
+    "thisVersion": "Diese Version: {{version}}",
+    "upcoming": "Nächste Version",
+    "soon": "Kommt bald",
+    "latest": "Neueste",
+    "version": "Version {{version}}",
+    "new": "Neu",
+    "fix": "Korrektur",
+    "countNew_one": "{{count}} Neuerung",
+    "countNew_other": "{{count}} Neuerungen",
+    "countFix_one": "{{count}} Korrektur",
+    "countFix_other": "{{count}} Korrekturen",
+    "all": "Alle {{count}} Versionen zeigen",
+    "fewer": "Nur die neuesten Versionen",
+    "backApp": "Zur App",
+    "backHome": "Zur Startseite",
+    "open": "Klavio entsteht offen:",
+    "history": "alle Änderungen auf GitHub",
+    "link": "Was ist neu"
   }
 }

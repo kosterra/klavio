@@ -83,7 +83,10 @@ test('Klavi reads tasks and explanations aloud – automatically for Kids, switc
   await expect(toggle).not.toBeChecked();
   const before = (await spoken(page)).length;
   await page.goto('/');
-  await page.getByRole('link', { name: /Weiter|Erste Lektion|Wo ist das C/ }).first().click();
+  await page
+    .getByRole('link', { name: /Weiter|Erste Lektion|Wo ist das C/ })
+    .first()
+    .click();
   await startLesson(page);
   await expect(page.getByTestId('read-aloud')).toBeVisible();
   await page.waitForTimeout(500);

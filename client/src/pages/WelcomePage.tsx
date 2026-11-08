@@ -320,7 +320,11 @@ export function WelcomePage() {
             {t('landing.footer')}{' '}
             <a href={APP_CONFIG.sourceUrl} className={classes.footerLink}>
               {t('landing.source')}
-            </a>
+            </a>{' '}
+            ·{' '}
+            <Link to="/whats-new" className={classes.footerLink}>
+              {t('whatsNew.link')}
+            </Link>
           </Text>
         </Container>
       </section>

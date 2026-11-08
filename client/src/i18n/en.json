@@ -663,5 +663,27 @@
     "auto": "Klavi reads aloud",
     "autoHint": "Tasks and explanations are read aloud automatically – handy for children who can't read yet. The voice comes from the device and the text never leaves it. While Klavi speaks, the microphone briefly stops listening.",
     "noVoice": "This device has no voice installed for this language. You can add text-to-speech in the device settings."
+  },
+  "whatsNew": {
+    "title": "What’s new",
+    "lead": "Klavio keeps growing: new worlds, lessons and ideas, version by version.",
+    "thisVersion": "This version: {{version}}",
+    "upcoming": "Next version",
+    "soon": "Coming soon",
+    "latest": "Latest",
+    "version": "Version {{version}}",
+    "new": "New",
+    "fix": "Fix",
+    "countNew_one": "{{count}} new",
+    "countNew_other": "{{count}} new",
+    "countFix_one": "{{count}} fix",
+    "countFix_other": "{{count}} fixes",
+    "all": "Show all {{count}} versions",
+    "fewer": "Only the latest versions",
+    "backApp": "Back to the app",
+    "backHome": "Back to the start page",
+    "open": "Klavio is made in the open:",
+    "history": "every change on GitHub",
+    "link": "What’s new"
   }
 }
