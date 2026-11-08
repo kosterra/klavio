@@ -122,17 +122,16 @@ export function PlayAlongExercise({
           ? t('lesson.wrongPlay', { note: midiToPitchName(wrong, lang) })
           : t('lesson.part', { n: seqIndex + 1, total: exercise.sequences.length })}
       </Text>
-      <div style={{ width: '100%' }}>
-        <VirtualKeyboard
-          from={lesson.keyboard.from}
-          to={lesson.keyboard.to}
-          labels={lesson.keyLabels}
-          height={kids ? 200 : 170}
-          interactive={inputMode === 'screen'}
-          hints={hint}
-          wrong={wrong !== null ? [wrong] : []}
-        />
-      </div>
+      <VirtualKeyboard
+        dock
+        from={lesson.keyboard.from}
+        to={lesson.keyboard.to}
+        labels={lesson.keyLabels}
+        height={kids ? 200 : 170}
+        interactive={inputMode === 'screen'}
+        hints={hint}
+        wrong={wrong !== null ? [wrong] : []}
+      />
     </Stack>
   );
 }

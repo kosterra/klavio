@@ -13,8 +13,9 @@
 - **Discover:** a short explanation with pictures, games and quizzes before each lesson; reading aloud for children who can't read yet (with the device's own voices).
 - **Review like flash cards:** lessons come back after 1, 3, 7, 14 and 30 days, with a quick round and medals.
 - **My dream song:** adults name the song they want to play one day; Klavio recognises it and shows the skills it needs and how close they are.
+- **Two kinds of worlds:** colourful worlds for children; from an age admins set, a profile can choose «The journey» instead – down into «hell», the hardest chapter, and up to the dream song, with an elevation profile.
 - **For families:** several profiles per account, a Kids and a Classic view, a parent area behind a PIN (or a passkey), stars, levels and badges without pressure.
-- **Accounts:** passkeys (fingerprint, face or device PIN) or a code by e-mail – no passwords. No birthdates, no tracking, no ads.
+- **Accounts:** passkeys (fingerprint, face or device PIN) or a code by e-mail – no passwords. No birthdates (just the year, to offer the right worlds), no tracking, no ads.
 - **Works offline** once loaded; results are sent when the device is back online.
 - **Languages:** German (Switzerland) and English; light and dark colour scheme.
 

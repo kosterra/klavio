@@ -20,7 +20,8 @@ import {
 } from '../models/index.js';
 import { HttpError, badRequest } from '../lib/errors.js';
 import { checkEmailCode, issueEmailCode } from '../lib/emailCodes.js';
-import { verifyEmailMail, type Mailer } from '../lib/mailer.js';
+import type { Mailer } from '../lib/mailer.js';
+import { codeMail } from '../lib/mailTemplates.js';
 import { PARENT_UNLOCK_MS, destroySession } from '../lib/session.js';
 import { hmac, safeEqualHex } from '../lib/crypto.js';
 import { consumeChallenge, storeChallenge } from '../lib/challenge.js';
@@ -180,7 +181,9 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
         userId,
       });
       if (!code) throw new HttpError(429, 'TOO_MANY_CODES');
-      await mailer.send(verifyEmailMail(req.body.email, code));
+      await mailer.send(
+        await codeMail(config, 'verify-email', req.body.email, code, req.body.lang),
+      );
       return reply.code(204).send();
     },
   );

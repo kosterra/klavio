@@ -65,6 +65,7 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await signUpWithEmail(page, uniqueEmail('lesson'), 'Familie');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Lina');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
 
   // --- dashboard: first lesson current, the rest locked

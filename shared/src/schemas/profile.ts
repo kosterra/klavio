@@ -5,6 +5,55 @@ import { GOAL_STYLES, SKILL_IDS } from '../curriculum/skills.ts';
 export const uiModeSchema = z.enum(['kids', 'classic']);
 export type UiMode = z.infer<typeof uiModeSchema>;
 
+/**
+ * Which worlds a profile travels through: the colourful kids' worlds or the
+ * adults' journey (down into «Die Hölle», up to the dream song). From the
+ * age admins set (journeyMinAge) a profile can choose; younger ones always
+ * get the kids' worlds.
+ */
+export const worldSetSchema = z.enum(['kids', 'journey']);
+export type WorldSet = z.infer<typeof worldSetSchema>;
+
+/** Default for the admin setting «both worlds from age …». */
+export const DEFAULT_JOURNEY_MIN_AGE = 12;
+
+/** Only the year of birth is stored – never a date. */
+export const birthYearSchema = z
+  .number()
+  .int()
+  .min(1900)
+  .refine((y) => y <= new Date().getFullYear(), { message: 'birth year in the future' });
+
+/** Age in the given year (the age one turns this year – the year is all Klavio knows). */
+export function ageIn(birthYear: number, year = new Date().getFullYear()): number {
+  return year - birthYear;
+}
+
+/** Whether a profile may choose between both worlds. Profiles without a birth year can't. */
+export function canChooseWorld(
+  birthYear: number | null | undefined,
+  minAge: number,
+  year?: number,
+): boolean {
+  return birthYear != null && ageIn(birthYear, year) >= minAge;
+}
+
+/**
+ * The worlds a profile actually sees. Without a choice yet, Classic profiles
+ * travel the journey and Kids profiles the kids' worlds; below the minimum
+ * age it is always the kids' worlds. Profiles from before the birth year
+ * existed keep what they had.
+ */
+export function effectiveWorld(
+  profile: { birthYear: number | null; world: WorldSet | null; uiMode: UiMode },
+  minAge: number,
+  year?: number,
+): WorldSet {
+  const chosen = profile.world ?? (profile.uiMode === 'classic' ? 'journey' : 'kids');
+  if (profile.birthYear == null) return chosen;
+  return canChooseWorld(profile.birthYear, minAge, year) ? chosen : 'kids';
+}
+
 /** Figures a profile can choose; "klavi" (the app's mascot) is the default. */
 export const avatarSchema = z.enum(['klavi', 'fox', 'owl', 'cat', 'bear', 'frog', 'whale']);
 export type Avatar = z.infer<typeof avatarSchema>;
@@ -29,6 +78,8 @@ export const profileCreateSchema = z.object({
   avatar: avatarSchema.default('klavi'),
   uiMode: uiModeSchema.default('kids'),
   dailyGoalMinutes: z.number().int().min(5).max(60).default(10),
+  birthYear: birthYearSchema,
+  world: worldSetSchema.nullable().default(null),
 });
 
 export const profileUpdateSchema = z
@@ -39,6 +90,8 @@ export const profileUpdateSchema = z
     dailyGoalMinutes: z.number().int().min(5).max(60),
     calibration: calibrationSchema.partial(),
     goalSong: goalSongSchema.nullable(),
+    birthYear: birthYearSchema,
+    world: worldSetSchema.nullable(),
   })
   .partial();
 
@@ -56,6 +109,10 @@ export interface ProfileDto {
   streak: { current: number; longest: number; lastActiveDate: string | null };
   badges: { id: string; earnedAt: string }[];
   goalSong: GoalSong | null;
+  /** null for profiles created before it was asked */
+  birthYear: number | null;
+  /** chosen worlds; null = not chosen (follows uiMode) */
+  world: WorldSet | null;
 }
 
 export const MAX_PROFILES_PER_ACCOUNT = 8;

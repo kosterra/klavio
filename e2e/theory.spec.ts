@@ -10,6 +10,7 @@ test('the first lesson starts with "Entdecken": explanations, games and a quiz',
   await signUpWithEmail(page, uniqueEmail('theory'), 'Familie Ton');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Lia');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await page.getByRole('link', { name: 'Erste Lektion starten' }).click();
 
@@ -71,6 +72,7 @@ test('quiz: wrong answers get a hint, the right one unlocks "Weiter"', async ({ 
   await signUpWithEmail(page, uniqueEmail('quiz'), 'Familie Quiz');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Noa');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   // jump to a lesson with a quiz: keys-d-e needs the two lessons before
@@ -100,6 +102,7 @@ test('reading and rhythm theory: staff lines/spaces, pizza note values, clap gam
   await signUpWithEmail(page, uniqueEmail('theory2'), 'Familie Takt');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Mo');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   const ids = LESSONS.map((l) => l.id);
@@ -146,6 +149,7 @@ test('"Wissen" lists what was discovered; a new chapter starts with "Weisst du�
   await signUpWithEmail(page, uniqueEmail('wissen'), 'Familie Wissen');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Ela');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   const ids = LESSONS.map((l) => l.id);

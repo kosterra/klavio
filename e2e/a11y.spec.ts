@@ -18,6 +18,7 @@ test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ p
 
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Kim');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
   await audit(page);
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await page.getByRole('heading', { name: 'Hallo Kim!' }).waitFor();
@@ -35,6 +36,7 @@ test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ p
   await page.goto('/profiles');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Max');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
   await page.getByRole('dialog').getByText('Classic', { exact: true }).click();
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await page.getByRole('heading', { name: 'Hallo Max!' }).waitFor();

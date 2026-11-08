@@ -147,16 +147,15 @@ export function ImproviseExercise({
           {phase === 'ready' ? t('lesson.improvise.start') : t('lesson.improvise.again')}
         </Button>
       )}
-      <div style={{ width: '100%' }}>
-        <VirtualKeyboard
-          from={lesson.keyboard.from}
-          to={lesson.keyboard.to}
-          labels="none"
-          height={kids ? 180 : 160}
-          interactive={inputMode === 'screen'}
-          hints={phase === 'play' || kids ? blackKeys : []}
-        />
-      </div>
+      <VirtualKeyboard
+        dock
+        from={lesson.keyboard.from}
+        to={lesson.keyboard.to}
+        labels="none"
+        height={kids ? 180 : 160}
+        interactive={inputMode === 'screen'}
+        hints={phase === 'play' || kids ? blackKeys : []}
+      />
     </Stack>
   );
 }

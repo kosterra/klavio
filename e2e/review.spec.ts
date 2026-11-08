@@ -9,6 +9,7 @@ test('lessons come back for review; quick round mixes old questions', async ({ p
   await signUpWithEmail(page, uniqueEmail('review'), 'Familie Repetition');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Tim');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
 

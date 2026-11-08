@@ -14,6 +14,7 @@ import {
 } from '@mantine/core';
 import { IconDeviceDesktop, IconMicrophone, IconPiano } from '@tabler/icons-react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router';
+import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import {
   LESSONS,
@@ -58,6 +59,7 @@ import { TheorySteps } from '../lesson/theory/TheorySteps';
 import { GoalMilestone } from '../goal/GoalMilestone';
 import { Scenery } from '../lesson/WorldScenery';
 import { worldOfLesson } from '../lesson/worlds';
+import { useWorldMode } from '../lesson/useWorldMode';
 import stage from '../lesson/LessonStage.module.css';
 
 type ShownResult = LessonResultDto & { pending?: boolean };
@@ -145,6 +147,7 @@ function LessonRun({
   const { me, activeProfile, refresh, applyLocalResult } = useSession();
   const input = useLessonInput();
   const kids = activeProfile?.uiMode !== 'classic';
+  const worldSet = useWorldMode();
   const theory = theoryFor(lesson.id);
   // first visit: "Weisst du's noch?" (start of a chapter) + the lesson's theory
   const [steps, setSteps] = useState(() =>
@@ -153,6 +156,12 @@ function LessonRun({
   const [phase, setPhase] = useState<'theory' | 'intro' | 'play' | 'result'>(
     discoverFirst && steps.length ? 'theory' : 'intro',
   );
+  // every step of a lesson starts at the top (the button to it may sit far down on a phone)
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [phase]);
+  // a phone held sideways has little height: smaller figures
+  const short = useMediaQuery('(max-height: 32em)') ?? false;
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
   const mistakes = useRef(0);
@@ -162,7 +171,7 @@ function LessonRun({
   const [saveError, setSaveError] = useState<string | null>(null);
   const total = lessonTargetCount(lesson);
   const chapter = chapterOf(lesson.id);
-  const where = worldOfLesson(lesson.id);
+  const where = worldOfLesson(lesson.id, worldSet);
   const next = LESSONS[LESSONS.findIndex((l) => l.id === lesson.id) + 1] ?? null;
   const { stopMicrophone } = input;
 
@@ -275,7 +284,7 @@ function LessonRun({
           {phase === 'intro' && (
             <Card withBorder radius="xl" padding="xl" maw={640} mx="auto" w="100%">
               <Stack align="center" gap="md">
-                <Buddy mood="happy" size={kids ? 120 : 80} />
+                <Buddy mood="happy" size={short ? 56 : kids ? 120 : 80} />
                 {chapter && (
                   <Text size="sm" fw={700} c="indigo.8" tt="uppercase">
                     {loc(chapter.title)}

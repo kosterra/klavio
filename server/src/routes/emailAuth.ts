@@ -4,7 +4,8 @@ import type { AppConfig } from '../config.js';
 import { User } from '../models/index.js';
 import { HttpError } from '../lib/errors.js';
 import { issueEmailCode, checkEmailCode } from '../lib/emailCodes.js';
-import { loginCodeMail, type Mailer } from '../lib/mailer.js';
+import type { Mailer } from '../lib/mailer.js';
+import { codeMail } from '../lib/mailTemplates.js';
 import { randomToken } from '../lib/crypto.js';
 import { createSession } from '../lib/session.js';
 import { getSettings } from '../lib/settings.js';
@@ -43,14 +44,14 @@ const emailAuthRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer
     },
     async (req, reply) => {
       await requestLimit.checkIp(req);
-      const { email } = req.body;
+      const { email, lang } = req.body;
       // Always 204 — never reveal whether an account exists or a mail was throttled.
       // With registration closed, unknown addresses silently get no mail.
       if (!(await User.exists({ email })) && !(await registrationOpen())) {
         return reply.code(204).send();
       }
       const code = await issueEmailCode(config, { email, purpose: 'login' });
-      if (code) await mailer.send(loginCodeMail(email, code));
+      if (code) await mailer.send(await codeMail(config, 'login-code', email, code, lang));
       return reply.code(204).send();
     },
   );

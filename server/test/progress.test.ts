@@ -34,7 +34,9 @@ async function learner(email = 'kid@example.ch') {
   await call(jar, 'POST', '/api/auth/email/request', { email });
   const code = /(\d{6})/.exec(ctx.outbox.at(-1)!.text)![1];
   await call(jar, 'POST', '/api/auth/email/verify', { email, code, displayName: 'Familie' });
-  const profile = (await call(jar, 'POST', '/api/profiles', { name: 'Lina' })).json();
+  const profile = (
+    await call(jar, 'POST', '/api/profiles', { name: 'Lina', birthYear: 2016 })
+  ).json();
   await call(jar, 'POST', '/api/profiles/select', { profileId: profile.id });
   return { jar, profileId: profile.id as string };
 }
@@ -168,7 +170,9 @@ describe('lesson progress', () => {
   it('is scoped to the profile and removed with it', async () => {
     const { jar, profileId } = await learner();
     await complete(jar, first!.id);
-    const other = (await call(jar, 'POST', '/api/profiles', { name: 'Ben' })).json();
+    const other = (
+      await call(jar, 'POST', '/api/profiles', { name: 'Ben', birthYear: 2018 })
+    ).json();
     await call(jar, 'POST', '/api/profiles/select', { profileId: other.id });
     expect((await call(jar, 'GET', `/api/progress?date=${today}`)).json().lessons).toEqual({});
 

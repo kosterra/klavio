@@ -1,0 +1,60 @@
+/* bottom card on phones: above the page, out of the way of the content */
+.banner {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 300;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 520px;
+  margin-inline: auto;
+  padding: 14px 10px 14px 14px;
+  border-radius: var(--mantine-radius-lg);
+  background: var(--mantine-color-body);
+  color: var(--mantine-color-text);
+  border: 1px solid var(--mantine-color-default-border);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 22%);
+  animation: rise 400ms ease-out both;
+  animation-delay: 1.2s;
+}
+
+.icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--mantine-color-indigo-7), var(--mantine-color-grape-7));
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner {
+    animation: none;
+  }
+}
+
+/* phones held sideways: keep the card small – title, one line, the button */
+@media (max-height: 32em) {
+  .body p {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

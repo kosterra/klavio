@@ -1,0 +1,127 @@
+.card {
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
+  border-radius: var(--mantine-radius-xl);
+  border: 1px solid var(--mantine-color-default-border);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mantine-color-indigo-5) 10%, var(--klavio-surface)),
+    var(--klavio-surface) 60%
+  );
+}
+
+.kicker {
+  letter-spacing: 0.05em;
+  color: var(--mantine-color-dimmed);
+}
+
+.chart {
+  margin-top: var(--mantine-spacing-sm);
+  width: 100%;
+  overflow: hidden;
+}
+
+.chart svg {
+  display: block;
+  overflow: visible;
+}
+
+.trail {
+  stroke: var(--mantine-color-default-border);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 2 9;
+}
+
+.travelled {
+  stroke: var(--mantine-primary-color-filled);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.sea {
+  stroke: var(--mantine-color-dimmed);
+  stroke-width: 1;
+  stroke-dasharray: 4 6;
+  opacity: 0.6;
+}
+
+.seaLabel,
+.altitude {
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--mantine-color-dimmed);
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 800;
+  fill: var(--mantine-color-text);
+}
+
+.hellLabel {
+  font-size: 14px;
+  font-weight: 900;
+  fill: var(--mantine-color-red-8);
+}
+
+:global([data-mantine-color-scheme='dark']) .hellLabel {
+  fill: var(--mantine-color-red-4);
+}
+
+.summitLabel {
+  font-size: 14px;
+  font-weight: 900;
+  fill: var(--mantine-color-pink-8);
+}
+
+:global([data-mantine-color-scheme='dark']) .summitLabel {
+  fill: var(--mantine-color-pink-3);
+}
+
+.stop {
+  stroke: var(--klavio-comic-line, var(--mantine-color-text));
+  stroke-width: 2.5;
+}
+
+.pole {
+  stroke: var(--mantine-color-text);
+  stroke-width: 2.5;
+}
+
+.flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flicker 1.4s ease-in-out infinite alternate;
+}
+
+.pulse {
+  fill: var(--mantine-primary-color-filled);
+  opacity: 0.25;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse 2s ease-out infinite;
+}
+
+@keyframes flicker {
+  to {
+    transform: scaleY(1.18) scaleX(0.9);
+  }
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(0.6);
+    opacity: 0.45;
+  }
+  to {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flame,
+  .pulse {
+    animation: none;
+  }
+}

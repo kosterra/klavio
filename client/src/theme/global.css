@@ -128,3 +128,25 @@ html[data-ui-mode='classic'] body {
   --mantine-color-teal-light: var(--mantine-color-teal-0);
   --mantine-color-teal-light-hover: var(--mantine-color-teal-1);
 }
+
+/* ------------------------------------------------------------ phones */
+
+/* dialogs fill the screen on phones instead of floating squeezed in the middle */
+@media (max-width: 36em) {
+  .mantine-Modal-inner {
+    padding: 0;
+  }
+
+  .mantine-Modal-content {
+    flex: 1 0 100%;
+    max-height: 100dvh;
+    min-height: 100dvh;
+    border-radius: 0;
+  }
+}
+
+/* segmented switches with long labels wrap rather than cut words off */
+.mantine-SegmentedControl-label {
+  white-space: normal;
+  line-height: 1.25;
+}

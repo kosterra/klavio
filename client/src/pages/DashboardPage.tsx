@@ -7,12 +7,14 @@ import { LearningPath } from '../lesson/LearningPath';
 import { BadgeShelf } from '../lesson/Badges';
 import { InstallHint } from '../components/InstallHint';
 import { useProgress } from '../lesson/useProgress';
+import { useWorldMode } from '../lesson/useWorldMode';
 import { PrivacyNote } from '../components/PrivacyNote';
 import { HeroStage } from '../dashboard/HeroStage';
 import { StatTiles } from '../dashboard/StatTiles';
 import { MicHint } from '../dashboard/MicHint';
 import { ReviewCard } from '../dashboard/ReviewCard';
 import { GoalSongCard, GoalSongPrompt } from '../goal/GoalSongCard';
+import { JourneyProfile } from '../dashboard/JourneyProfile';
 
 /** Home of a learner: greeting, stats, daily goal and the learning path. */
 export function DashboardPage() {
@@ -20,6 +22,7 @@ export function DashboardPage() {
   const { activeProfile } = useSession();
   const midi = useMidi();
   const { progress, completed } = useProgress();
+  const worldSet = useWorldMode();
   if (!activeProfile) return null;
   const current = nextLesson(completed);
   const todayMinutes = Math.floor((progress?.today.seconds ?? 0) / 60);
@@ -48,6 +51,15 @@ export function DashboardPage() {
         !kids && <GoalSongPrompt />
       )}
 
+      {/* adults: the way down into «Die Hölle» and up to the dream song */}
+      {worldSet === 'journey' && progress && (
+        <JourneyProfile
+          completed={completed}
+          currentLessonId={current.id}
+          goalTitle={activeProfile.goalSong?.title}
+        />
+      )}
+
       {progress && <ReviewCard progress={progress} />}
 
       <StatTiles
@@ -71,6 +83,7 @@ export function DashboardPage() {
             avatar={activeProfile.avatar}
             profileId={activeProfile.id}
             title={pathTitle}
+            worlds={worldSet}
           />
         ) : (
           <Stack p="lg">

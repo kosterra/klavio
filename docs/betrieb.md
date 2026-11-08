@@ -105,6 +105,26 @@ Menü «Verwaltung» und können dort die **Registrierung schliessen**: Dann ent
 mehr, bestehende melden sich weiter mit Passkey oder E-Mail-Code an – sinnvoll für eine Instanz nur
 für die eigene Familie oder Schule.
 
+Ebenfalls unter «Verwaltung»:
+
+- **Welten:** ab welchem Alter (aus dem Geburtsjahr des Profils) neben den bunten Welten auch «Die
+  Reise» wählbar ist (Standard 12). Jüngere Profile sehen immer die bunten Welten.
+- **Betreiber und Kontakt:** Name und Kontakt-E-Mail stehen in der Fusszeile und auf der Seite
+  «Datenschutz» (`/privacy`) als verantwortliche Stelle – bitte ausfüllen, eine Datenschutzerklärung
+  muss sie nennen.
+- **E-Mail-Vorlagen:** Betreff, Überschrift und die Texte vor und nach dem Code der beiden Code-Mails
+  (Anmeldung, neue Adresse bestätigen), auf Deutsch und Englisch, mit Platzhaltern `{{code}}`,
+  `{{app}}`, `{{minutes}}`. Gestaltung und Code-Feld bleiben fest; jede Mail geht in der Sprache, in
+  der die Person Klavio gerade nutzt. Die Vorschau zeigt die Mail genau so, wie sie verschickt wird;
+  «Test-E-Mail an mich» schickt sie mit dem Beispielcode 123456 an die eigene Adresse.
+
+### Hinter einer Zugangssperre (z. B. Cloudflare Access)
+
+Klavio funktioniert auch hinter einer vorgeschalteten Anmeldung wie Cloudflare Access (Zugang nur für
+bestimmte E-Mail-Adressen). Das Web-App-Manifest wird mit Cookies geladen, damit sich die App trotzdem
+installieren lässt. Die Sitzungsdauer der Sperre grosszügig wählen (z. B. einen Monat): Läuft sie ab,
+erreicht die installierte App den Server erst wieder, wenn man sie öffnet und sich neu anmeldet.
+
 ### Hinter einem anderen Reverse Proxy
 
 Läuft Klavio hinter einem weiteren Proxy (z. B. Traefik, nginx), muss der Server wissen, unter welcher

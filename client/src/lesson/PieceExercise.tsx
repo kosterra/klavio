@@ -194,18 +194,17 @@ export function PieceExercise({
       <VisuallyHidden aria-live="polite" data-testid="next-note">
         {!finished ? t('lesson.nextNote', { note: names(open.length ? open : required) }) : ''}
       </VisuallyHidden>
-      <div style={{ width: '100%' }}>
-        <VirtualKeyboard
-          from={lesson.keyboard.from}
-          to={lesson.keyboard.to}
-          labels={lesson.keyLabels}
-          height={kids ? 170 : 150}
-          interactive={inputMode === 'screen'}
-          hints={hint}
-          correct={got}
-          wrong={wrong !== null ? [wrong] : []}
-        />
-      </div>
+      <VirtualKeyboard
+        dock
+        from={lesson.keyboard.from}
+        to={lesson.keyboard.to}
+        labels={lesson.keyLabels}
+        height={kids ? 170 : 150}
+        interactive={inputMode === 'screen'}
+        hints={hint}
+        correct={got}
+        wrong={wrong !== null ? [wrong] : []}
+      />
     </Stack>
   );
 }

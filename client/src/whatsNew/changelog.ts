@@ -20,6 +20,43 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: UPCOMING,
+    changes: [
+      L(
+        'Neue Welt «Die Reise»: von der Alp hinunter durch Tobel, Schlucht und Stollen bis in die Hölle, das schwerste Kapitel, und dann hinauf über den Gipfelgrat zum Traumlied. Ein Höhenprofil zeigt, wo du gerade bist. Ab einem Alter, das Admins einstellen (Standard 12), wählt jedes Profil zwischen den bunten Welten und der Reise.',
+        'New world «The journey»: from the alp down through ravine, gorge and mine into hell, the hardest chapter, and then up over the summit ridge to the dream song. An elevation profile shows where you are. From an age admins set (12 by default), every profile chooses between the colourful worlds and the journey.',
+      ),
+      L(
+        'E-Mails im Klavio-Look: Die Codes kommen jetzt in einer gestalteten E-Mail mit Logo und Klavi, in der Sprache, in der du Klavio nutzt. Admins können die Texte auf Deutsch und Englisch anpassen, mit Vorschau und Test-E-Mail.',
+        'E-mails in Klavio’s look: codes now arrive in a designed e-mail with the logo and Klavi, in the language you use Klavio in. Admins can change the texts in German and English, with a preview and a test e-mail.',
+      ),
+      L(
+        'Datenschutz: Eine eigene Seite erklärt in einfachen Worten, welche Daten wo liegen und wie du sie löschst. Admins tragen ein, wer die Instanz betreibt und wie man sie erreicht.',
+        'Privacy: a page of its own explains in plain words which data is kept where and how you delete it. Admins fill in who runs the instance and how to reach them.',
+      ),
+      L(
+        'Profile fragen nach dem Geburtsjahr (nur das Jahr, kein Datum) – so bietet Klavio die passenden Welten an. Bestehende Profile behalten ihre Welt, bis das Jahr eingetragen ist.',
+        'Profiles ask for the year of birth (just the year, no date) – so Klavio offers the right worlds. Existing profiles keep their world until the year is filled in.',
+      ),
+      L(
+        'Neue Fusszeile mit Datenschutz, Was ist neu, Kontakt, Quellcode, Fehler melden und Lizenz – auf allen Seiten.',
+        'New footer with privacy, what’s new, contact, source code, problem reports and licence – on every page.',
+      ),
+      L(
+        'Korrektur: Auf dem Handy lässt sich die Seite über der Klaviatur wieder scrollen, ohne dass dabei Tasten gespielt werden. Eine Taste spielt beim Antippen; zum Wischen über die Tasten verschiebt sich die Klaviatur.',
+        'Fix: on phones the page scrolls over the keyboard again without playing keys. A key plays when tapped; swiping across the keys moves the keyboard.',
+      ),
+      L(
+        'Handy und Tablet zuerst: In Lektionen bleibt die Klaviatur unten am Bildschirm, mit Tasten in Fingergrösse – auch quer gehalten. Dialoge füllen auf dem Handy den Bildschirm, Knöpfe und Schalter werden nicht mehr abgeschnitten.',
+        'Phone and tablet first: in lessons the keyboard stays at the bottom of the screen, with finger-sized keys – also held sideways. Dialogs fill the screen on phones; buttons and switches are no longer cut off.',
+      ),
+      L(
+        'Auf dem Handy schlägt Klavio vor, sich als App zu installieren – auch in Browsern ohne eigenen Installieren-Knopf.',
+        'On phones Klavio suggests installing it as an app – also in browsers without an install button of their own.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.0',
     changes: [
       L(

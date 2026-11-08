@@ -11,7 +11,82 @@
   },
   "privacy": {
     "audioLocal": "Was du spielst, bleibt auf deinem Gerät. Wir senden oder speichern nie Audio.",
-    "audioLocalShort": "Audio bleibt auf deinem Gerät"
+    "audioLocalShort": "Audio bleibt auf deinem Gerät",
+    "title": "Datenschutz",
+    "lead": "Klavio speichert nur, was du zum Lernen brauchst – und der Ton deines Klaviers verlässt dein Gerät nie. Hier steht in einfachen Worten, was wo gespeichert wird.",
+    "short": {
+      "title": "Kurz gesagt",
+      "items": {
+        "1": "Was das Mikrofon hört, wird nur auf deinem Gerät ausgewertet – nie aufgenommen, hochgeladen oder gespeichert.",
+        "2": "Keine Werbung, kein Tracking, keine Analysedienste, keine Tracking-Cookies.",
+        "3": "Kein Geburtsdatum – nur das Geburtsjahr, damit Klavio die passenden Welten anbietet. Kein Standort, und Kinder brauchen keine eigene E-Mail-Adresse.",
+        "4": "Du kannst alles in der App ansehen, ändern und selbst löschen."
+      }
+    },
+    "responsible": {
+      "title": "Wer ist verantwortlich?",
+      "text": "Für die Daten in dieser Klavio-Instanz ist {{name}} verantwortlich.",
+      "contact": "Fragen zum Datenschutz an:",
+      "unknown": "Verantwortlich ist, wer diese Klavio-Instanz betreibt. Die Kontaktangaben sind noch nicht hinterlegt – frag die Person, die dir Klavio empfohlen hat.",
+      "software": "{{app}} ist freie Software. Wer sie entwickelt, bekommt keine Daten dieser Instanz."
+    },
+    "audio": {
+      "title": "Mikrofon und Ton",
+      "text": "Klavio hört über das Mikrofon, welche Taste du spielst. Das geschieht direkt im Browser: Nur Zahlen wie Tonhöhe und Lautstärke werden berechnet, und auch die bleiben auf der Seite. Es gibt keine Aufnahme, keinen Upload und keine Speicherung von Ton.",
+      "items": {
+        "1": "Mit einem Digitalpiano über MIDI oder der Bildschirm-Tastatur braucht Klavio gar kein Mikrofon.",
+        "2": "«Klavi liest vor» nutzt nur Stimmen, die auf deinem Gerät installiert sind. Der Text geht an keinen Dienst."
+      }
+    },
+    "stored": {
+      "title": "Was auf dem Server gespeichert wird",
+      "text": "Damit du auf mehreren Geräten weiterlernen kannst, liegt auf dem Server:",
+      "items": {
+        "1": "Konto: ein Name (z. B. «Familie Muster»), deine E-Mail-Adresse, ob du Admin bist, und – falls gesetzt – eine verschlüsselte Eltern-PIN.",
+        "2": "Passkeys: nur der öffentliche Schlüssel und Angaben wie der Name des Passwort-Managers. Fingerabdruck, Gesicht und private Schlüssel bleiben auf deinem Gerät.",
+        "3": "Profile: Name oder Spitzname, Geburtsjahr, Figur, Darstellung und Welt, Tagesziel, Mikrofon-Einstellung, XP, Level, Streak, Abzeichen und – falls gewählt – der Titel deines Traumlieds.",
+        "4": "Lernfortschritt: Sterne und Wiederholungen je Lektion sowie die Übungszeit pro Tag.",
+        "5": "Server-Protokoll: Zeitpunkt, aufgerufene Adresse und Antwort – ohne IP-Adresse."
+      }
+    },
+    "device": {
+      "title": "Was auf deinem Gerät gespeichert wird",
+      "text": "Klavio setzt nur zwei Cookies, beide technisch notwendig: eines hält dich angemeldet, eines schützt die Anmeldung mit Passkey. Im Speicher des Browsers liegen dein letzter Stand (damit Klavio auch offline funktioniert), noch nicht übertragene Ergebnisse und Einstellungen wie Sprache und Farbschema. Beim Abmelden wird dein Stand vom Gerät gelöscht."
+    },
+    "sharing": {
+      "title": "Wer Daten bekommt",
+      "text": "Klavio lädt nichts von fremden Servern – auch Schriften und Noten-Grafik kommen von hier.",
+      "items": {
+        "1": "Der E-Mail-Anbieter dieser Instanz verschickt deine Codes und sieht dabei deine Adresse und den Code.",
+        "2": "Wer den Server betreibt (Hosting), hat technisch Zugriff auf die Daten.",
+        "3": "Sonst niemand: keine Werbe-, Analyse- oder Fehlerberichtsdienste."
+      }
+    },
+    "retention": {
+      "title": "Wie lange Daten bleiben",
+      "items": {
+        "1": "Konto, Profile und Fortschritt, bis du sie löschst.",
+        "2": "Angemeldet bleibst du 60 Tage, danach meldest du dich neu an.",
+        "3": "E-Mail-Codes verfallen nach 10 Minuten.",
+        "4": "In Sicherungskopien bleiben Daten, bis die Sicherung abläuft – wie lange, legt der Betreiber fest."
+      },
+      "text": "Gelöscht wird so:"
+    },
+    "rights": {
+      "title": "Deine Rechte",
+      "text": "Du kannst deine Daten jederzeit selbst einsehen, ändern und löschen:",
+      "items": {
+        "1": "Konto, Passkeys, Profile, Fortschritt und Abzeichen siehst du direkt in der App.",
+        "2": "Name, E-Mail-Adresse und Profile änderst du unter «Konto» und «Profil».",
+        "3": "«Konto löschen» unter «Konto» entfernt sofort Konto, Passkeys, Profile und Fortschritt.",
+        "4": "Für alle anderen Fragen schreib dem Betreiber. Du kannst dich auch bei der Datenschutzaufsicht beschweren – in der Schweiz beim EDÖB."
+      }
+    },
+    "children": {
+      "title": "Kinder",
+      "text": "Kinder lernen mit einem Profil im Konto eines Erwachsenen und brauchen keine eigene E-Mail-Adresse; der Name darf ein Spitzname sein. Mit der Eltern-PIN (oder einem Passkey) bestimmst du, wer Konto, Profile und Einstellungen ändern darf."
+    },
+    "updated": "Stand: Version {{version}}"
   },
   "welcome": {
     "title": "Willkommen bei {{appName}}!",
@@ -54,7 +129,20 @@
     "switch": "Profil wechseln",
     "limit": "Maximal 8 Profile pro Konto.",
     "passkeyNudge": "Tipp: Richte einen Passkey ein, dann meldest du dich beim nächsten Mal per Fingerabdruck oder Gesicht an – ohne E-Mail-Code.",
-    "passkeyNudgeButton": "Passkey einrichten"
+    "passkeyNudgeButton": "Passkey einrichten",
+    "birthYear": "Geburtsjahr",
+    "birthYearHint": "Nur das Jahr, kein Datum – damit Klavio die passenden Welten anbietet.",
+    "birthYearPlaceholder": "z. B. 2016",
+    "birthYearAge_one": "Wird dieses Jahr {{count}} Jahr alt.",
+    "birthYearAge_other": "Wird dieses Jahr {{count}} Jahre alt.",
+    "birthYearRequired": "Bitte das Geburtsjahr eintragen.",
+    "birthYearInvalid": "Bitte ein Jahr zwischen 1900 und {{year}} eintragen.",
+    "world": "Welt",
+    "worldKids": "Bunte Welten",
+    "worldJourney": "Die Reise",
+    "worldKidsHint": "Vom Tasten-Tal bis zur Sternen-Nacht – farbig und verspielt.",
+    "worldJourneyHint": "Von der Alp hinunter bis in die Hölle und wieder hinauf zum Traumlied – mit Höhenprofil.",
+    "worldLocked": "Bunte Welten. Ab {{age}} Jahren kann man auch «Die Reise» wählen."
   },
   "avatars": {
     "klavi": "der Notenkopf",
@@ -150,7 +238,50 @@
   "admin": {
     "title": "Verwaltung",
     "registrationOpen": "Registrierung neuer Konten erlauben",
-    "registrationOpenHint": "Wenn ausgeschaltet, können keine neuen Konten erstellt werden. Bestehende Konten können sich weiterhin mit Passkey oder E-Mail-Code anmelden."
+    "registrationOpenHint": "Wenn ausgeschaltet, können keine neuen Konten erstellt werden. Bestehende Konten können sich weiterhin mit Passkey oder E-Mail-Code anmelden.",
+    "operator": {
+      "title": "Betreiber und Kontakt",
+      "hint": "Wer diese Klavio-Instanz betreibt und wie man dich erreicht. Steht in der Fusszeile und in der Datenschutzerklärung – dort muss stehen, wer für die Daten verantwortlich ist.",
+      "name": "Name (Person oder Organisation)",
+      "namePlaceholder": "z. B. Familie Muster oder Musikschule Bern",
+      "email": "Kontakt-E-Mail",
+      "saved": "Betreiber und Kontakt gespeichert."
+    },
+    "mail": {
+      "title": "E-Mail-Vorlagen",
+      "hint": "Die Texte der E-Mails mit Code, auf Deutsch und Englisch. Gestaltung, Logo und Code-Feld bleiben immer gleich; jede Person bekommt die E-Mail in der Sprache, in der sie Klavio gerade nutzt.",
+      "which": "E-Mail",
+      "language": "Sprache",
+      "loginCode": "Anmelde-Code",
+      "verifyEmail": "Neue Adresse bestätigen",
+      "customized": "Angepasst",
+      "builtIn": "Standardtexte",
+      "fields": {
+        "subject": "Betreff",
+        "heading": "Überschrift",
+        "intro": "Text vor dem Code",
+        "outro": "Text nach dem Code"
+      },
+      "required": "Darf nicht leer sein",
+      "placeholders": "Platzhalter:",
+      "paragraphs": "Eine Leerzeile beginnt einen neuen Absatz. Den Code im Betreff zu lassen hilft: Er steht dann schon in der Mitteilung auf dem Handy.",
+      "incomplete": "Bitte zuerst Betreff und Überschrift ausfüllen: {{languages}}",
+      "preview": "Vorschau",
+      "test": "Test-E-Mail an mich",
+      "testSent": "Test-E-Mail verschickt – schau in dein Postfach.",
+      "saved": "E-Mail-Vorlage gespeichert.",
+      "saveFirst": "Speichere zuerst, dann kannst du eine Test-E-Mail schicken.",
+      "reset": "Standardtexte wiederherstellen"
+    },
+    "worlds": {
+      "title": "Welten",
+      "hint": "Kinder lernen in den bunten Welten. Ab dem eingestellten Alter kann ein Profil auch «Die Reise» wählen: von der Alp hinunter in die Hölle und hinauf zum Traumlied.",
+      "minAge": "Beide Welten wählbar ab",
+      "minAgeHint": "Das Alter ergibt sich aus dem Geburtsjahr des Profils.",
+      "years": "Jahren",
+      "invalid": "Bitte ein Alter zwischen 0 und 99 eintragen.",
+      "saved": "Einstellung für die Welten gespeichert."
+    }
   },
   "errors": {
     "EMAIL_CODE_INVALID": "Der Code stimmt nicht oder ist abgelaufen.",
@@ -169,7 +300,8 @@
     "NETWORK": "Keine Verbindung zum Server. Prüfe das Internet und versuche es nochmals.",
     "PARENT_LOCKED": "Das ist Elternbereich. Bitte gib zuerst die Eltern-PIN ein.",
     "PIN_WRONG": "Die PIN stimmt nicht.",
-    "PASSKEY_UNLOCK_OFF": "Der Elternbereich lässt sich hier nur mit der PIN öffnen."
+    "PASSKEY_UNLOCK_OFF": "Der Elternbereich lässt sich hier nur mit der PIN öffnen.",
+    "WORLD_TOO_YOUNG": "«Die Reise» gibt es erst ab einem bestimmten Alter. Bitte das Geburtsjahr prüfen."
   },
   "validation": {
     "name": "Bitte gib einen Namen ein (höchstens 40 Zeichen).",
@@ -303,7 +435,15 @@
       "mountain": "Rhythmus-Berg",
       "cave": "Bass-Höhle",
       "city": "Brücken-Stadt",
-      "night": "Sternen-Nacht"
+      "night": "Sternen-Nacht",
+      "alp": "Alp",
+      "tobel": "Tobel",
+      "gorge": "Schlucht",
+      "mine": "Stollen",
+      "embers": "Glutkammer",
+      "hell": "Die Hölle",
+      "chimney": "Kamin",
+      "ridge": "Gipfelgrat"
     },
     "stages": {
       "1": "Stufe 1 · Erste Schritte",
@@ -414,7 +554,8 @@
     "title": "Klavio installieren",
     "text": "Installiere die App: Sie startet dann wie eine richtige App im Vollbild und funktioniert auch ohne Internet.",
     "ios": "Tippe in Safari auf «Teilen» (Quadrat mit Pfeil) und dann auf «Zum Home-Bildschirm». Dann startet Klavio wie eine richtige App und funktioniert auch ohne Internet.",
-    "button": "App installieren"
+    "button": "App installieren",
+    "android": "Öffne das Menü des Browsers (⋮ oder ☰) und tippe auf «App installieren» oder «Zum Startbildschirm hinzufügen». Dann startet Klavio wie eine richtige App im Vollbild und funktioniert auch ohne Internet."
   },
   "update": {
     "title": "Neue Version verfügbar",
@@ -587,7 +728,7 @@
     "privacy": {
       "audio": "Was du spielst, bleibt auf deinem Gerät – Audio wird nie gesendet oder gespeichert.",
       "ads": "Keine Werbung, kein Tracking.",
-      "data": "Nur das Nötigste: kein Geburtsdatum, für Kinder genügt ein Vorname.",
+      "data": "Nur das Nötigste: kein Geburtsdatum, nur das Geburtsjahr – für Kinder genügt ein Vorname.",
       "open": "Freie Software (AGPL-3.0) – der Quellcode ist offen."
     },
     "faqTitle": "Häufige Fragen",
@@ -691,5 +832,32 @@
     "open": "Klavio entsteht offen:",
     "history": "alle Änderungen auf GitHub",
     "link": "Was ist neu"
+  },
+  "footer": {
+    "label": "Fusszeile",
+    "privacy": "Datenschutz",
+    "contact": "Kontakt",
+    "issues": "Fehler melden",
+    "license": "Lizenz {{license}}",
+    "openSource": "Freie Software",
+    "tagline": "Spielerisch Klavier lernen – am echten Klavier. Der Ton bleibt auf deinem Gerät.",
+    "operator": "Betrieben von {{name}}",
+    "noTracking": "Keine Werbung, kein Tracking"
+  },
+  "journey": {
+    "kicker": "Deine Reise",
+    "title": "Hinunter in die Hölle – und hinauf zum Traumgipfel",
+    "titleSong": "Auf dem Weg zu «{{title}}»",
+    "dreamSong": "Dein Traumlied",
+    "altitude": "{{m}} m",
+    "seaLevel": "0 m",
+    "phase": {
+      "down": "Am Anfang geht es leicht bergab, dann immer steiler hinunter bis in die Hölle – das gehört dazu. Wer da durch ist, steigt nur noch auf: zu {{goal}}.",
+      "hell": "Du bist in der Hölle, dem schwersten Teil der Reise. Hier fühlt sich alles zäh an – das ist normal. Halte durch: Ab hier geht es nur noch bergauf.",
+      "up": "Die Hölle liegt hinter dir. Jetzt geht es bergauf – jedes Kapitel bringt dich näher zu {{goal}}.",
+      "summit": "Gipfel erreicht! Du hast den ganzen Weg geschafft – Zeit für {{goal}}."
+    },
+    "summary": "Höhenprofil deiner Reise: Kapitel {{n}} von {{total}}, du bist in «{{world}}». Der tiefste Punkt ist «{{hell}}», ganz oben wartet {{goal}}.",
+    "dreamSongTo": "deinem Traumlied"
   }
 }

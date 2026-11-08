@@ -173,17 +173,16 @@ export function SongExercise({
           ? t('lesson.nextNote', { note: midiToPitchName(expected, lang) })
           : ''}
       </VisuallyHidden>
-      <div style={{ width: '100%' }}>
-        <VirtualKeyboard
-          from={lesson.keyboard.from}
-          to={lesson.keyboard.to}
-          labels={lesson.keyLabels}
-          height={kids ? 180 : 160}
-          interactive={inputMode === 'screen'}
-          hints={hint}
-          wrong={wrong !== null ? [wrong] : []}
-        />
-      </div>
+      <VirtualKeyboard
+        dock
+        from={lesson.keyboard.from}
+        to={lesson.keyboard.to}
+        labels={lesson.keyLabels}
+        height={kids ? 180 : 160}
+        interactive={inputMode === 'screen'}
+        hints={hint}
+        wrong={wrong !== null ? [wrong] : []}
+      />
     </Stack>
   );
 }

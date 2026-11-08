@@ -5,9 +5,13 @@ import {
   profileCreateSchema,
   profileUpdateSchema,
   selectProfileSchema,
+  canChooseWorld,
   type ProfileDto,
   type GoalSong,
+  type WorldSet,
 } from '@klavio/shared';
+import type { AppConfig } from '../config.js';
+import { getSettings } from '../lib/settings.js';
 import {
   DailyActivity,
   LessonProgress,
@@ -39,6 +43,8 @@ export function profileToDto(p: ProfileDoc): ProfileDto {
       lastActiveDate: p.streak?.lastActiveDate ?? null,
     },
     badges: (p.badges ?? []).map((b) => ({ id: b.id!, earnedAt: b.earnedAt!.toISOString() })),
+    birthYear: p.birthYear ?? null,
+    world: (p.world as WorldSet | null | undefined) ?? null,
     goalSong: p.goalSong?.title
       ? {
           title: p.goalSong.title,
@@ -50,8 +56,15 @@ export function profileToDto(p: ProfileDoc): ProfileDto {
 }
 
 /** Learner profiles of the logged-in account (e.g. parent + children). */
-const profileRoutes: FastifyPluginAsyncZod = async (app) => {
+const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, { config }) => {
   app.addHook('preHandler', app.requireAuth);
+
+  /** The journey only from the age admins set; the kids' worlds are always fine. */
+  const checkWorld = async (world: WorldSet | null | undefined, birthYear: number | null) => {
+    if (world !== 'journey') return;
+    const { journeyMinAge } = await getSettings(config);
+    if (!canChooseWorld(birthYear, journeyMinAge)) throw new HttpError(400, 'WORLD_TOO_YOUNG');
+  };
 
   app.get('/', async (req) => {
     const list = await Profile.find({ userId: req.auth!.user._id })
@@ -68,6 +81,7 @@ const profileRoutes: FastifyPluginAsyncZod = async (app) => {
       if ((await Profile.countDocuments({ userId })) >= MAX_PROFILES_PER_ACCOUNT) {
         throw new HttpError(400, 'PROFILE_LIMIT');
       }
+      await checkWorld(req.body.world, req.body.birthYear);
       const created = await Profile.create({ ...req.body, userId });
       return reply.code(201).send(profileToDto(created.toObject() as ProfileDoc));
     },
@@ -82,7 +96,22 @@ const profileRoutes: FastifyPluginAsyncZod = async (app) => {
       // microphone calibration; name, display mode and daily goal are parent area.
       const parentOnly = Object.keys(rest).filter((k) => k !== 'avatar' && k !== 'goalSong');
       if (parentOnly.length > 0) await app.requireParent(req, reply);
-      const update: Record<string, unknown> = { ...rest };
+      const update: Record<string, unknown> = {};
+      if (rest.world === 'journey' || rest.birthYear !== undefined) {
+        const current = await Profile.findOne(
+          { _id: req.params.id, userId: req.auth!.user._id },
+          { birthYear: 1, world: 1 },
+        ).lean<ProfileDoc>();
+        if (!current) throw notFound();
+        const birthYear = rest.birthYear ?? current.birthYear ?? null;
+        if (rest.world === 'journey') await checkWorld('journey', birthYear);
+        else if (rest.world === undefined && current.world === 'journey') {
+          // a corrected birth year below the minimum age: back to the kids' worlds
+          const { journeyMinAge } = await getSettings(config);
+          if (!canChooseWorld(birthYear, journeyMinAge)) update.world = null;
+        }
+      }
+      Object.assign(update, rest);
       for (const [k, v] of Object.entries(calibration ?? {})) update[`calibration.${k}`] = v;
       const updated = await Profile.findOneAndUpdate(
         { _id: req.params.id, userId: req.auth!.user._id },

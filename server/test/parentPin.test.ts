@@ -31,7 +31,7 @@ async function family() {
   await call(jar, 'POST', '/api/auth/email/request', { email });
   const code = /(\d{6})/.exec(ctx.outbox.at(-1)!.text)![1];
   await call(jar, 'POST', '/api/auth/email/verify', { email, code, displayName: 'Familie' });
-  const kid = (await call(jar, 'POST', '/api/profiles', { name: 'Lina' })).json();
+  const kid = (await call(jar, 'POST', '/api/profiles', { name: 'Lina', birthYear: 2016 })).json();
   return { jar, kid };
 }
 
@@ -62,7 +62,9 @@ describe('parent PIN', () => {
 
     // parent area is closed …
     expect((await call(jar, 'GET', '/api/passkeys')).json()).toEqual(LOCKED);
-    expect((await call(jar, 'POST', '/api/profiles', { name: 'Ben' })).json()).toEqual(LOCKED);
+    expect(
+      (await call(jar, 'POST', '/api/profiles', { name: 'Ben', birthYear: 2018 })).json(),
+    ).toEqual(LOCKED);
     expect((await call(jar, 'PATCH', `/api/profiles/${kid.id}`, { name: 'X' })).json()).toEqual(
       LOCKED,
     );

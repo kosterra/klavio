@@ -37,6 +37,7 @@ test('rhythm: count-in, play in time, retry counts as practice', async ({ page }
   await signUpWithEmail(page, uniqueEmail('rhythm'), 'Familie');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Leo');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   const idx = LESSONS.findIndex((l) => l.id === 'rhythm-quarters');

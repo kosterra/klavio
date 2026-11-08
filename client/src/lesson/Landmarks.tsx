@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
-import type { WorldId } from './worlds';
+import type { KidsWorldId, WorldId } from './worlds';
+import { JOURNEY_LANDMARKS } from './journeyArt';
 import classes from './LearningPath.module.css';
 
 /*
@@ -25,7 +26,7 @@ const Note = ({ x, y, s = 1 }: { x: number; y: number; s?: number }) => (
 
 const Ground = () => <path d="M4 126 Q90 100 176 126 Z" fill="var(--world-hill-2)" {...line} />;
 
-const LANDMARKS: Record<WorldId, ReactNode> = {
+const KIDS_LANDMARKS: Record<KidsWorldId, ReactNode> = {
   // Tasten-Tal: a castle with piano-key battlements
   keys: (
     <>
@@ -357,6 +358,8 @@ const LANDMARKS: Record<WorldId, ReactNode> = {
     </>
   ),
 };
+
+const LANDMARKS: Record<WorldId, ReactNode> = { ...KIDS_LANDMARKS, ...JOURNEY_LANDMARKS };
 
 /** A world's landmark with a wooden name sign. */
 export function Landmark({

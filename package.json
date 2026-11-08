@@ -25,7 +25,8 @@
     "format:check": "prettier --check .",
     "samples:fetch": "node scripts/fetch-piano-samples.mjs",
     "admin:grant": "npm run admin:grant --workspace server --",
-    "check": "npm run typecheck && npm run lint && npm run format:check && npm test"
+    "openapi": "npm run openapi --workspace server --",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run openapi -- --check"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

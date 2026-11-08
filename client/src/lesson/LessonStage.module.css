@@ -13,6 +13,8 @@
   --world-hill: color-mix(in srgb, var(--chapter-color) 22%, var(--klavio-surface));
   --world-hill-2: color-mix(in srgb, var(--chapter-color) 34%, var(--klavio-surface));
   --world-outline: color-mix(in srgb, var(--chapter-dark) 45%, var(--klavio-surface));
+  /* behind the docked keyboard: the colour at the bottom of the sky */
+  --klavio-dock-bg: color-mix(in srgb, var(--chapter-color) 6%, var(--klavio-bg-kids));
 }
 
 .scenery {

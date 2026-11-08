@@ -1,6 +1,7 @@
 import {
   Button,
   Group,
+  NumberInput,
   SegmentedControl,
   Stack,
   Text,
@@ -10,7 +11,18 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useTranslation } from 'react-i18next';
-import { avatarSchema, displayNameSchema, type Avatar, type UiMode } from '@klavio/shared';
+import {
+  DEFAULT_JOURNEY_MIN_AGE,
+  ageIn,
+  avatarSchema,
+  birthYearSchema,
+  canChooseWorld,
+  displayNameSchema,
+  type Avatar,
+  type UiMode,
+  type WorldSet,
+} from '@klavio/shared';
+import { useSession } from '../auth/session';
 import type { ProfileInput } from '../api/endpoints';
 import { ProfileAvatar } from './ProfileAvatar';
 import classes from './ProfileForm.module.css';
@@ -34,6 +46,10 @@ export function ProfileForm({
   figureOnly = false,
 }: Props) {
   const { t } = useTranslation();
+  const { config } = useSession();
+  const minAge = config?.journeyMinAge ?? DEFAULT_JOURNEY_MIN_AGE;
+  // new profiles need a birth year; older ones may add it later
+  const creating = initial === undefined;
   const form = useForm<ProfileInput>({
     mode: 'controlled',
     initialValues: {
@@ -41,14 +57,36 @@ export function ProfileForm({
       avatar: initial?.avatar ?? 'klavi',
       uiMode: initial?.uiMode ?? 'kids',
       dailyGoalMinutes: initial?.dailyGoalMinutes ?? 10,
+      birthYear: initial?.birthYear ?? null,
+      world: initial?.world ?? null,
     },
     validate: {
       name: (v) => (displayNameSchema.safeParse(v).success ? null : t('validation.name')),
+      birthYear: (v) =>
+        v === null
+          ? creating
+            ? t('profiles.birthYearRequired')
+            : null
+          : birthYearSchema.safeParse(v).success
+            ? null
+            : t('profiles.birthYearInvalid', { year: new Date().getFullYear() }),
     },
   });
+  const { birthYear, uiMode, world } = form.values;
+  const yearValid = birthYear !== null && birthYearSchema.safeParse(birthYear).success;
+  const choose = yearValid && canChooseWorld(birthYear, minAge);
+  // without a choice yet, the view decides (Classic → journey)
+  const shownWorld: WorldSet = world ?? (uiMode === 'classic' ? 'journey' : 'kids');
+
+  const submit = (v: ProfileInput) =>
+    onSubmit({
+      ...v,
+      name: v.name.trim(),
+      world: choose ? shownWorld : v.world === 'journey' ? null : v.world,
+    });
 
   return (
-    <form onSubmit={form.onSubmit((v) => onSubmit({ ...v, name: v.name.trim() }))} noValidate>
+    <form onSubmit={form.onSubmit(submit)} noValidate>
       <Stack gap="md">
         <TextInput
           label={t('profiles.name')}
@@ -56,6 +94,29 @@ export function ProfileForm({
           data-autofocus
           disabled={figureOnly}
           {...form.getInputProps('name')}
+        />
+
+        <NumberInput
+          label={t('profiles.birthYear')}
+          description={
+            yearValid
+              ? t('profiles.birthYearAge', { count: ageIn(birthYear) })
+              : t('profiles.birthYearHint')
+          }
+          placeholder={t('profiles.birthYearPlaceholder')}
+          min={1900}
+          max={new Date().getFullYear()}
+          allowDecimal={false}
+          allowNegative={false}
+          hideControls
+          inputMode="numeric"
+          maxLength={4}
+          size="lg"
+          withAsterisk={creating}
+          disabled={figureOnly}
+          {...form.getInputProps('birthYear')}
+          value={birthYear ?? ''}
+          onChange={(v) => form.setFieldValue('birthYear', typeof v === 'number' ? v : null)}
         />
 
         <Stack gap={6} role="radiogroup" aria-label={t('profiles.avatar')}>
@@ -106,6 +167,37 @@ export function ProfileForm({
           <Text size="sm" c="dimmed">
             {t('profiles.modeHint')}
           </Text>
+        </Stack>
+
+        <Stack gap={6}>
+          <Text fw={500} id="world-label">
+            {t('profiles.world')}
+          </Text>
+          {choose ? (
+            <>
+              <SegmentedControl
+                aria-labelledby="world-label"
+                size="lg"
+                data={[
+                  { value: 'kids', label: t('profiles.worldKids') },
+                  { value: 'journey', label: t('profiles.worldJourney') },
+                ]}
+                value={shownWorld}
+                disabled={figureOnly}
+                onChange={(v) => form.setFieldValue('world', v as WorldSet)}
+                data-testid="world-choice"
+              />
+              <Text size="sm" c="dimmed">
+                {shownWorld === 'journey'
+                  ? t('profiles.worldJourneyHint')
+                  : t('profiles.worldKidsHint')}
+              </Text>
+            </>
+          ) : (
+            <Text size="sm" c="dimmed" data-testid="world-locked">
+              {t('profiles.worldLocked', { age: minAge })}
+            </Text>
+          )}
         </Stack>
 
         <Stack gap={6}>

@@ -26,6 +26,7 @@ import {
   IconUsers,
 } from '@tabler/icons-react';
 import { Link, Outlet, useNavigate } from 'react-router';
+import { SiteFooter } from './SiteFooter';
 import { useTranslation } from 'react-i18next';
 import { APP_CONFIG } from '@klavio/shared';
 import { useSession } from '../auth/session';
@@ -194,6 +195,7 @@ export function AppLayout() {
       </AppShell.Header>
       <AppShell.Main>
         <Outlet />
+        <SiteFooter variant="compact" />
       </AppShell.Main>
     </AppShell>
   );

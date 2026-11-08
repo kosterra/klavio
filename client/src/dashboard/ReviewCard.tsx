@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { findLesson, localIsoDate, reviewQueue, type ProgressDto } from '@klavio/shared';
 import { useLocalized } from '../lesson/useLocalized';
 import { worldOfLesson } from '../lesson/worlds';
+import { useWorldMode } from '../lesson/useWorldMode';
 import classes from './Dashboard.module.css';
 
 /**
@@ -14,6 +15,7 @@ import classes from './Dashboard.module.css';
 export function ReviewCard({ progress }: { progress: ProgressDto }) {
   const { t } = useTranslation();
   const loc = useLocalized();
+  const mode = useWorldMode();
   const played = Object.values(progress.lessons).some((l) => l.bestStars > 0);
   if (!played) return null;
   const due = reviewQueue(progress.lessons, localIsoDate());
@@ -37,7 +39,7 @@ export function ReviewCard({ progress }: { progress: ProgressDto }) {
         <Stack gap="xs" component="ul" className={classes.reviewList}>
           {due.map(({ lessonId, daysAgo }) => {
             const lesson = findLesson(lessonId)!;
-            const where = worldOfLesson(lessonId);
+            const where = worldOfLesson(lessonId, mode);
             return (
               <li key={lessonId} style={where.vars} className={classes.reviewItem}>
                 <div className={classes.reviewText}>

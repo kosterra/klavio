@@ -83,18 +83,17 @@ export function ReadNoteExercise({
       <Text size="sm" c="dimmed" data-testid="round">
         {t('lesson.round', { n: round + 1, total })}
       </Text>
-      <div style={{ width: '100%' }}>
-        <VirtualKeyboard
-          from={lesson.keyboard.from}
-          to={lesson.keyboard.to}
-          labels={lesson.keyLabels}
-          height={kids ? 190 : 160}
-          interactive={inputMode === 'screen'}
-          hints={markKey ? [target] : []}
-          correct={feedback?.ok ? [feedback.midi] : []}
-          wrong={feedback && !feedback.ok ? [feedback.midi] : []}
-        />
-      </div>
+      <VirtualKeyboard
+        dock
+        from={lesson.keyboard.from}
+        to={lesson.keyboard.to}
+        labels={lesson.keyLabels}
+        height={kids ? 190 : 160}
+        interactive={inputMode === 'screen'}
+        hints={markKey ? [target] : []}
+        correct={feedback?.ok ? [feedback.midi] : []}
+        wrong={feedback && !feedback.ok ? [feedback.midi] : []}
+      />
     </Stack>
   );
 }

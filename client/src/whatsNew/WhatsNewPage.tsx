@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { APP_CONFIG } from '@klavio/shared';
 import { useSession } from '../auth/session';
-import { SourceLink } from '../components/AboutApp';
+import { SiteFooter } from '../components/SiteFooter';
 import { ReleaseNotes } from './ReleaseNotes';
 import classes from './WhatsNew.module.css';
 
@@ -63,10 +63,10 @@ export function WhatsNewPage() {
                 {t('whatsNew.history')}
               </Anchor>
             </Text>
-            <SourceLink />
           </Stack>
         </Stack>
       </Container>
+      <SiteFooter />
     </div>
   );
 }

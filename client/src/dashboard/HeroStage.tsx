@@ -9,6 +9,7 @@ import { Landmark } from '../lesson/Landmarks';
 import { Scenery } from '../lesson/WorldScenery';
 import { useLocalized } from '../lesson/useLocalized';
 import { worldOfLesson } from '../lesson/worlds';
+import { useWorldMode } from '../lesson/useWorldMode';
 import classes from './Dashboard.module.css';
 
 /**
@@ -31,7 +32,7 @@ export function HeroStage({
 }) {
   const { t } = useTranslation();
   const loc = useLocalized();
-  const where = worldOfLesson(lesson?.id ?? '');
+  const where = worldOfLesson(lesson?.id ?? '', useWorldMode());
   const narrow = useMediaQuery('(max-width: 36em)') ?? false;
   return (
     <section className={classes.hero} style={where.vars} aria-labelledby="hero-title">

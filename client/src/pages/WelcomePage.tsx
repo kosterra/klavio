@@ -11,7 +11,6 @@ import {
 } from '@mantine/core';
 import {
   IconArrowRight,
-  IconBrandGithub,
   IconBulb,
   IconCode,
   IconDeviceTablet,
@@ -40,6 +39,8 @@ import { ThemeSwitch } from '../landing/ThemeSwitch';
 import { LanguageSwitch } from '../landing/LanguageSwitch';
 import { DuckParade, NoteRain } from '../landing/Effects';
 import { tapCounter, useKonami } from '../landing/easterEggs';
+import { SiteFooter } from '../components/SiteFooter';
+import { InstallHint } from '../components/InstallHint';
 import classes from '../landing/Landing.module.css';
 
 const FEATURES = [
@@ -320,31 +321,8 @@ export function WelcomePage() {
         </Container>
       </section>
 
-      {/* ---------------------------------------------------------- footer */}
-      <footer className={classes.footer}>
-        <Container size="lg">
-          <Group justify="space-between" gap="sm">
-            <Group gap="xs">
-              <IconPiano size={20} aria-hidden />
-              <Text fw={800}>{APP_CONFIG.name}</Text>
-              <Text size="sm">{t('about.license', { license: APP_CONFIG.license })}</Text>
-            </Group>
-            <Group gap="lg">
-              <Link to="/whats-new" className={classes.footerLink}>
-                {t('whatsNew.link')}
-              </Link>
-              <a
-                href={APP_CONFIG.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={classes.footerLink}
-              >
-                <IconBrandGithub size={18} aria-hidden /> {t('about.source')}
-              </a>
-            </Group>
-          </Group>
-        </Container>
-      </footer>
+      <SiteFooter />
+      <InstallHint variant="banner" />
     </div>
   );
 }

@@ -139,7 +139,7 @@ export function EmailLoginPage({ intent }: { intent: 'login' | 'register' }) {
                 {...form.getInputProps('displayName')}
               />
             )}
-            <Group grow>
+            <Group grow preventGrowOverflow={false}>
               <Button variant="default" component={Link} to="/welcome">
                 {t('common.back')}
               </Button>

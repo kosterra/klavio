@@ -245,20 +245,6 @@
   color: #fff;
 }
 
-.footer {
-  padding-block: var(--mantine-spacing-lg);
-  color: #fff;
-  background: var(--mantine-color-indigo-9);
-}
-
-.footerLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #fff;
-  font-weight: 700;
-}
-
 /* --------------------------------------------------------- easter eggs */
 .secret {
   position: fixed;

@@ -24,6 +24,7 @@ import {
   type Avatar,
   type Lesson,
   type ProgressDto,
+  type WorldSet,
 } from '@klavio/shared';
 import { Figure } from '../components/Figure';
 import { useLocalized } from './useLocalized';
@@ -32,9 +33,10 @@ import { Landmark } from './Landmarks';
 import type { StickerKind } from './stickerKinds';
 import { Fog, Scenery, Snowfall, WorldGate } from './WorldScenery';
 import {
-  CHAPTER_COLORS,
   CHRISTMAS_STICKERS,
+  chapterColor,
   chapterVars,
+  formatAltitude,
   isChristmasSeason,
   loadRevealed,
   saveRevealed,
@@ -241,6 +243,7 @@ export function LearningPath({
   avatar,
   profileId,
   title,
+  worlds = 'kids',
 }: {
   progress: ProgressDto['lessons'];
   currentLessonId: string;
@@ -248,6 +251,8 @@ export function LearningPath({
   profileId: string;
   /** heading drawn on the first world's background, so the map fills the whole panel */
   title?: React.ReactNode;
+  /** the colourful kids' worlds, or the journey down into «Die Hölle» and up to the summit */
+  worlds?: WorldSet;
 }) {
   const { t, i18n } = useTranslation();
   const loc = useLocalized();
@@ -284,7 +289,8 @@ export function LearningPath({
   let lessonNumber = 0;
   const sections = width
     ? CURRICULUM.map((chapter, ci) => {
-        const color = CHAPTER_COLORS[ci % CHAPTER_COLORS.length]!;
+        const world = worldOf(chapter.id, ci, worlds);
+        const color = chapterColor(world, ci);
         const earned = chapter.lessons.reduce((n, l) => n + (progress[l.id]?.bestStars ?? 0), 0);
         const total = chapter.lessons.length * 3;
         const done = chapter.lessons.filter((l) => completed.has(l.id)).length;
@@ -354,7 +360,7 @@ export function LearningPath({
         });
         return {
           chapter,
-          world: worldOf(chapter.id, ci),
+          world,
           ci,
           first,
           color,
@@ -394,11 +400,13 @@ export function LearningPath({
       {(title || stages.length > 1) && (
         <div
           className={`${classes.section} ${classes.mapTitle}`}
-          style={chapterVars(
-            CHAPTER_COLORS[
-              CURRICULUM.findIndex((c) => c.id === stageChapters[0]?.id) % CHAPTER_COLORS.length
-            ]!,
-          )}
+          style={(() => {
+            const i = Math.max(
+              0,
+              CURRICULUM.findIndex((c) => c.id === stageChapters[0]?.id),
+            );
+            return chapterVars(chapterColor(worldOf(CURRICULUM[i]!.id, i, worlds), i));
+          })()}
         >
           {title}
           {stages.length > 1 && (
@@ -463,6 +471,7 @@ export function LearningPath({
             key={chapter.id}
             className={`${classes.section} ${sec.reached ? '' : classes.foggy}`}
             style={{ ...vars, height }}
+            data-deep={(world.altitude ?? 0) < 0 || undefined}
             aria-labelledby={`chapter-${chapter.id}`}
           >
             <Scenery world={world.id} chapterId={chapter.id} height={height} snowy={christmas} />
@@ -542,6 +551,13 @@ export function LearningPath({
               <Box component="span" className={classes.signpostText}>
                 <Text component="span" display="block" size="xs" fw={800} tt="uppercase" c="dimmed">
                   {t('path.chapter', { n: ci + 1 })} · {t(`path.worlds.${world.id}`)}
+                  {world.altitude !== undefined && (
+                    <>
+                      {' '}
+                      ·{' '}
+                      {t('journey.altitude', { m: formatAltitude(world.altitude, i18n.language) })}
+                    </>
+                  )}
                 </Text>
                 <Text
                   component="span"

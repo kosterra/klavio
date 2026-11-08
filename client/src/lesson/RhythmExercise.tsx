@@ -306,15 +306,14 @@ export function RhythmExercise({
         {t('lesson.part', { n: index + 1, total: exercise.patterns.length })}
       </Text>
 
-      <div style={{ width: '100%' }}>
-        <VirtualKeyboard
-          from={lesson.keyboard.from}
-          to={lesson.keyboard.to}
-          labels={lesson.keyLabels}
-          height={kids ? 160 : 140}
-          interactive={inputMode === 'screen'}
-        />
-      </div>
+      <VirtualKeyboard
+        dock
+        from={lesson.keyboard.from}
+        to={lesson.keyboard.to}
+        labels={lesson.keyLabels}
+        height={kids ? 160 : 140}
+        interactive={inputMode === 'screen'}
+      />
     </Stack>
   );
 }

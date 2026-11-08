@@ -8,6 +8,7 @@ import { TheoryPicture } from '../lesson/theory/TheoryPicture';
 import { useLocalized } from '../lesson/useLocalized';
 import { useProgress } from '../lesson/useProgress';
 import { worldOf } from '../lesson/worlds';
+import { useWorldMode } from '../lesson/useWorldMode';
 
 /**
  * "Wissen": everything the learner has discovered so far, to look up again –
@@ -20,6 +21,7 @@ export function KnowledgePage() {
   const { activeProfile } = useSession();
   const { completed, progress } = useProgress();
   const kids = activeProfile?.uiMode !== 'classic';
+  const worldSet = useWorldMode();
 
   if (!progress) {
     return (
@@ -42,7 +44,7 @@ export function KnowledgePage() {
           theoryFor(l.id).some((s) => s.type === 'explain'),
         );
         if (!lessons.length) return null;
-        const world = worldOf(chapter.id, ci);
+        const world = worldOf(chapter.id, ci, worldSet);
         return (
           <section key={chapter.id} aria-labelledby={`knowledge-${chapter.id}`}>
             <Group gap="xs" mb="sm">

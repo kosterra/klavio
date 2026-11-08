@@ -73,6 +73,10 @@ const profileSchema = new Schema(
     name: { type: String, required: true },
     avatar: { type: String, default: 'klavi' },
     uiMode: { type: String, enum: ['kids', 'classic'], default: 'kids' },
+    /** only the year, to offer the right worlds; null for profiles from before it was asked */
+    birthYear: { type: Number, default: null },
+    /** chosen worlds (kids | journey); null = follows uiMode */
+    world: { type: String, enum: ['kids', 'journey', null], default: null },
     dailyGoalMinutes: { type: Number, default: 10 },
     calibration: {
       a4Hz: { type: Number, default: 440 },
@@ -172,7 +176,34 @@ const appSettingsSchema = new Schema(
     _id: { type: String, default: 'global' },
     /** When false, no new accounts can be created; existing users can still log in. */
     registrationOpen: { type: Boolean, required: true },
+    /** who runs this instance (footer, privacy page); empty until an admin fills it in */
+    operatorName: { type: String, default: '' },
+    contactEmail: { type: String, default: '' },
+    /** from this age profiles can choose between the kids' worlds and the journey */
+    journeyMinAge: { type: Number },
   },
   { timestamps: true },
 );
 export const AppSettings = model('AppSettings', appSettingsSchema);
+
+// ---------------------------------------------------------------------------
+// E-mail texts changed by admins (one document per mail; missing → built-in texts)
+// ---------------------------------------------------------------------------
+const mailTextSchema = new Schema(
+  {
+    subject: { type: String, required: true },
+    heading: { type: String, required: true },
+    intro: { type: String, default: '' },
+    outro: { type: String, default: '' },
+  },
+  { _id: false },
+);
+const mailTemplateSchema = new Schema(
+  {
+    _id: { type: String, required: true },
+    de: { type: mailTextSchema, required: true },
+    en: { type: mailTextSchema, required: true },
+  },
+  { timestamps: true },
+);
+export const MailTemplate = model('MailTemplate', mailTemplateSchema);

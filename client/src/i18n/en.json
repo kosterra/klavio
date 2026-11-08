@@ -11,7 +11,82 @@
   },
   "privacy": {
     "audioLocal": "What you play stays on your device. We never send or store audio.",
-    "audioLocalShort": "Audio stays on your device"
+    "audioLocalShort": "Audio stays on your device",
+    "title": "Privacy",
+    "lead": "Klavio only keeps what you need for learning – and the sound of your piano never leaves your device. Here is, in plain words, what is stored where.",
+    "short": {
+      "title": "In short",
+      "items": {
+        "1": "What the microphone hears is only analysed on your device – never recorded, uploaded or stored.",
+        "2": "No ads, no tracking, no analytics, no tracking cookies.",
+        "3": "No birthdate – only the year of birth, so Klavio offers the right worlds. No location, and children need no e-mail address of their own.",
+        "4": "You can see, change and delete everything yourself in the app."
+      }
+    },
+    "responsible": {
+      "title": "Who is responsible?",
+      "text": "{{name}} is responsible for the data in this Klavio instance.",
+      "contact": "Questions about privacy:",
+      "unknown": "Whoever runs this Klavio instance is responsible. The contact details have not been filled in yet – ask the person who recommended Klavio to you.",
+      "software": "{{app}} is free software. Its developers get no data from this instance."
+    },
+    "audio": {
+      "title": "Microphone and sound",
+      "text": "Klavio listens through the microphone to hear which key you play. This happens right in the browser: only numbers like pitch and loudness are worked out, and they stay on the page too. There is no recording, no upload and no storage of sound.",
+      "items": {
+        "1": "With a digital piano over MIDI or the on-screen keyboard, Klavio needs no microphone at all.",
+        "2": "«Klavi reads aloud» only uses voices installed on your device. The text goes to no service."
+      }
+    },
+    "stored": {
+      "title": "What is stored on the server",
+      "text": "So that you can keep learning on several devices, the server keeps:",
+      "items": {
+        "1": "Account: a name (e.g. «The Smiths»), your e-mail address, whether you are an admin and – if set – an encrypted parent PIN.",
+        "2": "Passkeys: only the public key and details like the name of the password manager. Fingerprint, face and private keys stay on your device.",
+        "3": "Profiles: name or nickname, year of birth, figure, view and world, daily goal, microphone setting, XP, level, streak, badges and – if chosen – the title of your dream song.",
+        "4": "Learning progress: stars and reviews per lesson and the practice time per day.",
+        "5": "Server log: time, address called and answer – without IP addresses."
+      }
+    },
+    "device": {
+      "title": "What is stored on your device",
+      "text": "Klavio sets only two cookies, both technically necessary: one keeps you signed in, one protects signing in with a passkey. The browser's storage keeps your latest state (so Klavio also works offline), results not sent yet and settings like language and colour scheme. Signing out deletes your state from the device."
+    },
+    "sharing": {
+      "title": "Who gets data",
+      "text": "Klavio loads nothing from other servers – fonts and music notation come from here too.",
+      "items": {
+        "1": "The e-mail provider of this instance sends your codes and sees your address and the code.",
+        "2": "Whoever runs the server (hosting) technically has access to the data.",
+        "3": "Nobody else: no advertising, analytics or crash-reporting services."
+      }
+    },
+    "retention": {
+      "title": "How long data is kept",
+      "text": "Data is deleted like this:",
+      "items": {
+        "1": "Account, profiles and progress: until you delete them.",
+        "2": "You stay signed in for 60 days, then you sign in again.",
+        "3": "E-mail codes expire after 10 minutes.",
+        "4": "Backups keep data until they expire – the operator decides how long."
+      }
+    },
+    "rights": {
+      "title": "Your rights",
+      "text": "You can see, change and delete your data yourself at any time:",
+      "items": {
+        "1": "Account, passkeys, profiles, progress and badges are right there in the app.",
+        "2": "Change name, e-mail address and profiles under «Account» and «Profile».",
+        "3": "«Delete account» under «Account» immediately removes account, passkeys, profiles and progress.",
+        "4": "For anything else, write to the operator. You can also complain to the data protection authority – in Switzerland the FDPIC."
+      }
+    },
+    "children": {
+      "title": "Children",
+      "text": "Children learn with a profile in an adult's account and need no e-mail address of their own; the name can be a nickname. With the parent PIN (or a passkey) you decide who may change the account, profiles and settings."
+    },
+    "updated": "As of version {{version}}"
   },
   "welcome": {
     "title": "Welcome to {{appName}}!",
@@ -54,7 +129,20 @@
     "switch": "Switch profile",
     "limit": "Up to 8 profiles per account.",
     "passkeyNudge": "Tip: set up a passkey and next time you sign in with your fingerprint or face – no e-mail code needed.",
-    "passkeyNudgeButton": "Set up passkey"
+    "passkeyNudgeButton": "Set up passkey",
+    "birthYear": "Year of birth",
+    "birthYearHint": "Just the year, no date – so Klavio offers the right worlds.",
+    "birthYearPlaceholder": "e.g. 2016",
+    "birthYearAge_one": "Turns {{count}} this year.",
+    "birthYearAge_other": "Turns {{count}} this year.",
+    "birthYearRequired": "Please enter the year of birth.",
+    "birthYearInvalid": "Please enter a year between 1900 and {{year}}.",
+    "world": "World",
+    "worldKids": "Colourful worlds",
+    "worldJourney": "The journey",
+    "worldKidsHint": "From Key Valley to Starry Night – colourful and playful.",
+    "worldJourneyHint": "From the alp down into hell and back up to the dream song – with an elevation profile.",
+    "worldLocked": "Colourful worlds. From the age of {{age}}, «The journey» can be chosen too."
   },
   "avatars": {
     "klavi": "the note head",
@@ -150,7 +238,50 @@
   "admin": {
     "title": "Administration",
     "registrationOpen": "Allow new accounts to register",
-    "registrationOpenHint": "When switched off, no new accounts can be created. Existing accounts can still sign in with a passkey or e-mail code."
+    "registrationOpenHint": "When switched off, no new accounts can be created. Existing accounts can still sign in with a passkey or e-mail code.",
+    "operator": {
+      "title": "Operator and contact",
+      "hint": "Who runs this Klavio instance and how to reach you. Shown in the footer and in the privacy policy – it has to name who is responsible for the data.",
+      "name": "Name (person or organisation)",
+      "namePlaceholder": "e.g. the Smith family or Bern music school",
+      "email": "Contact e-mail",
+      "saved": "Operator and contact saved."
+    },
+    "mail": {
+      "title": "E-mail templates",
+      "hint": "The texts of the e-mails with a code, in German and English. Design, logo and code box always stay the same; everyone gets the e-mail in the language they are using Klavio in.",
+      "which": "E-mail",
+      "language": "Language",
+      "loginCode": "Sign-in code",
+      "verifyEmail": "Confirm new address",
+      "customized": "Customised",
+      "builtIn": "Built-in texts",
+      "fields": {
+        "subject": "Subject",
+        "heading": "Heading",
+        "intro": "Text before the code",
+        "outro": "Text after the code"
+      },
+      "required": "Must not be empty",
+      "placeholders": "Placeholders:",
+      "paragraphs": "A blank line starts a new paragraph. Keeping the code in the subject helps: it then already shows in the notification on the phone.",
+      "incomplete": "Please fill in subject and heading first: {{languages}}",
+      "preview": "Preview",
+      "test": "Send me a test e-mail",
+      "testSent": "Test e-mail sent – check your inbox.",
+      "saved": "E-mail template saved.",
+      "saveFirst": "Save first, then you can send a test e-mail.",
+      "reset": "Restore the built-in texts"
+    },
+    "worlds": {
+      "title": "Worlds",
+      "hint": "Children learn in the colourful worlds. From the age set here, a profile can also choose «The journey»: from the alp down into hell and up to the dream song.",
+      "minAge": "Both worlds from the age of",
+      "minAgeHint": "The age comes from the profile's year of birth.",
+      "years": "years",
+      "invalid": "Please enter an age between 0 and 99.",
+      "saved": "Worlds setting saved."
+    }
   },
   "errors": {
     "EMAIL_CODE_INVALID": "The code is wrong or has expired.",
@@ -169,7 +300,8 @@
     "NETWORK": "No connection to the server. Check the internet connection and try again.",
     "PARENT_LOCKED": "This is the parent area. Please enter the parent PIN first.",
     "PIN_WRONG": "The PIN is not correct.",
-    "PASSKEY_UNLOCK_OFF": "The parent area can only be opened with the PIN here."
+    "PASSKEY_UNLOCK_OFF": "The parent area can only be opened with the PIN here.",
+    "WORLD_TOO_YOUNG": "«The journey» is only available from a certain age. Please check the year of birth."
   },
   "validation": {
     "name": "Please enter a name (max. 40 characters).",
@@ -303,7 +435,15 @@
       "mountain": "Rhythm Mountain",
       "cave": "Bass Cave",
       "city": "Bridge Town",
-      "night": "Starry Night"
+      "night": "Starry Night",
+      "alp": "Alp",
+      "tobel": "Ravine",
+      "gorge": "Gorge",
+      "mine": "Mine",
+      "embers": "Ember Cave",
+      "hell": "Hell",
+      "chimney": "Chimney",
+      "ridge": "Summit Ridge"
     },
     "stages": {
       "1": "Level 1 · First steps",
@@ -414,7 +554,8 @@
     "title": "Install Klavio",
     "text": "Install the app: it then starts like a real app in full screen and also works without internet.",
     "ios": "In Safari, tap “Share” (square with an arrow) and then “Add to Home Screen”. Klavio then starts like a real app and also works without internet.",
-    "button": "Install app"
+    "button": "Install app",
+    "android": "Open the browser's menu (⋮ or ☰) and tap «Install app» or «Add to Home screen». Klavio then starts like a real app in full screen and also works without internet."
   },
   "update": {
     "title": "New version available",
@@ -587,7 +728,7 @@
     "privacy": {
       "audio": "What you play stays on your device – audio is never sent or stored.",
       "ads": "No ads, no tracking.",
-      "data": "Only what's needed: no date of birth, a first name is enough for children.",
+      "data": "Only what's needed: no date of birth, just the year – a first name is enough for children.",
       "open": "Free software (AGPL-3.0) – the source code is open."
     },
     "faqTitle": "Frequently asked questions",
@@ -691,5 +832,32 @@
     "open": "Klavio is made in the open:",
     "history": "every change on GitHub",
     "link": "What’s new"
+  },
+  "footer": {
+    "label": "Footer",
+    "privacy": "Privacy",
+    "contact": "Contact",
+    "issues": "Report a problem",
+    "license": "Licence {{license}}",
+    "openSource": "Free software",
+    "tagline": "Learn the piano playfully – on a real piano. The sound stays on your device.",
+    "operator": "Run by {{name}}",
+    "noTracking": "No ads, no tracking"
+  },
+  "journey": {
+    "kicker": "Your journey",
+    "title": "Down into hell – and up to the dream summit",
+    "titleSong": "On the way to «{{title}}»",
+    "dreamSong": "Your dream song",
+    "altitude": "{{m}} m",
+    "seaLevel": "0 m",
+    "phase": {
+      "down": "It starts gently downhill, then ever steeper down into hell – that is part of it. Once you are through, it only goes up: to {{goal}}.",
+      "hell": "You are in hell, the hardest part of the journey. Everything feels slow here – that is normal. Hold on: from here it only goes uphill.",
+      "up": "Hell is behind you. Now it goes uphill – every chapter brings you closer to {{goal}}.",
+      "summit": "Summit reached! You made the whole way – time for {{goal}}."
+    },
+    "summary": "Elevation profile of your journey: chapter {{n}} of {{total}}, you are in «{{world}}». The lowest point is «{{hell}}», at the very top {{goal}} is waiting.",
+    "dreamSongTo": "your dream song"
   }
 }

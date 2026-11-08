@@ -1,4 +1,4 @@
-import Fastify, { type FastifyError } from 'fastify';
+import Fastify, { type FastifyError, type FastifyInstance } from 'fastify';
 import cookie from '@fastify/cookie';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
@@ -26,11 +26,21 @@ export interface BuildOptions {
   config: AppConfig;
   mailer?: Mailer;
   rateLimit?: boolean;
+  /**
+   * Runs right before the routes are registered – for plugins that have to see
+   * every route (scripts/openapi.ts registers @fastify/swagger here).
+   */
+  beforeRoutes?: (app: FastifyInstance) => Promise<void>;
 }
 
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
 
-export async function buildApp({ config, mailer, rateLimit: withRateLimit = true }: BuildOptions) {
+export async function buildApp({
+  config,
+  mailer,
+  rateLimit: withRateLimit = true,
+  beforeRoutes,
+}: BuildOptions) {
   const app = Fastify({
     logger:
       config.NODE_ENV === 'test'
@@ -101,6 +111,7 @@ export async function buildApp({ config, mailer, rateLimit: withRateLimit = true
   const resolvedMailer = mailer ?? createMailer(config, (m) => app.log.info(m));
 
   await app.register(authPlugin);
+  if (beforeRoutes) await beforeRoutes(app);
   await app.register(
     async (api) => {
       await api.register(publicConfigRoutes, { config });
@@ -112,9 +123,9 @@ export async function buildApp({ config, mailer, rateLimit: withRateLimit = true
       });
       await api.register(passkeyRoutes, { prefix: '/passkeys', config });
       await api.register(accountRoutes, { prefix: '/account', config, mailer: resolvedMailer });
-      await api.register(profileRoutes, { prefix: '/profiles' });
+      await api.register(profileRoutes, { prefix: '/profiles', config });
       await api.register(progressRoutes, { prefix: '/progress' });
-      await api.register(adminRoutes, { prefix: '/admin', config });
+      await api.register(adminRoutes, { prefix: '/admin', config, mailer: resolvedMailer });
     },
     { prefix: '/api' },
   );

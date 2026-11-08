@@ -31,6 +31,7 @@ test('MIDI, on-screen keyboard and computer keys share one input; MIDI beats the
   await signUpWithEmail(page, uniqueEmail('input'), 'Input');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Mira');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
 
   await page.getByRole('button', { name: 'Menü' }).click();
