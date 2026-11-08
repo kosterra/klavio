@@ -28,6 +28,22 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       tempo: 72,
       pattern: ['q', '8', '8', 'q', 'q'],
     },
+    {
+      type: 'quiz',
+      text: L(
+        'Wie viele Achtel dauern so lang wie eine Viertel?',
+        'How many eighths last as long as a quarter?',
+      ),
+      answers: [
+        { text: L('Eine', 'One') },
+        { text: L('Zwei', 'Two'), correct: true },
+        { text: L('Vier', 'Four') },
+      ],
+      hint: L(
+        'Zähl «eins-und»: zwei Achtel auf einen Schlag.',
+        'Count «one-and»: two eighths on one beat.',
+      ),
+    },
   ],
   'meter-waltz': [
     {
@@ -45,6 +61,99 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       ),
       tempo: 92,
       pattern: ['h', 'q'],
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Wie viele Schläge hat ein Takt im Walzer?',
+        'How many beats does a bar of a waltz have?',
+      ),
+      answers: [
+        { text: L('Zwei', 'Two') },
+        { text: L('Drei', 'Three'), correct: true },
+        { text: L('Vier', 'Four') },
+      ],
+      hint: L('«Eins, zwei, drei – eins, zwei, drei.»', '«One, two, three – one, two, three.»'),
+    },
+  ],
+  'keysig-flats': [
+    {
+      type: 'explain',
+      text: L(
+        'Ein ♭ macht eine Note einen Schritt tiefer: Aus E wird Es. Im Deutschen hängt man «-es» an – nur das H wird zum B, und aus A wird As.',
+        'A flat ♭ makes a note one step lower: E becomes E flat. In German you add «-es» – only B becomes «B» (and German «H» is your B).',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [64, 63], names: true, spelling: 'flat' },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Lustig: Cis und Des sind dieselbe schwarze Taste – sie heisst nur verschieden, je nachdem, ob man von unten (♯) oder von oben (♭) kommt.',
+        'Fun fact: C sharp and D flat are the same black key – it just has two names, depending on whether you come from below (♯) or from above (♭).',
+      ),
+      picture: { kind: 'keyboard', from: 60, to: 72, labels: 'all', marks: [61] },
+    },
+    {
+      type: 'quiz',
+      text: L('Welche Taste spielst du für diese Note?', 'Which key do you play for this note?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [70], spelling: 'flat' },
+      answers: [
+        { text: L('A', 'A') },
+        { text: L('B', 'B flat'), correct: true },
+        { text: L('H', 'B') },
+      ],
+      hint: L(
+        'Das ♭ heisst: einen Schritt tiefer als das H.',
+        'The ♭ means: one step lower than B.',
+      ),
+    },
+  ],
+  'keysig-g-scale': [
+    {
+      type: 'explain',
+      text: L(
+        'Jede Dur-Tonleiter klingt gleich – egal, wo sie beginnt. Damit G-Dur so klingt wie C-Dur, braucht sie eine schwarze Taste: das Fis. Darum steht in G-Dur ein ♯ gleich am Anfang jeder Zeile.',
+        'Every major scale sounds the same – wherever it starts. For G major to sound like C major, it needs one black key: F sharp. That is why G major has a ♯ right at the start of every line.',
+      ),
+      picture: {
+        kind: 'staff',
+        clef: 'treble',
+        notes: [67, 69, 71, 72, 74, 76, 78, 79],
+        keySignature: 'G',
+      },
+    },
+    {
+      type: 'quiz',
+      text: L('Welche schwarze Taste gehört zu G-Dur?', 'Which black key belongs to G major?'),
+      answers: [
+        { text: L('Fis', 'F sharp'), correct: true },
+        { text: L('B', 'B flat') },
+        { text: L('Cis', 'C sharp') },
+      ],
+      hint: L(
+        'Schau, wo das ♯ am Zeilenanfang steht: auf der F-Linie.',
+        'Look where the ♯ at the start of the line sits: on the F line.',
+      ),
+    },
+  ],
+  'keysig-f-read': [
+    {
+      type: 'explain',
+      text: L(
+        'Das ♮ heisst Auflösungszeichen: Es hebt ♯ oder ♭ auf, bis zum Ende des Takts. Hier steht ein ♭ am Anfang – das zweite H bekommt ein ♮ und wird wieder zum weissen H.',
+        'The ♮ is a natural sign: it cancels a ♯ or ♭ until the end of the bar. Here a ♭ stands at the start – the second B gets a ♮ and becomes the white B again.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [70, 71], names: true, keySignature: 'F' },
+    },
+    {
+      type: 'quiz',
+      text: L('Was macht das ♮?', 'What does the ♮ do?'),
+      answers: [
+        { text: L('Es macht die Note höher', 'It makes the note higher') },
+        { text: L('Es hebt ♯ oder ♭ auf', 'It cancels a ♯ or ♭'), correct: true },
+        { text: L('Es macht die Note länger', 'It makes the note longer') },
+      ],
+      hint: L('Lies nochmals oben nach.', 'Read the text above once more.'),
     },
   ],
   // ------------------------------------------------------------ chapter 1

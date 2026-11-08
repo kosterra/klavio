@@ -473,7 +473,8 @@
       "hell": "Die Hölle",
       "chimney": "Kamin",
       "ridge": "Gipfelgrat",
-      "hut": "Berghütte"
+      "hut": "Berghütte",
+      "pass": "Passhöhe"
     },
     "stages": {
       "1": "Stufe 1 · Erste Schritte",

@@ -101,6 +101,11 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
   'black-improvise': ['improvise'],
   'meter-eighths': ['eighths'],
   'meter-waltz': ['three-four'],
+  'keysig-flats': ['black-keys'],
+  'keysig-g-scale': ['scales'],
+  'keysig-g-read': ['scales'],
+  'keysig-f-scale': ['scales'],
+  'keysig-f-read': ['scales'],
 };
 
 /** Lessons (in learning order) that teach a skill; empty = planned for later. */

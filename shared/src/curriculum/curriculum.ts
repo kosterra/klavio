@@ -729,6 +729,128 @@ CURRICULUM.push({
   ],
 });
 
+// Block «Tonarten»: flats, the natural sign, key signatures (G and F major).
+CURRICULUM.push({
+  id: 'keysigs',
+  title: { 'de-CH': 'Tonarten', en: 'Keys' },
+  stage: 3,
+  lessons: [
+    {
+      id: 'keysig-flats',
+      kind: 'read',
+      title: { 'de-CH': 'Das ♭ in den Noten', en: 'Flats in the music' },
+      intro: {
+        'de-CH':
+          'Ein ♭ vor einer Note heisst: eine Taste nach links – meistens die schwarze. Aus E wird Es, aus H wird B.',
+        en: 'A flat ♭ in front of a note means: one key to the left – usually the black one. E becomes E flat, B becomes B flat.',
+      },
+      xp: 25,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        {
+          type: 'read-note',
+          clef: 'treble',
+          notes: seq('Bb4 Eb4 Ab4 Db4 Gb4 E4 A4 D4'),
+          rounds: 10,
+          spelling: 'flat',
+        },
+      ],
+    },
+    {
+      id: 'keysig-g-scale',
+      kind: 'play',
+      title: { 'de-CH': 'Die G-Dur-Tonleiter', en: 'The G major scale' },
+      intro: {
+        'de-CH':
+          'Die Tonleiter von G bis G – mit einer schwarzen Taste: dem Fis. Der Daumen schlüpft wieder nach dem dritten Ton unter.',
+        en: 'The scale from G to G – with one black key: F sharp. The thumb slips under again after the third note.',
+      },
+      xp: 25,
+      keyboard: { from: 67, to: 79 },
+      keyLabels: 'all',
+      exercises: [
+        {
+          type: 'play-along',
+          sequences: [seq('G4 A4 H4 C5 D5 E5 F#5 G5'), seq('G5 F#5 E5 D5 C5 H4 A4 G4')],
+          fingers: [
+            [1, 2, 3, 1, 2, 3, 4, 5],
+            [5, 4, 3, 2, 1, 3, 2, 1],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'keysig-g-read',
+      kind: 'read',
+      title: { 'de-CH': 'Noten in G-Dur', en: 'Reading in G major' },
+      intro: {
+        'de-CH':
+          'Steht ein ♯ gleich am Anfang der Zeile, gilt es für alle F: Jedes F wird zum Fis – auch ohne Kreuz vor der Note.',
+        en: 'A ♯ right at the start of the line counts for every F: each F becomes F sharp – even without a sharp in front of the note.',
+      },
+      xp: 25,
+      keyboard: { from: 60, to: 79 },
+      keyLabels: 'c',
+      exercises: [
+        {
+          type: 'read-note',
+          clef: 'treble',
+          notes: seq('G4 A4 H4 D5 E5 F#4 F#5 F#5'),
+          rounds: 10,
+          keySignature: 'G',
+        },
+      ],
+    },
+    {
+      id: 'keysig-f-scale',
+      kind: 'play',
+      title: { 'de-CH': 'Die F-Dur-Tonleiter', en: 'The F major scale' },
+      intro: {
+        'de-CH':
+          'Von F bis F, mit einer schwarzen Taste: dem B. Hier schlüpft der Daumen erst nach dem vierten Ton unter – nach dem B.',
+        en: 'From F to F, with one black key: B flat. Here the thumb slips under only after the fourth note – after B flat.',
+      },
+      xp: 25,
+      keyboard: { from: 65, to: 77 },
+      keyLabels: 'all',
+      exercises: [
+        {
+          type: 'play-along',
+          spelling: 'flat',
+          sequences: [seq('F4 G4 A4 Bb4 C5 D5 E5 F5'), seq('F5 E5 D5 C5 Bb4 A4 G4 F4')],
+          fingers: [
+            [1, 2, 3, 4, 1, 2, 3, 4],
+            [4, 3, 2, 1, 4, 3, 2, 1],
+          ],
+        },
+      ],
+    },
+    {
+      id: 'keysig-f-read',
+      kind: 'read',
+      title: { 'de-CH': 'Noten in F-Dur', en: 'Reading in F major' },
+      intro: {
+        'de-CH':
+          'Ein ♭ am Anfang der Zeile gilt für alle H: Jedes H wird zum B. Und ein ♮ (Auflösungszeichen) vor einer Note hebt es wieder auf.',
+        en: 'A ♭ at the start of the line counts for every B: each B becomes B flat. And a natural sign ♮ in front of a note cancels it again.',
+      },
+      xp: 25,
+      keyboard: { from: 60, to: 77 },
+      keyLabels: 'c',
+      exercises: [
+        {
+          type: 'read-note',
+          clef: 'treble',
+          notes: seq('F4 G4 A4 Bb4 C5 D5 Bb4 H4'),
+          rounds: 10,
+          keySignature: 'F',
+        },
+      ],
+    },
+  ],
+});
+
 // Every song is played twice: first to get to know it (Klavio waits for each
 // note), then «Im Takt» – the same notes with count-in and metronome.
 for (const chapter of CURRICULUM) {

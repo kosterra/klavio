@@ -289,6 +289,19 @@ export const JOURNEY_LANDMARKS: Record<JourneyWorldId, ReactNode> = {
       />
     </>
   ),
+  // Passhöhe: a saddle between two peaks, a yellow hiking signpost
+  pass: (
+    <>
+      <path d="M4 126 L44 30 L90 74 L136 24 L176 126 Z" fill={LIGHT} {...line} />
+      <path d="M34 50 L44 30 L54 50 L49 47 L44 52 L39 47 Z" fill={SNOW} {...thin} />
+      <path d="M126 44 L136 24 L146 44 L141 41 L136 46 L131 41 Z" fill={SNOW} {...thin} />
+      {ground()}
+      <rect x="86" y="70" width="5" height="52" rx="2" fill={WOOD} {...thin} />
+      <path d="M91 74 H124 L132 81 L124 88 H91 Z" fill="var(--mantine-color-yellow-5)" {...thin} />
+      <path d="M86 92 H54 L46 99 L54 106 H86 Z" fill="var(--mantine-color-yellow-5)" {...thin} />
+      <path d="M98 81 H118 M58 99 H78" stroke={INK} strokeWidth="2" strokeLinecap="round" />
+    </>
+  ),
 };
 
 const HILL = 'var(--world-hill)';
@@ -401,6 +414,16 @@ export const JOURNEY_TILES: Record<JourneyWorldId, { width: number; draw: ReactN
         <path d="M0 40 V30 L18 16 L28 24 L50 4 L64 20 L80 12 L98 26 L110 30 V40 Z" fill={HILL} />
         <path d="M44 10 L50 4 L56 10 L52 12 L50 9 L48 12 Z" fill={SURFACE} opacity="0.9" />
         <path d="M0 40 V35 L30 28 L60 36 L90 30 L110 35 V40 Z" fill={HILL2} />
+      </>
+    ),
+  },
+  pass: {
+    width: 110,
+    draw: (
+      <>
+        <path d="M0 40 V30 L22 12 L44 26 L66 14 L88 26 L110 30 V40 Z" fill={HILL} />
+        <path d="M17 16 L22 12 L27 16 L24 18 L22 15 L20 18 Z" fill={SURFACE} opacity="0.9" />
+        <path d="M0 40 V35 L30 30 L60 36 L90 31 L110 35 V40 Z" fill={HILL2} />
       </>
     ),
   },

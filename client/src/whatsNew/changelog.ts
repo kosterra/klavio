@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Neues Kapitel «Tonarten» (Stufe 3): das ♭ und das Auflösungszeichen ♮, die Tonleitern G-Dur und F-Dur mit Fingersatz und Notenlesen mit Vorzeichen am Zeilenanfang.',
+        'New chapter «Keys» (level 3): the flat ♭ and the natural sign ♮, the G major and F major scales with fingering, and reading with a key signature at the start of the line.',
+      ),
+      L(
         'Neues zum Entdecken: wie du gut am Klavier sitzt, gebunden und kurz spielen (legato, staccato), laut und leise (forte, piano) mit Hörspielen, die punktierte Viertel zum Mitklatschen – und Erklärungen zu Achteln und zum Walzer.',
         'More to discover: how to sit well at the piano, playing connected and short (legato, staccato), loud and soft (forte, piano) with listening games, the dotted quarter to tap along – and explanations of eighths and the waltz.',
       ),

@@ -1,6 +1,11 @@
 import { Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { midiToName, midiToPitchName, type ReadNoteExercise as Spec } from '@klavio/shared';
+import {
+  midiToName,
+  midiToPitchName,
+  spellingOf,
+  type ReadNoteExercise as Spec,
+} from '@klavio/shared';
 import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { Staff } from '../notation/Staff';
@@ -34,6 +39,8 @@ export function ReadNoteExercise({
   const sayName = wrongInRound >= 1;
   const markKey = wrongInRound >= (kids ? 1 : 2);
   const clefName = t(`lesson.clef.${exercise.clef}`);
+  // F major and flat lessons name the black keys with ♭ (B, Es …)
+  const spelling = exercise.spelling ?? spellingOf(exercise.keySignature ?? 'C');
   const noteState = feedback?.ok ? ('done' as const) : feedback ? ('wrong' as const) : undefined;
 
   return (
@@ -63,6 +70,8 @@ export function ReadNoteExercise({
         ) : (
           <Staff
             clef={exercise.clef}
+            keySignature={exercise.keySignature}
+            spelling={spelling}
             notes={[{ midi: target, state: noteState }]}
             height={kids ? 190 : 160}
             label={t('lesson.staffLabel', { clef: clefName })}
@@ -77,11 +86,11 @@ export function ReadNoteExercise({
           data-testid="feedback"
         >
           {feedback?.ok
-            ? t('lesson.correctNote', { note: midiToPitchName(target, lang) })
+            ? t('lesson.correctNote', { note: midiToPitchName(target, lang, spelling) })
             : feedback
               ? t('lesson.wrong', { note: midiToName(feedback.midi, lang) })
               : sayName
-                ? t('lesson.itIs', { note: midiToPitchName(target, lang) })
+                ? t('lesson.itIs', { note: midiToPitchName(target, lang, spelling) })
                 : ' '}
         </Text>
       </div>

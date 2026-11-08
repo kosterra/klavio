@@ -1,3 +1,5 @@
+import type { KeySignature, Spelling } from '../music/notes.ts';
+
 /** Text in every supported UI language. */
 export interface Localized {
   'de-CH': string;
@@ -16,6 +18,8 @@ export interface FindKeyExercise {
 /** "Spiel nach": play the shown notes in order; the app waits for each one. */
 export interface PlayAlongExercise {
   type: 'play-along';
+  /** names of black keys with ♭ instead of ♯ (F major: B, not Ais) */
+  spelling?: Spelling;
   sequences: number[][];
   /** finger numbers per note (1 = thumb … 5 = little finger), same shape as `sequences` */
   fingers?: number[][];
@@ -28,6 +32,10 @@ export interface ReadNoteExercise {
   clef: 'treble' | 'bass' | 'grand';
   notes: number[];
   rounds: number;
+  /** a key signature at the start of the staff (G major: F♯, F major: B♭) */
+  keySignature?: KeySignature;
+  /** how black keys are written (♭ or ♯) when the key signature doesn't say */
+  spelling?: Spelling;
 }
 
 /** Note values (VexFlow notation): whole, half, quarter, eighth; "d" = dotted. */
@@ -191,6 +199,8 @@ export type TheoryPicture =
       names?: boolean;
       /** colour the lines or the spaces of the staff */
       highlight?: 'lines' | 'spaces';
+      keySignature?: KeySignature;
+      spelling?: Spelling;
     }
   | {
       /** treble and bass staff together; notes from middle C up go into the treble */

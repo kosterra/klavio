@@ -51,7 +51,7 @@ export type KidsWorldId =
  * to the summit where the dream song waits.
  */
 export type JourneyWorldId =
-  'alp' | 'tobel' | 'gorge' | 'mine' | 'embers' | 'hell' | 'chimney' | 'ridge' | 'hut';
+  'alp' | 'tobel' | 'gorge' | 'mine' | 'embers' | 'hell' | 'chimney' | 'ridge' | 'hut' | 'pass';
 
 export type WorldId = KidsWorldId | JourneyWorldId;
 
@@ -142,6 +142,7 @@ const BY_CHAPTER: Record<string, KidsWorldId> = {
   both: 'city',
   black: 'night',
   meter: 'mountain',
+  keysigs: 'sea',
 };
 
 const ORDER: KidsWorldId[] = [
@@ -228,10 +229,19 @@ export const JOURNEY: Record<JourneyWorldId, World> = {
     stickers: ['drum', 'metronome', 'star'],
     road: { width: 22, dash: '4 10', cap: 'butt', color: LINE },
   },
+  // Passhöhe: the saddle just below the summit – keys and scales
+  pass: {
+    id: 'pass',
+    color: 'teal',
+    altitude: 3100,
+    stickers: ['notes', 'star', 'sparkle'],
+    road: { width: 11, dash: '9 6', cap: 'round', color: LINE },
+  },
 };
 
 const JOURNEY_BY_CHAPTER: Record<string, JourneyWorldId> = {
   meter: 'hut',
+  keysigs: 'pass',
   keys: 'alp',
   hand: 'tobel',
   read: 'gorge',

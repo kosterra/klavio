@@ -6,6 +6,7 @@ import {
   midiToName,
   midiToPitchName,
   type TheoryPicture as Picture,
+  spellingOf,
 } from '@klavio/shared';
 import { PianoKeyboard } from '../../components/PianoKeyboard';
 import { Staff } from '../../notation/Staff';
@@ -349,10 +350,18 @@ export function TheoryPicture({ picture, kids }: { picture: Picture; kids: boole
         <Box className={classes.staffPicture} data-highlight={picture.highlight}>
           <Staff
             clef={picture.clef}
+            keySignature={picture.keySignature}
+            spelling={picture.spelling}
             notes={picture.notes.map((m) => ({
               midi: m,
               duration: 'q',
-              label: picture.names ? midiToName(m, lang).replace(/\d+$/, '') : undefined,
+              label: picture.names
+                ? midiToPitchName(
+                    m,
+                    lang,
+                    picture.spelling ?? spellingOf(picture.keySignature ?? 'C'),
+                  )
+                : undefined,
             }))}
             // room below the staff for the note names
             height={(kids ? 170 : 150) + (picture.names ? 40 : 0)}

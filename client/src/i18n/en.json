@@ -473,7 +473,8 @@
       "hell": "Hell",
       "chimney": "Chimney",
       "ridge": "Summit Ridge",
-      "hut": "Mountain hut"
+      "hut": "Mountain hut",
+      "pass": "Mountain pass"
     },
     "stages": {
       "1": "Level 1 · First steps",
