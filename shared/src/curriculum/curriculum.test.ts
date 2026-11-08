@@ -52,7 +52,9 @@ describe('curriculum data', () => {
                       .flatMap((n) => (n.midi === null ? [] : [n.midi]))
                   : e.type === 'improvise'
                     ? []
-                    : e.notes;
+                    : e.type === 'chords'
+                      ? e.chords.flat()
+                      : e.notes;
         for (const n of notes) {
           if (e.type === 'find-key' && e.anyOctave) {
             // some octave of the pitch class must be visible

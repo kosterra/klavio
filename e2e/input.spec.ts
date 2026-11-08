@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
-import { signUpWithEmail, uniqueEmail } from './helpers';
+import { seedCompletedLessons, signUpWithEmail, skipTheory, uniqueEmail } from './helpers';
 import { audit } from './audit';
 import { installFakeMidi } from './fixtures/fakeMidi';
 
@@ -118,4 +118,56 @@ test('with a digital piano the first key starts the lesson; every note heard is 
   await midi(page, [0x90, 62, 100]);
   await expect(page.getByTestId('heard')).toHaveText('Ich höre: D');
   await audit(page);
+});
+
+test('chords: with a digital piano all three notes have to sound, on the screen one is enough', async ({
+  page,
+}) => {
+  test.setTimeout(90_000);
+  await page.addInitScript(installFakeMidi);
+  await signUpWithEmail(page, uniqueEmail('chords'), 'Familie');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Mira');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await page.getByRole('heading', { name: 'Hallo Mira!' }).waitFor();
+  const { LESSONS } = await import('@klavio/shared');
+  await seedCompletedLessons(
+    page,
+    LESSONS.slice(
+      0,
+      LESSONS.findIndex((l) => l.id === 'accomp-chords'),
+    ).map((l) => l.id),
+  );
+
+  // screen keys: one note of the chord is enough
+  await page.goto('/lesson/accomp-chords');
+  await skipTheory(page);
+  await page.getByTestId('lesson-start-screen').click();
+  await expect(page.getByText('Spiel den Akkord C').first()).toBeVisible();
+  await audit(page);
+  await page.getByRole('button', { name: 'E3', exact: true }).click();
+  await expect(page.getByText('Spiel den Akkord F').first()).toBeVisible();
+
+  // digital piano: one note is not enough, all three are
+  await page.goto('/input');
+  await page.getByRole('button', { name: 'MIDI verbinden' }).click();
+  await expect(page.getByText('Aktiv: MIDI (Klavio Test Piano)')).toBeVisible();
+  await page.evaluate(() => {
+    history.pushState({}, '', '/lesson/accomp-chords');
+    dispatchEvent(new PopStateEvent('popstate'));
+  });
+  const skip = page.getByRole('button', { name: 'Überspringen' });
+  await expect(skip.or(page.getByTestId('lesson-start'))).toBeVisible();
+  if (await skip.isVisible()) await skip.click();
+  await expect(page.getByTestId('lesson-start')).toBeVisible();
+  await midi(page, [0x90, 48, 100]); // starts the lesson
+  await expect(page.getByText('Alle drei Töne zusammen drücken.')).toBeVisible();
+  await midi(page, [0x80, 48, 0]);
+  await midi(page, [0x90, 48, 100]);
+  await page.waitForTimeout(400);
+  await expect(page.getByText('Spiel den Akkord C').first()).toBeVisible();
+  await midi(page, [0x90, 52, 100]);
+  await midi(page, [0x90, 55, 100]);
+  await expect(page.getByText('Spiel den Akkord F').first()).toBeVisible();
 });

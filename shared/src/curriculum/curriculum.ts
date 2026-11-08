@@ -851,6 +851,82 @@ CURRICULUM.push({
   ],
 });
 
+// Block «Begleiten»: the left hand accompanies – alternating bass, broken and full chords.
+const LH_FINGERS_531 = [5, 3, 1];
+CURRICULUM.push({
+  id: 'accomp',
+  title: { 'de-CH': 'Begleiten', en: 'Accompanying' },
+  stage: 3,
+  lessons: [
+    {
+      id: 'accomp-bass',
+      kind: 'song',
+      title: { 'de-CH': 'Hänschen mit Wechselbass', en: 'Little Hans with alternating bass' },
+      intro: {
+        'de-CH':
+          'Die rechte Hand spielt die Melodie, die linke begleitet: Grundton und Quinte im Wechsel – C und G, und wo die Melodie zum G-Dur wechselt, G und D.',
+        en: 'The right hand plays the melody, the left accompanies: root and fifth in turn – C and G, and where the melody moves to G major, G and D.',
+      },
+      xp: 30,
+      keyboard: C3_C5,
+      keyLabels: 'c',
+      exercises: [
+        piece(
+          'G4/q E4/q E4/h | F4/q D4/q D4/h | C4/q D4/q E4/q F4/q | G4/q G4/q G4/h | G4/q E4/q E4/h | F4/q D4/q D4/h | C4/q E4/q G4/q G4/q | C4/w',
+          'C3/h G3/h | G3/h D3/h | C3/h G3/h | C3/h G3/h | C3/h G3/h | G3/h D3/h | C3/h G3/h | C3/w',
+          { tempo: 84 },
+        ),
+      ],
+    },
+    {
+      id: 'accomp-broken',
+      kind: 'play',
+      title: { 'de-CH': 'Gebrochene Akkorde', en: 'Broken chords' },
+      intro: {
+        'de-CH':
+          'Ein Akkord sind drei Töne mit je einer Taste Abstand – C, E, G. Gebrochen spielst du sie nacheinander: mit dem kleinen Finger, dem Mittelfinger und dem Daumen der linken Hand.',
+        en: 'A chord is three notes, each one key apart – C, E, G. Broken, you play them one after the other: with the little finger, the middle finger and the thumb of the left hand.',
+      },
+      xp: 30,
+      keyboard: { from: 48, to: 64 },
+      keyLabels: 'all',
+      exercises: [
+        {
+          type: 'play-along',
+          sequences: [
+            seq('C3 E3 G3 E3 C3'),
+            seq('F3 A3 C4 A3 F3'),
+            seq('G3 H3 D4 H3 G3'),
+            seq('C3 E3 G3 E3 C3'),
+          ],
+          fingers: [0, 1, 2, 3].map(() => [5, 3, 1, 3, 5]),
+        },
+      ],
+    },
+    {
+      id: 'accomp-chords',
+      kind: 'play',
+      title: { 'de-CH': 'Die Akkorde C, F und G', en: 'The chords C, F and G' },
+      intro: {
+        'de-CH':
+          'Jetzt alle drei Töne zusammen! Mit C-, F- und G-Dur kannst du schon viele Lieder begleiten. Mit einem Digitalpiano müssen alle drei Töne gleichzeitig klingen.',
+        en: 'Now all three notes together! With C, F and G major you can already accompany many songs. With a digital piano all three notes have to sound at the same time.',
+      },
+      xp: 30,
+      keyboard: { from: 48, to: 64 },
+      keyLabels: 'all',
+      exercises: [
+        {
+          type: 'chords',
+          chords: [seq('C3 E3 G3'), seq('F3 A3 C4'), seq('G3 H3 D4'), seq('C3 E3 G3')],
+          names: ['C', 'F', 'G', 'C'],
+          fingers: [0, 1, 2, 3].map(() => LH_FINGERS_531),
+        },
+      ],
+    },
+  ],
+});
+
 // Every song is played twice: first to get to know it (Klavio waits for each
 // note), then «Im Takt» – the same notes with count-in and metronome.
 for (const chapter of CURRICULUM) {
@@ -892,9 +968,11 @@ export function lessonTargetCount(lesson: Lesson): number {
             ? e.patterns.reduce((m, p) => m + rhythmOnsets(p).length, 0)
             : e.type === 'piece'
               ? pieceSteps(e).length
-              : e.type === 'improvise'
-                ? 1
-                : e.rounds),
+              : e.type === 'chords'
+                ? e.chords.length
+                : e.type === 'improvise'
+                  ? 1
+                  : e.rounds),
     0,
   );
 }

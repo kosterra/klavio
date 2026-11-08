@@ -474,7 +474,8 @@
       "chimney": "Kamin",
       "ridge": "Gipfelgrat",
       "hut": "Berghütte",
-      "pass": "Passhöhe"
+      "pass": "Passhöhe",
+      "glacier": "Gletscher"
     },
     "stages": {
       "1": "Stufe 1 · Erste Schritte",
@@ -585,6 +586,11 @@
       "hits_other": "{{count}} von {{total}} Tönen im Takt",
       "tip": "Tipp: Zähl leise mit – «eins, zwei, drei, vier». Lieber ruhig und gleichmässig als schnell.",
       "tempo": "Tempo {{tempo}}"
+    },
+    "chords": {
+      "task": "Spiel den Akkord {{name}}",
+      "together": "Alle drei Töne zusammen drücken.",
+      "oneEnough": "Leg alle drei Finger auf – ein Ton des Akkords genügt mir hier."
     }
   },
   "badges": {

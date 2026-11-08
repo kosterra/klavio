@@ -11,6 +11,70 @@ const C4_C5 = { from: 60, to: 72 };
  * steps with pictures, games and quizzes. Keyed by lesson id.
  */
 export const LESSON_THEORY: Record<string, TheoryStep[]> = {
+  'accomp-bass': [
+    {
+      type: 'explain',
+      text: L(
+        'Begleiten heisst: Die linke Hand legt einen Boden unter die Melodie. Am einfachsten mit Grundton und Quinte im Wechsel – zum C-Dur spielst du C und G, zum G-Dur G und D.',
+        'Accompanying means: the left hand lays a floor under the melody. The easiest way is root and fifth in turn – with C major you play C and G, with G major G and D.',
+      ),
+      picture: { kind: 'keyboard', from: 48, to: 60, labels: 'all', marks: [48, 55] },
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Welche zwei Töne spielt die linke Hand zum C-Dur?',
+        'Which two notes does the left hand play with C major?',
+      ),
+      answers: [
+        { text: L('C und G', 'C and G'), correct: true },
+        { text: L('C und D', 'C and D') },
+        { text: L('E und A', 'E and A') },
+      ],
+      hint: L('Grundton C, und fünf Töne weiter: G.', 'Root C, and five notes up: G.'),
+    },
+  ],
+  'accomp-broken': [
+    {
+      type: 'explain',
+      text: L(
+        'Ein Dur-Akkord besteht aus drei Tönen: dem Grundton, dem Ton zwei weisse Tasten höher und noch einmal zwei höher. C-Dur ist C – E – G. Das sieht aus wie ein Schneemann auf den Notenlinien!',
+        'A major chord has three notes: the root, the note two white keys higher, and two higher again. C major is C – E – G. On the staff it looks like a snowman!',
+      ),
+      picture: { kind: 'keyboard', from: 48, to: 60, labels: 'all', marks: [48, 52, 55] },
+    },
+    {
+      type: 'quiz',
+      text: L('Aus welchen Tönen besteht der F-Dur-Akkord?', 'Which notes make the F major chord?'),
+      answers: [
+        { text: L('F – A – C', 'F – A – C'), correct: true },
+        { text: L('F – G – A', 'F – G – A') },
+        { text: L('F – H – D', 'F – B – D') },
+      ],
+      hint: L(
+        'Vom F aus immer eine weisse Taste überspringen.',
+        'From F, always skip one white key.',
+      ),
+    },
+  ],
+  'accomp-chords': [
+    {
+      type: 'explain',
+      text: L(
+        'Mit nur drei Akkorden – C, F und G – lassen sich sehr viele Lieder begleiten. Meist beginnt und endet ein Lied mit C; das G führt zurück nach Hause zum C.',
+        'With just three chords – C, F and G – you can accompany a great many songs. Most songs begin and end with C; the G leads back home to C.',
+      ),
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Welcher Akkord führt am Schluss zurück nach Hause zum C?',
+        'Which chord leads back home to C at the end?',
+      ),
+      answers: [{ text: L('F', 'F') }, { text: L('G', 'G'), correct: true }, { text: L('C', 'C') }],
+      hint: L('Lies nochmals oben nach.', 'Read the text above once more.'),
+    },
+  ],
   'meter-eighths': [
     {
       type: 'explain',

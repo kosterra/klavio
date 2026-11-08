@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Neues Kapitel «Begleiten» (Stufe 3): «Hänschen klein» mit Wechselbass, gebrochene Akkorde und die Akkorde C, F und G. Mit einem Digitalpiano müssen alle drei Töne zusammen klingen.',
+        'New chapter «Accompanying» (level 3): «Little Hans» with an alternating bass, broken chords and the chords C, F and G. With a digital piano all three notes have to sound together.',
+      ),
+      L(
         'Neues Kapitel «Tonarten» (Stufe 3): das ♭ und das Auflösungszeichen ♮, die Tonleitern G-Dur und F-Dur mit Fingersatz und Notenlesen mit Vorzeichen am Zeilenanfang.',
         'New chapter «Keys» (level 3): the flat ♭ and the natural sign ♮, the G major and F major scales with fingering, and reading with a key signature at the start of the line.',
       ),

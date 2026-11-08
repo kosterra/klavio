@@ -6,8 +6,8 @@ import { Figure } from '../components/Figure';
 import { SUMMIT_ALTITUDE, chapterColor, formatAltitude, worldOf } from '../lesson/worlds';
 import classes from './Journey.module.css';
 
-const HEIGHT = 250;
-const TOP = 62; // room for the figure and the summit flag
+const HEIGHT = 268;
+const TOP = 80; // room for the figure, the summit flag and its label
 const BOTTOM = 64; // room for the labels under the lowest point
 const SIDE = 34;
 
@@ -240,7 +240,7 @@ export function JourneyProfile({
                 fill="var(--mantine-color-pink-6)"
                 className={classes.ink}
               />
-              <text x="-8" y="-28" textAnchor="end" className={classes.summitLabel}>
+              <text x="30" y="-56" textAnchor="end" className={classes.summitLabel}>
                 {goal.length > 22 ? `${goal.slice(0, 21)}…` : goal}
               </text>
             </g>

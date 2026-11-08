@@ -289,6 +289,20 @@ export const JOURNEY_LANDMARKS: Record<JourneyWorldId, ReactNode> = {
       />
     </>
   ),
+  // Gletscher: a tongue of ice with crevasses between dark rock
+  glacier: (
+    <>
+      <path d="M4 126 L34 34 L66 60 L100 20 L140 50 L176 126 Z" fill={DARK} {...line} />
+      <path d="M40 126 Q60 70 100 40 Q130 72 150 126 Z" fill="#e7f5ff" {...line} />
+      <path
+        d="M78 84 l10 6 M98 70 l8 10 M112 96 l12 4 M70 110 l12 2"
+        stroke="var(--mantine-color-blue-4)"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <path d="M92 30 L100 20 L108 30 L104 28 L100 33 L96 28 Z" fill={SNOW} {...thin} />
+    </>
+  ),
   // Passhöhe: a saddle between two peaks, a yellow hiking signpost
   pass: (
     <>
@@ -414,6 +428,16 @@ export const JOURNEY_TILES: Record<JourneyWorldId, { width: number; draw: ReactN
         <path d="M0 40 V30 L18 16 L28 24 L50 4 L64 20 L80 12 L98 26 L110 30 V40 Z" fill={HILL} />
         <path d="M44 10 L50 4 L56 10 L52 12 L50 9 L48 12 Z" fill={SURFACE} opacity="0.9" />
         <path d="M0 40 V35 L30 28 L60 36 L90 30 L110 35 V40 Z" fill={HILL2} />
+      </>
+    ),
+  },
+  glacier: {
+    width: 100,
+    draw: (
+      <>
+        <path d="M0 40 V30 L20 16 L40 28 L62 10 L84 26 L100 30 V40 Z" fill={HILL2} />
+        <path d="M30 40 Q46 26 62 18 Q74 28 82 40 Z" fill={SURFACE} opacity="0.85" />
+        <path d="M52 32 l4 3 M64 28 l3 4" stroke="var(--mantine-color-blue-4)" strokeWidth="1.5" />
       </>
     ),
   },

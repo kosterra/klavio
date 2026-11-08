@@ -72,6 +72,21 @@ export interface TimedSongExercise extends Omit<SongExercise, 'type'> {
   type: 'song-timed';
 }
 
+/**
+ * "Akkorde": several keys at once, one chord after the other. With a digital
+ * piano (MIDI) all notes of a chord have to sound together; with the
+ * microphone or the screen keys one note of the chord is enough.
+ */
+export interface ChordsExercise {
+  type: 'chords';
+  /** the chords in order, each its notes (MIDI) */
+  chords: number[][];
+  /** the chord names shown (C, F, G …) */
+  names: string[];
+  /** finger per note, same shape as `chords` */
+  fingers?: number[][];
+}
+
 /** Rhythm values: note values plus rests ("qr" = quarter rest, …). */
 export type RhythmValue = NoteValue | 'qr' | 'hr' | 'wr';
 
@@ -127,6 +142,7 @@ export type Exercise =
   | ReadNoteExercise
   | SongExercise
   | TimedSongExercise
+  | ChordsExercise
   | RhythmExercise
   | PieceExercise
   | ImproviseExercise;

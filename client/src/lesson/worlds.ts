@@ -51,7 +51,17 @@ export type KidsWorldId =
  * to the summit where the dream song waits.
  */
 export type JourneyWorldId =
-  'alp' | 'tobel' | 'gorge' | 'mine' | 'embers' | 'hell' | 'chimney' | 'ridge' | 'hut' | 'pass';
+  | 'alp'
+  | 'tobel'
+  | 'gorge'
+  | 'mine'
+  | 'embers'
+  | 'hell'
+  | 'chimney'
+  | 'ridge'
+  | 'hut'
+  | 'pass'
+  | 'glacier';
 
 export type WorldId = KidsWorldId | JourneyWorldId;
 
@@ -143,6 +153,7 @@ const BY_CHAPTER: Record<string, KidsWorldId> = {
   black: 'night',
   meter: 'mountain',
   keysigs: 'sea',
+  accomp: 'city',
 };
 
 const ORDER: KidsWorldId[] = [
@@ -229,6 +240,14 @@ export const JOURNEY: Record<JourneyWorldId, World> = {
     stickers: ['drum', 'metronome', 'star'],
     road: { width: 22, dash: '4 10', cap: 'butt', color: LINE },
   },
+  // Gletscher: the last stretch on the ice before the summit – accompanying
+  glacier: {
+    id: 'glacier',
+    color: 'blue',
+    altitude: 3150,
+    stickers: ['crystal', 'snowflake', 'star'],
+    road: { width: 9, dash: '0 14', cap: 'round', color: LINE },
+  },
   // Passhöhe: the saddle just below the summit – keys and scales
   pass: {
     id: 'pass',
@@ -242,6 +261,7 @@ export const JOURNEY: Record<JourneyWorldId, World> = {
 const JOURNEY_BY_CHAPTER: Record<string, JourneyWorldId> = {
   meter: 'hut',
   keysigs: 'pass',
+  accomp: 'glacier',
   keys: 'alp',
   hand: 'tobel',
   read: 'gorge',
