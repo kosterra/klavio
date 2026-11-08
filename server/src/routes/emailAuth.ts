@@ -50,6 +50,8 @@ const emailAuthRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer
       if (!(await User.exists({ email })) && !(await registrationOpen())) {
         return reply.code(204).send();
       }
+      // the language of later mails (e.g. the warning before deleting an unused account)
+      if (lang) await User.updateOne({ email }, { locale: lang === 'en' ? 'en' : 'de-CH' });
       const code = await issueEmailCode(config, { email, purpose: 'login' });
       if (code) await mailer.send(await codeMail(config, 'login-code', email, code, lang));
       return reply.code(204).send();
@@ -64,7 +66,7 @@ const emailAuthRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer
     },
     async (req, reply) => {
       await verifyLimit.checkIp(req);
-      const { email, code, displayName } = req.body;
+      const { email, code, displayName, lang } = req.body;
       const existing = await User.findOne({ email });
 
       if (!existing) {
@@ -85,7 +87,12 @@ const emailAuthRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer
 
       let user;
       try {
-        user = await User.create({ displayName, email, webauthnUserId: randomToken(32) });
+        user = await User.create({
+          displayName,
+          email,
+          webauthnUserId: randomToken(32),
+          locale: lang === 'en' ? 'en' : 'de-CH',
+        });
       } catch {
         // Lost a race against a parallel sign-up with the same address.
         throw new HttpError(409, 'EMAIL_IN_USE');

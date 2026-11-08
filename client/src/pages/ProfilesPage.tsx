@@ -16,6 +16,7 @@ import { IconFingerprint, IconPlus } from '@tabler/icons-react';
 import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import { WorldPanorama } from '../lesson/WorldPanorama';
 import { CHAPTER_COLORS, chapterVars } from '../lesson/worlds';
 import { MAX_PROFILES_PER_ACCOUNT } from '@klavio/shared';
@@ -32,6 +33,7 @@ import classes from './ProfilesPage.module.css';
 /** "Who's playing today?" — shown after login and when switching profiles. */
 export function ProfilesPage() {
   const { t } = useTranslation();
+  usePageTitle(t('profiles.title'));
   const { me, profiles, selectProfile, refresh } = useSession();
   const navigate = useNavigate();
   const errorText = useErrorText();
@@ -100,7 +102,7 @@ export function ProfilesPage() {
                   style={chapterVars(CHAPTER_COLORS[i % CHAPTER_COLORS.length]!)}
                 >
                   <Stack align="center" gap="xs">
-                    <ProfileAvatar avatar={p.avatar} size={110} alive />
+                    <ProfileAvatar avatar={p.avatar} outfit={p.outfit} size={110} alive />
                     <Text fw={800} fz="xl" ta="center">
                       {p.name}
                     </Text>

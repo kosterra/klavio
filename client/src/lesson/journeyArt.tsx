@@ -261,6 +261,34 @@ export const JOURNEY_LANDMARKS: Record<JourneyWorldId, ReactNode> = {
       />
     </>
   ),
+  // Berghütte: a stone hut on a snowy shoulder, smoke from the chimney
+  hut: (
+    <>
+      <path d="M4 126 L60 46 L96 70 L132 34 L176 126 Z" fill={LIGHT} {...line} />
+      <path d="M120 50 L132 34 L144 50 L138 47 L132 53 L126 47 Z" fill={SNOW} {...thin} />
+      <path d="M48 64 L60 46 L72 64 L66 61 L60 67 L54 61 Z" fill={SNOW} {...thin} />
+      {ground()}
+      <rect x="62" y="88" width="56" height="34" fill="var(--mantine-color-gray-5)" {...line} />
+      <path d="M54 92 L90 66 L126 92 Z" fill={DARK} {...line} />
+      <rect x="104" y="64" width="9" height="18" fill="var(--mantine-color-gray-6)" {...thin} />
+      <path
+        d="M108 60 q-6 -8 2 -14 q8 -6 2 -14"
+        stroke="var(--mantine-color-gray-4)"
+        strokeWidth="4"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <rect x="82" y="100" width="16" height="22" rx="2" fill={WOOD} {...thin} />
+      <rect x="68" y="96" width="10" height="10" fill={GLOW} {...thin} />
+      <rect x="102" y="96" width="10" height="10" fill={GLOW} {...thin} />
+      <path
+        d="M28 120 V96 M28 96 L42 100 L28 104"
+        stroke={INK}
+        strokeWidth="2.5"
+        fill="var(--mantine-color-red-6)"
+      />
+    </>
+  ),
 };
 
 const HILL = 'var(--world-hill)';
@@ -373,6 +401,17 @@ export const JOURNEY_TILES: Record<JourneyWorldId, { width: number; draw: ReactN
         <path d="M0 40 V30 L18 16 L28 24 L50 4 L64 20 L80 12 L98 26 L110 30 V40 Z" fill={HILL} />
         <path d="M44 10 L50 4 L56 10 L52 12 L50 9 L48 12 Z" fill={SURFACE} opacity="0.9" />
         <path d="M0 40 V35 L30 28 L60 36 L90 30 L110 35 V40 Z" fill={HILL2} />
+      </>
+    ),
+  },
+  hut: {
+    width: 120,
+    draw: (
+      <>
+        <path d="M0 40 V28 L24 14 L44 26 L70 8 L96 24 L120 28 V40 Z" fill={HILL} />
+        <path d="M64 13 L70 8 L76 13 L72 15 L70 12 L68 15 Z" fill={SURFACE} opacity="0.9" />
+        <rect x="88" y="26" width="14" height="10" fill={HILL2} />
+        <path d="M85 27 L95 20 L105 27 Z" fill={DARK} opacity="0.45" />
       </>
     ),
   },

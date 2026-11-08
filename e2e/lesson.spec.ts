@@ -56,7 +56,7 @@ async function solvePlayAlong(page: Page) {
 async function startLesson(page: Page, title: string) {
   await skipTheory(page);
   await expect(page.getByRole('heading', { name: title })).toBeVisible();
-  await page.getByRole('button', { name: 'Los geht’s!' }).click();
+  await page.getByTestId('lesson-start').click();
 }
 
 test('learning path: play lessons, earn stars and XP, unlock the next ones', async ({ page }) => {
@@ -65,7 +65,7 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await signUpWithEmail(page, uniqueEmail('lesson'), 'Familie');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Lina');
-  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
 
   // --- dashboard: first lesson current, the rest locked
@@ -81,6 +81,9 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await page.getByRole('link', { name: 'Erste Lektion starten' }).click();
   await audit(page);
   await startLesson(page, 'Wo ist das C?');
+  // one line; the reason on request
+  await expect(page.getByTestId('mic-off')).toContainText('Mikrofon aus');
+  await page.getByTestId('mic-off').getByRole('button', { name: 'Warum?' }).click();
   await expect(page.getByText(/Zugriff auf das Mikrofon wurde verweigert/)).toBeVisible();
   await audit(page);
   await solveFindKey(page, { mistakeFirst: true });

@@ -1,3 +1,4 @@
+import { CURRICULUM } from '@klavio/shared';
 import { expect, test } from '@playwright/test';
 import rootPackage from '../package.json' with { type: 'json' };
 import { audit } from './audit';
@@ -11,7 +12,10 @@ test('landing page: sections, login card and easter eggs', async ({ page }) => {
   for (const name of [
     'So funktioniert’s',
     'Was Klavio kann',
-    '8 Welten warten auf dich',
+    `${CURRICULUM.length} Welten warten auf dich`,
+    "So sieht's aus",
+    'Die Reise zu deinem Traumlied',
+    'Für Familien, Schulen und Musikschulen: selbst betreiben',
     'Sicher und ehrlich',
     'Häufige Fragen',
   ]) {
@@ -67,7 +71,7 @@ test('profile page: the own figure plays its tune after five taps', async ({ pag
   await signUpWithEmail(page, uniqueEmail('egg'), 'Familie Ei');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Ole');
-  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('radio', { name: 'Quaki, der Frosch' }).click();
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
@@ -107,7 +111,7 @@ test('language: switch on the landing page, remembered on this device, also in t
   await signUpWithEmail(page, uniqueEmail('lang'), 'Familie Sprache');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Mia');
-  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   await page.getByRole('button', { name: 'Menü' }).click();

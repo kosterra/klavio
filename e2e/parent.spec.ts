@@ -13,7 +13,7 @@ test('account name and parent PIN protect the parent area', async ({ page }) => 
   await signUpWithEmail(page, uniqueEmail('parent'), 'Familie Muster');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Lina');
-  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Hallo Lina!' })).toBeVisible();
 
@@ -91,7 +91,7 @@ test('the input setup belongs to the parent area; a passkey can open it instead 
   await signUpWithEmail(page, uniqueEmail('parentkey'), 'Familie Schlüssel');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Tim');
-  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Hallo Tim!' })).toBeVisible();
 

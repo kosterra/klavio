@@ -14,5 +14,7 @@ export async function getSettings(config: AppConfig) {
     operatorName: doc!.operatorName ?? '',
     contactEmail: doc!.contactEmail ?? '',
     journeyMinAge: doc!.journeyMinAge ?? DEFAULT_JOURNEY_MIN_AGE,
+    searchIndexing: doc!.searchIndexing ?? true,
+    inactiveDeleteMonths: doc!.inactiveDeleteMonths ?? 0,
   };
 }

@@ -7,7 +7,10 @@ import { APP_CONFIG } from '../config/app.ts';
  * edit the words around it. The same renderer runs on the server (sending)
  * and in the admin page (preview), so what one sees is what goes out.
  */
-export const MAIL_TEMPLATE_IDS = ['login-code', 'verify-email'] as const;
+export const MAIL_TEMPLATE_IDS = ['login-code', 'verify-email', 'inactive-warning'] as const;
+
+/** Mails that carry a sign-in code (the others have a button instead). */
+export const CODE_MAILS: readonly MailTemplateId[] = ['login-code', 'verify-email'];
 export type MailTemplateId = (typeof MAIL_TEMPLATE_IDS)[number];
 
 export const MAIL_LANGS = ['de', 'en'] as const;
@@ -20,7 +23,7 @@ export function mailLangOf(locale: string | undefined | null): MailLang {
 }
 
 /** Placeholders admins can use in every field. */
-export const MAIL_PLACEHOLDERS = ['code', 'app', 'minutes'] as const;
+export const MAIL_PLACEHOLDERS = ['code', 'app', 'minutes', 'months', 'date'] as const;
 
 export const mailTextSchema = z.object({
   subject: z.string().trim().min(1).max(160),
@@ -73,11 +76,33 @@ export const DEFAULT_MAIL_TEMPLATES: Record<MailTemplateId, MailTemplateTexts> =
         'The code is valid for {{minutes}} minutes. If you did not want to change your address, ignore this e-mail – nothing changes.',
     },
   },
+  'inactive-warning': {
+    de: {
+      subject: 'Dein {{app}}-Konto wird bald gelöscht',
+      heading: 'Wir vermissen dich!',
+      intro:
+        'Hallo!\n\nDu hast dich seit {{months}} Monaten nicht mehr bei {{app}} angemeldet. Damit keine Daten unnötig liegen bleiben, löschen wir dein Konto mit allen Profilen und dem Lernfortschritt am {{date}}.',
+      outro:
+        'Willst du dein Konto behalten? Melde dich einfach vorher einmal an – dann bleibt alles, wie es ist.',
+    },
+    en: {
+      subject: 'Your {{app}} account will be deleted soon',
+      heading: 'We miss you!',
+      intro:
+        'Hello!\n\nYou have not signed in to {{app}} for {{months}} months. So that no data is kept for nothing, we will delete your account with all profiles and learning progress on {{date}}.',
+      outro:
+        'Want to keep your account? Just sign in once before then – and everything stays as it is.',
+    },
+  },
 };
 
 export interface MailVars {
-  code: string;
+  /** the sign-in code – mails without one get a button to the instance instead */
+  code?: string;
   minutes?: number;
+  /** inactivity warning: months without sign-in and the date of deletion */
+  months?: number;
+  date?: string;
   /** the public address of the instance, shown in the footer */
   origin?: string;
   /**
@@ -104,9 +129,11 @@ export interface RenderedMail {
 
 function fill(template: string, vars: MailVars): string {
   const values: Record<string, string> = {
-    code: vars.code,
+    code: vars.code ?? '',
     app: APP_CONFIG.name,
     minutes: String(vars.minutes ?? 10),
+    months: String(vars.months ?? ''),
+    date: vars.date ?? '',
   };
   return template.replace(/\{\{\s*(\w+)\s*\}\}/g, (match, key: string) => values[key] ?? match);
 }
@@ -133,6 +160,11 @@ function paragraphs(text: string, style: string): string {
 const FOOTER: Record<MailLang, string> = {
   de: 'Du bekommst diese E-Mail, weil diese Adresse bei {{app}} eingegeben wurde. {{app}} – spielerisch Klavier lernen, am echten Klavier.',
   en: 'You get this e-mail because this address was entered at {{app}}. {{app}} – learn the piano playfully, on a real piano.',
+};
+
+const OPEN: Record<MailLang, string> = {
+  de: `${APP_CONFIG.name} öffnen`,
+  en: `Open ${APP_CONFIG.name}`,
 };
 
 // Klavio's colours (Mantine indigo / grape / orange / yellow), written out:
@@ -177,9 +209,17 @@ ${
 </tr></table>
 ${paragraphs(intro, p)}
 </td></tr>
-<tr><td align="center" style="padding:6px 28px 22px">
+${
+  vars.code
+    ? `<tr><td align="center" style="padding:6px 28px 22px">
 <div style="display:inline-block;padding:14px 14px 14px 22px;border-radius:16px;background:#edf2ff;border:2px dashed ${INDIGO};font-family:'SF Mono',Menlo,Consolas,monospace;font-size:34px;font-weight:800;letter-spacing:8px;white-space:nowrap;color:${INDIGO_DARK}">${escapeHtml(vars.code)}</div>
-</td></tr>
+</td></tr>`
+    : vars.origin
+      ? `<tr><td align="center" style="padding:6px 28px 22px">
+<a href="${escapeHtml(vars.origin)}" style="display:inline-block;padding:14px 28px;border-radius:12px;background:${INDIGO};color:#ffffff;font-family:${FONT};font-size:18px;font-weight:800;text-decoration:none">${escapeHtml(OPEN[lang])}</a>
+</td></tr>`
+      : ''
+}
 <tr><td style="padding:0 28px 18px">
 ${paragraphs(outro, p)}
 </td></tr>
@@ -196,7 +236,7 @@ ${paragraphs(outro, p)}
 <html lang="${lang === 'de' ? 'de-CH' : 'en'}">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>${escapeHtml(subject)}</title></head>
 <body style="margin:0;padding:0;background:${PAGE}">
-<div style="display:none;max-height:0;overflow:hidden">${escapeHtml(heading)} – ${escapeHtml(vars.code)}</div>
+<div style="display:none;max-height:0;overflow:hidden">${escapeHtml(heading)}${vars.code ? ` – ${escapeHtml(vars.code)}` : ''}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${PAGE}"><tr><td style="padding:28px 12px">
 ${bodyHtml}
 </td></tr></table>
@@ -208,7 +248,7 @@ ${bodyHtml}
     '',
     intro,
     '',
-    `    ${vars.code}`,
+    vars.code ? `    ${vars.code}` : vars.origin ? `${OPEN[lang]}: ${vars.origin}` : '',
     '',
     outro,
     '',

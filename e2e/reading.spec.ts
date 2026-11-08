@@ -12,7 +12,7 @@ test('note reading: the staff shows a note, playing it is checked exactly', asyn
   await signUpWithEmail(page, uniqueEmail('read'), 'Familie');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Noa');
-  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
 

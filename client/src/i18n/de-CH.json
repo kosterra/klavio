@@ -68,7 +68,8 @@
         "1": "Konto, Profile und Fortschritt, bis du sie löschst.",
         "2": "Angemeldet bleibst du 60 Tage, danach meldest du dich neu an.",
         "3": "E-Mail-Codes verfallen nach 10 Minuten.",
-        "4": "In Sicherungskopien bleiben Daten, bis die Sicherung abläuft – wie lange, legt der Betreiber fest."
+        "4": "In Sicherungskopien bleiben Daten, bis die Sicherung abläuft – wie lange, legt der Betreiber fest.",
+        "5": "Falls die Betreiberin oder der Betreiber es eingestellt hat: Konten, die lange nicht benutzt wurden, werden nach einer Warnung per E-Mail gelöscht."
       },
       "text": "Gelöscht wird so:"
     },
@@ -79,7 +80,8 @@
         "1": "Konto, Passkeys, Profile, Fortschritt und Abzeichen siehst du direkt in der App.",
         "2": "Name, E-Mail-Adresse und Profile änderst du unter «Konto» und «Profil».",
         "3": "«Konto löschen» unter «Konto» entfernt sofort Konto, Passkeys, Profile und Fortschritt.",
-        "4": "Für alle anderen Fragen schreib dem Betreiber. Du kannst dich auch bei der Datenschutzaufsicht beschweren – in der Schweiz beim EDÖB."
+        "4": "Für alle anderen Fragen schreib dem Betreiber. Du kannst dich auch bei der Datenschutzaufsicht beschweren – in der Schweiz beim EDÖB.",
+        "5": "Unter «Konto → Daten herunterladen» bekommst du alles, was über dein Konto gespeichert ist, als Datei."
       }
     },
     "children": {
@@ -122,7 +124,6 @@
     "mode": "Darstellung",
     "modeKids": "Kids",
     "modeClassic": "Classic",
-    "modeHint": "Die Lerninhalte sind in beiden Darstellungen gleich.",
     "dailyGoal": "Tagesziel (Minuten)",
     "create": "Profil erstellen",
     "empty": "Lege ein Profil für jede Person an, die lernt – zum Beispiel für dich und deine Kinder.",
@@ -142,7 +143,10 @@
     "worldJourney": "Die Reise",
     "worldKidsHint": "Vom Tasten-Tal bis zur Sternen-Nacht – farbig und verspielt.",
     "worldJourneyHint": "Von der Alp hinunter bis in die Hölle und wieder hinauf zum Traumlied – mit Höhenprofil.",
-    "worldLocked": "Bunte Welten. Ab {{age}} Jahren kann man auch «Die Reise» wählen."
+    "worldLocked": "Bunte Welten. Ab {{age}} Jahren kann man auch «Die Reise» wählen.",
+    "more": "Mehr einstellen",
+    "modeHintKids": "Bunt und verspielt: farbiger Hintergrund, die Figur spricht in Sprechblasen, die nächste Taste ist immer markiert, Klavi liest vor. Die Lektionen sind in beiden Darstellungen dieselben.",
+    "modeHintClassic": "Ruhig und sachlich: schlichter Hintergrund, die Figur nur als Rückmeldung, Hilfe erst nach einem Fehler. Die Lektionen sind in beiden Darstellungen dieselben."
   },
   "avatars": {
     "klavi": "der Notenkopf",
@@ -183,7 +187,7 @@
     "streakLabel_one": "Tag in Folge",
     "streakLabel_other": "Tage in Folge",
     "xpToNext": "noch {{xp}} XP bis Level {{next}}",
-    "streakKeep": "Spiel morgen wieder, dann wächst dein Feuer!",
+    "streakKeep": "Spiel morgen wieder, dann wächst dein Feuer! Ein Tag Pause pro Woche ist erlaubt.",
     "streakZero": "Spiel heute – dann brennt dein Feuer!",
     "streak_one": "{{count}} Tag in Folge",
     "micSetupShort": "Richte einmal das Mikrofon ein – dann höre ich dein Klavier besser.",
@@ -205,7 +209,14 @@
       "dark": "Dunkel"
     },
     "knowledge": "Wissen",
-    "language": "Sprache"
+    "language": "Sprache",
+    "main": "Hauptnavigation",
+    "learn": "Lernen",
+    "play": "Spielen",
+    "toggle": "Navigation ein- oder ausblenden",
+    "learnGroup": "Lernen",
+    "parentGroup": "Für Eltern",
+    "adminGroup": "Verwaltung"
   },
   "account": {
     "title": "Konto",
@@ -233,7 +244,10 @@
     "name": "Name des Kontos",
     "nameHint": "Erscheint nur in der App, zum Beispiel «Familie Muster».",
     "changeName": "Name ändern",
-    "changeEmail": "E-Mail-Adresse ändern"
+    "changeEmail": "E-Mail-Adresse ändern",
+    "export": "Deine Daten",
+    "exportHint": "Lade alles herunter, was Klavio über dein Konto gespeichert hat – Konto, Passkeys, Profile, Fortschritt und Übungstage – als eine Datei (JSON).",
+    "exportButton": "Daten herunterladen"
   },
   "admin": {
     "title": "Verwaltung",
@@ -271,7 +285,8 @@
       "testSent": "Test-E-Mail verschickt – schau in dein Postfach.",
       "saved": "E-Mail-Vorlage gespeichert.",
       "saveFirst": "Speichere zuerst, dann kannst du eine Test-E-Mail schicken.",
-      "reset": "Standardtexte wiederherstellen"
+      "reset": "Standardtexte wiederherstellen",
+      "inactiveWarning": "Warnung vor dem Löschen"
     },
     "worlds": {
       "title": "Welten",
@@ -281,6 +296,18 @@
       "years": "Jahren",
       "invalid": "Bitte ein Alter zwischen 0 und 99 eintragen.",
       "saved": "Einstellung für die Welten gespeichert."
+    },
+    "data": {
+      "title": "Daten und Suchmaschinen",
+      "indexing": "Von Suchmaschinen finden lassen",
+      "indexingHint": "Ausgeschaltet bitten alle Seiten Suchmaschinen, die Instanz nicht aufzunehmen – sinnvoll für eine Instanz nur für die eigene Familie oder Schule.",
+      "retention": "Unbenutzte Konten löschen nach",
+      "retentionHint": "0 = nie. Sonst bekommt ein Konto, das so lange nicht benutzt wurde, eine Warnung per E-Mail und wird 30 Tage später mit allen Profilen gelöscht – ausser es meldet sich vorher an.",
+      "months": "Monaten",
+      "invalid": "Bitte eine Zahl zwischen 0 und 120 eintragen.",
+      "never": "Konten bleiben, bis man sie selbst löscht.",
+      "howItWorks": "Den Text der Warnung findest du unten bei den E-Mail-Vorlagen.",
+      "saved": "Einstellung gespeichert."
     }
   },
   "errors": {
@@ -301,7 +328,9 @@
     "PARENT_LOCKED": "Das ist Elternbereich. Bitte gib zuerst die Eltern-PIN ein.",
     "PIN_WRONG": "Die PIN stimmt nicht.",
     "PASSKEY_UNLOCK_OFF": "Der Elternbereich lässt sich hier nur mit der PIN öffnen.",
-    "WORLD_TOO_YOUNG": "«Die Reise» gibt es erst ab einem bestimmten Alter. Bitte das Geburtsjahr prüfen."
+    "WORLD_TOO_YOUNG": "«Die Reise» gibt es erst ab einem bestimmten Alter. Bitte das Geburtsjahr prüfen.",
+    "OUTFIT_LOCKED": "Dieses Stück gibt es erst ab einem höheren Level.",
+    "UNKNOWN_CHAPTER": "Dieses Kapitel gibt es nicht."
   },
   "validation": {
     "name": "Bitte gib einen Namen ein (höchstens 40 Zeichen).",
@@ -443,7 +472,8 @@
       "embers": "Glutkammer",
       "hell": "Die Hölle",
       "chimney": "Kamin",
-      "ridge": "Gipfelgrat"
+      "ridge": "Gipfelgrat",
+      "hut": "Berghütte"
     },
     "stages": {
       "1": "Stufe 1 · Erste Schritte",
@@ -452,16 +482,17 @@
     },
     "stagesLabel": "Stufe des Lernpfads",
     "nextStage": "Danach geht es weiter: {{stage}}",
-    "toStage": "Zu Stufe {{stage}}"
+    "toStage": "Zu Stufe {{stage}}",
+    "bonus": "Bonus"
   },
   "lesson": {
     "close": "Lektion beenden",
     "progress": "Fortschritt der Lektion",
     "start": "Los geht’s!",
-    "inputMidi": "Ich höre dein Digitalpiano ({{device}}).",
-    "inputMic": "Ich höre dir über das Mikrofon zu – spiel einfach auf deinem Klavier.",
+    "inputMidi": "Dein Digitalpiano ({{device}}) ist verbunden. Tippe auf «Los geht’s» – oder spiel einfach eine Taste, dann geht es los.",
+    "inputMic": "Tippe zuerst auf «Los geht’s». Dann höre ich dir über das Mikrofon zu, und du spielst auf deinem Klavier.",
     "inputMicSetup": "Tipp: Richte das Mikrofon einmal ein, dann erkenne ich dich noch besser.",
-    "inputScreen": "Spiel auf der Klaviatur hier auf dem Bildschirm.",
+    "inputScreen": "Tippe auf «Los geht’s» – dann erscheint die Klaviatur hier auf dem Bildschirm.",
     "useScreen": "Du kannst auf der Bildschirm-Klaviatur weiterspielen.",
     "micOn": "Mikrofon an",
     "useMic": "Mikrofon verwenden",
@@ -535,7 +566,15 @@
       "again": "Nochmals"
     },
     "playPiece": "Spiel mit beiden Händen",
-    "micMelodyOnly": "Mit dem Mikrofon zählt hier die Melodie."
+    "micMelodyOnly": "Mit dem Mikrofon zählt hier die Melodie.",
+    "micOff": "Mikrofon aus – spiel auf der Bildschirm-Klaviatur.",
+    "why": "Warum?",
+    "heard": "Ich höre: {{note}}",
+    "howToPlay": "Wie spielst du?",
+    "playPiano": "Auf meinem Klavier",
+    "playScreen": "Auf dem Bildschirm",
+    "playPianoHint": "Auf dem Klavier höre ich dir über das Mikrofon zu – der Ton bleibt auf deinem Gerät.",
+    "waitingForNote": "Ich höre zu – spiel los!"
   },
   "badges": {
     "title": "Abzeichen",
@@ -555,7 +594,8 @@
     "text": "Installiere die App: Sie startet dann wie eine richtige App im Vollbild und funktioniert auch ohne Internet.",
     "ios": "Tippe in Safari auf «Teilen» (Quadrat mit Pfeil) und dann auf «Zum Home-Bildschirm». Dann startet Klavio wie eine richtige App und funktioniert auch ohne Internet.",
     "button": "App installieren",
-    "android": "Öffne das Menü des Browsers (⋮ oder ☰) und tippe auf «App installieren» oder «Zum Startbildschirm hinzufügen». Dann startet Klavio wie eine richtige App im Vollbild und funktioniert auch ohne Internet."
+    "android": "Öffne das Menü des Browsers (⋮ oder ☰) und tippe auf «App installieren» oder «Zum Startbildschirm hinzufügen». Dann startet Klavio wie eine richtige App im Vollbild und funktioniert auch ohne Internet.",
+    "how": "So geht's"
   },
   "update": {
     "title": "Neue Version verfügbar",
@@ -748,6 +788,14 @@
       "offline": {
         "q": "Geht es auch ohne Internet?",
         "a": "Ja. Lektionen funktionieren offline, deine Ergebnisse werden nachgereicht, sobald du wieder online bist."
+      },
+      "cost": {
+        "q": "Was kostet Klavio?",
+        "a": "Nichts. Klavio ist kostenlos, ohne Abo, ohne Werbung und ohne versteckte Käufe. Es ist freie Software: Wer will, kann es auch selbst betreiben."
+      },
+      "adults": {
+        "q": "Ist das nur für Kinder?",
+        "a": "Nein. Erwachsene wählen die ruhigere Darstellung «Classic» und die Welt «Die Reise» mit Höhenprofil und Traumlied. Die Lektionen sind dieselben, ohne Kinderkram."
       }
     },
     "finalTitle": "Bereit für deine erste Taste?",
@@ -755,7 +803,29 @@
     "source": "Zum Quellcode",
     "eggKonami": "Geheimcode geknackt! 🎉 Du bist ein echter Profi.",
     "eggKlavi": "Klavi spielt «Für Elise» – nur für dich! 🎵",
-    "eggDucks": "Alle meine Entchen schwimmen auf dem See! 🦆"
+    "eggDucks": "Alle meine Entchen schwimmen auf dem See! 🦆",
+    "leadShort": "Klavio hört dir beim Spielen zu und zeigt dir Schritt für Schritt, was als Nächstes kommt – für Kinder und Erwachsene.",
+    "badgeFree": "Kostenlos, ohne Abo",
+    "lookTitle": "So sieht's aus",
+    "lookText": "Wie die grossen Klavier-Apps – aber kostenlos, ohne Abo und ohne Werbung. Und was du spielst, bleibt auf deinem Gerät.",
+    "look": {
+      "path": "Der Lernpfad: Welt für Welt, mit Sternen und Zielen",
+      "pathAlt": "Bildschirmfoto: der Lernpfad mit dem Hand-Wald, Lektionen als Steine auf einem Weg und dem Fuchs auf der nächsten Lektion",
+      "lesson": "Eine Lektion: Klavio wartet, bis du den richtigen Ton spielst",
+      "lessonAlt": "Bildschirmfoto: das Lied «Hänschen klein» in Noten, darunter die Klaviatur mit der nächsten Taste markiert"
+    },
+    "journeyKicker": "Für Jugendliche und Erwachsene",
+    "journeyTitle": "Die Reise zu deinem Traumlied",
+    "journeyText": "Klavier lernen ist kein gerader Weg: Zuerst geht es leicht bergab, dann wird es steil – und irgendwann kommt die Hölle, das schwerste Stück. Klavio sagt dir das, bevor es so weit ist, und zeigt dir auf einem Höhenprofil, wo du gerade bist.",
+    "journey": {
+      "dream": "Nenne dein Traumlied: Klavio erkennt es und zeigt, welche Fähigkeiten es braucht.",
+      "hell": "Von der Alp hinunter durch Tobel, Schlucht und Stollen bis in die Hölle – und wieder hinauf zum Gipfel.",
+      "choose": "Ab einem Alter, das die Betreiberin oder der Betreiber festlegt, wählt jedes Profil zwischen den bunten Welten und der Reise."
+    },
+    "journeyAlt": "Bildschirmfoto: Höhenprofil der Reise – von der Alp hinunter bis zur Hölle bei −666 m und hinauf zum Traumlied",
+    "hostTitle": "Für Familien, Schulen und Musikschulen: selbst betreiben",
+    "hostText": "Klavio ist freie Software. Mit einem Docker-Image läuft es auf deinem eigenen Server – nur für deine Familie, deine Klasse oder deine Musikschule, mit eigenen E-Mails und ohne dass Daten das Haus verlassen.",
+    "hostGuide": "Anleitung auf GitHub"
   },
   "goal": {
     "kicker": "Mein Traumlied",
@@ -768,7 +838,7 @@
       "later": "kommt in einer späteren Welt"
     },
     "next": "Als Nächstes: {{skill}}",
-    "ready": "Du kannst alles, was «{{title}}» braucht. Zeit für dein Traumlied! 🎉",
+    "ready": "Du kannst alles, was «{{title}}» braucht. Zeit für dein Traumlied!",
     "waiting": "Die nächsten Fähigkeiten kommen in neuen Welten – bleib dran!",
     "promptText": "Hast du ein Traumlied, das du eines Tages spielen möchtest?",
     "promptButton": "Traumlied festlegen",
@@ -802,7 +872,16 @@
     "unknown": "Dieses Lied kennt Klavio nicht – wähl unten die Art und was es braucht.",
     "fuzzy": "Meinst du «{{title}}» von {{artist}}? Art und Fähigkeiten sind vorgeschlagen.",
     "fuzzyNoArtist": "Meinst du «{{title}}»? Art und Fähigkeiten sind vorgeschlagen.",
-    "useTitle": "Titel übernehmen"
+    "useTitle": "Titel übernehmen",
+    "howTo": "Die Noten von deinem Traumlied hat Klavio nicht – so geht es weiter:",
+    "howToSteps": {
+      "sheet": "Hol dir die Noten: im Musikgeschäft, in der Bibliothek oder als vereinfachte Fassung für Klavier.",
+      "slow": "Übe in kleinen Stücken – ein paar Takte, erst jede Hand allein, dann zusammen.",
+      "metronome": "Langsam mit dem Metronom beginnen und das Tempo Schritt für Schritt erhöhen.",
+      "teacher": "Wenn es hakt: Eine Lehrperson oder eine Musikschule hilft beim Feinschliff."
+    },
+    "inChapter": "Kapitel {{n}} · {{world}}",
+    "legend": "Die Zahl zeigt das Kapitel, in dem du es lernst. Mit der Uhr: kommt in einem späteren Kapitel."
   },
   "speech": {
     "read": "Vorlesen",
@@ -855,9 +934,75 @@
       "down": "Am Anfang geht es leicht bergab, dann immer steiler hinunter bis in die Hölle – das gehört dazu. Wer da durch ist, steigt nur noch auf: zu {{goal}}.",
       "hell": "Du bist in der Hölle, dem schwersten Teil der Reise. Hier fühlt sich alles zäh an – das ist normal. Halte durch: Ab hier geht es nur noch bergauf.",
       "up": "Die Hölle liegt hinter dir. Jetzt geht es bergauf – jedes Kapitel bringt dich näher zu {{goal}}.",
-      "summit": "Gipfel erreicht! Du hast den ganzen Weg geschafft – Zeit für {{goal}}."
+      "summit": "Gipfel erreicht! Du kannst jetzt alles, was Klavio dir beibringt. Die Noten von {{goal}} holst du dir selbst – dann übst du es Stück für Stück, mit dem Metronom."
     },
     "summary": "Höhenprofil deiner Reise: Kapitel {{n}} von {{total}}, du bist in «{{world}}». Der tiefste Punkt ist «{{hell}}», ganz oben wartet {{goal}}.",
     "dreamSongTo": "deinem Traumlied"
+  },
+  "freePlay": {
+    "title": "Freies Spielen",
+    "hint": "Spiel, was du willst – hier gibt es keine Aufgaben.",
+    "sound": "Klang",
+    "sounds": {
+      "piano": "Klavier",
+      "musicbox": "Spieluhr",
+      "marimba": "Marimba",
+      "organ": "Orgel"
+    }
+  },
+  "family": {
+    "title": "Familie und Fortschritt",
+    "intro": "Wo jedes Profil auf dem Lernpfad steht und wie viel in den letzten Wochen geübt wurde.",
+    "mine": "Mein Fortschritt",
+    "level": "Level {{level}} · {{xp}} XP",
+    "allDone": "Alle Kapitel geschafft",
+    "pathDone": "{{percent}} % des Lernpfads geschafft",
+    "lessons": "Lektionen",
+    "stars": "Sterne",
+    "days": "Übungstage (28 Tage)",
+    "thisWeek_one": "Diese Woche: {{count}} Minute geübt",
+    "thisWeek_other": "Diese Woche: {{count}} Minuten geübt",
+    "chartCaption": "Minuten pro Woche, die letzten 8 Wochen. Gestrichelt: Wochenziel ({{goal}} Minuten).",
+    "weekMinutes_one": "Woche ab {{week}}: {{count}} Minute",
+    "weekMinutes_other": "Woche ab {{week}}: {{count}} Minuten"
+  },
+  "metronome": {
+    "title": "Metronom",
+    "open": "Zum Metronom",
+    "intro": "Zum Üben im eigenen Tempo – auch für Stücke ausserhalb von Klavio. Langsam anfangen, dann Schritt für Schritt schneller.",
+    "bpm": "Schläge pro Minute",
+    "tempo": "Tempo",
+    "beats": "Schläge pro Takt",
+    "start": "Start",
+    "stop": "Stopp",
+    "tap": "Tempo tippen"
+  },
+  "worldDone": {
+    "title": "{{world}} geschafft!",
+    "next": "Das Tor in die nächste Welt ist offen: {{world}} – {{chapter}}.",
+    "last": "Das war die letzte Welt. Du hast den ganzen Lernpfad geschafft!"
+  },
+  "wardrobe": {
+    "title": "Kleiderschrank",
+    "hint": "Mit jedem Level kommt ein neues Stück dazu. Such dir aus, was deine Figur trägt.",
+    "fromLevel": "ab Level {{level}}",
+    "lockedLabel": "{{name}} – ab Level {{level}}",
+    "items": {
+      "none": "Nichts",
+      "cap": "Zipfelmütze",
+      "bow": "Schleife",
+      "glasses": "Brille",
+      "scarf": "Schal",
+      "headphones": "Kopfhörer",
+      "crown": "Krone"
+    }
+  },
+  "placement": {
+    "title": "Ich kann schon …",
+    "hint": "Wer schon etwas Klavier spielt, beginnt später auf dem Lernpfad. Die Lektionen davor zählen dann als bestanden (mit einem Stern, ohne XP) und lassen sich jederzeit spielen.",
+    "label": "Beginnen bei",
+    "button": "Hier beginnen",
+    "confirm": "Beginnen bei «{{chapter}}»? Die Lektionen davor zählen dann als bestanden.",
+    "done": "Geschafft – der Lernpfad geht jetzt dort weiter."
   }
 }

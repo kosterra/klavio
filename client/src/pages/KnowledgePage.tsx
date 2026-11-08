@@ -2,6 +2,7 @@ import { Badge, Button, Card, Center, Group, Loader, Stack, Text, Title } from '
 import { IconLock, IconPlayerPlay } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import { CURRICULUM, isLessonUnlocked, theoryFor, type ExplainStep } from '@klavio/shared';
 import { useSession } from '../auth/session';
 import { TheoryPicture } from '../lesson/theory/TheoryPicture';
@@ -17,6 +18,7 @@ import { useWorldMode } from '../lesson/useWorldMode';
  */
 export function KnowledgePage() {
   const { t } = useTranslation();
+  usePageTitle(t('knowledge.title'));
   const loc = useLocalized();
   const { activeProfile } = useSession();
   const { completed, progress } = useProgress();

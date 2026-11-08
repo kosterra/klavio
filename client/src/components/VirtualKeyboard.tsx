@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { publishNote, useNoteEvents } from '../input/noteBus';
 import { SEMITONE_TO_CODE, midiForKeyCode } from '../input/computerKeys';
-import { playNote, type Voice } from '../audio/synth';
+import { playNote, type Timbre, type Voice } from '../audio/synth';
 import { PianoKeyboard, type PianoKeyboardProps } from './PianoKeyboard';
 import classes from './PianoKeyboard.module.css';
 
@@ -33,6 +33,8 @@ interface Props extends Omit<PianoKeyboardProps, 'onPress' | 'onRelease' | 'acti
    * task above scrolls – it is always in reach, also on a phone held sideways.
    */
   dock?: boolean;
+  /** the sound of the screen keys (free play) */
+  timbre?: Timbre;
 }
 
 /**
@@ -47,6 +49,7 @@ export function VirtualKeyboard({
   computerKeysFrom,
   interactive = true,
   dock = false,
+  timbre = 'piano',
   ...keyboard
 }: Props) {
   const [held, setHeld] = useState<number[]>([]);
@@ -67,7 +70,7 @@ export function VirtualKeyboard({
 
   const press = (midi: number, time = performance.now()) => {
     if (voices.current.has(midi)) return;
-    voices.current.set(midi, sound ? playNote(midi) : null);
+    voices.current.set(midi, sound ? playNote(midi, 0.8, timbre) : null);
     publishNote({
       type: 'note-on',
       midi,
@@ -156,5 +159,11 @@ export function VirtualKeyboard({
       }
     />
   );
-  return dock ? <div className={classes.dock}>{keys}</div> : keys;
+  return dock ? (
+    <div className={classes.dock} data-keyboard-dock>
+      {keys}
+    </div>
+  ) : (
+    keys
+  );
 }

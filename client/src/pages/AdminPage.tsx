@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Alert, Card, Stack, Switch, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import type { AdminSettingsDto } from '@klavio/shared';
 import { endpoints } from '../api/endpoints';
 import { useSession } from '../auth/session';
@@ -9,10 +10,12 @@ import { notify } from '../components/notify';
 import { OperatorCard } from '../admin/OperatorCard';
 import { MailTemplatesCard } from '../admin/MailTemplatesCard';
 import { WorldsCard } from '../admin/WorldsCard';
+import { DataCard } from '../admin/DataCard';
 
 /** Settings for admins (role granted via `npm run admin:grant`). */
 export function AdminPage() {
   const { t } = useTranslation();
+  usePageTitle(t('admin.title'));
   const { refresh } = useSession();
   const errorText = useErrorText();
   const [settings, setSettings] = useState<AdminSettingsDto | null>(null);
@@ -52,6 +55,12 @@ export function AdminPage() {
         settings={settings}
         onSave={async (journeyMinAge) => {
           if (await update({ journeyMinAge })) notify(t('admin.worlds.saved'));
+        }}
+      />
+      <DataCard
+        settings={settings}
+        onSave={async (change) => {
+          if (await update(change)) notify(t('admin.data.saved'));
         }}
       />
       <OperatorCard

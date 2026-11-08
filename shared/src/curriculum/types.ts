@@ -121,6 +121,12 @@ export interface Lesson {
   keyboard: { from: number; to: number };
   /** Note names on the keys (beginners) or not (when finding the key is the point). */
   keyLabels: 'all' | 'c' | 'none';
+  /**
+   * A bonus lesson (e.g. an extra song): open as soon as its chapter is, but
+   * never in the way – the next lessons don't wait for it, and a chapter counts
+   * as done without it. So new bonus lessons can join without holding anyone up.
+   */
+  bonus?: boolean;
   /** Song lessons are drawn differently on the learning path. */
   kind: 'keys' | 'play' | 'read' | 'song' | 'rhythm' | 'improvise';
   exercises: Exercise[];

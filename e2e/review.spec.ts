@@ -9,7 +9,7 @@ test('lessons come back for review; quick round mixes old questions', async ({ p
   await signUpWithEmail(page, uniqueEmail('review'), 'Familie Repetition');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Tim');
-  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
 
@@ -53,7 +53,7 @@ test('lessons come back for review; quick round mixes old questions', async ({ p
 
   // the review button opens the lesson (start card: it was played before)
   await page.getByTestId(`review-${played[0]}`).click();
-  await expect(page.getByRole('button', { name: 'Los geht’s!' })).toBeVisible();
+  await expect(page.getByTestId('lesson-start')).toBeVisible();
 
   // quick round
   await page.goto('/');

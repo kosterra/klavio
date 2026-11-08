@@ -352,3 +352,70 @@
   color: var(--mantine-color-indigo-8);
   box-shadow: 0 3px 0 rgb(0 0 0 / 18%);
 }
+
+/* phones: the short lead, so the buttons stay on the first screen */
+.leadShort {
+  display: none;
+}
+
+@media (max-width: 36em) {
+  .leadLong {
+    display: none;
+  }
+
+  .leadShort {
+    display: block;
+  }
+}
+
+/* real screenshots of the app, in a light frame */
+.shot {
+  margin: 0;
+}
+
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--mantine-radius-lg);
+  border: 1px solid var(--mantine-color-default-border);
+  box-shadow: 0 12px 32px rgb(30 40 90 / 14%);
+}
+
+.shot figcaption {
+  margin-top: var(--mantine-spacing-sm);
+  text-align: center;
+  font-weight: 700;
+}
+
+.kicker {
+  letter-spacing: 0.06em;
+  color: var(--mantine-color-grape-8);
+}
+
+:global([data-mantine-color-scheme='dark']) .kicker {
+  color: var(--mantine-color-grape-3);
+}
+
+.journey {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--mantine-spacing-xl);
+  align-items: center;
+}
+
+@media (min-width: 62em) {
+  .journey {
+    grid-template-columns: 1fr 1.2fr;
+  }
+}
+
+.code {
+  margin: var(--mantine-spacing-md) 0 0;
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
+  background: var(--mantine-color-dark-8);
+  color: #e9ecef;
+  font-size: var(--mantine-font-size-sm);
+  overflow-x: auto;
+}

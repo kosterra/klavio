@@ -1,3 +1,5 @@
+import type { Outfit as OutfitId } from '@klavio/shared';
+import { Outfit, type Head } from './Outfit';
 import classes from './Mascot.module.css';
 
 export type MascotMood = 'happy' | 'cheer' | 'think' | 'listen';
@@ -9,13 +11,18 @@ interface Props {
   label?: string;
   /** No motion (small avatars in lists and menus). */
   still?: boolean;
+  /** the wardrobe piece Klavi wears */
+  outfit?: OutfitId | null;
 }
+
+/** Klavi's head, for the wardrobe (the note head; the stem stays free). */
+const KLAVI_HEAD: Head = { cx: 54, top: 54, r: 40, eyesY: 90, eyeGap: 16, chin: 128 };
 
 /**
  * "Klavi" — the app's own mascot: a round note-head with a stem-antenna.
  * Original artwork, pure SVG, no third-party IP.
  */
-export function Mascot({ mood = 'happy', size = 120, label, still = false }: Props) {
+export function Mascot({ mood = 'happy', size = 120, label, still = false, outfit }: Props) {
   const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true };
   return (
     <svg
@@ -90,6 +97,7 @@ export function Mascot({ mood = 'happy', size = 120, label, still = false }: Pro
           <path d="M112 80 q6 12 0 24" />
         </g>
       )}
+      {outfit && <Outfit id={outfit} head={KLAVI_HEAD} />}
     </svg>
   );
 }

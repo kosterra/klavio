@@ -1,0 +1,29 @@
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--mantine-spacing-md);
+}
+
+.dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--klavio-track);
+  transition:
+    background 60ms,
+    transform 60ms;
+}
+
+.dot[data-accent] {
+  width: 44px;
+  height: 44px;
+}
+
+.dot[data-on] {
+  background: var(--mantine-primary-color-filled);
+  transform: scale(1.15);
+}
+
+.dot[data-on][data-accent] {
+  background: var(--mantine-color-orange-6);
+}

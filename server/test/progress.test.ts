@@ -141,7 +141,7 @@ describe('lesson progress', () => {
     const a = (await complete(jar, first!.id, { localDate: yesterday })).json();
     expect(a.streak.current).toBe(1);
     const b = (await complete(jar, second!.id)).json();
-    expect(b.streak).toEqual({ current: 2, longest: 2, lastActiveDate: today });
+    expect(b.streak).toMatchObject({ current: 2, longest: 2, lastActiveDate: today });
     expect(b.xp).toBeGreaterThanOrEqual(50);
     expect(b).toMatchObject({ level: 2, leveledUp: true });
   });
@@ -150,7 +150,7 @@ describe('lesson progress', () => {
     const { jar } = await learner();
     await complete(jar, first!.id);
     const late = (await complete(jar, second!.id, { localDate: addDays(today, -5) })).json();
-    expect(late.streak).toEqual({ current: 1, longest: 1, lastActiveDate: today });
+    expect(late.streak).toMatchObject({ current: 1, longest: 1, lastActiveDate: today });
     expect(late.today).toMatchObject({ date: addDays(today, -5), seconds: 120 });
   });
 

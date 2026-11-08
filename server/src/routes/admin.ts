@@ -1,6 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 import {
+  CODE_MAILS,
   MAIL_TEMPLATE_IDS,
   adminSettingsSchema,
   mailLangSchema,
@@ -14,6 +15,7 @@ import { getSettings } from '../lib/settings.js';
 import type { Mailer } from '../lib/mailer.js';
 import {
   codeMail,
+  templateMail,
   getMailTemplate,
   resetMailTemplate,
   saveMailTemplate,
@@ -74,7 +76,18 @@ const adminRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }> 
     },
     async (req, reply) => {
       const to = req.auth!.user.email;
-      await mailer.send(await codeMail(config, req.params.id, to, '123456', req.body.lang));
+      const id = req.params.id;
+      await mailer.send(
+        CODE_MAILS.includes(id)
+          ? await codeMail(config, id, to, '123456', req.body.lang)
+          : await templateMail(config, id, to, req.body.lang, {
+              months: (await getSettings(config)).inactiveDeleteMonths || 24,
+              date: new Date(Date.now() + 30 * 864e5).toLocaleDateString(
+                req.body.lang === 'en' ? 'en-GB' : 'de-CH',
+                { day: 'numeric', month: 'long', year: 'numeric' },
+              ),
+            }),
+      );
       return reply.code(204).send();
     },
   );

@@ -98,7 +98,7 @@ export const BADGES: BadgeDef[] = [
       'de-CH': `Schliesse alle Lektionen von «${c.title['de-CH']}» ab.`,
       en: `Finish all lessons of “${c.title.en}”.`,
     },
-    earned: (s) => c.lessons.every((l) => (s.lessons[l.id] ?? 0) > 0),
+    earned: (s) => c.lessons.every((l) => l.bonus || (s.lessons[l.id] ?? 0) > 0),
   })),
   {
     id: 'streak-3',

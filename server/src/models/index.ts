@@ -16,6 +16,10 @@ const userSchema = new Schema(
     /** the parent area may also be opened with one of the account's passkeys */
     parentPasskeyUnlock: { type: Boolean, default: false },
     locale: { type: String, default: 'de-CH' },
+    /** last day the account was used (for deleting long-inactive accounts, if admins set it) */
+    lastActiveAt: { type: Date, default: null },
+    /** when the warning before deletion went out; cleared when the account is used again */
+    inactiveWarnedAt: { type: Date, default: null },
   },
   { timestamps: true },
 );
@@ -77,6 +81,8 @@ const profileSchema = new Schema(
     birthYear: { type: Number, default: null },
     /** chosen worlds (kids | journey); null = follows uiMode */
     world: { type: String, enum: ['kids', 'journey', null], default: null },
+    /** the wardrobe piece the figure wears (unlocked by level) */
+    outfit: { type: String, default: null },
     dailyGoalMinutes: { type: Number, default: 10 },
     calibration: {
       a4Hz: { type: Number, default: 440 },
@@ -89,6 +95,7 @@ const profileSchema = new Schema(
       current: { type: Number, default: 0 },
       longest: { type: Number, default: 0 },
       lastActiveDate: { type: String, default: null }, // YYYY-MM-DD in the learner's local time
+      freeDayWeek: { type: String, default: null }, // the week whose free day was used
     },
     badges: { type: [{ id: String, earnedAt: Date, _id: false }], default: [] },
     // the learner's goal song: only its title, a style and the skills it needs
@@ -120,6 +127,8 @@ const lessonProgressSchema = new Schema(
     lastLocalDate: { type: String, default: null },
     reviewBox: { type: Number, default: 0 },
     reviews: { type: Number, default: 0 },
+    /** passed by placement («I can already do this»), not played */
+    placed: { type: Boolean, default: false },
   },
   { timestamps: true },
 );
@@ -181,6 +190,10 @@ const appSettingsSchema = new Schema(
     contactEmail: { type: String, default: '' },
     /** from this age profiles can choose between the kids' worlds and the journey */
     journeyMinAge: { type: Number },
+    /** false: robots noindex everywhere (a private family or school instance) */
+    searchIndexing: { type: Boolean },
+    /** accounts without any sign-in for this many months are deleted (0 = never) */
+    inactiveDeleteMonths: { type: Number },
   },
   { timestamps: true },
 );

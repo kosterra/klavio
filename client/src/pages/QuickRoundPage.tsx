@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Box, Button, Card, CloseButton, Group, Stack, Text, Title } from '@mantine/core';
 import { Link, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import { LESSONS, theoryFor, type TheoryStep } from '@klavio/shared';
 import { useSession } from '../auth/session';
 import { Buddy } from '../components/Buddy';
@@ -32,6 +33,7 @@ function pickSteps(played: Set<string>): TheoryStep[] {
  */
 export function QuickRoundPage() {
   const { t } = useTranslation();
+  usePageTitle(t('review.quick'));
   const navigate = useNavigate();
   const { activeProfile } = useSession();
   const { progress, completed } = useProgress();

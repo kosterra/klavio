@@ -1,13 +1,14 @@
-import { Text, Title } from '@mantine/core';
+import { Card, Text, Title } from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
-import { CURRICULUM } from '@klavio/shared';
+import { CURRICULUM, coreLessons, type Avatar, type Outfit } from '@klavio/shared';
+import { Figure } from '../components/Figure';
 import { SUMMIT_ALTITUDE, chapterColor, formatAltitude, worldOf } from '../lesson/worlds';
 import classes from './Journey.module.css';
 
-const HEIGHT = 230;
-const TOP = 34; // room for the summit flag
-const BOTTOM = 62; // room for the labels under the lowest point
+const HEIGHT = 250;
+const TOP = 62; // room for the figure and the summit flag
+const BOTTOM = 64; // room for the labels under the lowest point
 const SIDE = 34;
 
 /** A smooth line through the points (Catmull-Rom as cubic Béziers). */
@@ -35,10 +36,18 @@ export function JourneyProfile({
   completed,
   currentLessonId,
   goalTitle,
+  avatar,
+  outfit,
+  embedded = false,
 }: {
   completed: Set<string>;
   currentLessonId: string;
   goalTitle?: string;
+  /** the learner's figure stands where they are, as on the learning path */
+  avatar: Avatar;
+  outfit?: Outfit | null;
+  /** inside the dream song card: no frame and no heading of its own */
+  embedded?: boolean;
 }) {
   const { t, i18n } = useTranslation();
   const { ref, width } = useElementSize();
@@ -50,7 +59,7 @@ export function JourneyProfile({
       name: t(`path.worlds.${world.id}`),
       altitude: world.altitude ?? 0,
       color: chapterColor(world, ci),
-      done: chapter.lessons.every((l) => completed.has(l.id)),
+      done: coreLessons(chapter).every((l) => completed.has(l.id)),
       hell: world.id === 'hell',
     };
   });
@@ -89,21 +98,27 @@ export function JourneyProfile({
   const summit = points.at(-1)!;
 
   const label = (i: number) => wide || i === currentIndex || i === hellIndex;
+  // stones with their number where there is room, small dots on phones
+  const roomy = step >= 34;
+  const STONE = roomy ? 13 : 7;
 
-  return (
-    <section className={classes.card} aria-labelledby="journey-title" data-testid="journey">
-      <Text size="sm" fw={800} tt="uppercase" className={classes.kicker}>
-        {t('journey.kicker')}
-      </Text>
-      <Title order={2} size="h3" id="journey-title">
-        {goalTitle ? t('journey.titleSong', { title: goalTitle }) : t('journey.title')}
-      </Title>
-      <Text mt={4} data-testid="journey-phase">
-        {t(`journey.phase.${phase}`, { goal: goalTo })}
-      </Text>
+  // each stretch of land in its world's colour, as on the learning path
+  const edges = points.map((p, i) => ({
+    from: i === 0 ? 0 : (points[i - 1]!.x + p.x) / 2,
+    to: i === points.length - 1 ? w : (p.x + points[i + 1]!.x) / 2,
+  }));
+  const colorOf = (i: number) => (i < stops.length ? stops[i]!.color : 'pink');
 
-      <div ref={ref} className={classes.chart}>
-        {width > 0 && (
+  const phaseText = (
+    <Text mt={embedded ? 'md' : 4} data-testid="journey-phase">
+      {t(`journey.phase.${phase}`, { goal: goalTo })}
+    </Text>
+  );
+
+  const chart = (
+    <div ref={ref} className={classes.chart}>
+      {width > 0 && (
+        <>
           <svg
             width={w}
             height={HEIGHT}
@@ -118,67 +133,89 @@ export function JourneyProfile({
             })}
           >
             <defs>
-              {/* the colour of the ground follows the altitude: meadow, rock, glow */}
-              <linearGradient
-                id="journey-ground"
-                gradientUnits="userSpaceOnUse"
-                x1="0"
-                y1={TOP}
-                x2="0"
-                y2={HEIGHT - BOTTOM}
-              >
-                <stop offset="0" stopColor="var(--mantine-color-indigo-2)" />
-                <stop offset="0.3" stopColor="var(--mantine-color-green-3)" />
-                <stop offset="0.62" stopColor="var(--mantine-color-gray-4)" />
-                <stop offset="0.82" stopColor="var(--mantine-color-orange-5)" />
-                <stop offset="1" stopColor="var(--mantine-color-red-8)" />
-              </linearGradient>
+              <clipPath id="journey-land">
+                <path d={area} />
+              </clipPath>
               <clipPath id="journey-travelled">
                 <rect x="0" y="0" width={here.x} height={HEIGHT} />
               </clipPath>
             </defs>
 
-            <path d={area} fill="url(#journey-ground)" opacity="0.55" />
+            {/* the land, world by world */}
+            <g clipPath="url(#journey-land)">
+              {edges.map((e, i) => (
+                <rect
+                  key={i}
+                  x={e.from}
+                  y="0"
+                  width={e.to - e.from}
+                  height={HEIGHT}
+                  fill={`color-mix(in srgb, var(--mantine-color-${colorOf(i)}-5) ${
+                    i === hellIndex ? 40 : 26
+                  }%, var(--klavio-surface))`}
+                />
+              ))}
+            </g>
             <line x1={SIDE / 2} x2={w - SIDE / 2} y1={sea} y2={sea} className={classes.sea} />
             <text x={w - SIDE / 2} y={sea - 5} textAnchor="end" className={classes.seaLabel}>
               {t('journey.seaLevel')}
             </text>
+            {/* the road along the surface: grey ahead, coloured where one has been */}
+            <path d={line} className={classes.road} />
+            <path d={line} className={classes.travelled} clipPath="url(#journey-travelled)" />
+            <path d={line} className={classes.edge} />
 
-            <path d={line} fill="none" className={classes.trail} />
-            <path
-              d={line}
-              fill="none"
-              className={classes.travelled}
-              clipPath="url(#journey-travelled)"
-            />
+            {/* the fire at the lowest point */}
+            {hellIndex >= 0 && (
+              <g transform={`translate(${points[hellIndex]!.x} ${points[hellIndex]!.y + 4})`}>
+                <g className={classes.flame}>
+                  <path
+                    d="M-18 0 Q-22 -16 -10 -24 Q-10 -14 -4 -12 Q-8 -28 4 -38 Q4 -24 10 -20 Q12 -30 18 -30 Q24 -14 18 0 Z"
+                    fill="var(--mantine-color-orange-5)"
+                    className={classes.ink}
+                  />
+                  <path
+                    d="M-9 0 Q-11 -9 -4 -13 Q-3 -6 2 -8 Q2 -16 8 -18 Q14 -8 9 0 Z"
+                    fill="var(--mantine-color-yellow-4)"
+                  />
+                </g>
+              </g>
+            )}
 
             {stops.map((s, i) => {
               const p = points[i]!;
               const state = s.done ? 'done' : i === currentIndex ? 'current' : 'later';
+              const below = p.y + STONE + 16;
               return (
                 <g key={s.key} data-state={state}>
                   <circle
                     cx={p.x}
                     cy={p.y}
-                    r={i === currentIndex ? 9 : 7}
+                    r={STONE}
                     fill={
-                      state === 'later'
-                        ? 'var(--klavio-surface)'
-                        : `var(--mantine-color-${s.color}-6)`
+                      state === 'done'
+                        ? `var(--mantine-color-${s.color}-6)`
+                        : state === 'current'
+                          ? 'var(--mantine-color-orange-6)'
+                          : 'var(--klavio-locked-bg)'
                     }
-                    className={classes.stop}
+                    className={classes.ink}
                   />
-                  {s.hell && (
-                    <path
-                      d={`M ${p.x - 7} ${p.y + 22} Q ${p.x - 9} ${p.y + 12} ${p.x - 3} ${p.y + 8} Q ${p.x - 2} ${p.y + 14} ${p.x + 1} ${p.y + 12} Q ${p.x + 1} ${p.y + 6} ${p.x + 5} ${p.y + 4} Q ${p.x + 10} ${p.y + 14} ${p.x + 7} ${p.y + 22} Z`}
-                      fill="var(--mantine-color-orange-6)"
-                      className={classes.flame}
-                    />
+                  {roomy && (
+                    <text
+                      x={p.x}
+                      y={p.y}
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      className={state === 'later' ? classes.numberLocked : classes.number}
+                    >
+                      {i + 1}
+                    </text>
                   )}
                   {label(i) && (
                     <text
                       x={p.x}
-                      y={s.hell ? p.y + 36 : p.y + 26}
+                      y={below}
                       textAnchor="middle"
                       className={s.hell ? classes.hellLabel : classes.label}
                     >
@@ -186,12 +223,7 @@ export function JourneyProfile({
                     </text>
                   )}
                   {wide && (
-                    <text
-                      x={p.x}
-                      y={(s.hell ? p.y + 36 : p.y + 26) + 14}
-                      textAnchor="middle"
-                      className={classes.altitude}
-                    >
+                    <text x={p.x} y={below + 14} textAnchor="middle" className={classes.altitude}>
                       {t('journey.altitude', { m: formatAltitude(s.altitude, i18n.language) })}
                     </text>
                   )}
@@ -199,35 +231,58 @@ export function JourneyProfile({
               );
             })}
 
-            {/* the summit with the dream song */}
-            <g data-state={allDone ? 'done' : 'later'}>
-              <path d={`M ${summit.x} ${summit.y} V ${summit.y - 26}`} className={classes.pole} />
+            {/* the summit with the dream song: a flag like the chapter flags */}
+            <g transform={`translate(${summit.x} ${summit.y})`}>
+              <rect x="-2.5" y="-46" width="5" height="46" rx="2.5" className={classes.pole} />
+              <circle cy="-46" r="4.5" fill="var(--mantine-color-yellow-6)" />
               <path
-                d={`M ${summit.x + 1} ${summit.y - 26} L ${summit.x + 20} ${summit.y - 20} L ${summit.x + 1} ${summit.y - 14} Z`}
+                d="M2 -42 Q14 -46 30 -40 Q24 -32 30 -24 Q14 -28 2 -22 Z"
                 fill="var(--mantine-color-pink-6)"
+                className={classes.ink}
               />
-              <text
-                x={summit.x - 6}
-                y={summit.y - 12}
-                textAnchor="end"
-                className={classes.summitLabel}
-              >
+              <text x="-8" y="-28" textAnchor="end" className={classes.summitLabel}>
                 {goal.length > 22 ? `${goal.slice(0, 21)}…` : goal}
               </text>
             </g>
-
-            {/* you are here */}
-            <g className={classes.here} transform={`translate(${here.x} ${here.y})`}>
-              <circle r="15" className={classes.pulse} />
-              <path
-                d="M0 -12 C -8 -12 -10 -22 -10 -26 A 10 10 0 1 1 10 -26 C 10 -22 8 -12 0 -12 Z"
-                fill="var(--mantine-primary-color-filled)"
-              />
-              <circle cy="-26" r="4" fill="#fff" />
-            </g>
           </svg>
-        )}
+          {/* you are here: the learner's own figure, as on the learning path */}
+          <span
+            className={classes.figure}
+            style={{ left: here.x - 24, top: here.y - STONE - 50 }}
+            data-testid="journey-figure"
+          >
+            <Figure avatar={avatar} outfit={outfit} mood="happy" size={48} still />
+          </span>
+        </>
+      )}
+    </div>
+  );
+
+  if (embedded) {
+    return (
+      <div data-testid="journey">
+        {phaseText}
+        {chart}
       </div>
-    </section>
+    );
+  }
+  return (
+    <Card
+      withBorder
+      radius="xl"
+      padding="lg"
+      aria-labelledby="journey-title"
+      data-testid="journey"
+      component="section"
+    >
+      <Text size="sm" fw={800} tt="uppercase" c="dimmed" className={classes.kicker}>
+        {t('journey.kicker')}
+      </Text>
+      <Title order={2} size="h3" id="journey-title">
+        {goalTitle ? t('journey.titleSong', { title: goalTitle }) : t('journey.title')}
+      </Title>
+      {phaseText}
+      {chart}
+    </Card>
   );
 }

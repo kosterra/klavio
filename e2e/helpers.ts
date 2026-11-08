@@ -117,7 +117,7 @@ export async function seedCompletedLessons(page: Page, lessonIds: string[]) {
 
 /** Skips the "Entdecken" part if the lesson starts with it; returns at the start card. */
 export async function skipTheory(page: Page) {
-  const start = page.getByRole('button', { name: 'Los geht’s!' });
+  const start = page.getByTestId('lesson-start');
   const skip = page.getByRole('button', { name: 'Überspringen' });
   await expect(start.or(skip)).toBeVisible();
   if (await skip.isVisible()) await skip.click();
@@ -127,5 +127,5 @@ export async function skipTheory(page: Page) {
 /** Skips the theory part (if any) and starts the lesson. */
 export async function startLesson(page: Page) {
   await skipTheory(page);
-  await page.getByRole('button', { name: 'Los geht’s!' }).click();
+  await page.getByTestId('lesson-start').click();
 }

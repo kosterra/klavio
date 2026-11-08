@@ -317,6 +317,67 @@ CURRICULUM.push({
         ),
       ],
     },
+    // bonus songs: open together with the chapter, never in the way
+    {
+      id: 'song-jakob',
+      kind: 'song',
+      bonus: true,
+      title: { 'de-CH': 'Bruder Jakob', en: 'Brother John' },
+      intro: {
+        'de-CH':
+          'Ein Kanon, den man auf der ganzen Welt singt. Neu: zwei schnelle Achtelnoten hintereinander – und am Schluss geht es hinunter zum tiefen G.',
+        en: 'A round sung all over the world. New: two quick eighth notes in a row – and at the end it goes down to the low G.',
+      },
+      xp: 25,
+      keyboard: { from: 55, to: 72 },
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'C4/q D4/q E4/q C4/q | C4/q D4/q E4/q C4/q | E4/q F4/q G4/h | E4/q F4/q G4/h | G4/8 A4/8 G4/8 F4/8 E4/q C4/q | G4/8 A4/8 G4/8 F4/8 E4/q C4/q | C4/q G3/q C4/h | C4/q G3/q C4/h',
+          { tempo: 96 },
+        ),
+      ],
+    },
+    {
+      id: 'song-jingle',
+      kind: 'song',
+      bonus: true,
+      title: { 'de-CH': 'Jingle Bells', en: 'Jingle Bells' },
+      intro: {
+        'de-CH':
+          'Der Refrain des bekannten Winterlieds – mit vielen gleichen Tönen hintereinander. Zähl mit, damit du keinen vergisst!',
+        en: 'The chorus of the well-known winter song – with many equal notes in a row. Count along so you don’t miss one!',
+      },
+      xp: 25,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'E4/q E4/q E4/h | E4/q E4/q E4/h | E4/q G4/q C4/qd D4/8 | E4/w | F4/q F4/q F4/qd F4/8 | F4/q E4/q E4/q E4/8 E4/8 | E4/q D4/q D4/q E4/q | D4/h G4/h',
+          { tempo: 112 },
+        ),
+      ],
+    },
+    {
+      id: 'song-macdonald',
+      kind: 'song',
+      bonus: true,
+      title: { 'de-CH': 'Old MacDonald', en: 'Old MacDonald' },
+      intro: {
+        'de-CH':
+          'Ein Lied vom Bauernhof. Die Melodie geht unter das C hinunter: zum A und zum G gleich links davon.',
+        en: 'A song from the farm. The melody goes below C: to the A and the G just left of it.',
+      },
+      xp: 25,
+      keyboard: { from: 55, to: 72 },
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'C4/q C4/q C4/q G3/q | A3/q A3/q G3/h | E4/q E4/q D4/q D4/q | C4/w | C4/q C4/q C4/q G3/q | A3/q A3/q G3/h | E4/q E4/q D4/q D4/q | C4/w',
+          { tempo: 104 },
+        ),
+      ],
+    },
   ],
 });
 
@@ -611,8 +672,58 @@ CURRICULUM.push({
   ],
 });
 
+// ---------------------------------------------------------------- level 3
+// Block B: new rhythms. Appended at the end, so nobody's path changes.
+CURRICULUM.push({
+  id: 'meter',
+  title: { 'de-CH': 'Neue Rhythmen', en: 'New rhythms' },
+  stage: 3,
+  lessons: [
+    {
+      id: 'meter-eighths',
+      kind: 'rhythm',
+      title: { 'de-CH': 'Achtelnoten', en: 'Eighth notes' },
+      intro: {
+        'de-CH':
+          'Eine Achtelnote ist halb so lang wie eine Viertel: Auf einen Schlag passen zwei. Zähl «eins-und, zwei-und» – die Achtel kommen auf die Zahl und auf das «und».',
+        en: 'An eighth note is half as long as a quarter: two fit into one beat. Count «one-and, two-and» – the eighths come on the number and on the «and».',
+      },
+      xp: 25,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        rhythm('q q 8 8 q | 8 8 8 8 h | q 8 8 q q | 8 8 q 8 8 q | h 8 8 q', { tempo: 72 }),
+      ],
+    },
+    {
+      id: 'meter-waltz',
+      kind: 'rhythm',
+      title: { 'de-CH': 'Der Dreivierteltakt', en: 'Three-four time' },
+      intro: {
+        'de-CH':
+          'Im Walzer hat jeder Takt nur drei Schläge: «eins, zwei, drei – eins, zwei, drei». Der erste Schlag ist der starke. Eine halbe Note mit Punkt füllt einen ganzen Takt.',
+        en: 'In a waltz every bar has only three beats: «one, two, three – one, two, three». The first beat is the strong one. A dotted half note fills a whole bar.',
+      },
+      xp: 25,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        rhythm('q q q | h q | q q q | hd | q h | 8 8 q q | hd', { time: '3/4', tempo: 92 }),
+      ],
+    },
+  ],
+});
+
 /** All lessons in learning order. */
 export const LESSONS: Lesson[] = CURRICULUM.flatMap((c) => c.lessons);
+
+/** The lessons of the path without the bonus lessons – what «done» means. */
+export const CORE_LESSONS: Lesson[] = LESSONS.filter((l) => !l.bonus);
+
+/** A chapter's lessons that count for finishing it (no bonus lessons). */
+export function coreLessons(chapter: Chapter): Lesson[] {
+  return chapter.lessons.filter((l) => !l.bonus);
+}
 
 export function findLesson(id: string): Lesson | undefined {
   return LESSONS.find((l) => l.id === id);
@@ -646,10 +757,14 @@ export function lessonTargetCount(lesson: Lesson): number {
 export function isLessonUnlocked(lessonId: string, completed: ReadonlySet<string>): boolean {
   const i = LESSONS.findIndex((l) => l.id === lessonId);
   if (i < 0) return false;
-  return i === 0 || completed.has(LESSONS[i - 1]!.id);
+  // the closest lesson before it that is not a bonus lesson has to be done
+  for (let j = i - 1; j >= 0; j--) {
+    if (!LESSONS[j]!.bonus) return completed.has(LESSONS[j]!.id);
+  }
+  return true;
 }
 
 /** The lesson to continue with: the first one not yet completed (or the last one). */
 export function nextLesson(completed: ReadonlySet<string>): Lesson {
-  return LESSONS.find((l) => !completed.has(l.id)) ?? LESSONS[LESSONS.length - 1]!;
+  return CORE_LESSONS.find((l) => !completed.has(l.id)) ?? CORE_LESSONS[CORE_LESSONS.length - 1]!;
 }

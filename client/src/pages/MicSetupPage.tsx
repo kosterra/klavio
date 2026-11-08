@@ -15,6 +15,7 @@ import { notify } from '../components/notify';
 import { IconMicrophone } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import { midiToName } from '@klavio/shared';
 import { useSession } from '../auth/session';
 import { endpoints } from '../api/endpoints';
@@ -39,6 +40,7 @@ const TEST_NOTES_NEEDED = 3;
  */
 export function MicSetupPage() {
   const { t, i18n } = useTranslation();
+  usePageTitle(t('micSetup.title'));
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
   const { activeProfile, refresh } = useSession();
   const navigate = useNavigate();

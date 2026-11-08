@@ -50,6 +50,7 @@ export function InstallHint({ variant = 'alert' }: { variant?: 'alert' | 'banner
     () => readJson<boolean>(KEYS.installDismissed) === true,
   );
   const [installed, setInstalled] = useState(() => isStandalone());
+  const [how, setHow] = useState(false);
 
   useEffect(() => {
     const onPrompt = (e: Event) => {
@@ -128,9 +129,29 @@ export function InstallHint({ variant = 'alert' }: { variant?: 'alert' | 'banner
       onClose={dismiss}
       title={t('install.title')}
       data-testid="install-hint"
+      py="xs"
     >
-      <Text size="sm">{text}</Text>
-      {installButton && <Group mt="xs">{installButton}</Group>}
+      {/* compact: the steps only when asked for (or the browser's own button) */}
+      {installButton ? (
+        <Group mt={4}>{installButton}</Group>
+      ) : (
+        <>
+          <Button
+            variant="subtle"
+            size="compact-sm"
+            px={0}
+            onClick={() => setHow((h) => !h)}
+            aria-expanded={how}
+          >
+            {t('install.how')}
+          </Button>
+          {how && (
+            <Text size="sm" mt={4}>
+              {text}
+            </Text>
+          )}
+        </>
+      )}
     </Alert>
   );
 }

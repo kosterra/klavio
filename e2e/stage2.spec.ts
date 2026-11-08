@@ -9,7 +9,7 @@ async function learner(page: Page, name: string) {
   await signUpWithEmail(page, uniqueEmail(name), 'Familie Stufe');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Ada');
-  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
 }

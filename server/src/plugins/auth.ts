@@ -33,6 +33,11 @@ export default fp(async (app) => {
     if (!session) return;
     const user = await User.findById(session.userId).lean<UserDoc>();
     if (!user) return;
+    // remember use (at most twice a day) – long-unused accounts may be deleted after a warning
+    const last = user.lastActiveAt?.getTime() ?? 0;
+    if (Date.now() - last > 12 * 60 * 60 * 1000 || user.inactiveWarnedAt) {
+      await User.updateOne({ _id: user._id }, { lastActiveAt: new Date(), inactiveWarnedAt: null });
+    }
     const until = session.parentUnlockedUntil ?? null;
     req.auth = {
       user,

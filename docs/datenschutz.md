@@ -82,6 +82,8 @@ Keine weiteren Empfänger: keine Analyse-, Werbe- oder Fehlerberichtsdienste, ke
 ## Rechte der Nutzer
 
 - **Einsehen:** Konto, Passkeys, Profile, Fortschritt und Abzeichen sind in der App sichtbar.
+- **Herausgeben (Datenportabilität):** «Konto → Daten herunterladen» liefert alles, was zum Konto
+  gespeichert ist, als JSON-Datei – ohne Geheimnisse (PIN-Hash, Passkey-Schlüssel).
 - **Berichtigen:** Name des Kontos, E-Mail-Adresse (mit Bestätigung an die neue Adresse), Profile,
   Passkey-Namen – alles unter «Konto» bzw. auf der Profilwahl.
 - **Löschen:**
@@ -91,6 +93,13 @@ Keine weiteren Empfänger: keine Analyse-, Werbe- oder Fehlerberichtsdienste, ke
   - In Sicherungen bleiben Daten bis zu deren Ablauf; die Aufbewahrungsdauer legt der Betreiber fest.
 
 ## Hinweise für Betreiber
+
+- **Unbenutzte Konten:** Unter «Verwaltung → Daten und Suchmaschinen» lässt sich einstellen, nach wie
+  vielen Monaten ohne Anmeldung ein Konto gelöscht wird (Standard: nie). Das Konto bekommt vorher eine
+  Warnung per E-Mail und wird 30 Tage später gelöscht, ausser es meldet sich an. Dafür speichert das
+  Konto den Tag der letzten Nutzung und den Zeitpunkt der Warnung.
+- **Suchmaschinen:** Für eine private Instanz lässt sich die Aufnahme in Suchmaschinen abschalten
+  (`noindex` auf allen Seiten, `robots.txt` sperrt alles, keine Sitemap).
 
 - Die App hat eine eigene Datenschutzseite (`/privacy`, verlinkt in jeder Fusszeile), die diese
   Übersicht in einfachen Worten zusammenfasst. Als Verantwortliche nennt sie den Betreiber, den Admins

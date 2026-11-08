@@ -387,6 +387,7 @@ a.node:active {
 
 :global([data-mantine-color-scheme='dark']) .foggy {
   --world-bg: var(--klavio-fog);
+  --world-sky: var(--klavio-fog);
   --world-hill: color-mix(in srgb, var(--chapter-color) 10%, var(--klavio-locked-border));
   --world-hill-2: var(--world-hill);
 }

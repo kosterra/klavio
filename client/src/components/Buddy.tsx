@@ -8,5 +8,13 @@ import { Figure } from './Figure';
  */
 export function Buddy({ mood, size, label }: { mood?: MascotMood; size?: number; label?: string }) {
   const { activeProfile } = useSession();
-  return <Figure avatar={activeProfile?.avatar ?? 'klavi'} mood={mood} size={size} label={label} />;
+  return (
+    <Figure
+      avatar={activeProfile?.avatar ?? 'klavi'}
+      outfit={activeProfile?.outfit}
+      mood={mood}
+      size={size}
+      label={label}
+    />
+  );
 }

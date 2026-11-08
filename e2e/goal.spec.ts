@@ -11,6 +11,7 @@ test('dream song: set it in the profile, see progress and the next step on the d
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Ralph');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByTestId('profile-more').click();
   await page.getByRole('dialog').getByText('Classic', { exact: true }).click();
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();

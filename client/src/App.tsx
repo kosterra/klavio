@@ -48,6 +48,15 @@ const QuickRoundPage = lazy(() =>
 const KnowledgePage = lazy(() =>
   import('./pages/KnowledgePage').then((m) => ({ default: m.KnowledgePage })),
 );
+const FamilyPage = lazy(() =>
+  import('./family/FamilyPage').then((m) => ({ default: m.FamilyPage })),
+);
+const MetronomePage = lazy(() =>
+  import('./pages/MetronomePage').then((m) => ({ default: m.MetronomePage })),
+);
+const FreePlayPage = lazy(() =>
+  import('./pages/FreePlayPage').then((m) => ({ default: m.FreePlayPage })),
+);
 const LessonPage = lazy(() =>
   import('./pages/LessonPage').then((m) => ({ default: m.LessonPage })),
 );
@@ -159,6 +168,14 @@ export function App() {
                       </ParentGate>
                     }
                   />
+                  <Route
+                    path="/family"
+                    element={
+                      <ParentGate>
+                        <FamilyPage />
+                      </ParentGate>
+                    }
+                  />
                   <Route element={<RequireAdmin />}>
                     <Route
                       path="/admin"
@@ -197,6 +214,8 @@ export function App() {
                     />
                     <Route path="/profile" element={<ProfileSettingsPage />} />
                     <Route path="/knowledge" element={<KnowledgePage />} />
+                    <Route path="/play" element={<FreePlayPage />} />
+                    <Route path="/metronome" element={<MetronomePage />} />
                   </Route>
                 </Route>
               </Route>

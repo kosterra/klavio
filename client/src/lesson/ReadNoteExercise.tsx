@@ -70,7 +70,12 @@ export function ReadNoteExercise({
         )}
       </div>
       <div aria-live="polite" aria-atomic style={{ textAlign: 'center' }}>
-        <Text mih={28} fw={700} c={feedback?.ok ? 'teal.8' : 'orange.9'} data-testid="feedback">
+        <Text
+          mih={28}
+          fw={700}
+          c={feedback?.ok ? 'teal.8' : 'var(--klavio-hint)'}
+          data-testid="feedback"
+        >
           {feedback?.ok
             ? t('lesson.correctNote', { note: midiToPitchName(target, lang) })
             : feedback

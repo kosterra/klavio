@@ -29,7 +29,7 @@ test('on a phone the keys are big enough, a swipe scrolls and only a tap plays',
 
   await page.goto('/lesson/keys-c');
   await skipTheory(page);
-  await page.getByRole('button', { name: 'Los geht’s!' }).click();
+  await page.getByTestId('lesson-start').click();
   const c4 = page.getByRole('button', { name: 'C4', exact: true });
   await expect(c4).toBeVisible();
 

@@ -31,11 +31,11 @@ test('MIDI, on-screen keyboard and computer keys share one input; MIDI beats the
   await signUpWithEmail(page, uniqueEmail('input'), 'Input');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Mira');
-  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
 
-  await page.getByRole('button', { name: 'Menü' }).click();
-  await page.getByRole('menuitem', { name: 'Eingabe' }).click();
+  await page.getByTestId('nav-toggle').click();
+  await page.getByTestId('side-nav').getByRole('link', { name: 'Eingabe' }).click();
   await expect(page.getByRole('heading', { name: 'Wie spielst du?' })).toBeVisible();
   await expect(page.getByText('Aktiv: Bildschirm')).toBeVisible();
   await audit(page);
@@ -83,4 +83,39 @@ test('MIDI, on-screen keyboard and computer keys share one input; MIDI beats the
   await expect(last).toHaveText(/^(C4|E4|G4|C5)$/, { timeout: 15_000 });
   await expect(source).toHaveText('Mikrofon');
   await page.getByRole('button', { name: 'Stoppen' }).click();
+});
+
+test('with a digital piano the first key starts the lesson; every note heard is shown', async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  await page.addInitScript(installFakeMidi);
+  await signUpWithEmail(page, uniqueEmail('midistart'), 'Familie');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Mira');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await page.getByRole('heading', { name: 'Hallo Mira!' }).waitFor();
+  await page.goto('/input');
+  await page.getByRole('button', { name: 'MIDI verbinden' }).click();
+  await expect(page.getByText('Aktiv: MIDI (Klavio Test Piano)')).toBeVisible();
+
+  // navigate inside the app (a reload would drop the test's MIDI device)
+  await page.evaluate(() => {
+    history.pushState({}, '', '/lesson/keys-c');
+    dispatchEvent(new PopStateEvent('popstate'));
+  });
+  const skip = page.getByRole('button', { name: 'Überspringen' });
+  const start = page.getByTestId('lesson-start');
+  await expect(skip.or(start)).toBeVisible();
+  if (await skip.isVisible()) await skip.click();
+  // the start card says what to do: tap the button – or just play
+  await expect(page.getByText(/oder spiel einfach eine Taste/)).toBeVisible();
+  await midi(page, [0x90, 64, 100]);
+  await midi(page, [0x80, 64, 0]);
+  await expect(page.getByTestId('heard')).toBeVisible();
+  // in the lesson: the note played shows up
+  await midi(page, [0x90, 62, 100]);
+  await expect(page.getByTestId('heard')).toHaveText('Ich höre: D');
+  await audit(page);
 });

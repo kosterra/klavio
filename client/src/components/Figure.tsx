@@ -1,4 +1,5 @@
-import type { Avatar } from '@klavio/shared';
+import type { Avatar, Outfit as OutfitId } from '@klavio/shared';
+import { Outfit } from './Outfit';
 import { Mascot, type MascotMood } from './Mascot';
 import classes from './Figure.module.css';
 
@@ -191,6 +192,7 @@ export function Figure({
   size = 120,
   label,
   still = false,
+  outfit,
 }: {
   avatar: Avatar;
   mood?: MascotMood;
@@ -198,8 +200,11 @@ export function Figure({
   label?: string;
   /** No motion (small avatars in lists and menus). */
   still?: boolean;
+  /** the wardrobe piece the figure wears */
+  outfit?: OutfitId | null;
 }) {
-  if (avatar === 'klavi') return <Mascot mood={mood} size={size} label={label} still={still} />;
+  if (avatar === 'klavi')
+    return <Mascot mood={mood} size={size} label={label} still={still} outfit={outfit} />;
   const spec = SPECS[avatar];
   const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true };
   return (
@@ -247,6 +252,19 @@ export function Figure({
         <circle cx="72" cy="66" r="5" fill="#ff8fab" opacity="0.55" />
         <Eyes spec={spec} animal={avatar} mood={mood} />
         <Mouth animal={avatar} spec={spec} mood={mood} />
+        {outfit && (
+          <Outfit
+            id={outfit}
+            head={{
+              cx: 50,
+              top: avatar === 'frog' ? 18 : 25,
+              r: 32,
+              eyesY: spec.eyes[0][1],
+              eyeGap: (spec.eyes[1][0] - spec.eyes[0][0]) / 2,
+              chin: 86,
+            }}
+          />
+        )}
       </g>
     </svg>
   );

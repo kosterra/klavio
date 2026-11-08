@@ -13,6 +13,7 @@ import authPlugin from './plugins/auth.js';
 import { registerWeb } from './plugins/web.js';
 import { HttpError } from './lib/errors.js';
 import { createMailer, type Mailer } from './lib/mailer.js';
+import { scheduleRetention } from './lib/retention.js';
 import authRoutes from './routes/auth.js';
 import emailAuthRoutes from './routes/emailAuth.js';
 import passkeyRoutes from './routes/passkeys.js';
@@ -31,6 +32,8 @@ export interface BuildOptions {
    * every route (scripts/openapi.ts registers @fastify/swagger here).
    */
   beforeRoutes?: (app: FastifyInstance) => Promise<void>;
+  /** background jobs (deleting long-inactive accounts) – only the real server */
+  jobs?: boolean;
 }
 
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
@@ -40,6 +43,7 @@ export async function buildApp({
   mailer,
   rateLimit: withRateLimit = true,
   beforeRoutes,
+  jobs = false,
 }: BuildOptions) {
   const app = Fastify({
     logger:
@@ -109,6 +113,10 @@ export async function buildApp({
   });
 
   const resolvedMailer = mailer ?? createMailer(config, (m) => app.log.info(m));
+  if (jobs) {
+    const stop = scheduleRetention(config, resolvedMailer, app.log);
+    app.addHook('onClose', async () => stop());
+  }
 
   await app.register(authPlugin);
   if (beforeRoutes) await beforeRoutes(app);

@@ -2,6 +2,8 @@ import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 import {
   addDays,
+  CURRICULUM,
+  coreLessons,
   applyCompletion,
   findLesson,
   isLessonUnlocked,
@@ -61,6 +63,43 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
   app.addHook('preHandler', async (req) => {
     if (!req.auth!.activeProfileId) throw new HttpError(409, 'NO_ACTIVE_PROFILE');
   });
+
+  /**
+   * Placement: «I can already do this» – the core lessons before a chapter
+   * count as passed (1 star, no XP, no reviews), so one starts there. Lessons
+   * already played keep their stars. Parent area: children don't skip ahead.
+   */
+  app.post(
+    '/placement',
+    {
+      schema: { body: z.object({ chapterId: z.string().max(40) }) },
+      preHandler: app.requireParent,
+    },
+    async (req) => {
+      const profileId = req.auth!.activeProfileId!;
+      const ci = CURRICULUM.findIndex((c) => c.id === req.body.chapterId);
+      if (ci < 0) throw new HttpError(400, 'UNKNOWN_CHAPTER');
+      const skip = CURRICULUM.slice(0, ci).flatMap((c) => coreLessons(c).map((l) => l.id));
+      const have = new Set(
+        (
+          await LessonProgress.find({ profileId, lessonId: { $in: skip } }, { lessonId: 1 }).lean()
+        ).map((l) => l.lessonId),
+      );
+      const add = skip.filter((id) => !have.has(id));
+      if (add.length) {
+        await LessonProgress.insertMany(
+          add.map((lessonId) => ({
+            profileId,
+            lessonId,
+            bestStars: 1,
+            completions: 0,
+            placed: true,
+          })),
+        );
+      }
+      return { placed: add.length };
+    },
+  );
 
   app.get(
     '/',
@@ -133,6 +172,7 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
           current: profile.streak?.current ?? 0,
           longest: profile.streak?.longest ?? 0,
           lastActiveDate: profile.streak?.lastActiveDate ?? null,
+          freeDayWeek: profile.streak?.freeDayWeek ?? null,
         },
         localDate,
       );

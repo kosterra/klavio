@@ -42,7 +42,7 @@ export function StatTiles({
 
   return (
     <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="md">
-      <div className={classes.tile} style={tileStyle('indigo')}>
+      <div className={classes.tile} data-tile style={tileStyle('indigo')}>
         <ThemeIcon size={52} radius="xl" color="indigo" aria-hidden>
           <IconTrophyFilled size={28} />
         </ThemeIcon>
@@ -70,7 +70,7 @@ export function StatTiles({
         </div>
       </div>
 
-      <div className={classes.tile} style={tileStyle('orange')}>
+      <div className={classes.tile} data-tile style={tileStyle('orange')}>
         <div className={classes.flameBox} aria-hidden>
           <IconFlameFilled size={flame} className={streak > 0 ? classes.flame : classes.flameOut} />
         </div>
@@ -84,7 +84,7 @@ export function StatTiles({
         </div>
       </div>
 
-      <div className={classes.tile} style={tileStyle('teal')}>
+      <div className={classes.tile} data-tile style={tileStyle('teal')}>
         <RingProgress
           size={72}
           thickness={9}

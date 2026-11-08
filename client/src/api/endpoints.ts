@@ -7,6 +7,7 @@ import type {
   PasskeyDto,
   ProfileDto,
   PublicConfigResponse,
+  ProfileOverviewDto,
   MailLang,
   MailTemplateDto,
   MailTemplateId,
@@ -41,7 +42,10 @@ export const endpoints = {
 
   emailRequest: (email: string) => api('POST', '/auth/email/request', { email, lang: lang() }),
   emailVerify: (body: { email: string; code: string; displayName?: string }) =>
-    api<{ status: 'ok' | 'needs-display-name' | 'created' }>('POST', '/auth/email/verify', body),
+    api<{ status: 'ok' | 'needs-display-name' | 'created' }>('POST', '/auth/email/verify', {
+      ...body,
+      lang: lang(),
+    }),
 
   passkeys: () => api<PasskeyDto[]>('GET', '/passkeys'),
   addPasskeyOptions: () => api<PublicKeyCredentialCreationOptionsJSON>('POST', '/passkeys/options'),
@@ -70,12 +74,15 @@ export const endpoints = {
     api<{ unlockedUntil: string | null }>('POST', '/account/pin/passkey/verify', { response }),
 
   profiles: () => api<ProfileDto[]>('GET', '/profiles'),
+  profileOverview: (date: string) =>
+    api<ProfileOverviewDto[]>('GET', `/profiles/overview?date=${encodeURIComponent(date)}`),
   createProfile: (body: ProfileInput) => api<ProfileDto>('POST', '/profiles', body),
   updateProfile: (
     id: string,
     body: Partial<ProfileInput> & {
       calibration?: Partial<ProfileDto['calibration']>;
       goalSong?: ProfileDto['goalSong'];
+      outfit?: ProfileDto['outfit'];
     },
   ) => api<ProfileDto>('PATCH', `/profiles/${id}`, body),
   deleteProfile: (id: string) => api('DELETE', `/profiles/${id}`),

@@ -1,0 +1,29 @@
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 8px 4px;
+  border-radius: var(--mantine-radius-md);
+  border: 2px solid transparent;
+  text-align: center;
+}
+
+.item[data-selected] {
+  border-color: var(--mantine-primary-color-filled);
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 8%, var(--klavio-surface));
+}
+
+.item[data-locked] {
+  cursor: not-allowed;
+}
+
+.item[data-locked] svg:first-child {
+  filter: grayscale(1);
+  opacity: 0.45;
+}
+
+.item:focus-visible {
+  outline: 3px solid var(--mantine-color-orange-6);
+}

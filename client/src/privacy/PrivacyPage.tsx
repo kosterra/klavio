@@ -2,6 +2,7 @@ import { Anchor, Button, Card, Container, Group, List, Stack, Text, Title } from
 import { IconArrowLeft, IconCircleCheck, IconPiano } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import { APP_CONFIG } from '@klavio/shared';
 import { useSession } from '../auth/session';
 import { SiteFooter } from '../components/SiteFooter';
@@ -50,6 +51,7 @@ function Section({ id }: { id: (typeof SECTIONS)[number] }) {
  */
 export function PrivacyPage() {
   const { t } = useTranslation();
+  usePageTitle(null, '/privacy');
   const { me, config } = useSession();
   const back = me ? '/' : '/welcome';
   const operator = config?.operatorName;

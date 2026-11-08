@@ -56,7 +56,7 @@ test('Klavi reads tasks and explanations aloud – automatically for Kids, switc
   await signUpWithEmail(page, uniqueEmail('voice'), 'Familie Stimme');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Noa');
-  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
 
   // Kids profile: the first explanation is read on its own

@@ -62,7 +62,11 @@ describe('admin: mail texts', () => {
 
     const list = await call(admin, 'GET', '/api/admin/mail-templates');
     expect(list.statusCode).toBe(200);
-    expect(list.json().map((t: { id: string }) => t.id)).toEqual(['login-code', 'verify-email']);
+    expect(list.json().map((t: { id: string }) => t.id)).toEqual([
+      'login-code',
+      'verify-email',
+      'inactive-warning',
+    ]);
     expect(list.json()[0].customized).toBe(false);
 
     const saved = await call(
@@ -127,6 +131,8 @@ describe('operator info', () => {
       operatorName: 'Familie Muster',
       contactEmail: 'kontakt@example.ch',
       journeyMinAge: 12,
+      searchIndexing: true,
+      inactiveDeleteMonths: 0,
     });
     const pub = await ctx.app.inject({ method: 'GET', url: '/api/config' });
     expect(pub.json()).toMatchObject({

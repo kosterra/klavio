@@ -1,4 +1,4 @@
-import type { Avatar } from '@klavio/shared';
+import type { Avatar, Outfit } from '@klavio/shared';
 import { Figure } from './Figure';
 import type { MascotMood } from './Mascot';
 
@@ -12,6 +12,7 @@ export function ProfileAvatar({
   label,
   alive = false,
   mood,
+  outfit,
 }: {
   avatar: Avatar;
   size?: number;
@@ -19,6 +20,8 @@ export function ProfileAvatar({
   /** Breathing, blinking, glancing (where figures are chosen); still by default. */
   alive?: boolean;
   mood?: MascotMood;
+  /** the wardrobe piece the figure wears */
+  outfit?: Outfit | null;
 }) {
   const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true };
   // Klavi is taller than wide (note stem) → a bit smaller inside the frame
@@ -40,7 +43,7 @@ export function ProfileAvatar({
           avatar === 'klavi' ? 'var(--klavio-avatar-bg-klavi)' : 'var(--klavio-avatar-bg)',
       }}
     >
-      <Figure avatar={avatar} size={inner} still={!alive} mood={mood} />
+      <Figure avatar={avatar} size={inner} still={!alive} mood={mood} outfit={outfit} />
     </span>
   );
 }

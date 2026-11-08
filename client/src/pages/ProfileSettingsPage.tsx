@@ -15,6 +15,10 @@ import {
 import { IconLock, IconTrash, IconVolume } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { MyProgress } from '../family/MyProgress';
+import { Wardrobe } from '../components/Wardrobe';
+import { PlacementCard } from '../components/PlacementCard';
+import { usePageTitle } from '../components/usePageTitle';
 import type { GoalSong } from '@klavio/shared';
 import { endpoints, type ProfileInput } from '../api/endpoints';
 import { useSession } from '../auth/session';
@@ -39,6 +43,7 @@ import { useAutoRead, useCanSpeak } from '../components/useReadAloud';
  */
 export function ProfileSettingsPage() {
   const { t } = useTranslation();
+  usePageTitle(t('nav.profile'));
   // easter eggs
   const [rain, setRain] = useState(0);
   const [spin, setSpin] = useState(false);
@@ -178,6 +183,10 @@ export function ProfileSettingsPage() {
         />
       </Card>
 
+      <MyProgress />
+
+      <Wardrobe />
+
       <ReadAloudSetting />
 
       <GoalSongEditor
@@ -186,6 +195,8 @@ export function ProfileSettingsPage() {
         busy={busy}
         onSave={(g) => void saveGoal(g)}
       />
+
+      {parentUnlocked && <PlacementCard />}
 
       {parentUnlocked && (
         <Card

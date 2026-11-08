@@ -25,9 +25,11 @@ import {
   IconPencil,
   IconPlus,
   IconTrash,
+  IconDownload,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import { displayNameSchema, emailSchema, type PasskeyDto } from '@klavio/shared';
 import { endpoints } from '../api/endpoints';
 import { useSession } from '../auth/session';
@@ -36,6 +38,7 @@ import { useErrorText } from '../auth/useErrorText';
 
 export function AccountPage() {
   const { t, i18n } = useTranslation();
+  usePageTitle(t('account.title'));
   const { me, refresh, logout } = useSession();
   const navigate = useNavigate();
   const errorText = useErrorText();
@@ -297,6 +300,27 @@ export function AccountPage() {
       </Card>
 
       <ParentPinSettings />
+
+      {/* ------------------------------------------------------ own data */}
+      <Card withBorder radius="lg" padding="lg">
+        <Stack gap="sm" align="flex-start">
+          <Title order={2} size="h3">
+            {t('account.export')}
+          </Title>
+          <Text size="sm">{t('account.exportHint')}</Text>
+          <Button
+            component="a"
+            href="/api/account/export"
+            download
+            variant="light"
+            size="md"
+            leftSection={<IconDownload size={18} />}
+            data-testid="export"
+          >
+            {t('account.exportButton')}
+          </Button>
+        </Stack>
+      </Card>
 
       <AboutCard />
 

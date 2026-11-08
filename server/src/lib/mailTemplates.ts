@@ -9,6 +9,7 @@ import {
   type MailTemplateDto,
   type MailTemplateId,
   type MailTemplateTexts,
+  type MailVars,
 } from '@klavio/shared';
 import type { AppConfig } from '../config.js';
 import { MailTemplate } from '../models/index.js';
@@ -63,22 +64,33 @@ function mailImages(config: AppConfig): Promise<Attachment[] | null> {
   return images;
 }
 
-/** A code mail, in the design of Klavio and the language of the app. */
-export async function codeMail(
+/** A mail in the design of Klavio and the language of the app. */
+export async function templateMail(
   config: AppConfig,
   id: MailTemplateId,
   to: string,
-  code: string,
-  lang: MailLang = 'de',
+  lang: MailLang,
+  vars: Omit<MailVars, 'origin' | 'images'>,
 ): Promise<Mail> {
   const { texts } = await getMailTemplate(id);
   const attachments = await mailImages(config);
   const { subject, text, html } = renderMail(texts[lang], lang, {
-    code,
+    ...vars,
     origin: config.APP_ORIGIN,
     images: attachments
       ? { logo: `cid:${MAIL_IMAGES.logo.cid}`, klavi: `cid:${MAIL_IMAGES.klavi.cid}` }
       : undefined,
   });
   return { to, subject, text, html, ...(attachments ? { attachments } : {}) };
+}
+
+/** A mail with a sign-in code. */
+export function codeMail(
+  config: AppConfig,
+  id: MailTemplateId,
+  to: string,
+  code: string,
+  lang: MailLang = 'de',
+): Promise<Mail> {
+  return templateMail(config, id, to, lang, { code });
 }

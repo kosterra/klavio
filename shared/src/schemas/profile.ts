@@ -54,6 +54,21 @@ export function effectiveWorld(
   return canChooseWorld(profile.birthYear, minAge, year) ? chosen : 'kids';
 }
 
+/**
+ * The wardrobe: one piece the figure wears. Pieces are unlocked by level –
+ * nothing is spent, XP never goes down.
+ */
+export const OUTFITS = [
+  { id: 'cap', level: 2 },
+  { id: 'bow', level: 3 },
+  { id: 'glasses', level: 4 },
+  { id: 'scarf', level: 5 },
+  { id: 'headphones', level: 7 },
+  { id: 'crown', level: 10 },
+] as const;
+export const outfitSchema = z.enum(['cap', 'bow', 'glasses', 'scarf', 'headphones', 'crown']);
+export type Outfit = z.infer<typeof outfitSchema>;
+
 /** Figures a profile can choose; "klavi" (the app's mascot) is the default. */
 export const avatarSchema = z.enum(['klavi', 'fox', 'owl', 'cat', 'bear', 'frog', 'whale']);
 export type Avatar = z.infer<typeof avatarSchema>;
@@ -92,6 +107,7 @@ export const profileUpdateSchema = z
     goalSong: goalSongSchema.nullable(),
     birthYear: birthYearSchema,
     world: worldSetSchema.nullable(),
+    outfit: outfitSchema.nullable(),
   })
   .partial();
 
@@ -106,13 +122,34 @@ export interface ProfileDto {
   calibration: Calibration;
   xp: number;
   level: number;
-  streak: { current: number; longest: number; lastActiveDate: string | null };
+  streak: {
+    current: number;
+    longest: number;
+    lastActiveDate: string | null;
+    /** the week whose free day was used */
+    freeDayWeek?: string | null;
+  };
   badges: { id: string; earnedAt: string }[];
   goalSong: GoalSong | null;
   /** null for profiles created before it was asked */
   birthYear: number | null;
   /** chosen worlds; null = not chosen (follows uiMode) */
   world: WorldSet | null;
+  /** the wardrobe piece the figure wears */
+  outfit: Outfit | null;
 }
 
 export const MAX_PROFILES_PER_ACCOUNT = 8;
+
+/** One profile in the family overview (parent area) and «Mein Profil». */
+export interface ProfileOverviewDto {
+  profile: ProfileDto;
+  lessonsDone: number;
+  stars: number;
+  /** the lesson to play next (null: all done) */
+  nextLessonId: string | null;
+  /** minutes practised per week, oldest first; the last one is this week */
+  weeks: { week: string; minutes: number }[];
+  /** days practised in the last 28 days */
+  activeDays: number;
+}

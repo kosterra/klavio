@@ -23,6 +23,58 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Vor jeder Lektion fragt Klavio: «Auf meinem Klavier» oder «Auf dem Bildschirm»? Mit einem Digitalpiano geht es mit der ersten Taste los. Während der Lektion zeigt «Ich höre: E», dass dein Ton angekommen ist.',
+        'Before each lesson Klavio asks: «On my piano» or «On the screen»? With a digital piano the first key starts the lesson. During the lesson «I hear: E» shows that your note arrived.',
+      ),
+      L(
+        'Traumlied: Bei jeder Fähigkeit steht, in welchem Kapitel du sie lernst. Mit «Die Reise» zeigt die Karte des Traumlieds auch das Höhenprofil – im Stil des Lernpfads.',
+        'Dream song: every skill shows the chapter where you learn it. With «The journey» the dream song card also shows the elevation profile – in the style of the learning path.',
+      ),
+      L(
+        'Neues Kapitel «Neue Rhythmen» (Stufe 3): Achtelnoten und der Dreivierteltakt.',
+        'New chapter «New rhythms» (level 3): eighth notes and three-four time.',
+      ),
+      L(
+        'Bonus-Lieder: «Bruder Jakob», «Jingle Bells» und «Old MacDonald» – sie öffnen sich mit den ersten Liedern und halten niemanden auf.',
+        'Bonus songs: «Brother John», «Jingle Bells» and «Old MacDonald» – they open with the first songs and hold nobody up.',
+      ),
+      L(
+        'Freies Spielen: ohne Aufgabe auf der Bildschirm-Klaviatur, mit Klavier, Spieluhr, Marimba oder Orgel.',
+        'Free play: no task, just the screen keyboard, with piano, music box, marimba or organ.',
+      ),
+      L(
+        'Kleiderschrank: Mit jedem Level gibt es ein neues Stück für deine Figur – Zipfelmütze, Schleife, Brille, Schal, Kopfhörer und Krone.',
+        'Wardrobe: every level brings a new piece for your figure – pointy hat, bow, glasses, scarf, headphones and crown.',
+      ),
+      L(
+        'Eine ganze Welt geschafft? Das wird jetzt gefeiert – und das Tor zur nächsten Welt geht auf.',
+        'Finished a whole world? That is now celebrated – and the gate to the next world opens.',
+      ),
+      L(
+        'Ein freier Tag pro Woche: Wer einen Tag auslässt, behält seine Serie trotzdem.',
+        'One free day per week: skipping a day no longer ends your streak.',
+      ),
+      L(
+        'Für Eltern: «Familie und Fortschritt» zeigt jedes Profil mit Lektionen, Sternen und Übungsminuten der letzten acht Wochen. Unter «Mein Profil» siehst du deinen eigenen Verlauf.',
+        'For parents: «Family and progress» shows every profile with lessons, stars and minutes practised over the last eight weeks. «My profile» shows your own history.',
+      ),
+      L(
+        'Für Erwachsene: «Ich kann schon …» – auf dem Lernpfad später einsteigen. Dazu ein Metronom mit Tempo tippen, und am Gipfel steht ehrlich, wie es mit dem Traumlied weitergeht.',
+        'For adults: «I can already …» – join the learning path later. Plus a metronome with tap tempo, and the summit says honestly how to go on with your dream song.',
+      ),
+      L(
+        'Deine Daten: Unter «Konto» lässt sich alles herunterladen, was über dein Konto gespeichert ist. Admins können lange unbenutzte Konten nach einer Warnung löschen lassen und die Instanz vor Suchmaschinen verbergen.',
+        'Your data: under «Account» you can download everything stored about your account. Admins can have long-unused accounts deleted after a warning and hide the instance from search engines.',
+      ),
+      L(
+        'Auf dem Handy: eine Leiste unten für Lernen, Spielen, Wissen und Profil; ein kürzeres Formular für neue Profile; Noten und Klaviatur nebeneinander, wenn das Handy quer liegt; ein kurzes Brummen bei richtig und falsch.',
+        'On phones: a bar at the bottom for learn, play, knowledge and profile; a shorter form for new profiles; notes and keyboard side by side with the phone sideways; a short buzz for right and wrong.',
+      ),
+      L(
+        'Die Startseite zeigt jetzt, wie Klavio aussieht, was es kostet (nichts) und wie Familien und Schulen es selbst betreiben.',
+        'The start page now shows what Klavio looks like, what it costs (nothing) and how families and schools run it themselves.',
+      ),
+      L(
         'Neue Welt «Die Reise»: von der Alp hinunter durch Tobel, Schlucht und Stollen bis in die Hölle, das schwerste Kapitel, und dann hinauf über den Gipfelgrat zum Traumlied. Ein Höhenprofil zeigt, wo du gerade bist. Ab einem Alter, das Admins einstellen (Standard 12), wählt jedes Profil zwischen den bunten Welten und der Reise.',
         'New world «The journey»: from the alp down through ravine, gorge and mine into hell, the hardest chapter, and then up over the summit ridge to the dream song. An elevation profile shows where you are. From an age admins set (12 by default), every profile chooses between the colourful worlds and the journey.',
       ),

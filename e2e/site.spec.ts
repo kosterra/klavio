@@ -121,6 +121,7 @@ test('adults travel down into «Die Hölle» and up to their dream song', async 
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Ralph');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByTestId('profile-more').click();
   await page.getByRole('dialog').getByText('Classic', { exact: true }).click();
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
 
@@ -152,14 +153,17 @@ test('the year of birth decides whether a profile can choose the journey', async
   // a birth year is required
   await dialog.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(dialog.getByText('Bitte das Geburtsjahr eintragen.')).toBeVisible();
-  // young children: colourful worlds only
+  // young children: colourful worlds only (view, world and goal sit under «Mehr einstellen»)
   await dialog.getByLabel('Geburtsjahr').fill(String(year - 7));
+  await dialog.getByTestId('profile-more').click();
   await expect(dialog.getByText('Wird dieses Jahr 7 Jahre alt.')).toBeVisible();
   await expect(dialog.getByTestId('world-locked')).toContainText('Ab 12 Jahren');
   await expect(dialog.getByTestId('world-choice')).toHaveCount(0);
   // from 12 on: both worlds – a Kids profile can travel the journey
   await dialog.getByLabel('Geburtsjahr').fill(String(year - 13));
   await dialog.getByTestId('world-choice').getByText('Die Reise').click();
+  // a 13-year-old still starts in the Kids view
+  await expect(dialog.getByRole('radio', { name: 'Kids' })).toBeChecked();
   await audit(page);
   await dialog.getByRole('button', { name: 'Profil erstellen' }).click();
   await expect(page.getByTestId('journey')).toBeVisible();

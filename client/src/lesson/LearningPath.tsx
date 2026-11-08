@@ -18,12 +18,14 @@ import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import {
   CURRICULUM,
+  coreLessons,
   isLessonUnlocked,
   isReviewDue,
   localIsoDate,
   type Avatar,
   type Lesson,
   type ProgressDto,
+  type Outfit,
   type WorldSet,
 } from '@klavio/shared';
 import { Figure } from '../components/Figure';
@@ -244,6 +246,7 @@ export function LearningPath({
   profileId,
   title,
   worlds = 'kids',
+  outfit = null,
 }: {
   progress: ProgressDto['lessons'];
   currentLessonId: string;
@@ -253,6 +256,8 @@ export function LearningPath({
   title?: React.ReactNode;
   /** the colourful kids' worlds, or the journey down into «Die Hölle» and up to the summit */
   worlds?: WorldSet;
+  /** the wardrobe piece of the figure on the path */
+  outfit?: Outfit | null;
 }) {
   const { t, i18n } = useTranslation();
   const loc = useLocalized();
@@ -291,10 +296,15 @@ export function LearningPath({
     ? CURRICULUM.map((chapter, ci) => {
         const world = worldOf(chapter.id, ci, worlds);
         const color = chapterColor(world, ci);
-        const earned = chapter.lessons.reduce((n, l) => n + (progress[l.id]?.bestStars ?? 0), 0);
-        const total = chapter.lessons.length * 3;
-        const done = chapter.lessons.filter((l) => completed.has(l.id)).length;
-        const finished = done === chapter.lessons.length;
+        const earned = coreLessons(chapter).reduce(
+          (n, l) => n + (progress[l.id]?.bestStars ?? 0),
+          0,
+        );
+        const core = coreLessons(chapter);
+        const total = core.length * 3;
+        const done = core.filter((l) => completed.has(l.id)).length;
+        // bonus lessons don't count for finishing a chapter
+        const finished = done === core.length;
         const reached = isLessonUnlocked(chapter.lessons[0]!.id, completed);
         const defaultOpen = chapter.lessons.some((l) => l.id === currentLessonId);
         const open = defaultOpen !== toggled.has(chapter.id);
@@ -626,7 +636,9 @@ export function LearningPath({
                         : unlocked
                           ? 'open'
                           : 'locked';
-                    const title = loc(lesson.title);
+                    const title = lesson.bonus
+                      ? `${t('path.bonus')}: ${loc(lesson.title)}`
+                      : loc(lesson.title);
                     const label = [
                       t('path.lessonN', { n: number }),
                       title,
@@ -694,7 +706,7 @@ export function LearningPath({
                         )}
                         {current && (
                           <span className={classes.figure} data-testid="path-figure">
-                            <Figure avatar={avatar} mood="happy" size={62} />
+                            <Figure avatar={avatar} outfit={outfit} mood="happy" size={62} />
                           </span>
                         )}
                         <Text

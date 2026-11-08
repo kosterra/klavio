@@ -46,7 +46,7 @@ export function FindKeyExercise({
             {t('lesson.findKey', { note: name })}
           </Text>
           {!exercise.anyOctave && target === 60 && <Text c="dimmed">{t('lesson.middleC')}</Text>}
-          <Text mih={28} fw={700} c={feedback?.ok ? 'teal.8' : 'orange.9'}>
+          <Text mih={28} fw={700} c={feedback?.ok ? 'teal.8' : 'var(--klavio-hint)'}>
             {feedback?.ok
               ? t('lesson.correct')
               : feedback

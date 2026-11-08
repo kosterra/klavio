@@ -1,0 +1,37 @@
+.chart {
+  margin: var(--mantine-spacing-xs) 0 0;
+}
+
+.bars {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+  height: 84px;
+  padding-top: 4px;
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+
+.barCol {
+  display: flex;
+  align-items: flex-end;
+}
+
+.bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  background: color-mix(in srgb, var(--mantine-primary-color-filled) 45%, var(--klavio-surface));
+}
+
+.bar[data-current] {
+  background: var(--mantine-primary-color-filled);
+}
+
+/* the weekly goal (daily goal × 5) */
+.goal {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 2px dashed var(--mantine-color-teal-7);
+  pointer-events: none;
+}

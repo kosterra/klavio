@@ -82,6 +82,9 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
   'song-haenschen': ['melodies'],
   'song-freude': ['melodies'],
   'song-weihnachtsmann': ['melodies'],
+  'song-jakob': ['melodies'],
+  'song-jingle': ['melodies'],
+  'song-macdonald': ['melodies'],
   'rhythm-quarters': ['note-values'],
   'rhythm-rests': ['note-values'],
   'bass-hand': ['left-hand'],
@@ -96,11 +99,13 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
   'black-sharps': ['black-keys'],
   'black-lamb': ['black-keys'],
   'black-improvise': ['improvise'],
+  'meter-eighths': ['eighths'],
+  'meter-waltz': ['three-four'],
 };
 
 /** Lessons (in learning order) that teach a skill; empty = planned for later. */
 export function lessonsForSkill(skill: SkillId): string[] {
-  return LESSONS.filter((l) => LESSON_SKILLS[l.id]?.includes(skill)).map((l) => l.id);
+  return LESSONS.filter((l) => !l.bonus && LESSON_SKILLS[l.id]?.includes(skill)).map((l) => l.id);
 }
 
 export function isSkillTaught(skill: SkillId): boolean {

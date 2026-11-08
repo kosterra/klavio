@@ -2,6 +2,7 @@ import { Anchor, Button, Container, Group, Stack, Text, Title } from '@mantine/c
 import { IconArrowLeft, IconPiano } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import { APP_CONFIG } from '@klavio/shared';
 import { useSession } from '../auth/session';
 import { SiteFooter } from '../components/SiteFooter';
@@ -14,6 +15,7 @@ import classes from './WhatsNew.module.css';
  */
 export function WhatsNewPage() {
   const { t } = useTranslation();
+  usePageTitle(null, '/whats-new');
   const { me } = useSession();
   const back = me ? '/' : '/welcome';
   return (

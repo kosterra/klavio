@@ -188,6 +188,13 @@
                     "minLength": 1,
                     "maxLength": 40,
                     "pattern": "^[^\\p{C}]+$"
+                  },
+                  "lang": {
+                    "type": "string",
+                    "enum": [
+                      "de",
+                      "en"
+                    ]
                   }
                 },
                 "required": [
@@ -624,6 +631,35 @@
         }
       }
     },
+    "/api/account/export": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/profiles/overview": {
+      "get": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "in": "query",
+            "name": "date",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
     "/api/profiles/": {
       "get": {
         "responses": {
@@ -857,6 +893,24 @@
                         "type": "null"
                       }
                     ]
+                  },
+                  "outfit": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "cap",
+                          "bow",
+                          "glasses",
+                          "scarf",
+                          "headphones",
+                          "crown"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   }
                 }
               }
@@ -915,6 +969,34 @@
                 },
                 "required": [
                   "profileId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/progress/placement": {
+      "post": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "chapterId": {
+                    "type": "string",
+                    "maxLength": 40
+                  }
+                },
+                "required": [
+                  "chapterId"
                 ]
               }
             }
@@ -1039,6 +1121,14 @@
                     "type": "integer",
                     "minimum": 0,
                     "maximum": 99
+                  },
+                  "searchIndexing": {
+                    "type": "boolean"
+                  },
+                  "inactiveDeleteMonths": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 120
                   }
                 }
               }
@@ -1143,7 +1233,8 @@
               "type": "string",
               "enum": [
                 "login-code",
-                "verify-email"
+                "verify-email",
+                "inactive-warning"
               ]
             },
             "in": "path",
@@ -1164,7 +1255,8 @@
               "type": "string",
               "enum": [
                 "login-code",
-                "verify-email"
+                "verify-email",
+                "inactive-warning"
               ]
             },
             "in": "path",
@@ -1209,7 +1301,8 @@
               "type": "string",
               "enum": [
                 "login-code",
-                "verify-email"
+                "verify-email",
+                "inactive-warning"
               ]
             },
             "in": "path",

@@ -14,3 +14,4 @@ export * from './schemas/progress.ts';
 export * from './curriculum/song.ts';
 export * from './curriculum/badges.ts';
 export * from './mail/templates.ts';
+export * from './config/seo.ts';

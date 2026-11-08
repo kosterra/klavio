@@ -17,6 +17,7 @@ import {
 import { IconDeviceFloppy, IconMailForward, IconRestore } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import {
+  CODE_MAILS,
   MAIL_PLACEHOLDERS,
   mailTextSchema,
   renderMail,
@@ -48,6 +49,8 @@ export function MailTemplatesCard() {
   );
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<'save' | 'test' | 'reset' | null>(null);
+  // the preview of the warning shows a deletion date 30 days ahead
+  const [deletionSample] = useState(() => Date.now() + 30 * 864e5);
 
   useEffect(() => {
     endpoints.mailTemplates().then(setTemplates, (e) => setError(errorText(e)));
@@ -66,12 +69,20 @@ export function MailTemplatesCard() {
     () =>
       current
         ? renderMail(current, lang, {
-            code: '123456',
+            ...(CODE_MAILS.includes(id)
+              ? { code: '123456' }
+              : {
+                  months: 24,
+                  date: new Date(deletionSample).toLocaleDateString(
+                    lang === 'en' ? 'en-GB' : 'de-CH',
+                    { day: 'numeric', month: 'long', year: 'numeric' },
+                  ),
+                }),
             origin: location.origin,
             images: { logo: '/mail/logo.png', klavi: '/mail/klavi.png' },
           })
         : null,
-    [current, lang],
+    [current, lang, id, deletionSample],
   );
 
   const edit = (field: keyof MailText, value: string) => {
@@ -116,6 +127,7 @@ export function MailTemplatesCard() {
             data={[
               { value: 'login-code', label: t('admin.mail.loginCode') },
               { value: 'verify-email', label: t('admin.mail.verifyEmail') },
+              { value: 'inactive-warning', label: t('admin.mail.inactiveWarning') },
             ]}
             aria-label={t('admin.mail.which')}
           />

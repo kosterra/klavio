@@ -69,7 +69,8 @@
         "1": "Account, profiles and progress: until you delete them.",
         "2": "You stay signed in for 60 days, then you sign in again.",
         "3": "E-mail codes expire after 10 minutes.",
-        "4": "Backups keep data until they expire – the operator decides how long."
+        "4": "Backups keep data until they expire – the operator decides how long.",
+        "5": "If the operator has set it: accounts unused for a long time are deleted after a warning by e-mail."
       }
     },
     "rights": {
@@ -79,7 +80,8 @@
         "1": "Account, passkeys, profiles, progress and badges are right there in the app.",
         "2": "Change name, e-mail address and profiles under «Account» and «Profile».",
         "3": "«Delete account» under «Account» immediately removes account, passkeys, profiles and progress.",
-        "4": "For anything else, write to the operator. You can also complain to the data protection authority – in Switzerland the FDPIC."
+        "4": "For anything else, write to the operator. You can also complain to the data protection authority – in Switzerland the FDPIC.",
+        "5": "Under «Account → Download data» you get everything stored about your account as a file."
       }
     },
     "children": {
@@ -122,7 +124,6 @@
     "mode": "Style",
     "modeKids": "Kids",
     "modeClassic": "Classic",
-    "modeHint": "Lessons are the same in both styles.",
     "dailyGoal": "Daily goal (minutes)",
     "create": "Create profile",
     "empty": "Create a profile for everyone who learns – for example you and your kids.",
@@ -142,7 +143,10 @@
     "worldJourney": "The journey",
     "worldKidsHint": "From Key Valley to Starry Night – colourful and playful.",
     "worldJourneyHint": "From the alp down into hell and back up to the dream song – with an elevation profile.",
-    "worldLocked": "Colourful worlds. From the age of {{age}}, «The journey» can be chosen too."
+    "worldLocked": "Colourful worlds. From the age of {{age}}, «The journey» can be chosen too.",
+    "more": "More settings",
+    "modeHintKids": "Colourful and playful: coloured background, the figure talks in speech bubbles, the next key is always marked, Klavi reads aloud. The lessons are the same in both views.",
+    "modeHintClassic": "Calm and plain: simple background, the figure only for feedback, help only after a mistake. The lessons are the same in both views."
   },
   "avatars": {
     "klavi": "the note head",
@@ -183,7 +187,7 @@
     "streakLabel_one": "day in a row",
     "streakLabel_other": "days in a row",
     "xpToNext": "{{xp}} XP to level {{next}}",
-    "streakKeep": "Play again tomorrow and your fire grows!",
+    "streakKeep": "Play again tomorrow and your fire grows! One day off per week is fine.",
     "streakZero": "Play today – and your fire starts burning!",
     "streak_one": "{{count}} day in a row",
     "micSetupShort": "Set up the microphone once – then I can hear your piano better.",
@@ -205,7 +209,14 @@
       "dark": "Dark"
     },
     "knowledge": "Knowledge",
-    "language": "Language"
+    "language": "Language",
+    "main": "Main navigation",
+    "learn": "Learn",
+    "play": "Play",
+    "toggle": "Show or hide the navigation",
+    "learnGroup": "Learn",
+    "parentGroup": "For parents",
+    "adminGroup": "Administration"
   },
   "account": {
     "title": "Account",
@@ -233,7 +244,10 @@
     "name": "Account name",
     "nameHint": "Only shown in the app, for example “The Smiths”.",
     "changeName": "Change name",
-    "changeEmail": "Change e-mail address"
+    "changeEmail": "Change e-mail address",
+    "export": "Your data",
+    "exportHint": "Download everything Klavio keeps about your account – account, passkeys, profiles, progress and practice days – as one file (JSON).",
+    "exportButton": "Download data"
   },
   "admin": {
     "title": "Administration",
@@ -271,7 +285,8 @@
       "testSent": "Test e-mail sent – check your inbox.",
       "saved": "E-mail template saved.",
       "saveFirst": "Save first, then you can send a test e-mail.",
-      "reset": "Restore the built-in texts"
+      "reset": "Restore the built-in texts",
+      "inactiveWarning": "Warning before deletion"
     },
     "worlds": {
       "title": "Worlds",
@@ -281,6 +296,18 @@
       "years": "years",
       "invalid": "Please enter an age between 0 and 99.",
       "saved": "Worlds setting saved."
+    },
+    "data": {
+      "title": "Data and search engines",
+      "indexing": "Let search engines find this instance",
+      "indexingHint": "When off, every page asks search engines not to list the instance – useful for an instance only for your own family or school.",
+      "retention": "Delete unused accounts after",
+      "retentionHint": "0 = never. Otherwise an account unused for this long gets a warning by e-mail and is deleted with all profiles 30 days later – unless someone signs in before.",
+      "months": "months",
+      "invalid": "Please enter a number between 0 and 120.",
+      "never": "Accounts stay until they are deleted by their owners.",
+      "howItWorks": "The warning's text is below, with the e-mail templates.",
+      "saved": "Setting saved."
     }
   },
   "errors": {
@@ -301,7 +328,9 @@
     "PARENT_LOCKED": "This is the parent area. Please enter the parent PIN first.",
     "PIN_WRONG": "The PIN is not correct.",
     "PASSKEY_UNLOCK_OFF": "The parent area can only be opened with the PIN here.",
-    "WORLD_TOO_YOUNG": "«The journey» is only available from a certain age. Please check the year of birth."
+    "WORLD_TOO_YOUNG": "«The journey» is only available from a certain age. Please check the year of birth.",
+    "OUTFIT_LOCKED": "This piece comes with a higher level.",
+    "UNKNOWN_CHAPTER": "This chapter doesn't exist."
   },
   "validation": {
     "name": "Please enter a name (max. 40 characters).",
@@ -443,7 +472,8 @@
       "embers": "Ember Cave",
       "hell": "Hell",
       "chimney": "Chimney",
-      "ridge": "Summit Ridge"
+      "ridge": "Summit Ridge",
+      "hut": "Mountain hut"
     },
     "stages": {
       "1": "Level 1 · First steps",
@@ -452,16 +482,17 @@
     },
     "stagesLabel": "Level of the learning path",
     "nextStage": "Up next: {{stage}}",
-    "toStage": "To level {{stage}}"
+    "toStage": "To level {{stage}}",
+    "bonus": "Bonus"
   },
   "lesson": {
     "close": "End lesson",
     "progress": "Lesson progress",
     "start": "Let’s go!",
-    "inputMidi": "I can hear your digital piano ({{device}}).",
-    "inputMic": "I am listening through the microphone – just play your piano.",
+    "inputMidi": "Your digital piano ({{device}}) is connected. Tap «Let’s go» – or just play a key and we start.",
+    "inputMic": "First tap «Let’s go». Then I listen through the microphone and you play on your piano.",
     "inputMicSetup": "Tip: set up the microphone once and I will recognise you even better.",
-    "inputScreen": "Play on the keyboard here on the screen.",
+    "inputScreen": "Tap «Let’s go» – then the keyboard appears here on the screen.",
     "useScreen": "You can keep playing on the on-screen keyboard.",
     "micOn": "Microphone on",
     "useMic": "Use microphone",
@@ -535,7 +566,15 @@
       "again": "Again"
     },
     "playPiece": "Play with both hands",
-    "micMelodyOnly": "With the microphone, the melody counts here."
+    "micMelodyOnly": "With the microphone, the melody counts here.",
+    "micOff": "Microphone off – play on the screen keyboard.",
+    "why": "Why?",
+    "heard": "I hear: {{note}}",
+    "howToPlay": "How do you play?",
+    "playPiano": "On my piano",
+    "playScreen": "On the screen",
+    "playPianoHint": "On the piano I listen through the microphone – the sound stays on your device.",
+    "waitingForNote": "I’m listening – go ahead!"
   },
   "badges": {
     "title": "Badges",
@@ -555,7 +594,8 @@
     "text": "Install the app: it then starts like a real app in full screen and also works without internet.",
     "ios": "In Safari, tap “Share” (square with an arrow) and then “Add to Home Screen”. Klavio then starts like a real app and also works without internet.",
     "button": "Install app",
-    "android": "Open the browser's menu (⋮ or ☰) and tap «Install app» or «Add to Home screen». Klavio then starts like a real app in full screen and also works without internet."
+    "android": "Open the browser's menu (⋮ or ☰) and tap «Install app» or «Add to Home screen». Klavio then starts like a real app in full screen and also works without internet.",
+    "how": "How?"
   },
   "update": {
     "title": "New version available",
@@ -748,6 +788,14 @@
       "offline": {
         "q": "Does it work without internet?",
         "a": "Yes. Lessons work offline, and your results are sent as soon as you're back online."
+      },
+      "cost": {
+        "q": "What does Klavio cost?",
+        "a": "Nothing. Klavio is free, with no subscription, no ads and no hidden purchases. It is free software: anyone can also run it themselves."
+      },
+      "adults": {
+        "q": "Is this only for children?",
+        "a": "No. Adults choose the calmer «Classic» view and the world «The journey» with its elevation profile and dream song. The lessons are the same, without the kids' stuff."
       }
     },
     "finalTitle": "Ready for your first key?",
@@ -755,7 +803,29 @@
     "source": "View the source code",
     "eggKonami": "Secret code cracked! 🎉 You're a real pro.",
     "eggKlavi": "Klavi plays “Für Elise” – just for you! 🎵",
-    "eggDucks": "All my little ducklings are swimming on the lake! 🦆"
+    "eggDucks": "All my little ducklings are swimming on the lake! 🦆",
+    "leadShort": "Klavio listens while you play and shows you step by step what comes next – for children and adults.",
+    "badgeFree": "Free, no subscription",
+    "lookTitle": "What it looks like",
+    "lookText": "Like the big piano apps – but free, with no subscription and no ads. And what you play stays on your device.",
+    "look": {
+      "path": "The learning path: world by world, with stars and goals",
+      "pathAlt": "Screenshot: the learning path in the Hand Forest, lessons as stones along a road and the fox on the next lesson",
+      "lesson": "A lesson: Klavio waits until you play the right note",
+      "lessonAlt": "Screenshot: the song «Little Hans» in notation, the keyboard below with the next key marked"
+    },
+    "journeyKicker": "For teens and adults",
+    "journeyTitle": "The journey to your dream song",
+    "journeyText": "Learning the piano is not a straight road: first it goes gently downhill, then it gets steep – and at some point comes hell, the hardest part. Klavio tells you before you get there and shows you on an elevation profile where you are.",
+    "journey": {
+      "dream": "Name your dream song: Klavio recognises it and shows which skills it needs.",
+      "hell": "From the alp down through ravine, gorge and mine into hell – and back up to the summit.",
+      "choose": "From an age the operator sets, every profile chooses between the colourful worlds and the journey."
+    },
+    "journeyAlt": "Screenshot: elevation profile of the journey – from the alp down to hell at −666 m and up to the dream song",
+    "hostTitle": "For families, schools and music schools: run it yourself",
+    "hostText": "Klavio is free software. With one Docker image it runs on your own server – just for your family, your class or your music school, with your own e-mails and without any data leaving the house.",
+    "hostGuide": "Guide on GitHub"
   },
   "goal": {
     "kicker": "My dream song",
@@ -768,7 +838,7 @@
       "later": "comes in a later world"
     },
     "next": "Next: {{skill}}",
-    "ready": "You can do everything “{{title}}” needs. Time for your dream song! 🎉",
+    "ready": "You can do everything «{{title}}» needs. Time for your dream song!",
     "waiting": "The next skills come in new worlds – keep going!",
     "promptText": "Is there a dream song you'd like to play one day?",
     "promptButton": "Set a dream song",
@@ -802,7 +872,16 @@
     "unknown": "Klavio doesn't know this song – choose the kind of piece and what it needs below.",
     "fuzzy": "Do you mean “{{title}}” by {{artist}}? Kind of piece and skills are suggested.",
     "fuzzyNoArtist": "Do you mean “{{title}}”? Kind of piece and skills are suggested.",
-    "useTitle": "Use this title"
+    "useTitle": "Use this title",
+    "howTo": "Klavio doesn't have the sheet music of your dream song – here is how to go on:",
+    "howToSteps": {
+      "sheet": "Get the sheet music: in a music shop, at the library or as a simplified piano version.",
+      "slow": "Practise in small pieces – a few bars, first each hand alone, then together.",
+      "metronome": "Start slowly with the metronome and raise the tempo step by step.",
+      "teacher": "If you get stuck: a teacher or a music school helps with the fine-tuning."
+    },
+    "inChapter": "Chapter {{n}} · {{world}}",
+    "legend": "The number shows the chapter where you learn it. With the clock: comes in a later chapter."
   },
   "speech": {
     "read": "Read aloud",
@@ -855,9 +934,75 @@
       "down": "It starts gently downhill, then ever steeper down into hell – that is part of it. Once you are through, it only goes up: to {{goal}}.",
       "hell": "You are in hell, the hardest part of the journey. Everything feels slow here – that is normal. Hold on: from here it only goes uphill.",
       "up": "Hell is behind you. Now it goes uphill – every chapter brings you closer to {{goal}}.",
-      "summit": "Summit reached! You made the whole way – time for {{goal}}."
+      "summit": "Summit reached! You can now do everything Klavio teaches. Get the sheet music of {{goal}} yourself – then practise it piece by piece, with the metronome."
     },
     "summary": "Elevation profile of your journey: chapter {{n}} of {{total}}, you are in «{{world}}». The lowest point is «{{hell}}», at the very top {{goal}} is waiting.",
     "dreamSongTo": "your dream song"
+  },
+  "freePlay": {
+    "title": "Free play",
+    "hint": "Play whatever you like – no tasks here.",
+    "sound": "Sound",
+    "sounds": {
+      "piano": "Piano",
+      "musicbox": "Music box",
+      "marimba": "Marimba",
+      "organ": "Organ"
+    }
+  },
+  "family": {
+    "title": "Family and progress",
+    "intro": "Where each profile stands on the learning path and how much was practised in the last weeks.",
+    "mine": "My progress",
+    "level": "Level {{level}} · {{xp}} XP",
+    "allDone": "All chapters done",
+    "pathDone": "{{percent}} % of the learning path done",
+    "lessons": "Lessons",
+    "stars": "Stars",
+    "days": "Practice days (28 days)",
+    "thisWeek_one": "This week: {{count}} minute practised",
+    "thisWeek_other": "This week: {{count}} minutes practised",
+    "chartCaption": "Minutes per week, the last 8 weeks. Dashed: weekly goal ({{goal}} minutes).",
+    "weekMinutes_one": "Week from {{week}}: {{count}} minute",
+    "weekMinutes_other": "Week from {{week}}: {{count}} minutes"
+  },
+  "metronome": {
+    "title": "Metronome",
+    "open": "Open the metronome",
+    "intro": "For practising at your own tempo – also pieces outside Klavio. Start slowly, then get faster step by step.",
+    "bpm": "beats per minute",
+    "tempo": "Tempo",
+    "beats": "Beats per bar",
+    "start": "Start",
+    "stop": "Stop",
+    "tap": "Tap tempo"
+  },
+  "worldDone": {
+    "title": "{{world}} done!",
+    "next": "The gate to the next world is open: {{world}} – {{chapter}}.",
+    "last": "That was the last world. You made the whole learning path!"
+  },
+  "wardrobe": {
+    "title": "Wardrobe",
+    "hint": "Every level brings a new piece. Choose what your figure wears.",
+    "fromLevel": "from level {{level}}",
+    "lockedLabel": "{{name}} – from level {{level}}",
+    "items": {
+      "none": "Nothing",
+      "cap": "Pointy hat",
+      "bow": "Bow",
+      "glasses": "Glasses",
+      "scarf": "Scarf",
+      "headphones": "Headphones",
+      "crown": "Crown"
+    }
+  },
+  "placement": {
+    "title": "I can already …",
+    "hint": "If you already play a little, start later on the learning path. The lessons before then count as passed (with one star, without XP) and can be played any time.",
+    "label": "Start at",
+    "button": "Start here",
+    "confirm": "Start at «{{chapter}}»? The lessons before then count as passed.",
+    "done": "Done – the learning path now goes on from there."
   }
 }

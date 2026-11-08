@@ -109,6 +109,9 @@ Ebenfalls unter «Verwaltung»:
 
 - **Welten:** ab welchem Alter (aus dem Geburtsjahr des Profils) neben den bunten Welten auch «Die
   Reise» wählbar ist (Standard 12). Jüngere Profile sehen immer die bunten Welten.
+- **Daten und Suchmaschinen:** ob Suchmaschinen die Instanz aufnehmen dürfen (aus: `noindex`,
+  `robots.txt` sperrt alles) und nach wie vielen Monaten ohne Anmeldung ein Konto nach einer
+  Warnung gelöscht wird (Standard 0 = nie). Die Prüfung läuft im Server alle sechs Stunden.
 - **Betreiber und Kontakt:** Name und Kontakt-E-Mail stehen in der Fusszeile und auf der Seite
   «Datenschutz» (`/privacy`) als verantwortliche Stelle – bitte ausfüllen, eine Datenschutzerklärung
   muss sie nennen.
@@ -117,6 +120,14 @@ Ebenfalls unter «Verwaltung»:
   `{{app}}`, `{{minutes}}`. Gestaltung und Code-Feld bleiben fest; jede Mail geht in der Sprache, in
   der die Person Klavio gerade nutzt. Die Vorschau zeigt die Mail genau so, wie sie verschickt wird;
   «Test-E-Mail an mich» schickt sie mit dem Beispielcode 123456 an die eigene Adresse.
+
+### Suchmaschinen
+
+Der Server liefert `/robots.txt` und `/sitemap.xml` selbst (mit der Adresse aus `PUBLIC_ORIGIN`)
+und schreibt für die öffentlichen Seiten (`/welcome`, `/privacy`, `/whats-new`, je auf Deutsch und
+mit `?lang=en` auf Englisch) Titel, Beschreibung, `canonical`, `hreflang` und einen kurzen Text
+direkt ins HTML – auch Suchmaschinen ohne JavaScript sehen so den Inhalt. Alle anderen Seiten
+tragen `noindex`.
 
 ### Hinter einer Zugangssperre (z. B. Cloudflare Access)
 

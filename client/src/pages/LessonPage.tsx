@@ -16,8 +16,10 @@ import { IconDeviceDesktop, IconMicrophone, IconPiano } from '@tabler/icons-reac
 import { Link, Navigate, useNavigate, useParams } from 'react-router';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import {
   LESSONS,
+  midiToPitchName,
   applyCompletion,
   chapterOf,
   findLesson,
@@ -53,14 +55,19 @@ import { PieceExercise } from '../lesson/PieceExercise';
 import { ImproviseExercise } from '../lesson/ImproviseExercise';
 import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
+import { useNoteEvents } from '../input/noteBus';
 import { useLocalized } from '../lesson/useLocalized';
 import { loadProgress, useProgress } from '../lesson/useProgress';
 import { TheorySteps } from '../lesson/theory/TheorySteps';
 import { GoalMilestone } from '../goal/GoalMilestone';
+import { WorldDone } from '../lesson/WorldDone';
 import { Scenery } from '../lesson/WorldScenery';
-import { worldOfLesson } from '../lesson/worlds';
+import { finishesWorld, worldOfLesson } from '../lesson/worlds';
 import { useWorldMode } from '../lesson/useWorldMode';
 import stage from '../lesson/LessonStage.module.css';
+
+/** «Auf meinem Klavier» or «Auf dem Bildschirm», remembered on this device. */
+const PLAY_ON_KEY = 'klavio-play-on';
 
 type ShownResult = LessonResultDto & { pending?: boolean };
 
@@ -141,6 +148,7 @@ function LessonRun({
 }) {
   const { t } = useTranslation();
   const loc = useLocalized();
+  usePageTitle(loc(lesson.title));
   const navigate = useNavigate();
   const errorText = useErrorText();
   const micErrorText = useMicErrorText();
@@ -156,12 +164,37 @@ function LessonRun({
   const [phase, setPhase] = useState<'theory' | 'intro' | 'play' | 'result'>(
     discoverFirst && steps.length ? 'theory' : 'intro',
   );
+  // how the learner played last time on this device: shown first
+  const [playOn] = useState<'piano' | 'screen'>(() => {
+    try {
+      return localStorage.getItem(PLAY_ON_KEY) === 'screen' ? 'screen' : 'piano';
+    } catch {
+      return 'piano';
+    }
+  });
+  const startLesson = (choice: 'piano' | 'screen' = 'piano') => {
+    // the real piano: the microphone starts with this tap (iOS needs a gesture)
+    if (choice === 'piano') input.startPreferred();
+    try {
+      localStorage.setItem(PLAY_ON_KEY, choice);
+    } catch {
+      // not remembered – fine
+    }
+    startedAt.current = performance.now();
+    setPhase('play');
+  };
+  // a digital piano: the first key played on the start card starts the lesson
+  useNoteEvents((e) => {
+    if (phase === 'intro' && e.type === 'note-on' && e.source === 'midi') startLesson('piano');
+  });
+
   // every step of a lesson starts at the top (the button to it may sit far down on a phone)
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, [phase]);
   // a phone held sideways has little height: smaller figures
   const short = useMediaQuery('(max-height: 32em)') ?? false;
+  const [micDetails, setMicDetails] = useState(false);
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
   const mistakes = useRef(0);
@@ -232,9 +265,14 @@ function LessonRun({
     lesson,
     inputMode: input.mode,
     kids,
-    onCorrect: () => setCorrect((c) => c + 1),
+    onCorrect: () => {
+      setCorrect((c) => c + 1);
+      // a short tap on the screen keys (never with the microphone: it would hear the buzz)
+      if (input.mode === 'screen') navigator.vibrate?.(15);
+    },
     onMistake: () => {
       mistakes.current++;
+      if (input.mode === 'screen') navigator.vibrate?.([30, 40, 30]);
     },
     onDone: finishExercise,
   };
@@ -269,9 +307,33 @@ function LessonRun({
             {phase === 'play' ? <InputSwitch input={input} /> : <PrivacyBadge />}
           </Group>
 
+          {/* every note heard gets an answer, whatever the exercise */}
+          {phase === 'play' && <HeardNote mode={input.mode} />}
+
+          {/* one line – the task matters more; the details on request */}
           {input.micError && phase === 'play' && (
-            <Alert color="orange">
-              {micErrorText(input.micError)} {t('lesson.useScreen')}
+            <Alert color="orange" p="xs" data-testid="mic-off">
+              <Group gap="xs" wrap="nowrap" justify="space-between">
+                <Text size="sm" fw={700}>
+                  {t('lesson.micOff')}
+                </Text>
+                <Button
+                  variant="transparent"
+                  size="compact-sm"
+                  c="inherit"
+                  td="underline"
+                  style={{ flex: 'none' }}
+                  onClick={() => setMicDetails((d) => !d)}
+                  aria-expanded={micDetails}
+                >
+                  {t('lesson.why')}
+                </Button>
+              </Group>
+              {micDetails && (
+                <Text size="sm" mt={4}>
+                  {micErrorText(input.micError)} {t('lesson.useScreen')}
+                </Text>
+              )}
             </Alert>
           )}
 
@@ -296,11 +358,6 @@ function LessonRun({
                 <Text fz="lg" ta="center">
                   {loc(lesson.intro)}
                 </Text>
-                <InputInfo
-                  mode={input.mode}
-                  midiDevice={input.midiDevice}
-                  micSupported={input.micSupported}
-                />
                 {theory.length > 0 && (
                   <Button
                     variant="subtle"
@@ -313,17 +370,53 @@ function LessonRun({
                     {t('theory.again')}
                   </Button>
                 )}
-                <Button
-                  size="xl"
-                  mt="sm"
-                  onClick={() => {
-                    input.startPreferred();
-                    startedAt.current = performance.now();
-                    setPhase('play');
-                  }}
-                >
-                  {t('lesson.start')}
-                </Button>
+                {/* how to play: a clear choice, the real piano first */}
+                {input.mode === 'midi' || !input.micSupported ? (
+                  <>
+                    <InputInfo
+                      mode={input.mode}
+                      midiDevice={input.midiDevice}
+                      micSupported={input.micSupported}
+                    />
+                    <Button
+                      size="xl"
+                      mt="sm"
+                      onClick={() => startLesson('piano')}
+                      data-testid="lesson-start"
+                    >
+                      {t('lesson.start')}
+                    </Button>
+                  </>
+                ) : (
+                  <Stack gap="sm" w="100%" maw={420} mt="sm">
+                    <Text fw={800} ta="center">
+                      {t('lesson.howToPlay')}
+                    </Text>
+                    {(playOn === 'screen'
+                      ? (['screen', 'piano'] as const)
+                      : (['piano', 'screen'] as const)
+                    ).map((choice, i) => (
+                      <Button
+                        key={choice}
+                        size="xl"
+                        variant={i === 0 ? 'filled' : 'light'}
+                        leftSection={
+                          choice === 'piano' ? <IconMicrophone /> : <IconDeviceDesktop />
+                        }
+                        onClick={() => startLesson(choice)}
+                        data-testid={choice === 'piano' ? 'lesson-start' : 'lesson-start-screen'}
+                      >
+                        {choice === 'piano' ? t('lesson.playPiano') : t('lesson.playScreen')}
+                      </Button>
+                    ))}
+                    <Text size="sm" c="dimmed" ta="center">
+                      {t('lesson.playPianoHint')}{' '}
+                      {activeProfile?.calibration.noiseFloorDb == null && (
+                        <Link to="/mic-setup">{t('mic.setup')}</Link>
+                      )}
+                    </Text>
+                  </Stack>
+                )}
               </Stack>
             </Card>
           )}
@@ -358,17 +451,22 @@ function LessonRun({
               onNext={next ? () => navigate(`/lesson/${next.id}`) : null}
               onPath={() => navigate('/')}
               extra={
-                activeProfile?.goalSong && result && result.stars > 0 ? (
-                  <GoalMilestone
-                    goal={activeProfile.goalSong}
-                    reached={newlyReachedGoalSkills(
-                      activeProfile.goalSong.skills,
-                      completedBefore,
-                      lesson.id,
-                    )}
-                    completed={new Set(completedBefore).add(lesson.id)}
-                  />
-                ) : null
+                <>
+                  {result && result.stars > 0 && finishesWorld(lesson.id, completedBefore) && (
+                    <WorldDone lessonId={lesson.id} />
+                  )}
+                  {activeProfile?.goalSong && result && result.stars > 0 ? (
+                    <GoalMilestone
+                      goal={activeProfile.goalSong}
+                      reached={newlyReachedGoalSkills(
+                        activeProfile.goalSong.skills,
+                        completedBefore,
+                        lesson.id,
+                      )}
+                      completed={new Set(completedBefore).add(lesson.id)}
+                    />
+                  ) : null}
+                </>
               }
             />
           )}
@@ -412,6 +510,41 @@ function InputInfo({
     <Alert color="gray" variant="light" icon={<IconDeviceDesktop />} w="100%">
       {t('lesson.inputScreen')}
     </Alert>
+  );
+}
+
+/**
+ * «Ich höre: E» – shows each recognised note for a moment, so one always
+ * knows the app heard the piano. Before the first note: that it listens.
+ */
+function HeardNote({ mode }: { mode: LessonInputMode }) {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language.startsWith('de') ? 'de' : 'en';
+  const [heard, setHeard] = useState<{ midi: number; n: number } | null>(null);
+  const [fresh, setFresh] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useNoteEvents((e) => {
+    if (e.type !== 'note-on') return;
+    setHeard((h) => ({ midi: e.midi, n: (h?.n ?? 0) + 1 }));
+    setFresh(true);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setFresh(false), 1500);
+  });
+  useEffect(() => () => clearTimeout(timer.current), []);
+  if (mode === 'screen' && !heard) return null;
+  return (
+    <div className={stage.heard} data-fresh={fresh || undefined} aria-hidden data-testid="heard">
+      {heard ? (
+        <span key={heard.n} className={stage.heardPop}>
+          {t('lesson.heard', { note: midiToPitchName(heard.midi, lang) })}
+        </span>
+      ) : (
+        <span>
+          {mode === 'midi' ? <IconPiano size={16} /> : <IconMicrophone size={16} />}{' '}
+          {t('lesson.waitingForNote')}
+        </span>
+      )}
+    </div>
   );
 }
 

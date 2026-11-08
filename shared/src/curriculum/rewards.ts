@@ -51,14 +51,52 @@ export interface Streak {
   current: number;
   longest: number;
   lastActiveDate: string | null;
+  /** the Monday of the week whose free day was used (one missed day per week keeps the streak) */
+  freeDayWeek?: string | null;
+}
+
+/** The Monday (YYYY-MM-DD) of the week a day belongs to. */
+export function weekOf(day: string): string {
+  const weekday = (new Date(`${day}T00:00:00Z`).getUTCDay() + 6) % 7; // Monday = 0
+  return addDays(day, -weekday);
 }
 
 /**
- * Practising today keeps the streak; yesterday → +1; a gap starts again at 1.
- * A day before the last active one (a result synced late) changes nothing.
+ * Practising today keeps the streak; yesterday → +1. **One missed day per week
+ * is free**: practising the day after it still counts on (children get ill,
+ * families travel). A longer gap starts again at 1. A day before the last
+ * active one (a result synced late) changes nothing.
  */
 export function nextStreak(streak: Streak, today: string): Streak {
   if (streak.lastActiveDate && today <= streak.lastActiveDate) return streak;
-  const current = streak.lastActiveDate === addDays(today, -1) ? streak.current + 1 : 1;
-  return { current, longest: Math.max(streak.longest, current), lastActiveDate: today };
+  const yesterday = addDays(today, -1);
+  const missed = weekOf(yesterday);
+  let freeDayWeek = streak.freeDayWeek ?? null;
+  let current = 1;
+  if (streak.lastActiveDate === yesterday) current = streak.current + 1;
+  else if (streak.lastActiveDate === addDays(today, -2) && freeDayWeek !== missed) {
+    current = streak.current + 1;
+    freeDayWeek = missed;
+  }
+  return {
+    current,
+    longest: Math.max(streak.longest, current),
+    lastActiveDate: today,
+    freeDayWeek,
+  };
+}
+
+/**
+ * The streak as it stands today: still alive if one practised yesterday, or
+ * the day before with this week's free day still unused.
+ */
+export function liveStreak(streak: Streak, today: string): number {
+  const last = streak.lastActiveDate;
+  if (!last) return 0;
+  if (last >= addDays(today, -1)) return streak.current;
+  const missed = addDays(today, -1);
+  if (last === addDays(today, -2) && (streak.freeDayWeek ?? null) !== weekOf(missed)) {
+    return streak.current;
+  }
+  return 0;
 }

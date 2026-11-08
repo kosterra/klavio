@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { CURRICULUM, type WorldSet } from '@klavio/shared';
+import { CURRICULUM, coreLessons, type WorldSet } from '@klavio/shared';
 import type { StickerKind } from './stickerKinds';
 
 /** One colour per chapter (Mantine palette names), repeating. */
@@ -51,7 +51,7 @@ export type KidsWorldId =
  * to the summit where the dream song waits.
  */
 export type JourneyWorldId =
-  'alp' | 'tobel' | 'gorge' | 'mine' | 'embers' | 'hell' | 'chimney' | 'ridge';
+  'alp' | 'tobel' | 'gorge' | 'mine' | 'embers' | 'hell' | 'chimney' | 'ridge' | 'hut';
 
 export type WorldId = KidsWorldId | JourneyWorldId;
 
@@ -141,6 +141,7 @@ const BY_CHAPTER: Record<string, KidsWorldId> = {
   bass: 'cave',
   both: 'city',
   black: 'night',
+  meter: 'mountain',
 };
 
 const ORDER: KidsWorldId[] = [
@@ -219,9 +220,18 @@ export const JOURNEY: Record<JourneyWorldId, World> = {
     stickers: ['star', 'sparkle', 'moon'],
     road: { width: 11, dash: '9 6', cap: 'round', color: LINE },
   },
+  // Berghütte: a rest high up, before the last climb – new rhythms
+  hut: {
+    id: 'hut',
+    color: 'cyan',
+    altitude: 2900,
+    stickers: ['drum', 'metronome', 'star'],
+    road: { width: 22, dash: '4 10', cap: 'butt', color: LINE },
+  },
 };
 
 const JOURNEY_BY_CHAPTER: Record<string, JourneyWorldId> = {
+  meter: 'hut',
   keys: 'alp',
   hand: 'tobel',
   read: 'gorge',
@@ -293,4 +303,14 @@ export function saveRevealed(profileId: string, chapterIds: Iterable<string>) {
   } catch {
     // storage unavailable: the lift simply plays again next time
   }
+}
+
+/** Whether this lesson just finished its whole world (chapter). */
+export function finishesWorld(lessonId: string, completedBefore: Set<string>): boolean {
+  const chapter = CURRICULUM.find((c) => c.lessons.some((l) => l.id === lessonId));
+  if (!chapter) return false;
+  const core = coreLessons(chapter);
+  const before = core.every((l) => completedBefore.has(l.id));
+  const after = core.every((l) => l.id === lessonId || completedBefore.has(l.id));
+  return !before && after;
 }
