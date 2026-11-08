@@ -8,6 +8,8 @@ on:
   push:
     branches:
       - develop
+  # start it again by hand (Actions → develop → Run workflow), e.g. after fixing a secret
+  workflow_dispatch:
 
 # a running check finishes (a release is opened from its commit and needs its result);
 # pushes in the meantime wait, and only the newest of them runs
