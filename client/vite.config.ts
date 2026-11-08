@@ -6,6 +6,16 @@ import { APP_CONFIG } from '@klavio/shared';
 export default defineConfig({
   plugins: [
     react(),
+    {
+      // Link previews need absolute URLs. Behind Caddy the address is filled in per
+      // request (Caddyfile: `templates`); during development relative is enough.
+      name: 'klavio-origin',
+      transformIndexHtml: (html, ctx) =>
+        html.replaceAll(
+          '%ORIGIN%',
+          ctx.server ? '' : (process.env.PUBLIC_ORIGIN ?? 'https://{{.Host}}'),
+        ),
+    },
     VitePWA({
       registerType: 'prompt',
       injectRegister: false,

@@ -116,7 +116,8 @@
       "light": "Hell",
       "dark": "Dunkel"
     },
-    "knowledge": "Wissen"
+    "knowledge": "Wissen",
+    "language": "Sprache"
   },
   "account": {
     "title": "Konto",
@@ -655,5 +656,12 @@
     "fuzzy": "Meinst du «{{title}}» von {{artist}}? Art und Fähigkeiten sind vorgeschlagen.",
     "fuzzyNoArtist": "Meinst du «{{title}}»? Art und Fähigkeiten sind vorgeschlagen.",
     "useTitle": "Titel übernehmen"
+  },
+  "speech": {
+    "read": "Vorlesen",
+    "stop": "Vorlesen stoppen",
+    "auto": "Klavi liest vor",
+    "autoHint": "Aufgaben und Erklärungen werden automatisch vorgelesen – praktisch für Kinder, die noch nicht lesen können. Die Stimme kommt vom Gerät, der Text verlässt es nicht. Während Klavi spricht, hört das Mikrofon kurz weg.",
+    "noVoice": "Auf diesem Gerät ist keine Stimme für diese Sprache installiert. In den Einstellungen des Geräts lässt sich eine Sprachausgabe hinzufügen."
   }
 }

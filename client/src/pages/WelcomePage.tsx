@@ -36,6 +36,7 @@ import { useLocalized } from '../lesson/useLocalized';
 import { LoginCard } from '../landing/LoginCard';
 import { TryKeyboard } from '../landing/TryKeyboard';
 import { ThemeSwitch } from '../landing/ThemeSwitch';
+import { LanguageSwitch } from '../landing/LanguageSwitch';
 import { DuckParade, NoteRain } from '../landing/Effects';
 import { tapCounter, useKonami } from '../landing/easterEggs';
 import classes from '../landing/Landing.module.css';
@@ -105,7 +106,10 @@ export function WelcomePage() {
 
       {/* ----------------------------------------------------------- hero */}
       <header className={classes.hero}>
-        <ThemeSwitch />
+        <div className={classes.cornerTools}>
+          <LanguageSwitch />
+          <ThemeSwitch />
+        </div>
         <Container size="lg">
           <div className={classes.heroGrid}>
             <div className={classes.heroText}>

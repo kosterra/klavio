@@ -12,6 +12,7 @@ import {
   IconCheck,
   IconCloudOff,
   IconDeviceDesktop,
+  IconLanguage,
   IconMoon,
   IconSun,
   IconLogout,
@@ -30,7 +31,7 @@ import { ProfileAvatar } from './ProfileAvatar';
 import { PrivacyBadge } from './PrivacyNote';
 
 export function AppLayout() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { me, activeProfile, logout, offline } = useSession();
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const navigate = useNavigate();
@@ -138,6 +139,27 @@ export function AppLayout() {
                     onClick={() => setColorScheme(scheme)}
                   >
                     {t(`nav.scheme.${scheme}`)}
+                  </Menu.Item>
+                ))}
+                <Menu.Divider />
+                <Menu.Label>{t('nav.language')}</Menu.Label>
+                {(
+                  [
+                    ['de-CH', 'Deutsch'],
+                    ['en', 'English'],
+                  ] as const
+                ).map(([lng, name]) => (
+                  <Menu.Item
+                    key={lng}
+                    lang={lng}
+                    closeMenuOnClick={false}
+                    leftSection={<IconLanguage size={18} />}
+                    rightSection={i18n.language === lng ? <IconCheck size={16} /> : null}
+                    aria-checked={i18n.language === lng}
+                    role="menuitemradio"
+                    onClick={() => void i18n.changeLanguage(lng)}
+                  >
+                    {name}
                   </Menu.Item>
                 ))}
                 <Menu.Divider />

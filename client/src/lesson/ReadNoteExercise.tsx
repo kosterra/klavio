@@ -42,6 +42,7 @@ export function ReadNoteExercise({
         mood={feedback?.ok ? 'cheer' : feedback ? 'think' : 'listen'}
         size={kids ? 90 : 64}
         kids={kids}
+        say={t('lesson.readNote')}
       >
         <Text fz={kids ? 30 : 24} fw={800} ta="center">
           {t('lesson.readNote')}

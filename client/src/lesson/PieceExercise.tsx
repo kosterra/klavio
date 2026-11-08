@@ -151,6 +151,7 @@ export function PieceExercise({
         mood={finished ? 'cheer' : listening ? 'happy' : wrong !== null ? 'think' : 'listen'}
         size={kids ? 80 : 56}
         kids={kids}
+        say={t('lesson.playPiece')}
         classicRow
       >
         <Text fz={kids ? 26 : 22} fw={800} aria-live="polite">

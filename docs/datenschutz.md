@@ -10,6 +10,9 @@ ersetzt keine Datenschutzerklärung.
   Tonhöhe und Lautstärke verlassen die Analyse – und auch die nur innerhalb der Seite. Es gibt keine
   Aufnahme, keinen Upload, keine Speicherung von Audio. Die App sagt das sichtbar (Hinweis und Abzeichen
   im Kopf).
+- **Vorlesen bleibt auf dem Gerät.** «Klavi liest vor» nutzt die Sprachausgabe des Browsers, aber nur
+  Stimmen, die auf dem Gerät installiert sind (`localService`). Online-Stimmen, die den Text an einen
+  Dienst schicken würden, verwendet Klavio nie; fehlt eine lokale Stimme, gibt es keinen Vorlese-Knopf.
 - **So wenig wie möglich:** keine Geburtsdaten, kein Alter, kein Geschlecht, kein Standort, kein
   Tracking, keine Analyse- oder Werbedienste, keine Anfragen an fremde Server (Schriften und
   Notenschrift werden mitgeliefert).
@@ -55,8 +58,8 @@ wird nur ein HMAC mit dem Server-Geheimnis, und Eingabeversuche sind auf 5 pro 5
 | `localStorage`       | letzter Stand von Konto (inkl. E-Mail-Adresse) und Profilen, Fortschritt je Profil         | Nutzung ohne Internet                    | beim Abmelden                                                |
 | `localStorage`       | offline gespielte Ergebnisse (Lektions-ID, Fehlerzahl, Dauer, Datum, Konto- und Profil-ID) | spätere Übertragung                      | nach erfolgreicher Übertragung; ältere als 14 Tage verworfen |
 | `localStorage`       | «Installationshinweis ausgeblendet»                                                        | Hinweis nicht erneut zeigen              | Browserdaten löschen                                         |
-| `localStorage`       | je Profil-ID: «Mikrofon-Hinweis ausgeblendet»                                              | Hinweis nicht erneut zeigen              | Browserdaten löschen                                         |
-| `localStorage`       | Farbschema; je Profil-ID die Kapitel, deren «Nebel» sich schon gelichtet hat               | Einstellung, Animation nur einmal zeigen | Browserdaten löschen                                         |
+| `localStorage`       | je Profil-ID: «Mikrofon-Hinweis ausgeblendet», «Klavi liest vor» ein/aus                   | Hinweis nicht erneut zeigen              | Browserdaten löschen                                         |
+| `localStorage`       | Farbschema, Sprache; je Profil-ID die Kapitel, deren «Nebel» sich schon gelichtet hat      | Einstellung, Animation nur einmal zeigen | Browserdaten löschen                                         |
 | Service-Worker-Cache | nur die Dateien der App                                                                    | schneller Start, offline                 | Browserdaten löschen                                         |
 
 Beide Cookies sind technisch notwendig; es gibt keine Tracking-Cookies. Mikrofon- und MIDI-Freigaben

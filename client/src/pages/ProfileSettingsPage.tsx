@@ -6,11 +6,13 @@ import {
   Group,
   Modal,
   Stack,
+  Switch,
   Text,
+  ThemeIcon,
   Title,
   UnstyledButton,
 } from '@mantine/core';
-import { IconLock, IconTrash } from '@tabler/icons-react';
+import { IconLock, IconTrash, IconVolume } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import type { GoalSong } from '@klavio/shared';
@@ -29,6 +31,7 @@ import { playMelody } from '../audio/synth';
 import landing from '../landing/Landing.module.css';
 import classes from './ProfileSettingsPage.module.css';
 import { GoalSongEditor } from '../goal/GoalSongEditor';
+import { useAutoRead, useCanSpeak } from '../components/useReadAloud';
 
 /**
  * "Mein Profil": name, figure, display mode, daily goal. The figure is the
@@ -175,6 +178,8 @@ export function ProfileSettingsPage() {
         />
       </Card>
 
+      <ReadAloudSetting />
+
       <GoalSongEditor
         key={activeProfile.goalSong?.title ?? 'none'}
         initial={activeProfile.goalSong}
@@ -235,5 +240,37 @@ export function ProfileSettingsPage() {
         </Stack>
       </Modal>
     </Stack>
+  );
+}
+
+/** «Klavi liest vor»: read tasks and explanations aloud (per profile, on this device). */
+function ReadAloudSetting() {
+  const { t } = useTranslation();
+  const [on, setOn] = useAutoRead();
+  const can = useCanSpeak();
+  return (
+    <Card withBorder radius="lg" padding="lg">
+      <Group justify="space-between" wrap="nowrap" align="flex-start">
+        <Group gap="sm" wrap="nowrap" align="flex-start">
+          <ThemeIcon size={44} radius="xl" variant="light" color="indigo" aria-hidden>
+            <IconVolume size={24} />
+          </ThemeIcon>
+          <div>
+            <Text fw={700} id="read-aloud-label">
+              {t('speech.auto')}
+            </Text>
+            <Text size="sm" c="dimmed">
+              {can ? t('speech.autoHint') : t('speech.noVoice')}
+            </Text>
+          </div>
+        </Group>
+        <Switch
+          checked={on && can}
+          disabled={!can}
+          onChange={(e) => setOn(e.currentTarget.checked)}
+          aria-labelledby="read-aloud-label"
+        />
+      </Group>
+    </Card>
   );
 }

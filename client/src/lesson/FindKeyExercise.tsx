@@ -39,6 +39,7 @@ export function FindKeyExercise({
         mood={feedback?.ok ? 'cheer' : feedback ? 'think' : 'listen'}
         size={kids ? 110 : 72}
         kids={kids}
+        say={t('lesson.findKey', { note: name })}
       >
         <div aria-live="polite" aria-atomic style={{ textAlign: 'center' }}>
           <Text fz={kids ? 36 : 28} fw={800} data-testid="prompt">

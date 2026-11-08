@@ -332,12 +332,19 @@
   line-height: 1.25;
 }
 
-/* light / dark switch in the top right corner of the hero */
-.themeSwitch {
-  position: absolute;
-  top: var(--mantine-spacing-md);
-  right: var(--mantine-spacing-md);
+/* language and light / dark switches: a row at the top of the hero */
+.cornerTools {
+  position: relative;
   z-index: 3;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--mantine-spacing-xs);
+  padding: 0 var(--mantine-spacing-md);
+  margin-top: calc(var(--mantine-spacing-xl) * -0.5);
+}
+
+.themeSwitch,
+.cornerButton {
   color: var(--mantine-color-indigo-8);
   box-shadow: 0 3px 0 rgb(0 0 0 / 18%);
 }

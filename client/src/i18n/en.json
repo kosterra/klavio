@@ -116,7 +116,8 @@
       "light": "Light",
       "dark": "Dark"
     },
-    "knowledge": "Knowledge"
+    "knowledge": "Knowledge",
+    "language": "Language"
   },
   "account": {
     "title": "Account",
@@ -655,5 +656,12 @@
     "fuzzy": "Do you mean “{{title}}” by {{artist}}? Kind of piece and skills are suggested.",
     "fuzzyNoArtist": "Do you mean “{{title}}”? Kind of piece and skills are suggested.",
     "useTitle": "Use this title"
+  },
+  "speech": {
+    "read": "Read aloud",
+    "stop": "Stop reading",
+    "auto": "Klavi reads aloud",
+    "autoHint": "Tasks and explanations are read aloud automatically – handy for children who can't read yet. The voice comes from the device and the text never leaves it. While Klavi speaks, the microphone briefly stops listening.",
+    "noVoice": "This device has no voice installed for this language. You can add text-to-speech in the device settings."
   }
 }

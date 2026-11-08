@@ -23,6 +23,8 @@ Der Produktname ist ein Platzhalter. Er steht zentral in
   wieder («Heute wiederholen», Markierung im Lernpfad, Bonus-XP); dazu die «Schnelle Runde» mit
   gemischten Fragen aus allen gespielten Lektionen. Fleissiges Wiederholen bringt eigene Medaillen
   (1, 10, 25 und 50 Wiederholungen; «Für immer gemerkt», wenn eine Lektion beim Monats-Takt ist).
+- **Klavi liest vor:** Aufgaben und Erklärungen auf Knopfdruck oder automatisch (für Kids-Profile
+  voreingestellt) – mit Stimmen, die auf dem Gerät installiert sind; das Mikrofon pausiert dabei.
 - **Übungen:** Finde die Taste, Spiel nach, Notenlesen, Lied spielen mit «Warte auf mich»,
   Rhythmus mit Metronom.
 - **Eingaben:** Tonerkennung über das Mikrofon (98,6 % der Töne C2–C6 korrekt und innert 100 ms

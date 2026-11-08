@@ -70,6 +70,7 @@ export function PlayAlongExercise({
         mood={finishedSeq ? 'cheer' : wrong !== null ? 'think' : 'listen'}
         size={kids ? 100 : 64}
         kids={kids}
+        say={t('lesson.playAlong')}
       >
         <Text fz={kids ? 28 : 22} fw={800} ta="center" aria-live="polite">
           {finishedSeq ? t('lesson.wellDone') : t('lesson.playAlong')}

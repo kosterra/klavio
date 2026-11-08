@@ -123,6 +123,14 @@ Docker Compose (`docker-compose.yml`):
 | `PUBLIC_ORIGIN`                        | `https://SITE_ADDRESS:HTTPS_PORT` | Nur nötig hinter einem weiteren Proxy.                         |
 | `SMTP_HOST_DOCKER`, `SMTP_PORT_DOCKER` | `mailpit`, `1025`                 | Echter SMTP-Server im Betrieb.                                 |
 
+### Link-Vorschau
+
+Wird ein Link zu Klavio geteilt (WhatsApp, Signal, soziale Medien), zeigen die Dienste Titel,
+Beschreibung und das Bild `client/public/og-image.jpg` (1200 × 630). Diese Dienste verlangen absolute
+Adressen: Caddy setzt dafür in `index.html` die aufgerufene Domain ein (`templates` im `Caddyfile`).
+Wer Klavio ohne Caddy ausliefert, baut den Client mit `PUBLIC_ORIGIN=https://example.ch`; dann steht
+die Adresse fest im Build. `robots.txt` erlaubt Suchmaschinen die Startseite und sperrt `/api/`.
+
 Der Produktname ist ein Platzhalter und steht zentral in `shared/src/config/app.ts` (UI, Manifest,
 WebAuthn, E-Mails); eine Änderung braucht einen neuen Build.
 
