@@ -52,8 +52,6 @@
     "create": "Create profile",
     "empty": "Create a profile for everyone who learns – for example you and your kids.",
     "switch": "Switch profile",
-    "edit": "Edit profile",
-    "deleteConfirm": "Delete profile “{{name}}” and all its progress?",
     "limit": "Up to 8 profiles per account.",
     "passkeyNudge": "Tip: set up a passkey and next time you sign in with your fingerprint or face – no e-mail code needed.",
     "passkeyNudgeButton": "Set up passkey"
@@ -83,7 +81,6 @@
     "mascotClassic": "Welcome back.",
     "xp": "XP",
     "level": "Level {{level}}",
-    "streak": "{{count}} day in a row",
     "streak_other": "{{count}} days in a row",
     "dailyGoal": "Daily goal: {{minutes}} minutes",
     "learnPath": "Learning path",
@@ -96,7 +93,14 @@
     "goalReached": "Daily goal reached!",
     "allDone": "You have finished all lessons! New ones are coming soon.",
     "streakLabel_one": "day in a row",
-    "streakLabel_other": "days in a row"
+    "streakLabel_other": "days in a row",
+    "xpToNext": "{{xp}} XP to level {{next}}",
+    "streakKeep": "Play again tomorrow and your fire grows!",
+    "streakZero": "Play today – and your fire starts burning!",
+    "streak_one": "{{count}} day in a row",
+    "micSetupShort": "Set up the microphone once – then I can hear your piano better.",
+    "hideHint": "Hide this hint",
+    "xpTotal": "{{xp}} XP"
   },
   "nav": {
     "home": "Home",
@@ -104,7 +108,15 @@
     "admin": "Administration",
     "logout": "Sign out",
     "menu": "Menu",
-    "input": "Input"
+    "input": "Input",
+    "profile": "My profile",
+    "colorScheme": "Colour scheme",
+    "scheme": {
+      "auto": "Automatic",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "knowledge": "Knowledge"
   },
   "account": {
     "title": "Account",
@@ -278,7 +290,27 @@
     "goal": "Goal of chapter {{n}}: not reached yet",
     "goalReached": "Goal of chapter {{n}}: reached",
     "goalLabel": "Goal",
-    "goalDone": "Done!"
+    "goalDone": "Done!",
+    "lessonCount_one": "{{count}} lesson",
+    "lessonCount_other": "{{count}} lessons",
+    "worlds": {
+      "keys": "Key Valley",
+      "forest": "Hand Forest",
+      "sea": "Note Sea",
+      "village": "Song Village",
+      "mountain": "Rhythm Mountain",
+      "cave": "Bass Cave",
+      "city": "Bridge Town",
+      "night": "Starry Night"
+    },
+    "stages": {
+      "1": "Level 1 · First steps",
+      "2": "Level 2 · Both hands",
+      "3": "Level 3 · Musician"
+    },
+    "stagesLabel": "Level of the learning path",
+    "nextStage": "Up next: {{stage}}",
+    "toStage": "To level {{stage}}"
   },
   "lesson": {
     "close": "End lesson",
@@ -322,7 +354,8 @@
     "itIs": "That is {{note}}.",
     "clef": {
       "treble": "treble clef",
-      "bass": "bass clef"
+      "bass": "bass clef",
+      "grand": "grand staff"
     },
     "playSong": "Play the song – I will wait for you",
     "listening": "Listen carefully …",
@@ -346,7 +379,21 @@
       "missed": "missed",
       "extra": "{{count}} extra note",
       "extra_other": "{{count}} extra notes"
-    }
+    },
+    "improvise": {
+      "ready": "Ready? I play an accompaniment – you play freely on the black keys.",
+      "play": "Play whatever you like!",
+      "nudge": "Try the black keys!",
+      "more": "Lovely! Play a bit more next time – at least {{min}} notes.",
+      "done": "Beautiful – you composed!",
+      "count_one": "{{count}} star",
+      "count_other": "{{count}} stars",
+      "progress": "Accompaniment",
+      "start": "Let’s go",
+      "again": "Again"
+    },
+    "playPiece": "Play with both hands",
+    "micMelodyOnly": "With the microphone, the melody counts here."
   },
   "badges": {
     "title": "Badges",
@@ -392,5 +439,221 @@
     "newPin": "New PIN (4 digits)",
     "repeatPin": "Repeat PIN",
     "mismatch": "The two PINs do not match."
+  },
+  "profileSettings": {
+    "title": "My profile",
+    "saved": "Profile saved.",
+    "figureOnly": "You can choose your figure yourself. Your parents change the name, display mode and daily goal.",
+    "openParent": "Open parent area",
+    "delete": "Delete profile",
+    "deleteHint": "Deletes the profile “{{name}}” with all progress and badges. This cannot be undone.",
+    "deleteConfirm": "Delete profile “{{name}}”?",
+    "figureButton": "{{name}}, your figure",
+    "eggTune": "{{name}} dances and plays a tune for you! 🎶",
+    "eggDisco": "Disco mode! 🪩 Let the colours dance."
+  },
+  "theory": {
+    "title": "Discover",
+    "next": "Next",
+    "skip": "Skip",
+    "toLesson": "Let’s play!",
+    "again": "Discover again",
+    "stepOf": "Step {{n}} of {{total}}",
+    "right": "Exactly!",
+    "allRight": "Great, all correct!",
+    "tryAgain": "Almost! Try again.",
+    "found": "{{n}} of {{total}} found",
+    "listen": "Listen",
+    "listenAgain": "Listen carefully once more.",
+    "round": "Round {{n}} of {{total}}",
+    "lower": "lower",
+    "higher": "higher",
+    "keyboardPicture": "Piano keys",
+    "keyboardMarked": "Piano keys, marked: {{notes}}",
+    "handNumbers": "Right hand from above: thumb 1, index finger 2, middle finger 3, ring finger 4, little finger 5",
+    "handMarked": "Right hand from above, one finger is marked",
+    "values": {
+      "w": "Whole",
+      "h": "Half",
+      "q": "Quarter",
+      "qr": "Quarter rest"
+    },
+    "beats_one": "{{count}} beat",
+    "beats_other": "{{count}} beats",
+    "clapStart": "Start",
+    "clap": "Clap!",
+    "clapNow": "Your turn!",
+    "countIn": "Count-in: {{n}}",
+    "clapGood": "Great, right in time!",
+    "clapAgain": "Almost! Listen to the clicks and try again.",
+    "clapAgainButton": "Again",
+    "staffLines": "Staff with the lines marked. Notes: {{notes}}",
+    "staffSpaces": "Staff with the spaces marked. Notes: {{notes}}",
+    "handNumbersLeft": "Left hand from above: thumb 1, index finger 2, middle finger 3, ring finger 4, little finger 5",
+    "handMarkedLeft": "Left hand from above, one finger is marked"
+  },
+  "knowledge": {
+    "title": "Knowledge",
+    "intro": "Everything you have discovered so far – to look up again.",
+    "locked": "not discovered yet",
+    "toLesson": "Go to lesson"
+  },
+  "review": {
+    "title": "Review today",
+    "intro": "These lessons are due again – so you don't forget anything.",
+    "allFresh": "Everything fresh in your head!",
+    "quickIntro": "Nothing is due today. Up for a quick round?",
+    "daysAgo_one": "played {{count}} day ago",
+    "daysAgo_other": "played {{count}} days ago",
+    "go": "Review",
+    "play": "Review {{lesson}}",
+    "quick": "Quick round",
+    "quickEmpty": "Play a few lessons first – then there will be questions about them here.",
+    "quickDone": "Great, quick round done!",
+    "quickAgain": "One more round",
+    "back": "Back to the path",
+    "finish": "Done!",
+    "stop": "Stop",
+    "close": "Stop the quick round",
+    "done": "Well reviewed! You get {{xp}} bonus XP.",
+    "due": "to review",
+    "dueCount_one": "{{count}} to review",
+    "dueCount_other": "{{count}} to review"
+  },
+  "landing": {
+    "headline": "Learn piano – on a real piano, like a game.",
+    "lead": "Klavio listens while you play, shows you step by step what comes next and guides you through colourful worlds – from your first key to playing with both hands.",
+    "cta": "Get started",
+    "how": "How it works",
+    "login": "Log in",
+    "badgeAudio": "Audio stays on your device",
+    "badgeOpen": "Free software",
+    "klavi": "Klavi, the mascot",
+    "howTitle": "How it works",
+    "steps": {
+      "profile": {
+        "title": "Create a profile",
+        "text": "One account for the family, one profile for everyone – each with their own figure."
+      },
+      "stand": {
+        "title": "Put it on the music stand",
+        "text": "Place a tablet, phone or laptop on the piano. A digital piano works by cable too."
+      },
+      "play": {
+        "title": "Play – Klavio listens",
+        "text": "You play on your piano, Klavio recognises the notes and helps you along."
+      }
+    },
+    "featuresTitle": "What Klavio can do",
+    "features": {
+      "listen": {
+        "title": "Listens to you",
+        "text": "Note detection with the microphone, MIDI for digital pianos, or the on-screen keyboard."
+      },
+      "worlds": {
+        "title": "{{count}} worlds",
+        "text": "From Key Valley to Starry Night: a learning path like a board game."
+      },
+      "discover": {
+        "title": "Discover & knowledge",
+        "text": "Short explanations, quizzes and little games before every lesson – collected to look up again."
+      },
+      "review": {
+        "title": "Review",
+        "text": "Lessons you played come back at the right time – so everything sticks."
+      },
+      "medals": {
+        "title": "Medals & stars",
+        "text": "Stars, levels, a daily goal and medals to collect – without any pressure."
+      },
+      "family": {
+        "title": "For the whole family",
+        "text": "Several profiles, a kids and a classic look, a parents' area with a PIN."
+      }
+    },
+    "worldsTitle": "{{count}} worlds are waiting for you",
+    "worldsText": "Every chapter is a world of its own. Worlds you haven't reached yet lie in the fog – until you discover them.",
+    "tryTitle": "Try it right now",
+    "tryText": "Tap or click the keys.",
+    "tryHint": "Do you know a children's song? Why not play it …",
+    "privacyTitle": "Safe and honest",
+    "privacy": {
+      "audio": "What you play stays on your device – audio is never sent or stored.",
+      "ads": "No ads, no tracking.",
+      "data": "Only what's needed: no date of birth, a first name is enough for children.",
+      "open": "Free software (AGPL-3.0) – the source code is open."
+    },
+    "faqTitle": "Frequently asked questions",
+    "faq": {
+      "piano": {
+        "q": "Do I need a digital piano?",
+        "a": "No. A real piano is enough – the microphone recognises the notes. You can connect a digital piano via USB MIDI, and there is an on-screen keyboard to try things out."
+      },
+      "who": {
+        "q": "Who is Klavio for?",
+        "a": "For children and adults without prior knowledge. Everyone gets their own profile – children a playful look, adults a calm one if they like."
+      },
+      "devices": {
+        "q": "Which devices does Klavio run on?",
+        "a": "In any current browser on a tablet, phone or computer. You can also install Klavio like an app."
+      },
+      "offline": {
+        "q": "Does it work without internet?",
+        "a": "Yes. Lessons work offline, and your results are sent as soon as you're back online."
+      }
+    },
+    "finalTitle": "Ready for your first key?",
+    "footer": "Klavio is free software.",
+    "source": "View the source code",
+    "eggKonami": "Secret code cracked! 🎉 You're a real pro.",
+    "eggKlavi": "Klavi plays “Für Elise” – just for you! 🎵",
+    "eggDucks": "All my little ducklings are swimming on the lake! 🦆"
+  },
+  "goal": {
+    "kicker": "My dream song",
+    "percent": "{{percent}} % of the way to your dream song",
+    "skillsReached": "{{reached}} of {{total}} skills done",
+    "skillsLabel": "What your dream song needs",
+    "state": {
+      "reached": "done",
+      "open": "on your way",
+      "later": "comes in a later world"
+    },
+    "next": "Next: {{skill}}",
+    "ready": "You can do everything “{{title}}” needs. Time for your dream song! 🎉",
+    "waiting": "The next skills come in new worlds – keep going!",
+    "promptText": "Is there a dream song you'd like to play one day?",
+    "promptButton": "Set a dream song",
+    "editorTitle": "My dream song",
+    "editorIntro": "Which song would you like to play one day? Klavio shows you along the way how close you are.",
+    "songTitle": "Title",
+    "songTitleHint": "Start typing – Klavio suggests well-known songs. For example “Nothing Else Matters”.",
+    "songTitlePlaceholder": "Song – artist",
+    "style": "What kind of piece is it?",
+    "styles": {
+      "ballad": "Ballad with broken chords",
+      "pop": "Pop song with accompaniment",
+      "classical": "Classical piece",
+      "film": "Film music",
+      "melody": "Melody with accompaniment"
+    },
+    "needs": "What does the song need?",
+    "needsHint": "A suggestion for this song – adjust it as you like. Basics like reading notes are always included.",
+    "later": "later",
+    "copyright": "Klavio only stores the title – no notes. You get the sheet music of your dream song yourself later, for example as an “easy piano” edition.",
+    "save": "Save dream song",
+    "remove": "Remove dream song",
+    "saved": "Dream song saved.",
+    "removed": "Dream song removed.",
+    "closer": "One step closer to “{{title}}”!",
+    "nowYouCan": "New skills: {{skills}}",
+    "percentOfWay": "{{percent}} % of the way done",
+    "recognized": "Recognised: “{{title}}” by {{artist}} – kind of piece and skills are suggested. You can adjust them.",
+    "recognizedNoArtist": "Recognised: “{{title}}” – kind of piece and skills are suggested. You can adjust them.",
+    "guessed": "Klavio doesn't know this song exactly but made a suggestion from the title. Give it a quick check.",
+    "unknown": "Klavio doesn't know this song – choose the kind of piece and what it needs below.",
+    "fuzzy": "Do you mean “{{title}}” by {{artist}}? Kind of piece and skills are suggested.",
+    "fuzzyNoArtist": "Do you mean “{{title}}”? Kind of piece and skills are suggested.",
+    "useTitle": "Use this title"
   }
 }

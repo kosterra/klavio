@@ -1,0 +1,60 @@
+.panorama {
+  position: relative;
+  width: 100%;
+  padding-top: var(--mantine-spacing-md);
+  pointer-events: none;
+
+  --world-hill-2: color-mix(in srgb, var(--mantine-color-teal-5) 42%, var(--klavio-surface));
+}
+
+.hills {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 70px;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end;
+  gap: var(--mantine-spacing-xs);
+  padding: 0 var(--mantine-spacing-md) 10px;
+}
+
+.item {
+  flex: 1 1 0;
+  max-width: 200px;
+  min-width: 0;
+}
+
+.item svg {
+  width: 100%;
+  height: auto;
+}
+
+/* phones: three worlds are enough */
+@media (max-width: 36em) {
+  .item:nth-child(n + 4) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .item {
+    animation: bob 4s ease-in-out infinite;
+  }
+
+  .item:nth-child(2n) {
+    animation-delay: -2s;
+  }
+}
+
+@keyframes bob {
+  50% {
+    translate: 0 -4px;
+  }
+}

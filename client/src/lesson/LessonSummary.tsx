@@ -5,10 +5,13 @@ import {
   IconRefresh,
   IconStarFilled,
   IconTrophy,
+  IconRepeat,
 } from '@tabler/icons-react';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { REVIEW_BONUS_XP } from '@klavio/shared';
 import type { LessonResultDto } from '@klavio/shared';
-import { Mascot } from '../components/Mascot';
+import { Buddy } from '../components/Buddy';
 import { NewBadges } from './Badges';
 
 interface Props {
@@ -20,6 +23,8 @@ interface Props {
   onAgain: () => void;
   onNext: (() => void) | null;
   onPath: () => void;
+  /** e.g. the goal-song milestone */
+  extra?: ReactNode;
 }
 
 /** End of a lesson: stars, XP, level, streak, daily goal — friendly, never shaming. */
@@ -32,6 +37,7 @@ export function LessonSummary({
   onAgain,
   onNext,
   onPath,
+  extra,
 }: Props) {
   const { t } = useTranslation();
   const stars = result?.stars ?? 0;
@@ -40,7 +46,7 @@ export function LessonSummary({
   return (
     <Card withBorder radius="xl" padding="xl" maw={560} mx="auto" w="100%">
       <Stack align="center" gap="md">
-        <Mascot mood="cheer" size={120} />
+        <Buddy mood="cheer" size={120} />
         <Title order={1} ta="center">
           {result ? t(`lesson.result${stars}`) : t('lesson.finished')}
         </Title>
@@ -52,9 +58,7 @@ export function LessonSummary({
                 <IconStarFilled
                   key={s}
                   size={56}
-                  color={
-                    s <= stars ? 'var(--mantine-color-yellow-6)' : 'var(--mantine-color-gray-3)'
-                  }
+                  color={s <= stars ? 'var(--mantine-color-yellow-6)' : 'var(--klavio-empty-star)'}
                   aria-hidden
                 />
               ))}
@@ -63,6 +67,19 @@ export function LessonSummary({
             <Text fz={28} fw={800} c="indigo.8" data-testid="xp-gained">
               {t('lesson.xpGained', { xp: result.xpGained })}
             </Text>
+            {extra}
+            {result.review && (
+              <Alert
+                color="teal"
+                variant="light"
+                icon={<IconRepeat />}
+                radius="lg"
+                w="100%"
+                data-testid="review-done"
+              >
+                <Text fw={700}>{t('review.done', { xp: REVIEW_BONUS_XP })}</Text>
+              </Alert>
+            )}
             {result.pending && (
               <Alert
                 color="blue"

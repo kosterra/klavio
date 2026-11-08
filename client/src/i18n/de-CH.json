@@ -52,8 +52,6 @@
     "create": "Profil erstellen",
     "empty": "Lege ein Profil für jede Person an, die lernt – zum Beispiel für dich und deine Kinder.",
     "switch": "Profil wechseln",
-    "edit": "Profil bearbeiten",
-    "deleteConfirm": "Profil «{{name}}» mit allem Fortschritt löschen?",
     "limit": "Maximal 8 Profile pro Konto.",
     "passkeyNudge": "Tipp: Richte einen Passkey ein, dann meldest du dich beim nächsten Mal per Fingerabdruck oder Gesicht an – ohne E-Mail-Code.",
     "passkeyNudgeButton": "Passkey einrichten"
@@ -83,7 +81,6 @@
     "mascotClassic": "Willkommen zurück.",
     "xp": "XP",
     "level": "Level {{level}}",
-    "streak": "{{count}} Tag in Folge",
     "streak_other": "{{count}} Tage in Folge",
     "dailyGoal": "Tagesziel: {{minutes}} Minuten",
     "learnPath": "Lernpfad",
@@ -96,7 +93,14 @@
     "goalReached": "Tagesziel erreicht!",
     "allDone": "Du hast alle Lektionen geschafft! Neue kommen bald.",
     "streakLabel_one": "Tag in Folge",
-    "streakLabel_other": "Tage in Folge"
+    "streakLabel_other": "Tage in Folge",
+    "xpToNext": "noch {{xp}} XP bis Level {{next}}",
+    "streakKeep": "Spiel morgen wieder, dann wächst dein Feuer!",
+    "streakZero": "Spiel heute – dann brennt dein Feuer!",
+    "streak_one": "{{count}} Tag in Folge",
+    "micSetupShort": "Richte einmal das Mikrofon ein – dann höre ich dein Klavier besser.",
+    "hideHint": "Hinweis ausblenden",
+    "xpTotal": "{{xp}} XP"
   },
   "nav": {
     "home": "Start",
@@ -104,7 +108,15 @@
     "admin": "Verwaltung",
     "logout": "Abmelden",
     "menu": "Menü",
-    "input": "Eingabe"
+    "input": "Eingabe",
+    "profile": "Mein Profil",
+    "colorScheme": "Farbschema",
+    "scheme": {
+      "auto": "Automatisch",
+      "light": "Hell",
+      "dark": "Dunkel"
+    },
+    "knowledge": "Wissen"
   },
   "account": {
     "title": "Konto",
@@ -278,7 +290,27 @@
     "goal": "Ziel von Kapitel {{n}}: noch nicht erreicht",
     "goalReached": "Ziel von Kapitel {{n}}: erreicht",
     "goalLabel": "Ziel",
-    "goalDone": "Geschafft!"
+    "goalDone": "Geschafft!",
+    "lessonCount_one": "{{count}} Lektion",
+    "lessonCount_other": "{{count}} Lektionen",
+    "worlds": {
+      "keys": "Tasten-Tal",
+      "forest": "Hand-Wald",
+      "sea": "Noten-Meer",
+      "village": "Lieder-Dorf",
+      "mountain": "Rhythmus-Berg",
+      "cave": "Bass-Höhle",
+      "city": "Brücken-Stadt",
+      "night": "Sternen-Nacht"
+    },
+    "stages": {
+      "1": "Stufe 1 · Erste Schritte",
+      "2": "Stufe 2 · Beide Hände",
+      "3": "Stufe 3 · Musiker"
+    },
+    "stagesLabel": "Stufe des Lernpfads",
+    "nextStage": "Danach geht es weiter: {{stage}}",
+    "toStage": "Zu Stufe {{stage}}"
   },
   "lesson": {
     "close": "Lektion beenden",
@@ -322,7 +354,8 @@
     "itIs": "Das ist ein {{note}}.",
     "clef": {
       "treble": "Violinschlüssel",
-      "bass": "Bassschlüssel"
+      "bass": "Bassschlüssel",
+      "grand": "grossem Notensystem"
     },
     "playSong": "Spiel das Lied – ich warte auf dich",
     "listening": "Hör gut zu …",
@@ -346,7 +379,21 @@
       "missed": "gefehlt",
       "extra": "{{count}} Ton zu viel",
       "extra_other": "{{count}} Töne zu viel"
-    }
+    },
+    "improvise": {
+      "ready": "Bereit? Ich spiele eine Begleitung – du spielst frei auf den schwarzen Tasten.",
+      "play": "Spiel, was dir gefällt!",
+      "nudge": "Probier die schwarzen Tasten!",
+      "more": "Schön! Spiel beim nächsten Mal noch etwas mehr – mindestens {{min}} Töne.",
+      "done": "Wunderschön – du hast komponiert!",
+      "count_one": "{{count}} Stern",
+      "count_other": "{{count}} Sterne",
+      "progress": "Begleitung",
+      "start": "Los geht’s",
+      "again": "Nochmals"
+    },
+    "playPiece": "Spiel mit beiden Händen",
+    "micMelodyOnly": "Mit dem Mikrofon zählt hier die Melodie."
   },
   "badges": {
     "title": "Abzeichen",
@@ -392,5 +439,221 @@
     "newPin": "Neue PIN (4 Ziffern)",
     "repeatPin": "PIN wiederholen",
     "mismatch": "Die beiden PINs stimmen nicht überein."
+  },
+  "profileSettings": {
+    "title": "Mein Profil",
+    "saved": "Profil gespeichert.",
+    "figureOnly": "Deine Figur kannst du selbst wählen. Name, Darstellung und Tagesziel ändern deine Eltern.",
+    "openParent": "Elternbereich öffnen",
+    "delete": "Profil löschen",
+    "deleteHint": "Löscht das Profil «{{name}}» mit allem Fortschritt und allen Abzeichen. Das kann nicht rückgängig gemacht werden.",
+    "deleteConfirm": "Profil «{{name}}» löschen?",
+    "figureButton": "{{name}}, deine Figur",
+    "eggTune": "{{name}} tanzt und spielt sein Lied für dich! 🎶",
+    "eggDisco": "Disco-Modus! 🪩 Lass die Farben tanzen."
+  },
+  "theory": {
+    "title": "Entdecken",
+    "next": "Weiter",
+    "skip": "Überspringen",
+    "toLesson": "Jetzt spielen!",
+    "again": "Nochmals entdecken",
+    "stepOf": "Schritt {{n}} von {{total}}",
+    "right": "Genau!",
+    "allRight": "Super, alles richtig!",
+    "tryAgain": "Fast! Versuch es nochmals.",
+    "found": "{{n}} von {{total}} gefunden",
+    "listen": "Anhören",
+    "listenAgain": "Hör nochmals genau hin.",
+    "round": "Runde {{n}} von {{total}}",
+    "lower": "tiefer",
+    "higher": "höher",
+    "keyboardPicture": "Klaviertasten",
+    "keyboardMarked": "Klaviertasten, markiert: {{notes}}",
+    "handNumbers": "Rechte Hand von oben: Daumen 1, Zeigefinger 2, Mittelfinger 3, Ringfinger 4, kleiner Finger 5",
+    "handMarked": "Rechte Hand von oben, ein Finger ist markiert",
+    "values": {
+      "w": "Ganze",
+      "h": "Halbe",
+      "q": "Viertel",
+      "qr": "Viertelpause"
+    },
+    "beats_one": "{{count}} Schlag",
+    "beats_other": "{{count}} Schläge",
+    "clapStart": "Start",
+    "clap": "Klatsch!",
+    "clapNow": "Jetzt du!",
+    "countIn": "Einzählen: {{n}}",
+    "clapGood": "Super im Takt!",
+    "clapAgain": "Fast! Hör auf die Klicks und versuch es nochmals.",
+    "clapAgainButton": "Nochmals",
+    "staffLines": "Notenlinien, die Linien sind markiert. Noten: {{notes}}",
+    "staffSpaces": "Notenlinien, die Zwischenräume sind markiert. Noten: {{notes}}",
+    "handNumbersLeft": "Linke Hand von oben: Daumen 1, Zeigefinger 2, Mittelfinger 3, Ringfinger 4, kleiner Finger 5",
+    "handMarkedLeft": "Linke Hand von oben, ein Finger ist markiert"
+  },
+  "knowledge": {
+    "title": "Wissen",
+    "intro": "Alles, was du schon entdeckt hast – zum Nachschauen.",
+    "locked": "noch nicht entdeckt",
+    "toLesson": "Zur Lektion"
+  },
+  "review": {
+    "title": "Heute wiederholen",
+    "intro": "Diese Lektionen sind wieder dran – so vergisst du nichts.",
+    "allFresh": "Alles frisch im Kopf!",
+    "quickIntro": "Heute ist nichts fällig. Lust auf eine schnelle Runde?",
+    "daysAgo_one": "vor {{count}} Tag gespielt",
+    "daysAgo_other": "vor {{count}} Tagen gespielt",
+    "go": "Wiederholen",
+    "play": "{{lesson}} wiederholen",
+    "quick": "Schnelle Runde",
+    "quickEmpty": "Spiel zuerst ein paar Lektionen – dann gibt es hier Fragen dazu.",
+    "quickDone": "Super, schnelle Runde geschafft!",
+    "quickAgain": "Noch eine Runde",
+    "back": "Zum Lernpfad",
+    "finish": "Fertig!",
+    "stop": "Beenden",
+    "close": "Schnelle Runde beenden",
+    "done": "Super wiederholt! Du bekommst {{xp}} Bonus-XP.",
+    "due": "zum Wiederholen",
+    "dueCount_one": "{{count}} zum Wiederholen",
+    "dueCount_other": "{{count}} zum Wiederholen"
+  },
+  "landing": {
+    "headline": "Klavier lernen – am echten Klavier, wie im Spiel.",
+    "lead": "Klavio hört dir beim Spielen zu, zeigt dir Schritt für Schritt, was als Nächstes kommt, und führt dich durch bunte Welten – von der ersten Taste bis zum Spiel mit beiden Händen.",
+    "cta": "Jetzt loslegen",
+    "how": "So funktioniert’s",
+    "login": "Anmelden",
+    "badgeAudio": "Audio bleibt auf dem Gerät",
+    "badgeOpen": "Freie Software",
+    "klavi": "Klavi, das Maskottchen",
+    "howTitle": "So funktioniert’s",
+    "steps": {
+      "profile": {
+        "title": "Profil anlegen",
+        "text": "Ein Konto für die Familie, ein Profil für jede Person – mit eigener Figur."
+      },
+      "stand": {
+        "title": "Aufs Notenpult stellen",
+        "text": "Tablet, Handy oder Laptop aufs Klavier stellen. Ein Digitalpiano geht auch per Kabel."
+      },
+      "play": {
+        "title": "Spielen – Klavio hört zu",
+        "text": "Du spielst auf deinem Klavier, Klavio erkennt die Töne und hilft dir weiter."
+      }
+    },
+    "featuresTitle": "Was Klavio kann",
+    "features": {
+      "listen": {
+        "title": "Hört dir zu",
+        "text": "Tonerkennung über das Mikrofon, MIDI fürs Digitalpiano oder die Bildschirm-Klaviatur."
+      },
+      "worlds": {
+        "title": "{{count}} Welten",
+        "text": "Vom Tasten-Tal bis zur Sternen-Nacht: ein Lernpfad wie ein Spielbrett."
+      },
+      "discover": {
+        "title": "Entdecken & Wissen",
+        "text": "Kurze Erklärungen, Quiz und kleine Spiele vor jeder Lektion – zum Nachschauen gesammelt."
+      },
+      "review": {
+        "title": "Wiederholen",
+        "text": "Gespielte Lektionen kommen zur richtigen Zeit wieder – so bleibt alles im Kopf."
+      },
+      "medals": {
+        "title": "Medaillen & Sterne",
+        "text": "Sterne, Level, Tagesziel und Medaillen zum Sammeln – ganz ohne Druck."
+      },
+      "family": {
+        "title": "Für die ganze Familie",
+        "text": "Mehrere Profile, Kinder- und Classic-Darstellung, Eltern-Bereich mit PIN."
+      }
+    },
+    "worldsTitle": "{{count}} Welten warten auf dich",
+    "worldsText": "Jedes Kapitel ist eine eigene Welt. Noch nicht erreichte Welten liegen im Nebel – bis du sie entdeckst.",
+    "tryTitle": "Probier’s gleich aus",
+    "tryText": "Tippe auf die Tasten oder klicke sie an.",
+    "tryHint": "Kennst du ein Kinderlied? Spiel es doch mal …",
+    "privacyTitle": "Sicher und ehrlich",
+    "privacy": {
+      "audio": "Was du spielst, bleibt auf deinem Gerät – Audio wird nie gesendet oder gespeichert.",
+      "ads": "Keine Werbung, kein Tracking.",
+      "data": "Nur das Nötigste: kein Geburtsdatum, für Kinder genügt ein Vorname.",
+      "open": "Freie Software (AGPL-3.0) – der Quellcode ist offen."
+    },
+    "faqTitle": "Häufige Fragen",
+    "faq": {
+      "piano": {
+        "q": "Brauche ich ein Digitalpiano?",
+        "a": "Nein. Ein echtes Klavier genügt – das Mikrofon erkennt die Töne. Ein Digitalpiano kannst du per USB-MIDI anschliessen, und zum Ausprobieren gibt es die Bildschirm-Klaviatur."
+      },
+      "who": {
+        "q": "Für wen ist Klavio?",
+        "a": "Für Kinder und Erwachsene ohne Vorkenntnisse. Jede Person bekommt ein eigenes Profil – Kinder in einer verspielten, Erwachsene auf Wunsch in einer ruhigen Darstellung."
+      },
+      "devices": {
+        "q": "Auf welchen Geräten läuft Klavio?",
+        "a": "In jedem aktuellen Browser auf Tablet, Handy oder Computer. Du kannst Klavio auch wie eine App installieren."
+      },
+      "offline": {
+        "q": "Geht es auch ohne Internet?",
+        "a": "Ja. Lektionen funktionieren offline, deine Ergebnisse werden nachgereicht, sobald du wieder online bist."
+      }
+    },
+    "finalTitle": "Bereit für deine erste Taste?",
+    "footer": "Klavio ist freie Software.",
+    "source": "Zum Quellcode",
+    "eggKonami": "Geheimcode geknackt! 🎉 Du bist ein echter Profi.",
+    "eggKlavi": "Klavi spielt «Für Elise» – nur für dich! 🎵",
+    "eggDucks": "Alle meine Entchen schwimmen auf dem See! 🦆"
+  },
+  "goal": {
+    "kicker": "Mein Traumlied",
+    "percent": "{{percent}} % des Weges zum Traumlied",
+    "skillsReached": "{{reached}} von {{total}} Fähigkeiten geschafft",
+    "skillsLabel": "Was dein Traumlied braucht",
+    "state": {
+      "reached": "geschafft",
+      "open": "kommt auf deinem Weg",
+      "later": "kommt in einer späteren Welt"
+    },
+    "next": "Als Nächstes: {{skill}}",
+    "ready": "Du kannst alles, was «{{title}}» braucht. Zeit für dein Traumlied! 🎉",
+    "waiting": "Die nächsten Fähigkeiten kommen in neuen Welten – bleib dran!",
+    "promptText": "Hast du ein Traumlied, das du eines Tages spielen möchtest?",
+    "promptButton": "Traumlied festlegen",
+    "editorTitle": "Mein Traumlied",
+    "editorIntro": "Welches Lied möchtest du eines Tages spielen? Klavio zeigt dir unterwegs, wie nah du ihm schon bist.",
+    "songTitle": "Titel",
+    "songTitleHint": "Tippe los – Klavio schlägt bekannte Lieder vor. Zum Beispiel «Nothing Else Matters».",
+    "songTitlePlaceholder": "Lied – Interpret",
+    "style": "Was für ein Stück ist es?",
+    "styles": {
+      "ballad": "Ballade mit gebrochenen Akkorden",
+      "pop": "Pop-Song mit Begleitung",
+      "classical": "Klassisches Stück",
+      "film": "Filmmusik",
+      "melody": "Melodie mit Begleitung"
+    },
+    "needs": "Was braucht das Lied?",
+    "needsHint": "Vorschlag passend zum Lied – du kannst anpassen. Grundlagen wie Noten lesen sind immer dabei.",
+    "later": "später",
+    "copyright": "Klavio speichert nur den Titel – keine Noten. Die Noten deines Traumlieds besorgst du dir später selbst, zum Beispiel als «Easy Piano»-Ausgabe.",
+    "save": "Traumlied speichern",
+    "remove": "Traumlied entfernen",
+    "saved": "Traumlied gespeichert.",
+    "removed": "Traumlied entfernt.",
+    "closer": "Ein Schritt näher an «{{title}}»!",
+    "nowYouCan": "Neu kannst du: {{skills}}",
+    "percentOfWay": "{{percent}} % des Weges geschafft",
+    "recognized": "Erkannt: «{{title}}» von {{artist}} – Art und Fähigkeiten sind vorgeschlagen. Du kannst sie anpassen.",
+    "recognizedNoArtist": "Erkannt: «{{title}}» – Art und Fähigkeiten sind vorgeschlagen. Du kannst sie anpassen.",
+    "guessed": "Klavio kennt dieses Lied nicht genau, hat aber aus dem Titel einen Vorschlag gemacht. Prüf ihn kurz.",
+    "unknown": "Dieses Lied kennt Klavio nicht – wähl unten die Art und was es braucht.",
+    "fuzzy": "Meinst du «{{title}}» von {{artist}}? Art und Fähigkeiten sind vorgeschlagen.",
+    "fuzzyNoArtist": "Meinst du «{{title}}»? Art und Fähigkeiten sind vorgeschlagen.",
+    "useTitle": "Titel übernehmen"
   }
 }

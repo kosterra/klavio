@@ -4,7 +4,7 @@ import { IconCheck } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { midiToPitchName, type PlayAlongExercise as Spec } from '@klavio/shared';
 import { useNoteEvents } from '../input/noteBus';
-import { Mascot } from '../components/Mascot';
+import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { FEEDBACK_MS, type ExerciseProps } from './exercises';
 import { useNoteLang } from './useLocalized';
@@ -66,13 +66,15 @@ export function PlayAlongExercise({
 
   return (
     <Stack align="center" gap="lg" w="100%">
-      <Mascot
+      <BuddySays
         mood={finishedSeq ? 'cheer' : wrong !== null ? 'think' : 'listen'}
         size={kids ? 100 : 64}
-      />
-      <Text fz={kids ? 28 : 22} fw={800} ta="center" aria-live="polite">
-        {finishedSeq ? t('lesson.wellDone') : t('lesson.playAlong')}
-      </Text>
+        kids={kids}
+      >
+        <Text fz={kids ? 28 : 22} fw={800} ta="center" aria-live="polite">
+          {finishedSeq ? t('lesson.wellDone') : t('lesson.playAlong')}
+        </Text>
+      </BuddySays>
       <Group
         gap="sm"
         justify="center"
@@ -101,11 +103,11 @@ export function PlayAlongExercise({
                 fontSize: kids ? 26 : 20,
                 border: `3px solid ${now ? 'var(--mantine-color-orange-7)' : 'transparent'}`,
                 background: done
-                  ? 'var(--mantine-color-teal-1)'
+                  ? 'var(--mantine-color-teal-light)'
                   : now
-                    ? 'var(--mantine-color-orange-0)'
-                    : 'var(--mantine-color-gray-1)',
-                color: done ? 'var(--mantine-color-teal-9)' : 'var(--mantine-color-dark-7)',
+                    ? 'var(--mantine-color-orange-light)'
+                    : 'var(--klavio-track)',
+                color: done ? 'var(--mantine-color-teal-light-color)' : 'var(--mantine-color-text)',
               }}
             >
               {done && <IconCheck size={16} aria-hidden />}

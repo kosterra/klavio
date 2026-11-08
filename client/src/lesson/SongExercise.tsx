@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Button, Group, Stack, Text, VisuallyHidden } from '@mantine/core';
+import { Button, Stack, Text, VisuallyHidden } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconPlayerPlay, IconPlayerStop } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { beatsOf, midiToPitchName, type SongExercise as Spec } from '@klavio/shared';
 import { inputHub, useNoteEvents } from '../input/noteBus';
 import { playMelody, type Playback } from '../audio/synth';
-import { Mascot } from '../components/Mascot';
+import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { Staff, type StaffNote } from '../notation/Staff';
 import { FEEDBACK_MS, type ExerciseProps } from './exercises';
@@ -125,19 +125,14 @@ export function SongExercise({
 
   return (
     <Stack align="center" gap="md" w="100%">
-      <Group justify="center" gap="md" wrap="nowrap">
-        <Mascot
-          mood={
-            finished
-              ? 'cheer'
-              : playingIndex !== null
-                ? 'happy'
-                : wrong !== null
-                  ? 'think'
-                  : 'listen'
-          }
-          size={kids ? 80 : 56}
-        />
+      <BuddySays
+        mood={
+          finished ? 'cheer' : playingIndex !== null ? 'happy' : wrong !== null ? 'think' : 'listen'
+        }
+        size={kids ? 80 : 56}
+        kids={kids}
+        classicRow
+      >
         <Text fz={kids ? 26 : 22} fw={800} aria-live="polite">
           {finished
             ? t('lesson.wellDone')
@@ -153,7 +148,7 @@ export function SongExercise({
         >
           {playingIndex !== null ? t('lesson.stopListening') : t('lesson.listen')}
         </Button>
-      </Group>
+      </BuddySays>
 
       <div style={{ width: '100%' }} data-testid="song-staff">
         <Staff

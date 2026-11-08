@@ -1,14 +1,106 @@
+/* App colours with a light and a dark value (Mantine sets data-mantine-color-scheme). */
 :root {
   --klavio-bg-kids: #fffaf2;
+  --klavio-doodles: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22260%22 height=%22260%22 viewBox=%220 0 260 260%22%3E%3Cg fill-opacity=%220.28%22%3E %3Cg fill=%22%235c7cfa%22 transform=%22translate(30 40) rotate(-12)%22%3E%3Cellipse cx=%220%22 cy=%2222%22 rx=%229%22 ry=%227%22/%3E%3Crect x=%226%22 y=%22-8%22 width=%224%22 height=%2230%22 rx=%222%22/%3E%3Cpath d=%22M9 -8 q12 4 10 16 q-3-7-10-7z%22/%3E%3C/g%3E %3Cpath fill=%22%23fab005%22 transform=%22translate(180 50) rotate(10)%22 d=%22M0 -14 L4 -4 L15 -4 L6 3 L9 14 L0 7 L-9 14 L-6 3 L-15 -4 L-4 -4 Z%22/%3E %3Cg fill=%22%2320c997%22 transform=%22translate(120 150) rotate(8)%22%3E%3Cellipse cx=%220%22 cy=%2222%22 rx=%228%22 ry=%226%22/%3E%3Cellipse cx=%2226%22 cy=%2216%22 rx=%228%22 ry=%226%22/%3E%3Crect x=%225%22 y=%22-6%22 width=%224%22 height=%2228%22 rx=%222%22/%3E%3Crect x=%2231%22 y=%22-12%22 width=%224%22 height=%2228%22 rx=%222%22/%3E%3Cpath d=%22M5 -6 L35 -12 L35 -6 L5 0 Z%22/%3E%3C/g%3E %3Cpath fill=%22%23f06595%22 transform=%22translate(220 190)%22 d=%22M0 -12 Q2 -2 12 0 Q2 2 0 12 Q-2 2 -12 0 Q-2 -2 0 -12 Z%22/%3E %3Ccircle fill=%22%23ff922b%22 cx=%2260%22 cy=%22200%22 r=%227%22/%3E %3Ccircle fill=%22%235c7cfa%22 cx=%22230%22 cy=%22110%22 r=%224%22/%3E %3Cpath fill=%22%23fab005%22 transform=%22translate(70 120)%22 d=%22M0 -8 Q1.5 -1.5 8 0 Q1.5 1.5 0 8 Q-1.5 1.5 -8 0 Q-1.5 -1.5 0 -8 Z%22/%3E %3C/g%3E%3C/svg%3E');
+  --klavio-blob-a: rgb(255 212 59 / 28%);
+  --klavio-blob-b: rgb(116 143 252 / 22%);
+  --klavio-blob-c: rgb(56 217 169 / 20%);
+  --klavio-blob-d: rgb(247 131 172 / 16%);
   --klavio-bg-classic: #f8f9fb;
+  --klavio-surface: #fff;
+  --klavio-track: var(--mantine-color-gray-2);
+  --klavio-road: var(--mantine-color-gray-2);
+  --klavio-road-line: #fff;
+  --klavio-fog: var(--mantine-color-gray-1);
+  --klavio-fog-cloud: #fff;
+  --klavio-snow: #fff;
+  --klavio-success: var(--mantine-color-teal-9);
+  --klavio-comic-line: #2b2d42;
+  --klavio-bubble: var(--mantine-color-indigo-0);
+  --klavio-grape-text: var(--mantine-color-grape-8);
+  --klavio-hand: #f8d5b8;
+  --klavio-hand-line: #c98e66;
+  --klavio-snow-edge: var(--mantine-color-blue-1);
+  --klavio-snowflake: var(--mantine-color-blue-2);
+  --klavio-bar: rgb(255 255 255 / 70%);
+  --klavio-locked-bg: var(--mantine-color-gray-1);
+  --klavio-locked-border: var(--mantine-color-gray-4);
+  --klavio-locked-fg: var(--mantine-color-gray-7);
+  --klavio-empty-star: var(--mantine-color-gray-3);
+  --klavio-avatar-bg: #fff4e6;
+  --klavio-avatar-bg-klavi: #e7ecff;
+  --klavio-ink: #000;
+  /* destructive actions (delete, log out): ≥ 4.5:1 on the page and on cards */
+  --klavio-danger: var(--mantine-color-red-9);
+  --klavio-flag-pole: var(--mantine-color-gray-7);
+  --klavio-locked-flag: var(--mantine-color-gray-3);
 }
 
-html[data-ui-mode='kids'] body {
-  background: var(--klavio-bg-kids);
+:root[data-mantine-color-scheme='dark'] {
+  --klavio-bg-kids: #191a24;
+  --klavio-doodles: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22260%22 height=%22260%22 viewBox=%220 0 260 260%22%3E%3Cg fill-opacity=%220.16%22%3E %3Cg fill=%22%235c7cfa%22 transform=%22translate(30 40) rotate(-12)%22%3E%3Cellipse cx=%220%22 cy=%2222%22 rx=%229%22 ry=%227%22/%3E%3Crect x=%226%22 y=%22-8%22 width=%224%22 height=%2230%22 rx=%222%22/%3E%3Cpath d=%22M9 -8 q12 4 10 16 q-3-7-10-7z%22/%3E%3C/g%3E %3Cpath fill=%22%23fab005%22 transform=%22translate(180 50) rotate(10)%22 d=%22M0 -14 L4 -4 L15 -4 L6 3 L9 14 L0 7 L-9 14 L-6 3 L-15 -4 L-4 -4 Z%22/%3E %3Cg fill=%22%2320c997%22 transform=%22translate(120 150) rotate(8)%22%3E%3Cellipse cx=%220%22 cy=%2222%22 rx=%228%22 ry=%226%22/%3E%3Cellipse cx=%2226%22 cy=%2216%22 rx=%228%22 ry=%226%22/%3E%3Crect x=%225%22 y=%22-6%22 width=%224%22 height=%2228%22 rx=%222%22/%3E%3Crect x=%2231%22 y=%22-12%22 width=%224%22 height=%2228%22 rx=%222%22/%3E%3Cpath d=%22M5 -6 L35 -12 L35 -6 L5 0 Z%22/%3E%3C/g%3E %3Cpath fill=%22%23f06595%22 transform=%22translate(220 190)%22 d=%22M0 -12 Q2 -2 12 0 Q2 2 0 12 Q-2 2 -12 0 Q-2 -2 0 -12 Z%22/%3E %3Ccircle fill=%22%23ff922b%22 cx=%2260%22 cy=%22200%22 r=%227%22/%3E %3Ccircle fill=%22%235c7cfa%22 cx=%22230%22 cy=%22110%22 r=%224%22/%3E %3Cpath fill=%22%23fab005%22 transform=%22translate(70 120)%22 d=%22M0 -8 Q1.5 -1.5 8 0 Q1.5 1.5 0 8 Q-1.5 1.5 -8 0 Q-1.5 -1.5 0 -8 Z%22/%3E %3C/g%3E%3C/svg%3E');
+  --klavio-blob-a: rgb(250 176 5 / 10%);
+  --klavio-blob-b: rgb(92 124 250 / 14%);
+  --klavio-blob-c: rgb(32 201 151 / 10%);
+  --klavio-blob-d: rgb(240 101 149 / 9%);
+  --klavio-bg-classic: var(--mantine-color-dark-8);
+  --klavio-surface: var(--mantine-color-dark-6);
+  --klavio-track: var(--mantine-color-dark-4);
+  --klavio-road: var(--mantine-color-dark-5);
+  --klavio-road-line: var(--mantine-color-dark-3);
+  --klavio-fog: var(--mantine-color-dark-7);
+  --klavio-fog-cloud: var(--mantine-color-dark-4);
+  --klavio-snow: var(--mantine-color-gray-3);
+  --klavio-success: var(--mantine-color-teal-4);
+  --klavio-comic-line: #14151c;
+  --klavio-bubble: var(--mantine-color-dark-5);
+  --klavio-grape-text: var(--mantine-color-grape-3);
+  --klavio-hand: #e2b493;
+  --klavio-hand-line: #8a5a3c;
+  --klavio-snow-edge: var(--mantine-color-gray-5);
+  --klavio-snowflake: #fff;
+  --klavio-bar: rgb(255 255 255 / 14%);
+  --klavio-locked-bg: var(--mantine-color-dark-6);
+  --klavio-locked-border: var(--mantine-color-dark-3);
+  --klavio-locked-fg: var(--mantine-color-dark-1);
+  --klavio-empty-star: var(--mantine-color-dark-3);
+  --klavio-avatar-bg: #3a3128;
+  --klavio-avatar-bg-klavi: #283056;
+  --klavio-ink: #e9ecef;
+  --klavio-danger: var(--mantine-color-red-4);
+  --klavio-flag-pole: var(--mantine-color-gray-4);
+  --klavio-locked-flag: var(--mantine-color-dark-4);
+}
+
+/* soft colour fields and a few floating notes and stars behind everything */
+html body {
+  background-color: var(--klavio-bg-kids);
+  background-image:
+    radial-gradient(circle at 8% 12%, var(--klavio-blob-a), transparent 32%),
+    radial-gradient(circle at 92% 22%, var(--klavio-blob-b), transparent 34%),
+    radial-gradient(circle at 15% 78%, var(--klavio-blob-c), transparent 34%),
+    radial-gradient(circle at 88% 88%, var(--klavio-blob-d), transparent 30%), var(--klavio-doodles);
+  background-attachment: fixed, fixed, fixed, fixed, scroll;
+}
+
+/* a stripe in the five world colours under the header */
+html .mantine-AppShell-header {
+  border-bottom: 0;
+  background-image: linear-gradient(
+    90deg,
+    var(--mantine-color-indigo-5) 0 20%,
+    var(--mantine-color-teal-5) 20% 40%,
+    var(--mantine-color-grape-5) 40% 60%,
+    var(--mantine-color-orange-5) 60% 80%,
+    var(--mantine-color-cyan-5) 80% 100%
+  );
+  background-size: 100% 5px;
+  background-position: bottom;
+  background-repeat: no-repeat;
 }
 
 html[data-ui-mode='classic'] body {
-  background: var(--klavio-bg-classic);
+  background-color: var(--klavio-bg-classic);
 }
 
 /* Respect users who prefer less motion (mascot bounce, transitions). */
@@ -24,6 +116,11 @@ html[data-ui-mode='classic'] body {
 /* Mantine's default "dimmed" (gray-6) is ~3.3:1 on white; gray-7 meets WCAG AA (4.5:1). */
 :root[data-mantine-color-scheme='light'] {
   --mantine-color-dimmed: var(--mantine-color-gray-7);
+}
+
+/* Dark: Mantine's "dimmed" (dark-2) is ~3.5:1 on cards; dark-1 meets WCAG AA. */
+:root[data-mantine-color-scheme='dark'] {
+  --mantine-color-dimmed: var(--mantine-color-dark-1);
 }
 
 /* Teal "light" variant (privacy badge/alert): lighter background so teal-9 text reaches 4.5:1. */

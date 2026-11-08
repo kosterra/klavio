@@ -20,10 +20,19 @@ interface Props {
   submitLabel: string;
   busy?: boolean;
   onSubmit: (values: ProfileInput) => void;
-  onCancel: () => void;
+  onCancel?: () => void;
+  /** Only the figure can be changed (parent area locked). */
+  figureOnly?: boolean;
 }
 
-export function ProfileForm({ initial, submitLabel, busy, onSubmit, onCancel }: Props) {
+export function ProfileForm({
+  initial,
+  submitLabel,
+  busy,
+  onSubmit,
+  onCancel,
+  figureOnly = false,
+}: Props) {
   const { t } = useTranslation();
   const form = useForm<ProfileInput>({
     mode: 'controlled',
@@ -45,12 +54,13 @@ export function ProfileForm({ initial, submitLabel, busy, onSubmit, onCancel }: 
           label={t('profiles.name')}
           maxLength={40}
           data-autofocus
+          disabled={figureOnly}
           {...form.getInputProps('name')}
         />
 
         <Stack gap={6} role="radiogroup" aria-label={t('profiles.avatar')}>
           <Text fw={500}>{t('profiles.avatar')}</Text>
-          <SimpleGrid cols={{ base: 4, xs: 7 }} spacing="xs">
+          <SimpleGrid cols={{ base: 3, xs: 4, sm: 7 }} spacing={6}>
             {avatarSchema.options.map((a: Avatar) => (
               <UnstyledButton
                 key={a}
@@ -64,7 +74,12 @@ export function ProfileForm({ initial, submitLabel, busy, onSubmit, onCancel }: 
                 data-selected={form.values.avatar === a || undefined}
                 onClick={() => form.setFieldValue('avatar', a)}
               >
-                <ProfileAvatar avatar={a} size={56} />
+                <ProfileAvatar
+                  avatar={a}
+                  size={68}
+                  alive
+                  mood={form.values.avatar === a ? 'cheer' : 'happy'}
+                />
                 <Text size="xs" fw={700} aria-hidden>
                   {t(`avatars.names.${a}`)}
                 </Text>
@@ -85,6 +100,7 @@ export function ProfileForm({ initial, submitLabel, busy, onSubmit, onCancel }: 
               { value: 'classic', label: t('profiles.modeClassic') },
             ]}
             value={form.values.uiMode}
+            disabled={figureOnly}
             onChange={(v) => form.setFieldValue('uiMode', v as UiMode)}
           />
           <Text size="sm" c="dimmed">
@@ -101,14 +117,17 @@ export function ProfileForm({ initial, submitLabel, busy, onSubmit, onCancel }: 
             size="lg"
             data={['5', '10', '15', '20', '30']}
             value={String(form.values.dailyGoalMinutes)}
+            disabled={figureOnly}
             onChange={(v) => form.setFieldValue('dailyGoalMinutes', Number(v))}
           />
         </Stack>
 
         <Group grow>
-          <Button variant="default" onClick={onCancel}>
-            {t('common.cancel')}
-          </Button>
+          {onCancel && (
+            <Button variant="default" onClick={onCancel}>
+              {t('common.cancel')}
+            </Button>
+          )}
           <Button type="submit" loading={busy}>
             {submitLabel}
           </Button>

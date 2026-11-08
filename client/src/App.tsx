@@ -1,5 +1,13 @@
 import { lazy, Suspense, useEffect, type ReactNode } from 'react';
-import { Button, Center, Loader, MantineProvider, Stack, Text } from '@mantine/core';
+import {
+  Button,
+  Center,
+  Loader,
+  MantineProvider,
+  Stack,
+  Text,
+  localStorageColorSchemeManager,
+} from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +37,15 @@ const MicSetupPage = lazy(() =>
   import('./pages/MicSetupPage').then((m) => ({ default: m.MicSetupPage })),
 );
 const InputPage = lazy(() => import('./pages/InputPage').then((m) => ({ default: m.InputPage })));
+const ProfileSettingsPage = lazy(() =>
+  import('./pages/ProfileSettingsPage').then((m) => ({ default: m.ProfileSettingsPage })),
+);
+const QuickRoundPage = lazy(() =>
+  import('./pages/QuickRoundPage').then((m) => ({ default: m.QuickRoundPage })),
+);
+const KnowledgePage = lazy(() =>
+  import('./pages/KnowledgePage').then((m) => ({ default: m.KnowledgePage })),
+);
 const LessonPage = lazy(() =>
   import('./pages/LessonPage').then((m) => ({ default: m.LessonPage })),
 );
@@ -39,6 +56,9 @@ function MidiAutoConnect() {
   return null;
 }
 
+/** Light / dark / automatic (follows the device) – remembered on this device. */
+const colorSchemeManager = localStorageColorSchemeManager({ key: 'klavio-color-scheme' });
+
 /** Theme follows the active profile's Kids/Classic choice. */
 function ThemedApp({ children }: { children: ReactNode }) {
   const { activeProfile } = useSession();
@@ -47,7 +67,11 @@ function ThemedApp({ children }: { children: ReactNode }) {
     document.documentElement.dataset.uiMode = mode;
   }, [mode]);
   return (
-    <MantineProvider theme={themes[mode]} defaultColorScheme="light">
+    <MantineProvider
+      theme={themes[mode]}
+      defaultColorScheme="auto"
+      colorSchemeManager={colorSchemeManager}
+    >
       <Notifications position="top-center" />
       <MidiAutoConnect />
       {children}
@@ -122,6 +146,7 @@ export function App() {
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route element={<RequireProfile />}>
                   <Route path="/lesson/:lessonId" element={<LessonPage />} />
+                  <Route path="/quick" element={<QuickRoundPage />} />
                 </Route>
                 <Route element={<AppLayout />}>
                   <Route
@@ -147,6 +172,8 @@ export function App() {
                     <Route path="/mic-test" element={<MicTestPage />} />
                     <Route path="/mic-setup" element={<MicSetupPage />} />
                     <Route path="/input" element={<InputPage />} />
+                    <Route path="/profile" element={<ProfileSettingsPage />} />
+                    <Route path="/knowledge" element={<KnowledgePage />} />
                   </Route>
                 </Route>
               </Route>

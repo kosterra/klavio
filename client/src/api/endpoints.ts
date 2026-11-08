@@ -55,7 +55,10 @@ export const endpoints = {
   createProfile: (body: ProfileInput) => api<ProfileDto>('POST', '/profiles', body),
   updateProfile: (
     id: string,
-    body: Partial<ProfileInput> & { calibration?: Partial<ProfileDto['calibration']> },
+    body: Partial<ProfileInput> & {
+      calibration?: Partial<ProfileDto['calibration']>;
+      goalSong?: ProfileDto['goalSong'];
+    },
   ) => api<ProfileDto>('PATCH', `/profiles/${id}`, body),
   deleteProfile: (id: string) => api('DELETE', `/profiles/${id}`),
   selectProfile: (profileId: string) => api('POST', '/profiles/select', { profileId }),

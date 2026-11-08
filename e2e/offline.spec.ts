@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { signUpWithEmail, uniqueEmail } from './helpers';
+import { signUpWithEmail, uniqueEmail, skipTheory } from './helpers';
 import { audit } from './audit';
 
 const key = (page: Page, name: string) => page.getByRole('button', { name, exact: true });
@@ -30,7 +30,7 @@ test('lessons work offline; results are synced when back online', async ({ page,
   // open the lesson once while online (the dev server has no service worker
   // that would have precached the lesson page)
   await page.getByRole('link', { name: 'Erste Lektion starten' }).click();
-  await expect(page.getByRole('button', { name: 'Los geht’s!' })).toBeVisible();
+  await skipTheory(page);
 
   if (process.env.E2E_BASE_URL?.startsWith('https')) {
     // production build: wait until the service worker controls the page
@@ -53,7 +53,7 @@ test('lessons work offline; results are synced when back online', async ({ page,
   await expect(page.getByTestId('offline-badge')).toBeVisible();
   await expect(page.getByTestId('path-keys-c')).toHaveAccessibleName(/3 von 3 Sternen/);
   await expect(page.getByTestId('path-keys-middle-c')).toHaveAttribute('aria-current', 'step');
-  await expect(page.getByText('25', { exact: true })).toBeVisible(); // XP, computed locally
+  await expect(page.getByTestId('xp-total')).toHaveText('25 XP'); // computed locally
 
   if (process.env.E2E_BASE_URL?.startsWith('https')) {
     // with the service worker (production build) the app even starts offline
@@ -70,5 +70,5 @@ test('lessons work offline; results are synced when back online', async ({ page,
   await expect(page.getByTestId('offline-badge')).toHaveCount(0);
   await expect(page.getByTestId('badge-first-lesson')).toHaveAttribute('data-earned', 'true');
   await expect(page.getByTestId('path-keys-c')).toHaveAccessibleName(/3 von 3 Sternen/);
-  await expect(page.getByText('25', { exact: true })).toBeVisible(); // XP, now from the server
+  await expect(page.getByTestId('xp-total')).toHaveText('25 XP'); // now from the server
 });

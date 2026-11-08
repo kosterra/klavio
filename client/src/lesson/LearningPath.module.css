@@ -1,47 +1,72 @@
-.chapter {
+.section {
   position: relative;
 }
 
-.banner {
-  display: flex;
-  align-items: center;
-  gap: var(--mantine-spacing-md);
-  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
-  border-radius: var(--mantine-radius-xl);
-  background: var(--chapter-tint);
-  margin-bottom: var(--mantine-spacing-xs);
+.flag {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 2px rgb(0 0 0 / 18%));
 }
 
-.bannerNumber {
+.flagWave {
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flagWave {
+    animation: wave 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: skewY(0deg) scaleX(1);
+  }
+
+  50% {
+    transform: skewY(-4deg) scaleX(0.94);
+  }
+}
+
+.signpost {
+  position: absolute;
+  z-index: 2; /* above the lesson list, which covers the whole section */
+  display: flex;
+  min-height: 80px;
+  align-items: center;
+  border-radius: var(--mantine-radius-lg);
+  padding: 4px 8px;
+}
+
+.signpost:focus-visible {
+  outline: 3px solid var(--mantine-color-orange-6);
+  outline-offset: 2px;
+}
+
+.signpostText {
+  min-width: 0;
+}
+
+.signpostMeta {
+  margin-top: 2px;
+}
+
+.chevron {
   flex: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--chapter-color);
-  color: #fff;
-  font-weight: 800;
-  font-size: 22px;
-  box-shadow: 0 4px 0 var(--chapter-dark);
+  color: var(--mantine-color-dimmed);
 }
 
-.bannerBar {
-  height: 8px;
-  border-radius: 4px;
-  background: rgb(255 255 255 / 70%);
-  overflow: hidden;
+.chevron[data-open] {
+  transform: rotate(180deg);
 }
 
-.bannerBarFill {
-  height: 100%;
-  border-radius: 4px;
-  background: var(--chapter-color);
-}
-
-.board {
-  position: relative;
+@media (prefers-reduced-motion: no-preference) {
+  .chevron {
+    transition: transform 150ms ease;
+  }
 }
 
 .road {
@@ -59,10 +84,12 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  pointer-events: none; /* only the stones themselves take clicks */
 }
 
 .stop {
   position: absolute;
+  pointer-events: auto;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
@@ -74,91 +101,145 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 68px;
-  height: 68px;
-  border-radius: 50%;
+  width: 72px;
+  height: 72px;
+  border-radius: 24px;
   text-decoration: none;
   cursor: pointer;
-  color: var(--chapter-color);
-  background: #fff;
-  border: 4px solid var(--chapter-color);
-  box-shadow: 0 5px 0 var(--chapter-dark);
+  color: #fff;
+  /* stepping stone: lighter top, chapter colour, darker 3D edge */
+  background: linear-gradient(180deg, var(--chapter-light) 0%, var(--chapter-color) 70%);
+  box-shadow:
+    0 7px 0 var(--chapter-dark),
+    0 10px 14px rgb(0 0 0 / 18%);
+}
+
+/* glossy highlight on the top of every stone */
+.node::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 14%;
+  width: 72%;
+  height: 30%;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 28%);
+  pointer-events: none;
 }
 
 .node:focus-visible {
   outline: 3px solid var(--mantine-color-orange-6);
-  outline-offset: 4px;
+  outline-offset: 6px;
+}
+
+a.node:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 3px 0 var(--chapter-dark),
+    0 5px 8px rgb(0 0 0 / 18%);
 }
 
 .done {
-  color: #fff;
-  background: var(--chapter-color);
+  /* default stone look */
+}
+
+.open {
+  color: var(--chapter-color);
+  background: var(--klavio-surface);
+  border: 4px solid var(--chapter-color);
 }
 
 .current {
-  width: 82px;
-  height: 82px;
-  color: #fff;
-  background: var(--mantine-color-orange-7);
-  border-color: #fff;
+  width: 88px;
+  height: 88px;
+  border-radius: 28px;
+  background: linear-gradient(
+    180deg,
+    var(--mantine-color-orange-5) 0%,
+    var(--mantine-color-orange-7) 70%
+  );
   box-shadow:
-    0 5px 0 var(--mantine-color-orange-9),
-    0 0 0 6px var(--mantine-color-orange-2);
+    0 8px 0 var(--mantine-color-orange-9),
+    0 0 0 7px rgb(255 192 120 / 45%),
+    0 12px 18px rgb(0 0 0 / 22%);
 }
 
+/* locked: a faded stone that still shows what is inside, with a padlock badge */
 .locked {
-  color: var(--mantine-color-gray-7);
-  background: var(--mantine-color-gray-1);
-  border-color: var(--mantine-color-gray-4);
-  box-shadow: 0 5px 0 var(--mantine-color-gray-4);
   cursor: default;
+  color: color-mix(in srgb, var(--chapter-color) 45%, var(--klavio-surface));
+  background: color-mix(in srgb, var(--chapter-color) 14%, var(--klavio-surface));
+  box-shadow: 0 7px 0 color-mix(in srgb, var(--chapter-color) 30%, var(--klavio-surface));
+}
+
+.locked::before {
+  background: rgb(255 255 255 / 35%);
+}
+
+.lockBadge {
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--klavio-locked-fg);
+  background: var(--klavio-surface);
+  border: 2px solid var(--klavio-locked-border);
 }
 
 .goal {
-  color: var(--mantine-color-gray-7);
-  background: var(--mantine-color-gray-0);
-  border: 4px dashed var(--mantine-color-gray-5);
-  box-shadow: none;
   cursor: default;
+  color: var(--klavio-locked-fg);
+  background: var(--klavio-locked-bg);
+  border: 4px dashed var(--klavio-locked-border);
+  box-shadow: none;
+}
+
+.goal::before {
+  display: none;
 }
 
 .goalReached {
-  color: #fff;
-  background: var(--mantine-color-yellow-6);
-  border: 4px solid #fff;
+  cursor: default;
+  background: linear-gradient(
+    180deg,
+    var(--mantine-color-yellow-4) 0%,
+    var(--mantine-color-yellow-6) 70%
+  );
   box-shadow:
-    0 5px 0 var(--mantine-color-yellow-9),
-    0 0 0 6px var(--mantine-color-yellow-2);
+    0 7px 0 var(--mantine-color-yellow-9),
+    0 0 0 6px rgb(255 224 102 / 45%),
+    0 10px 14px rgb(0 0 0 / 18%);
 }
 
+/* stars on a little ribbon across the bottom edge of the stone */
 .stars {
   position: absolute;
-  bottom: -10px;
+  bottom: -13px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   gap: 1px;
-  padding: 1px 4px;
+  padding: 2px 6px;
   border-radius: 999px;
-  background: #fff;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 15%);
+  background: var(--klavio-surface);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
 }
 
 .title {
-  margin-top: 14px;
+  margin-top: 18px;
   padding: 1px 8px;
   border-radius: var(--mantine-radius-sm);
-  background: var(--mantine-color-body);
+  background: var(--world-bg);
   font-weight: 700;
   line-height: 1.2;
   text-align: center;
   hyphens: auto;
   overflow-wrap: break-word;
-}
-
-.emblem {
-  position: absolute;
-  pointer-events: none;
 }
 
 .figure {
@@ -179,7 +260,7 @@
     animation: glow 2s ease-in-out infinite;
   }
 
-  .node:not(.locked, .goal):hover {
+  a.node:hover {
     transform: translateY(-2px);
   }
 }
@@ -203,13 +284,317 @@
   0%,
   100% {
     box-shadow:
-      0 5px 0 var(--mantine-color-orange-9),
-      0 0 0 6px var(--mantine-color-orange-2);
+      0 8px 0 var(--mantine-color-orange-9),
+      0 0 0 7px rgb(255 192 120 / 45%),
+      0 12px 18px rgb(0 0 0 / 22%);
   }
 
   50% {
     box-shadow:
-      0 5px 0 var(--mantine-color-orange-9),
-      0 0 0 12px rgb(255 216 168 / 40%);
+      0 8px 0 var(--mantine-color-orange-9),
+      0 0 0 13px rgb(255 192 120 / 25%),
+      0 12px 18px rgb(0 0 0 / 22%);
   }
+}
+
+.travelled {
+  stroke: var(--chapter-road-light);
+}
+
+:global([data-mantine-color-scheme='dark']) .travelled {
+  stroke: var(--chapter-road-dark);
+}
+
+.titleCurrent {
+  box-shadow: inset 0 -3px 0 var(--mantine-color-orange-6);
+}
+
+.sticker {
+  position: absolute;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 15%));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sticker {
+    animation: drift 5s ease-in-out infinite;
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -5px;
+  }
+}
+
+/* ------------------------------------------------------------------ worlds */
+
+.map {
+  position: relative;
+  overflow: clip;
+}
+
+.mapTitle {
+  padding: var(--mantine-spacing-lg) var(--mantine-spacing-lg) var(--mantine-spacing-xs);
+}
+
+.section {
+  --world-bg: color-mix(in srgb, var(--chapter-color) 7%, var(--klavio-surface));
+  --world-hill: color-mix(in srgb, var(--chapter-color) 16%, var(--klavio-surface));
+  --world-hill-2: color-mix(in srgb, var(--chapter-color) 28%, var(--klavio-surface));
+  --world-sky: color-mix(in srgb, var(--chapter-color) 18%, var(--klavio-surface));
+  --world-outline: color-mix(in srgb, var(--chapter-dark) 45%, var(--klavio-surface));
+
+  /* a stronger "sky" at the top of every world, fading into its ground colour */
+  background: linear-gradient(180deg, var(--world-sky) 0, var(--world-bg) 150px);
+}
+
+:global([data-mantine-color-scheme='dark']) .section {
+  --world-bg: color-mix(in srgb, var(--chapter-color) 12%, var(--klavio-surface));
+  --world-hill: color-mix(in srgb, var(--chapter-color) 24%, var(--klavio-surface));
+  --world-hill-2: color-mix(in srgb, var(--chapter-color) 36%, var(--klavio-surface));
+  --world-sky: color-mix(in srgb, var(--chapter-color) 26%, var(--klavio-surface));
+  --world-outline: color-mix(in srgb, var(--chapter-light) 40%, var(--klavio-surface));
+}
+
+.scenery {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.gate {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 18%));
+}
+
+/* a world not reached yet is grey and lies under clouds */
+.foggy {
+  --world-bg: var(--klavio-fog);
+  --world-sky: var(--klavio-fog);
+  --world-hill: color-mix(in srgb, var(--chapter-color) 6%, var(--klavio-locked-border));
+  --world-hill-2: var(--world-hill);
+}
+
+:global([data-mantine-color-scheme='dark']) .foggy {
+  --world-bg: var(--klavio-fog);
+  --world-hill: color-mix(in srgb, var(--chapter-color) 10%, var(--klavio-locked-border));
+  --world-hill-2: var(--world-hill);
+}
+
+.foggy .scenery {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.foggy .landmark {
+  filter: grayscale(1) opacity(0.4);
+}
+
+.foggy .sticker {
+  filter: grayscale(1) opacity(0.45);
+}
+
+.fog {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* the first visit after reaching a world: grey veil and clouds blow away */
+.fogLift {
+  background: var(--klavio-fog);
+}
+
+.cloud {
+  position: absolute;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cloud {
+    animation: drift 7s ease-in-out infinite;
+  }
+
+  .fogLift {
+    animation: fog-lift 2.2s ease-in 0.6s forwards;
+  }
+
+  .fogLift .cloud {
+    animation: cloud-away 2.2s ease-in 0.6s forwards;
+  }
+
+  .fogLift .cloud:nth-child(odd) {
+    animation-name: cloud-away-left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fogLift {
+    display: none;
+  }
+}
+
+@keyframes fog-lift {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes cloud-away {
+  to {
+    translate: 60vw -20px;
+    opacity: 0;
+  }
+}
+
+@keyframes cloud-away-left {
+  to {
+    translate: -60vw -20px;
+    opacity: 0;
+  }
+}
+
+/* Christmas season */
+.snowfall {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: clip;
+  z-index: 2;
+}
+
+.flake {
+  position: absolute;
+  top: -10px;
+  border-radius: 50%;
+  background: var(--klavio-snowflake);
+  opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .flake {
+    animation: snow linear infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flake {
+    display: none;
+  }
+}
+
+@keyframes snow {
+  from {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(12px, calc(var(--fall) / 2));
+  }
+
+  to {
+    transform: translate(-4px, var(--fall));
+  }
+}
+
+/* "Geschafft!" – a gold badge (under the trophy and in the chapter heading) */
+.doneBadge {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 999px;
+  background: var(--mantine-color-yellow-4);
+  box-shadow:
+    0 2px 0 var(--mantine-color-yellow-7),
+    0 3px 6px rgb(0 0 0 / 15%);
+  color: var(--mantine-color-dark-9);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.title.doneBadge {
+  margin-top: 16px;
+}
+
+/* comic outlines on the landscape */
+.scenery path {
+  stroke: var(--world-outline);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.landmark {
+  position: absolute;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 0 rgb(0 0 0 / 12%));
+}
+
+/* due for review: a small badge on the stone and a note in the heading */
+.dueBadge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--mantine-color-lime-8);
+  border: 3px solid var(--klavio-surface);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dueBadge {
+    animation: due-spin 4s ease-in-out infinite;
+  }
+}
+
+@keyframes due-spin {
+  0%,
+  80% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.reviewBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 10px;
+  border-radius: 999px;
+  font-weight: 800;
+  /* dark text on light green: readable in both colour schemes */
+  color: var(--mantine-color-dark-9);
+  background: var(--mantine-color-lime-3);
+}
+
+/* level switch in the map heading and the teaser for the next level */
+.stageSwitch {
+  max-width: 100%;
+  background: color-mix(in srgb, var(--chapter-color) 12%, var(--klavio-surface));
+}
+
+.stageTeaser {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
 }

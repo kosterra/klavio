@@ -13,7 +13,7 @@ import {
 import { inputHub, useNoteEvents } from '../input/noteBus';
 import { runMetronome, type MetronomeRun } from '../audio/metronome';
 import { playNote } from '../audio/synth';
-import { Mascot } from '../components/Mascot';
+import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { Staff, type StaffNote } from '../notation/Staff';
 import type { ExerciseProps } from './exercises';
@@ -202,11 +202,12 @@ export function RhythmExercise({
       data-play-start={playStartAt ?? undefined}
       data-beat-ms={beatMs}
     >
-      <Group gap="md" wrap="nowrap" justify="center">
-        <Mascot
-          mood={perfect ? 'cheer' : phase === 'result' ? 'think' : 'listen'}
-          size={kids ? 80 : 56}
-        />
+      <BuddySays
+        mood={perfect ? 'cheer' : phase === 'result' ? 'think' : 'listen'}
+        size={kids ? 80 : 56}
+        kids={kids}
+        classicRow
+      >
         <Text fz={kids ? 26 : 22} fw={800} aria-live="polite" data-testid="rhythm-status">
           {phase === 'countin'
             ? t('lesson.rhythm.countIn')
@@ -220,7 +221,7 @@ export function RhythmExercise({
                     : t('lesson.rhythm.almost')
                   : t('lesson.rhythm.ready')}
         </Text>
-      </Group>
+      </BuddySays>
 
       <Group gap="sm" aria-hidden>
         {Array.from({ length: beatsPerBar }, (_, i) => (
@@ -240,8 +241,8 @@ export function RhythmExercise({
                   ? phase === 'countin'
                     ? 'var(--mantine-color-orange-6)'
                     : 'var(--mantine-color-indigo-7)'
-                  : 'var(--mantine-color-gray-2)',
-              color: counting && shownBeat === i ? '#fff' : 'var(--mantine-color-dark-6)',
+                  : 'var(--klavio-track)',
+              color: counting && shownBeat === i ? '#fff' : 'var(--mantine-color-text)',
             }}
           >
             {i + 1}

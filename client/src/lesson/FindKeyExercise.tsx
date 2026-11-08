@@ -1,7 +1,7 @@
 import { Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { midiToName, midiToPitchName, type FindKeyExercise as Spec } from '@klavio/shared';
-import { Mascot } from '../components/Mascot';
+import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { matchingKeys, type ExerciseProps } from './exercises';
 import { useRoundTask } from './useRoundTask';
@@ -35,25 +35,27 @@ export function FindKeyExercise({
 
   return (
     <Stack align="center" gap="lg" w="100%">
-      <Mascot
+      <BuddySays
         mood={feedback?.ok ? 'cheer' : feedback ? 'think' : 'listen'}
         size={kids ? 110 : 72}
-      />
-      <div aria-live="polite" aria-atomic style={{ textAlign: 'center' }}>
-        <Text fz={kids ? 36 : 28} fw={800} data-testid="prompt">
-          {t('lesson.findKey', { note: name })}
-        </Text>
-        {!exercise.anyOctave && target === 60 && <Text c="dimmed">{t('lesson.middleC')}</Text>}
-        <Text mih={28} fw={700} c={feedback?.ok ? 'teal.8' : 'orange.9'}>
-          {feedback?.ok
-            ? t('lesson.correct')
-            : feedback
-              ? t('lesson.wrong', { note: midiToName(feedback.midi, lang) })
-              : showHint
-                ? t('lesson.hint')
-                : ' '}
-        </Text>
-      </div>
+        kids={kids}
+      >
+        <div aria-live="polite" aria-atomic style={{ textAlign: 'center' }}>
+          <Text fz={kids ? 36 : 28} fw={800} data-testid="prompt">
+            {t('lesson.findKey', { note: name })}
+          </Text>
+          {!exercise.anyOctave && target === 60 && <Text c="dimmed">{t('lesson.middleC')}</Text>}
+          <Text mih={28} fw={700} c={feedback?.ok ? 'teal.8' : 'orange.9'}>
+            {feedback?.ok
+              ? t('lesson.correct')
+              : feedback
+                ? t('lesson.wrong', { note: midiToName(feedback.midi, lang) })
+                : showHint
+                  ? t('lesson.hint')
+                  : ' '}
+          </Text>
+        </div>
+      </BuddySays>
       <Text size="sm" c="dimmed">
         {t('lesson.round', { n: round + 1, total })}
       </Text>

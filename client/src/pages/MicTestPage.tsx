@@ -65,7 +65,7 @@ export function MicTestPage() {
         {running ? (
           <Button
             size="lg"
-            color="red.9"
+            color="var(--klavio-danger)"
             variant="outline"
             leftSection={<IconPlayerStop />}
             onClick={() => void pitch.stop()}

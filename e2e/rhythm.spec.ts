@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { LESSONS } from '@klavio/shared';
-import { seedCompletedLessons, signUpWithEmail, uniqueEmail } from './helpers';
+import { seedCompletedLessons, signUpWithEmail, uniqueEmail, startLesson } from './helpers';
 import { audit } from './audit';
 
 /**
@@ -45,7 +45,7 @@ test('rhythm: count-in, play in time, retry counts as practice', async ({ page }
     LESSONS.slice(0, idx).map((l) => l.id),
   );
   await page.goto('/lesson/rhythm-quarters');
-  await page.getByRole('button', { name: 'Los geht’s!' }).click();
+  await startLesson(page);
   await expect(page.getByRole('img', { name: 'Rhythmus 1 von 5' }).locator('svg')).toBeVisible();
   await audit(page);
 

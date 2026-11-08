@@ -36,7 +36,13 @@ describe('curriculum data', () => {
               ? e.bars.flat().map((n) => n.midi)
               : e.type === 'rhythm'
                 ? [e.midi]
-                : e.notes;
+                : e.type === 'piece'
+                  ? e.bars
+                      .flatMap((b) => [...b.rh, ...b.lh])
+                      .flatMap((n) => (n.midi === null ? [] : [n.midi]))
+                  : e.type === 'improvise'
+                    ? []
+                    : e.notes;
         for (const n of notes) {
           if (e.type === 'find-key' && e.anyOctave) {
             // some octave of the pitch class must be visible
@@ -101,7 +107,14 @@ describe('song notation', () => {
 });
 
 describe('badges', () => {
-  const none = { lessons: {}, streak: 0, todaySeconds: 0, dailyGoalMinutes: 10 };
+  const none = {
+    lessons: {},
+    streak: 0,
+    todaySeconds: 0,
+    dailyGoalMinutes: 10,
+    reviews: 0,
+    longTerm: 0,
+  };
 
   it('has unique ids and translated texts', async () => {
     const { BADGES } = await import('./badges.ts');
@@ -126,6 +139,21 @@ describe('badges', () => {
       'streak-3',
       'streak-7',
       'daily-goal',
+    ]);
+    expect(newlyEarnedBadges({ ...none, reviews: 10 }, new Set())).toEqual([
+      'review-first',
+      'memory-pro',
+    ]);
+    expect(newlyEarnedBadges({ ...none, reviews: 50 }, new Set())).toEqual([
+      'review-first',
+      'memory-pro',
+      'review-25',
+      'review-50',
+    ]);
+    expect(newlyEarnedBadges({ ...none, longTerm: 1 }, new Set())).toEqual(['long-term']);
+    expect(newlyEarnedBadges({ ...none, longTerm: 10 }, new Set())).toEqual([
+      'long-term',
+      'long-term-10',
     ]);
   });
 });

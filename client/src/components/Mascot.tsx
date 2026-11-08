@@ -7,20 +7,22 @@ interface Props {
   size?: number;
   /** When omitted the mascot is decorative and hidden from screen readers. */
   label?: string;
+  /** No motion (small avatars in lists and menus). */
+  still?: boolean;
 }
 
 /**
  * "Klavi" — the app's own mascot: a round note-head with a stem-antenna.
  * Original artwork, pure SVG, no third-party IP.
  */
-export function Mascot({ mood = 'happy', size = 120, label }: Props) {
+export function Mascot({ mood = 'happy', size = 120, label, still = false }: Props) {
   const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': true };
   return (
     <svg
       viewBox="0 0 120 140"
       width={size}
       height={(size * 140) / 120}
-      className={mood === 'cheer' ? classes.bounce : classes.idle}
+      className={still ? classes.still : mood === 'cheer' ? classes.bounce : classes.idle}
       {...a11y}
     >
       {/* stem + flag */}
@@ -51,7 +53,7 @@ export function Mascot({ mood = 'happy', size = 120, label }: Props) {
           />
         </>
       ) : (
-        <>
+        <g className={`${classes.part} ${classes.blink}`}>
           <circle cx="42" cy="90" r="9" fill="#fff" />
           <circle cx="74" cy="90" r="9" fill="#fff" />
           <circle
@@ -66,7 +68,7 @@ export function Mascot({ mood = 'happy', size = 120, label }: Props) {
             r="4.5"
             fill="#1c2559"
           />
-        </>
+        </g>
       )}
       {/* mouth */}
       {mood === 'think' ? (

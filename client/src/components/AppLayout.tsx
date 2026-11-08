@@ -1,10 +1,25 @@
-import { ActionIcon, AppShell, Badge, Group, Menu, Text, UnstyledButton } from '@mantine/core';
 import {
+  ActionIcon,
+  AppShell,
+  Badge,
+  Group,
+  Menu,
+  Text,
+  UnstyledButton,
+  useMantineColorScheme,
+} from '@mantine/core';
+import {
+  IconCheck,
   IconCloudOff,
+  IconDeviceDesktop,
+  IconMoon,
+  IconSun,
   IconLogout,
   IconPiano,
   IconSettings,
   IconShield,
+  IconUserCircle,
+  IconBulb,
   IconUsers,
 } from '@tabler/icons-react';
 import { Link, Outlet, useNavigate } from 'react-router';
@@ -17,6 +32,7 @@ import { PrivacyBadge } from './PrivacyNote';
 export function AppLayout() {
   const { t } = useTranslation();
   const { me, activeProfile, logout, offline } = useSession();
+  const { colorScheme, setColorScheme } = useMantineColorScheme();
   const navigate = useNavigate();
 
   return (
@@ -65,6 +81,22 @@ export function AppLayout() {
                 </Menu.Item>
                 {activeProfile && (
                   <Menu.Item
+                    leftSection={<IconUserCircle size={18} />}
+                    onClick={() => navigate('/profile')}
+                  >
+                    {t('nav.profile')}
+                  </Menu.Item>
+                )}
+                {activeProfile && (
+                  <Menu.Item
+                    leftSection={<IconBulb size={18} />}
+                    onClick={() => navigate('/knowledge')}
+                  >
+                    {t('nav.knowledge')}
+                  </Menu.Item>
+                )}
+                {activeProfile && (
+                  <Menu.Item
                     leftSection={<IconPiano size={18} />}
                     onClick={() => navigate('/input')}
                   >
@@ -86,8 +118,31 @@ export function AppLayout() {
                   </Menu.Item>
                 )}
                 <Menu.Divider />
+                <Menu.Label>{t('nav.colorScheme')}</Menu.Label>
+                {(['auto', 'light', 'dark'] as const).map((scheme) => (
+                  <Menu.Item
+                    key={scheme}
+                    closeMenuOnClick={false}
+                    leftSection={
+                      scheme === 'auto' ? (
+                        <IconDeviceDesktop size={18} />
+                      ) : scheme === 'light' ? (
+                        <IconSun size={18} />
+                      ) : (
+                        <IconMoon size={18} />
+                      )
+                    }
+                    rightSection={colorScheme === scheme ? <IconCheck size={16} /> : null}
+                    aria-checked={colorScheme === scheme}
+                    role="menuitemradio"
+                    onClick={() => setColorScheme(scheme)}
+                  >
+                    {t(`nav.scheme.${scheme}`)}
+                  </Menu.Item>
+                ))}
+                <Menu.Divider />
                 <Menu.Item
-                  color="red.9"
+                  color="var(--klavio-danger)"
                   leftSection={<IconLogout size={18} />}
                   onClick={async () => {
                     await logout();

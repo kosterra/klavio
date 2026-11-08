@@ -163,7 +163,7 @@ export function InputPage() {
               {mic.status === 'running' ? (
                 <Button
                   variant="outline"
-                  color="red.9"
+                  color="var(--klavio-danger)"
                   leftSection={<IconPlayerStop />}
                   onClick={() => void mic.stop()}
                 >

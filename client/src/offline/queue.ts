@@ -5,6 +5,7 @@ import {
   starsFor,
   type LessonCompleteInput,
   type ProgressDto,
+  applyCompletion,
 } from '@klavio/shared';
 import { KEYS, readJson, writeJson } from './storage';
 
@@ -48,11 +49,7 @@ export function withQueuedResults(
     const lesson = findLesson(q.lessonId);
     if (!lesson) continue;
     const stars = starsFor(lessonTargetCount(lesson), q.mistakes);
-    const prev = lessons[q.lessonId];
-    lessons[q.lessonId] = {
-      bestStars: Math.max(prev?.bestStars ?? 0, stars),
-      completions: (prev?.completions ?? 0) + 1,
-    };
+    lessons[q.lessonId] = applyCompletion(lessons[q.lessonId], stars, q.localDate).next;
     if (q.localDate === progress.today.date) seconds += q.durationSec;
   }
   return { ...progress, lessons, today: { ...progress.today, seconds } };

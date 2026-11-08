@@ -3,7 +3,8 @@ import type { UiMode } from '@klavio/shared';
 
 /**
  * Two looks, same content:
- *  - kids:    warm, rounder, more colour, mascot everywhere
+ *  - kids:    warm, more colour, mascot everywhere (round cards, but buttons and
+ *             inputs with the same moderate radius as in classic)
  *  - classic: calm, neutral, mascot only for feedback
  * Both use large sizes by default: the device sits on the piano's music
  * stand ~50 cm away and is operated with a single finger.
@@ -15,6 +16,7 @@ const shared: MantineThemeOverride = {
   components: {
     Button: { defaultProps: { size: 'lg' } },
     TextInput: { defaultProps: { size: 'lg' } },
+    Autocomplete: { defaultProps: { size: 'lg' } },
     PinInput: { defaultProps: { size: 'lg' } },
     ActionIcon: { defaultProps: { size: 'xl' } },
     Switch: { defaultProps: { size: 'lg' } },
@@ -25,7 +27,7 @@ const kids = createTheme({
   ...shared,
   primaryColor: 'indigo',
   primaryShade: 7, // white text on indigo-7 ≈ 5:1 (WCAG AA)
-  defaultRadius: 'xl',
+  defaultRadius: 'md',
   other: { mascotPresence: 'high' },
 });
 

@@ -19,7 +19,7 @@ export function CentsMeter({ cents, tolerance }: { cents: number | null; toleran
         h={28}
         style={{
           borderRadius: 14,
-          background: 'var(--mantine-color-gray-2)',
+          background: 'var(--klavio-track)',
           overflow: 'hidden',
         }}
       >
@@ -88,7 +88,7 @@ export function LevelMeter({ levelDb, gateDb }: { levelDb: number; gateDb: numbe
         h={20}
         style={{
           borderRadius: 10,
-          background: 'var(--mantine-color-gray-2)',
+          background: 'var(--klavio-track)',
           overflow: 'hidden',
         }}
       >

@@ -10,12 +10,14 @@ import {
   Stack,
   Text,
   Title,
+  VisuallyHidden,
 } from '@mantine/core';
 import { IconDeviceDesktop, IconMicrophone, IconPiano } from '@tabler/icons-react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import {
   LESSONS,
+  applyCompletion,
   chapterOf,
   findLesson,
   isLessonUnlocked,
@@ -24,6 +26,9 @@ import {
   localIsoDate,
   nextStreak,
   starsFor,
+  newlyReachedGoalSkills,
+  recapFor,
+  theoryFor,
   xpFor,
   type Lesson,
   type LessonResultDto,
@@ -36,17 +41,24 @@ import { endpoints } from '../api/endpoints';
 import { useSession } from '../auth/session';
 import { useErrorText } from '../auth/useErrorText';
 import { useMicErrorText } from '../audio/micErrorText';
-import { Mascot } from '../components/Mascot';
+import { Buddy } from '../components/Buddy';
 import { PrivacyBadge } from '../components/PrivacyNote';
 import { FindKeyExercise } from '../lesson/FindKeyExercise';
 import { PlayAlongExercise } from '../lesson/PlayAlongExercise';
 import { ReadNoteExercise } from '../lesson/ReadNoteExercise';
 import { SongExercise } from '../lesson/SongExercise';
 import { RhythmExercise } from '../lesson/RhythmExercise';
+import { PieceExercise } from '../lesson/PieceExercise';
+import { ImproviseExercise } from '../lesson/ImproviseExercise';
 import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
 import { useLocalized } from '../lesson/useLocalized';
 import { loadProgress, useProgress } from '../lesson/useProgress';
+import { TheorySteps } from '../lesson/theory/TheorySteps';
+import { GoalMilestone } from '../goal/GoalMilestone';
+import { Scenery } from '../lesson/WorldScenery';
+import { worldOfLesson } from '../lesson/worlds';
+import stage from '../lesson/LessonStage.module.css';
 
 type ShownResult = LessonResultDto & { pending?: boolean };
 
@@ -62,7 +74,8 @@ function localResult(
 ): ShownResult {
   const stars = starsFor(lessonTargetCount(lesson), body.mistakes);
   const previousBest = before.lessons[lesson.id]?.bestStars ?? 0;
-  const xpGained = xpFor(lesson.xp, stars, previousBest);
+  const { wasDue, bonusXp } = applyCompletion(before.lessons[lesson.id], stars, body.localDate);
+  const xpGained = xpFor(lesson.xp, stars, previousBest) + bonusXp;
   const xp = profile.xp + xpGained;
   const level = levelForXp(xp);
   return {
@@ -79,6 +92,7 @@ function localResult(
       seconds: before.today.seconds + body.durationSec,
       xp: before.today.xp + xpGained,
     },
+    review: wasDue,
     newBadges: [],
     pending: true,
   };
@@ -103,12 +117,26 @@ function LessonGate({ lessonId }: { lessonId: string }) {
     <LessonRun
       key={`${lesson.id}-${attempt}`}
       lesson={lesson}
+      // the theory part comes first only until the lesson has been played once
+      discoverFirst={attempt === 0 && !completed.has(lesson.id)}
+      completedBefore={completed}
       onAgain={() => setAttempt((a) => a + 1)}
     />
   );
 }
 
-function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void }) {
+function LessonRun({
+  lesson,
+  discoverFirst,
+  completedBefore,
+  onAgain,
+}: {
+  lesson: Lesson;
+  discoverFirst: boolean;
+  /** lessons completed before this run (for the goal-song milestone) */
+  completedBefore: Set<string>;
+  onAgain: () => void;
+}) {
   const { t } = useTranslation();
   const loc = useLocalized();
   const navigate = useNavigate();
@@ -117,7 +145,14 @@ function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void })
   const { me, activeProfile, refresh, applyLocalResult } = useSession();
   const input = useLessonInput();
   const kids = activeProfile?.uiMode !== 'classic';
-  const [phase, setPhase] = useState<'intro' | 'play' | 'result'>('intro');
+  const theory = theoryFor(lesson.id);
+  // first visit: "Weisst du's noch?" (start of a chapter) + the lesson's theory
+  const [steps, setSteps] = useState(() =>
+    discoverFirst ? [...recapFor(lesson.id), ...theory] : theory,
+  );
+  const [phase, setPhase] = useState<'theory' | 'intro' | 'play' | 'result'>(
+    discoverFirst && steps.length ? 'theory' : 'intro',
+  );
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
   const mistakes = useRef(0);
@@ -127,6 +162,7 @@ function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void })
   const [saveError, setSaveError] = useState<string | null>(null);
   const total = lessonTargetCount(lesson);
   const chapter = chapterOf(lesson.id);
+  const where = worldOfLesson(lesson.id);
   const next = LESSONS[LESSONS.findIndex((l) => l.id === lesson.id) + 1] ?? null;
   const { stopMicrophone } = input;
 
@@ -195,93 +231,141 @@ function LessonRun({ lesson, onAgain }: { lesson: Lesson; onAgain: () => void })
   };
 
   return (
-    <Box mih="100dvh" p="md" maw={1100} mx="auto">
-      <Stack gap="md">
-        {/* ------------------------------------------------------ top bar */}
-        <Group justify="space-between" wrap="nowrap" gap="sm">
-          <CloseButton size="xl" aria-label={t('lesson.close')} onClick={() => navigate('/')} />
-          <Progress
-            value={phase === 'result' ? 100 : (correct / total) * 100}
-            size="xl"
-            radius="xl"
-            style={{ flex: 1 }}
-            aria-label={t('lesson.progress')}
-            color="teal"
-          />
-          {phase === 'play' ? <InputSwitch input={input} /> : <PrivacyBadge />}
-        </Group>
+    <div
+      className={kids ? stage.stage : undefined}
+      style={kids ? where.vars : undefined}
+      data-world={kids ? where.world.id : undefined}
+    >
+      {kids && (
+        <div className={stage.scenery} aria-hidden>
+          <Scenery world={where.world.id} chapterId="lesson" height={40} />
+        </div>
+      )}
+      <Box mih="100dvh" p="md" maw={1100} mx="auto" pos="relative">
+        <Stack gap="md">
+          {/* ------------------------------------------------------ top bar */}
+          <Group justify="space-between" wrap="nowrap" gap="sm">
+            <CloseButton size="xl" aria-label={t('lesson.close')} onClick={() => navigate('/')} />
+            <Progress
+              value={phase === 'result' ? 100 : (correct / total) * 100}
+              size="xl"
+              radius="xl"
+              style={{ flex: 1 }}
+              aria-label={t('lesson.progress')}
+              color={kids ? where.color : 'teal'}
+              striped={kids}
+              animated={kids && phase === 'play'}
+              bg={kids ? 'var(--klavio-surface)' : undefined}
+            />
+            {phase === 'play' ? <InputSwitch input={input} /> : <PrivacyBadge />}
+          </Group>
 
-        {input.micError && phase === 'play' && (
-          <Alert color="orange">
-            {micErrorText(input.micError)} {t('lesson.useScreen')}
-          </Alert>
-        )}
+          {input.micError && phase === 'play' && (
+            <Alert color="orange">
+              {micErrorText(input.micError)} {t('lesson.useScreen')}
+            </Alert>
+          )}
 
-        {/* -------------------------------------------------------- intro */}
-        {phase === 'intro' && (
-          <Card withBorder radius="xl" padding="xl" maw={640} mx="auto" w="100%">
-            <Stack align="center" gap="md">
-              <Mascot mood="happy" size={kids ? 120 : 80} />
-              {chapter && (
-                <Text size="sm" fw={700} c="indigo.8" tt="uppercase">
-                  {loc(chapter.title)}
+          {/* ------------------------------------------- theory ("Entdecken") */}
+          {phase === 'theory' && (
+            <TheorySteps steps={steps} kids={kids} onDone={() => setPhase('intro')} />
+          )}
+
+          {/* -------------------------------------------------------- intro */}
+          {phase === 'intro' && (
+            <Card withBorder radius="xl" padding="xl" maw={640} mx="auto" w="100%">
+              <Stack align="center" gap="md">
+                <Buddy mood="happy" size={kids ? 120 : 80} />
+                {chapter && (
+                  <Text size="sm" fw={700} c="indigo.8" tt="uppercase">
+                    {loc(chapter.title)}
+                  </Text>
+                )}
+                <Title order={1} ta="center">
+                  {loc(lesson.title)}
+                </Title>
+                <Text fz="lg" ta="center">
+                  {loc(lesson.intro)}
                 </Text>
-              )}
-              <Title order={1} ta="center">
-                {loc(lesson.title)}
-              </Title>
-              <Text fz="lg" ta="center">
-                {loc(lesson.intro)}
-              </Text>
-              <InputInfo
-                mode={input.mode}
-                midiDevice={input.midiDevice}
-                micSupported={input.micSupported}
-              />
-              <Button
-                size="xl"
-                mt="sm"
-                onClick={() => {
-                  input.startPreferred();
-                  startedAt.current = performance.now();
-                  setPhase('play');
-                }}
-              >
-                {t('lesson.start')}
-              </Button>
-            </Stack>
-          </Card>
-        )}
+                <InputInfo
+                  mode={input.mode}
+                  midiDevice={input.midiDevice}
+                  micSupported={input.micSupported}
+                />
+                {theory.length > 0 && (
+                  <Button
+                    variant="subtle"
+                    onClick={() => {
+                      setSteps(theory);
+                      setPhase('theory');
+                    }}
+                    data-testid="theory-again"
+                  >
+                    {t('theory.again')}
+                  </Button>
+                )}
+                <Button
+                  size="xl"
+                  mt="sm"
+                  onClick={() => {
+                    input.startPreferred();
+                    startedAt.current = performance.now();
+                    setPhase('play');
+                  }}
+                >
+                  {t('lesson.start')}
+                </Button>
+              </Stack>
+            </Card>
+          )}
 
-        {/* --------------------------------------------------------- play */}
-        {phase === 'play' &&
-          (exercise.type === 'find-key' ? (
-            <FindKeyExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
-          ) : exercise.type === 'read-note' ? (
-            <ReadNoteExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
-          ) : exercise.type === 'song' ? (
-            <SongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
-          ) : exercise.type === 'rhythm' ? (
-            <RhythmExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
-          ) : (
-            <PlayAlongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
-          ))}
+          {/* --------------------------------------------------------- play */}
+          {phase === 'play' &&
+            (exercise.type === 'find-key' ? (
+              <FindKeyExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'read-note' ? (
+              <ReadNoteExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'song' ? (
+              <SongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'piece' ? (
+              <PieceExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'improvise' ? (
+              <ImproviseExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'rhythm' ? (
+              <RhythmExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : (
+              <PlayAlongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ))}
 
-        {/* ------------------------------------------------------- result */}
-        {phase === 'result' && (
-          <LessonSummary
-            result={result}
-            saving={saving}
-            error={saveError}
-            dailyGoalMinutes={activeProfile?.dailyGoalMinutes ?? 10}
-            onRetrySave={() => void save()}
-            onAgain={onAgain}
-            onNext={next ? () => navigate(`/lesson/${next.id}`) : null}
-            onPath={() => navigate('/')}
-          />
-        )}
-      </Stack>
-    </Box>
+          {/* ------------------------------------------------------- result */}
+          {phase === 'result' && (
+            <LessonSummary
+              result={result}
+              saving={saving}
+              error={saveError}
+              dailyGoalMinutes={activeProfile?.dailyGoalMinutes ?? 10}
+              onRetrySave={() => void save()}
+              onAgain={onAgain}
+              onNext={next ? () => navigate(`/lesson/${next.id}`) : null}
+              onPath={() => navigate('/')}
+              extra={
+                activeProfile?.goalSong && result && result.stars > 0 ? (
+                  <GoalMilestone
+                    goal={activeProfile.goalSong}
+                    reached={newlyReachedGoalSkills(
+                      activeProfile.goalSong.skills,
+                      completedBefore,
+                      lesson.id,
+                    )}
+                    completed={new Set(completedBefore).add(lesson.id)}
+                  />
+                ) : null
+              }
+            />
+          )}
+        </Stack>
+      </Box>
+    </div>
   );
 }
 
@@ -334,7 +418,7 @@ function InputSwitch({ input }: { input: ReturnType<typeof useLessonInput> }) {
         tabIndex={-1}
         component="span"
       >
-        MIDI
+        <ShortLabel label="MIDI" />
       </Button>
     );
   }
@@ -347,7 +431,7 @@ function InputSwitch({ input }: { input: ReturnType<typeof useLessonInput> }) {
         onClick={input.stopMicrophone}
         title={t('lesson.switchToScreen')}
       >
-        {t('lesson.micOn')}
+        <ShortLabel label={t('lesson.micOn')} />
       </Button>
     );
   }
@@ -358,7 +442,7 @@ function InputSwitch({ input }: { input: ReturnType<typeof useLessonInput> }) {
       loading={input.micStatus === 'starting'}
       onClick={input.startMicrophone}
     >
-      {t('lesson.useMic')}
+      <ShortLabel label={t('lesson.useMic')} />
     </Button>
   ) : (
     <Button
@@ -367,7 +451,19 @@ function InputSwitch({ input }: { input: ReturnType<typeof useLessonInput> }) {
       leftSection={<IconDeviceDesktop size={18} />}
       component="span"
     >
-      {t('input.source.keyboard')}
+      <ShortLabel label={t('input.source.keyboard')} />
     </Button>
+  );
+}
+
+/** Button text that collapses to the icon on phones (the name stays for screen readers). */
+function ShortLabel({ label }: { label: string }) {
+  return (
+    <>
+      <Box component="span" visibleFrom="xs">
+        {label}
+      </Box>
+      <VisuallyHidden hiddenFrom="xs">{label}</VisuallyHidden>
+    </>
   );
 }

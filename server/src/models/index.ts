@@ -85,6 +85,14 @@ const profileSchema = new Schema(
       lastActiveDate: { type: String, default: null }, // YYYY-MM-DD in the learner's local time
     },
     badges: { type: [{ id: String, earnedAt: Date, _id: false }], default: [] },
+    // the learner's goal song: only its title, a style and the skills it needs
+    goalSong: {
+      type: new Schema(
+        { title: String, style: String, skills: { type: [String], default: [] } },
+        { _id: false },
+      ),
+      default: null,
+    },
   },
   { timestamps: true },
 );
@@ -101,6 +109,11 @@ const lessonProgressSchema = new Schema(
     bestStars: { type: Number, required: true },
     completions: { type: Number, default: 0 },
     lastCompletedAt: { type: Date, default: null },
+    // repetition (see shared/curriculum/review.ts): local date of the last
+    // completion, step in the schedule, reviews done while due
+    lastLocalDate: { type: String, default: null },
+    reviewBox: { type: Number, default: 0 },
+    reviews: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

@@ -103,7 +103,8 @@ export function playMelody(
     timers.push(
       setTimeout(() => {
         onNote?.(i);
-        voices[i] = playNote(n.midi, 0.7);
+        // a negative pitch is a rest: keep the time, play nothing
+        voices[i] = n.midi >= 0 ? playNote(n.midi, 0.7) : null;
       }, start),
       setTimeout(() => voices[i]?.release(), start + length * 0.9),
     );

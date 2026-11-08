@@ -3,7 +3,7 @@ import { audit } from './audit';
 import { addVirtualAuthenticator, signUpWithEmail, uniqueEmail } from './helpers';
 
 test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ page, context }) => {
-  test.setTimeout(120_000); // many axe audits; slow on the on-demand dev server
+  test.setTimeout(240_000); // eleven axe audits; slow on the on-demand dev server
   await addVirtualAuthenticator(context, page);
 
   await page.goto('/welcome');
@@ -41,5 +41,21 @@ test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ p
   await audit(page);
   await page.goto('/account');
   await page.getByRole('heading', { name: 'Passkeys' }).waitFor();
+  await audit(page);
+
+  // Dark colour scheme (follows the device by default): Classic …
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('/');
+  await page.getByRole('heading', { name: 'Lernpfad' }).waitFor();
+  await audit(page);
+  await page.goto('/profile');
+  await page.getByRole('heading', { name: 'Mein Profil' }).waitFor();
+  await audit(page);
+  // … and Kids
+  await page.goto('/profiles');
+  await page.getByRole('button', { name: 'Kim' }).click();
+  await page.getByRole('heading', { name: 'Hallo Kim!' }).waitFor();
+  await audit(page);
+  await page.goto('/profiles');
   await audit(page);
 });

@@ -1,9 +1,20 @@
-.idle {
-  animation: float 4s ease-in-out infinite;
+.part {
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
-.bounce {
-  animation: bounce 0.8s ease-in-out infinite;
+@media (prefers-reduced-motion: no-preference) {
+  .idle {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .bounce {
+    animation: bounce 0.8s ease-in-out infinite;
+  }
+
+  .blink {
+    animation: blink 6s 0.9s infinite;
+  }
 }
 
 @keyframes float {
@@ -16,4 +27,20 @@
   50% {
     transform: translateY(-10px) scale(1.03);
   }
+}
+
+@keyframes blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+.still * {
+  animation: none !important;
 }

@@ -21,7 +21,7 @@ test('account name and parent PIN protect the parent area', async ({ page }) => 
   await expect(page.getByTestId('account-name')).toHaveText('Familie Muster');
   await page.getByRole('button', { name: 'Name ändern' }).click();
   await page.getByLabel('Name des Kontos').fill('Familie Huber');
-  await page.getByRole('button', { name: 'Speichern' }).click();
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
   await expect(page.getByTestId('account-name')).toHaveText('Familie Huber');
 
   await page.getByRole('button', { name: 'PIN festlegen' }).click();
@@ -32,7 +32,7 @@ test('account name and parent PIN protect the parent area', async ({ page }) => 
   await typePin(page, pinCard, '2468');
   await page.getByRole('button', { name: 'Weiter' }).click();
   await typePin(page, pinCard, '2468');
-  await page.getByRole('button', { name: 'Speichern' }).click();
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
   await expect(page.getByText('Die Eltern-PIN ist eingerichtet.')).toBeVisible();
   await audit(page);
 
@@ -59,4 +59,24 @@ test('account name and parent PIN protect the parent area', async ({ page }) => 
   await expect(dialog).toBeVisible();
   await typePin(page, dialog, '2468');
   await expect(page.getByRole('dialog', { name: 'Neues Profil' })).toBeVisible();
+
+  // --- the child may pick a new figure in "Mein Profil" while the parent area is locked
+  await page
+    .getByRole('dialog', { name: 'Neues Profil' })
+    .getByRole('button', { name: 'Abbrechen' })
+    .click();
+  await page.getByRole('button', { name: 'Lina' }).click();
+  await page.getByRole('button', { name: 'Menü' }).click();
+  await page.getByRole('menuitem', { name: 'Mein Profil' }).click();
+  await expect(page.getByText('Deine Figur kannst du selbst wählen.')).toBeVisible();
+  await expect(page.getByLabel('Name')).toBeDisabled();
+  await page.getByRole('radio', { name: 'Quaki, der Frosch' }).click();
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click();
+  await expect(page.getByText('Profil gespeichert.')).toBeVisible();
+  await expect(page.getByRole('radio', { name: 'Quaki, der Frosch' })).toHaveAttribute(
+    'aria-checked',
+    'true',
+  );
+  await expect(page.getByRole('button', { name: 'Profil löschen' })).toHaveCount(0);
+  await audit(page);
 });

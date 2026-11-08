@@ -266,6 +266,7 @@ export function AccountPage() {
               <Text size="sm">{t('email.codeSent')}</Text>
               <Group wrap="nowrap">
                 <PinInput
+                  size="lg"
                   length={6}
                   type="number"
                   oneTimeCode
@@ -314,7 +315,7 @@ export function AccountPage() {
           <Text size="sm" c="dimmed">
             {t('account.userId')}: <Code>{me.user.id}</Code>
           </Text>
-          <Button color="red.9" variant="outline" onClick={deleteModal.open}>
+          <Button color="var(--klavio-danger)" variant="outline" onClick={deleteModal.open}>
             {t('account.deleteAccount')}
           </Button>
         </Stack>
@@ -364,7 +365,7 @@ export function AccountPage() {
               {t('common.cancel')}
             </Button>
             <Button
-              color="red"
+              color="red.9"
               loading={busy === 'delete'}
               onClick={() =>
                 run('delete', async () => {

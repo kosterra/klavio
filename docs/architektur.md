@@ -191,9 +191,52 @@ sequenceDiagram
   L->>K: Zusammenfassung
 ```
 
+**Entdecken:** Vor dem ersten Spielen einer Lektion zeigt `lesson/theory/TheorySteps.tsx` die
+Theorie aus `shared/src/curriculum/theory.ts` (`theoryFor`): Erklärungen mit Bildern, Tipp-Spiele auf der
+Bildschirm-Klaviatur, Quiz, Hörspiele und ein Klatschspiel mit Metronom. Bilder werden aus Daten
+gezeichnet (`TheoryPicture`: Klaviatur mit Markierungen, Gruppen und Fingersatz, Hand, Notenlinien,
+Notenwerte als Pizza) – keine Bilddateien. Nichts davon wird bewertet. Die erste Lektion jedes
+Kapitels beginnt mit «Weisst du's noch?» (`recapFor`: Quizfragen aus dem vorherigen Kapitel). Die
+Seite «Wissen» (`/knowledge`) zeigt die Erklärungen aller erreichten Lektionen.
+
+**Stufen, Fähigkeiten und Traumlied:** Kapitel gehören zu Stufen mit je eigener Karte im
+Lernpfad. Lektionen lehren Fähigkeiten (`shared/src/curriculum/skills.ts`); das Traumlied eines
+Profils (Titel, Art, gewünschte Fähigkeiten – keine Noten) wird daraus fortlaufend bewertet
+(`goalProgress`), Meilensteine meldet die Ergebnisseite (`newlyReachedGoalSkills`).
+
+**Beide Hände:** `notation/GrandStaff.tsx` zeichnet das grosse Notensystem (VexFlow, Klammer,
+ausgerichtete Stimmen). `PieceExercise` wartet Schritt für Schritt (`pieceSteps`) auf die Töne beider
+Hände; mit dem Mikrofon genügt die Melodie. `ImproviseExercise` spielt eine Begleitung (mit dem
+Mikrofon nur Klicks, damit es die Begleitung nicht als Töne hört) und zählt Töne auf schwarzen
+Tasten.
+
+**Wiederholen:** `shared/src/curriculum/review.ts` legt fest, wann eine gespielte Lektion wieder
+fällig ist (nach 1, 3, 7, 14, dann 30 Tagen; Stufe `box`). Eine gute Wiederholung (2–3 Sterne) einer
+fälligen Lektion rückt eine Stufe weiter und gibt `REVIEW_BONUS_XP`, ein schwaches Ergebnis eine
+Stufe zurück. Server (`routes/progress.ts`) und Gerät (Offline-Warteschlange, lokales Ergebnis)
+rechnen mit derselben Funktion `applyCompletion`. Gespeichert werden nur der lokale Tag des letzten
+Abschlusses, die Stufe und die Anzahl Wiederholungen. Die Startseite zeigt höchstens drei fällige
+Lektionen (`reviewQueue`), der Lernpfad markiert sie; `/quick` mischt Quizfragen und Spiele aus
+allen gespielten Lektionen (nicht bewertet).
+
 Übungstypen (`client/src/lesson/`): `FindKeyExercise`, `PlayAlongExercise`, `ReadNoteExercise`,
 `SongExercise`, `RhythmExercise`. Rundenbasierte Übungen teilen sich `useRoundTask`. Notation zeichnet
 `notation/Staff.tsx` mit VexFlow; die Bibliothek wird erst geladen, wenn Noten gebraucht werden.
+
+## Startseite und Easter Eggs
+
+`/welcome` ist die öffentliche Startseite (`pages/WelcomePage.tsx`): Kopfbereich mit Anmeldekarte
+(`landing/LoginCard.tsx`), «So funktioniert's», Funktionen, alle Welten, eine Klaviatur zum
+Ausprobieren, Datenschutz und Fragen. Versteckt (`landing/easterEggs.ts`, getestet in
+`e2e/landing.spec.ts`):
+
+- Konami-Code (↑↑↓↓←→←→BA) auf der Startseite: Notenregen; auf «Mein Profil»: Disco-Modus der Figur.
+- Klavi in der Anmeldekarte fünfmal antippen: «Für Elise».
+- Den Anfang von «Alle meine Entchen» auf der Probier-Klaviatur spielen: eine Entenparade.
+- Die eigene Figur auf «Mein Profil» fünfmal antippen: Sie dreht sich und spielt ihr eigenes Lied
+  (`landing/figureTunes.ts`).
+
+Bewegte Effekte entfallen bei «Bewegung reduzieren»; die Meldung erscheint trotzdem.
 
 ## Offline
 
@@ -221,6 +264,12 @@ flowchart TB
 
 - Mantine 9 mit CSS Modules; zwei Themes pro Profil: **Kids** (grosse Schrift, runde Formen,
   Maskottchen gross) und **Classic** (ruhiger, kompakter). Gleiche Inhalte.
+- **Farbschema** hell, dunkel oder automatisch (pro Gerät gespeichert, Menü). Eigene Farben stehen als
+  Variablen mit hellem und dunklem Wert in `client/src/theme/global.css` (`--klavio-…`); neue
+  Komponenten bitte darüber statt mit festen Farben. VexFlow zeichnet die Noten in der passenden Tinte.
+- **Figuren** (`components/Figure.tsx`): alle Profilfiguren mit Stimmungen (happy, cheer, think, listen)
+  und Bewegung; `Buddy` zeigt die Figur des aktiven Profils als Begleiter, `ProfileAvatar` dieselbe
+  Figur im runden Rahmen.
 - Sprachen: de-CH (Schweizer Schreibweise, kein ß – ein Test prüft das) und en. Lehrplantexte stehen
   im Lehrplan selbst, UI-Texte in `client/src/i18n/`.
 - Barrierefreiheit: axe-core prüft die Hauptseiten in beiden Themes auf WCAG 2.1 AA (E2E). Klaviatur,

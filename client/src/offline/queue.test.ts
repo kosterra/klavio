@@ -4,7 +4,9 @@ import { LESSONS } from '@klavio/shared';
 import { isTooOld, withQueuedResults, type QueuedResult } from './queue';
 
 const base = {
-  lessons: { [LESSONS[0]!.id]: { bestStars: 1, completions: 1 } },
+  lessons: {
+    [LESSONS[0]!.id]: { bestStars: 1, completions: 1, lastDate: '2026-11-05', box: 0, reviews: 0 },
+  },
   today: { date: '2026-11-07', seconds: 60, xp: 0 },
 };
 const item = (over: Partial<QueuedResult>): QueuedResult => ({
@@ -26,8 +28,15 @@ describe('offline queue', () => {
       [item({}), item({ lessonId: LESSONS[0]!.id, mistakes: 0 }), item({ profileId: 'other' })],
       'p1',
     );
-    expect(p.lessons[LESSONS[1]!.id]).toEqual({ bestStars: 3, completions: 1 });
-    expect(p.lessons[LESSONS[0]!.id]).toEqual({ bestStars: 3, completions: 2 });
+    expect(p.lessons[LESSONS[1]!.id]).toMatchObject({ bestStars: 3, completions: 1 });
+    // the first lesson was due (played two days ago): the queued replay counts as a review
+    expect(p.lessons[LESSONS[0]!.id]).toEqual({
+      bestStars: 3,
+      completions: 2,
+      lastDate: '2026-11-07',
+      box: 1,
+      reviews: 1,
+    });
     expect(p.today.seconds).toBe(60 + 120 + 120);
   });
 

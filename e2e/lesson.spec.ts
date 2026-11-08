@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { signUpWithEmail, uniqueEmail } from './helpers';
+import { signUpWithEmail, uniqueEmail, skipTheory } from './helpers';
 import { audit } from './audit';
 
 /** No MIDI, microphone denied → the lesson falls back to the on-screen keyboard. */
@@ -54,6 +54,7 @@ async function solvePlayAlong(page: Page) {
 }
 
 async function startLesson(page: Page, title: string) {
+  await skipTheory(page);
   await expect(page.getByRole('heading', { name: title })).toBeVisible();
   await page.getByRole('button', { name: 'Los geht’s!' }).click();
 }
@@ -118,7 +119,7 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await expect(page.getByTestId('path-keys-cde')).toHaveAccessibleName(/3 von 3 Sternen/);
   await expect(page.getByTestId('path-keys-f-g')).toHaveAttribute('aria-current', 'step');
   await expect(page.getByRole('link', { name: 'Weiter: F und G' })).toBeVisible();
-  await expect(page.getByText('100', { exact: true })).toBeVisible(); // XP stat
+  await expect(page.getByTestId('xp-total')).toHaveText('100 XP');
   await expect(page.getByTestId('badge-first-lesson')).toHaveAttribute('data-earned', 'true');
   await expect(page.getByTestId('badge-perfect')).toHaveAttribute('data-earned', 'true');
   await expect(page.getByTestId('badge-first-song')).toHaveAttribute('data-earned', 'false');
