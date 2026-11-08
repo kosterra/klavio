@@ -42,7 +42,7 @@ describe('curriculum data', () => {
         const notes =
           e.type === 'play-along'
             ? e.sequences.flat()
-            : e.type === 'song'
+            : e.type === 'song' || e.type === 'song-timed'
               ? e.bars.flat().map((n) => n.midi)
               : e.type === 'rhythm'
                 ? [e.midi]

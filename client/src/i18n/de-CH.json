@@ -575,7 +575,16 @@
     "playScreen": "Auf dem Bildschirm",
     "playPianoHint": "Auf dem Klavier höre ich dir über das Mikrofon zu – der Ton bleibt auf deinem Gerät.",
     "waitingForNote": "Ich höre zu – spiel los!",
-    "finger": "Finger {{n}}"
+    "finger": "Finger {{n}}",
+    "timed": {
+      "intro": "Jetzt im Takt! Ich zähle ein, dann spielst du mit dem Metronom.",
+      "now": "Spiel mit!",
+      "start": "Im Takt spielen",
+      "hits_one": "{{count}} von {{total}} Tönen im Takt",
+      "hits_other": "{{count}} von {{total}} Tönen im Takt",
+      "tip": "Tipp: Zähl leise mit – «eins, zwei, drei, vier». Lieber ruhig und gleichmässig als schnell.",
+      "tempo": "Tempo {{tempo}}"
+    }
   },
   "badges": {
     "title": "Abzeichen",

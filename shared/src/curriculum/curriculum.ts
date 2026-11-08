@@ -729,6 +729,15 @@ CURRICULUM.push({
   ],
 });
 
+// Every song is played twice: first to get to know it (Klavio waits for each
+// note), then «Im Takt» – the same notes with count-in and metronome.
+for (const chapter of CURRICULUM) {
+  for (const lesson of chapter.lessons) {
+    const known = lesson.exercises.filter((e) => e.type === 'song');
+    for (const e of known) lesson.exercises.push({ ...e, type: 'song-timed' });
+  }
+}
+
 /** All lessons in learning order. */
 export const LESSONS: Lesson[] = CURRICULUM.flatMap((c) => c.lessons);
 
@@ -755,7 +764,7 @@ export function lessonTargetCount(lesson: Lesson): number {
       n +
       (e.type === 'play-along'
         ? e.sequences.reduce((m, s) => m + s.length, 0)
-        : e.type === 'song'
+        : e.type === 'song' || e.type === 'song-timed'
           ? e.bars.reduce((m, b) => m + b.length, 0)
           : e.type === 'rhythm'
             ? e.patterns.reduce((m, p) => m + rhythmOnsets(p).length, 0)

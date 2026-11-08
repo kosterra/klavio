@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Lieder «Im Takt»: Nach dem Kennenlernen spielst du jedes Lied nochmals – mit Einzählen und Metronom. Jetzt zählt auch, ob der Ton zur richtigen Zeit kommt.',
+        'Songs «In time»: after getting to know a song, you play it once more – with a count-in and the metronome. Now it also counts whether each note comes at the right time.',
+      ),
+      L(
         'Fingersatz: Über den Noten und auf der markierten Taste steht, welcher Finger spielt – in den Fünf-Finger-Lektionen, bei der C-Dur-Tonleiter (Daumen untersetzen!) und in den ersten Liedern.',
         'Fingering: above the notes and on the marked key it shows which finger plays – in the five-finger lessons, in the C major scale (thumb under!) and in the first songs.',
       ),

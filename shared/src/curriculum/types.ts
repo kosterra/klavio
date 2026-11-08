@@ -56,6 +56,14 @@ export interface SongExercise {
   bars: SongNote[][];
 }
 
+/**
+ * "Im Takt": the same song once more, now in time – a bar of count-in, then
+ * the metronome keeps going and every note counts when it comes on time.
+ */
+export interface TimedSongExercise extends Omit<SongExercise, 'type'> {
+  type: 'song-timed';
+}
+
 /** Rhythm values: note values plus rests ("qr" = quarter rest, …). */
 export type RhythmValue = NoteValue | 'qr' | 'hr' | 'wr';
 
@@ -110,6 +118,7 @@ export type Exercise =
   | PlayAlongExercise
   | ReadNoteExercise
   | SongExercise
+  | TimedSongExercise
   | RhythmExercise
   | PieceExercise
   | ImproviseExercise;

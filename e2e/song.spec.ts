@@ -1,6 +1,12 @@
 import { expect, test, type Page } from '@playwright/test';
 import { LESSONS } from '@klavio/shared';
-import { seedCompletedLessons, signUpWithEmail, uniqueEmail, startLesson } from './helpers';
+import {
+  playTimedSong,
+  seedCompletedLessons,
+  signUpWithEmail,
+  startLesson,
+  uniqueEmail,
+} from './helpers';
 import { audit } from './audit';
 
 const before = (id: string) =>
@@ -65,7 +71,8 @@ test('song mode waits for every note; "listen" plays the song first', async ({ p
 
   const summary = page.getByRole('button', { name: 'Zum Lernpfad' });
   const next = page.getByTestId('next-note');
-  while (!(await summary.isVisible())) {
+  const timed = page.getByTestId('timed-song');
+  while (!(await summary.isVisible()) && !(await timed.isVisible())) {
     const text = (await next.allTextContents())[0] ?? '';
     const note = /Nächster Ton: (\S+)/.exec(text)?.[1];
     if (!note) {
@@ -75,9 +82,13 @@ test('song mode waits for every note; "listen" plays the song first', async ({ p
     const status = (await page.getByTestId('song-status').allTextContents())[0];
     await page.getByRole('button', { name: `${note}4`, exact: true }).click();
     await expect(
-      summary.or(page.getByTestId('song-status').filter({ hasNotText: status })),
+      summary.or(timed).or(page.getByTestId('song-status').filter({ hasNotText: status })),
     ).toBeVisible();
   }
+  // then the same song «Im Takt»: count-in, metronome, every note on time
+  await expect(page.getByTestId('timed-status')).toHaveText(/Jetzt im Takt/);
+  await audit(page);
+  expect(await playTimedSong(page)).toContain('27 von 27 Tönen im Takt');
   await expect(page.getByRole('heading', { name: 'Perfekt!' })).toBeVisible(); // 27 / 28 → 3 stars
 
   // the line moved on while playing: a later song shows dotted notes and eighths

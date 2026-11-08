@@ -575,7 +575,16 @@
     "playScreen": "On the screen",
     "playPianoHint": "On the piano I listen through the microphone – the sound stays on your device.",
     "waitingForNote": "I’m listening – go ahead!",
-    "finger": "finger {{n}}"
+    "finger": "finger {{n}}",
+    "timed": {
+      "intro": "Now in time! I count in, then you play with the metronome.",
+      "now": "Play along!",
+      "start": "Play in time",
+      "hits_one": "{{count}} of {{total}} notes in time",
+      "hits_other": "{{count}} of {{total}} notes in time",
+      "tip": "Tip: count quietly – «one, two, three, four». Steady beats fast.",
+      "tempo": "Tempo {{tempo}}"
+    }
   },
   "badges": {
     "title": "Badges",
