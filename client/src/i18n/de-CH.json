@@ -565,7 +565,9 @@
       "count_other": "{{count}} Sterne",
       "progress": "Begleitung",
       "start": "Los geht’s",
-      "again": "Nochmals"
+      "again": "Nochmals",
+      "readyWhite": "Bereit? Ich spiele eine Begleitung in C – du spielst frei auf den weissen Tasten. C, E und G klingen immer schön.",
+      "nudgeWhite": "Probier die weissen Tasten!"
     },
     "playPiece": "Spiel mit beiden Händen",
     "micMelodyOnly": "Mit dem Mikrofon zählt hier die Melodie.",
@@ -591,6 +593,31 @@
       "task": "Spiel den Akkord {{name}}",
       "together": "Alle drei Töne zusammen drücken.",
       "oneEnough": "Leg alle drei Finger auf – ein Ton des Akkords genügt mir hier."
+    },
+    "dynamics": {
+      "f": "Spiel das {{note}} laut",
+      "p": "Spiel das {{note}} leise",
+      "louder": "Noch kräftiger – das war zu leise.",
+      "softer": "Noch sanfter – das war zu laut.",
+      "measured": "Ich höre am Digitalpiano, wie fest du drückst.",
+      "notMeasured": "Wie laut, hört nur ein Digitalpiano genau – hier genügt die richtige Taste. Probier es trotzdem: kräftig oder ganz sanft!"
+    },
+    "pedal": {
+      "task": "Taste spielen – dann Pedal kurz heben und wieder drücken.",
+      "play": "Spiel das {{note}} mit Pedal",
+      "press": "Drück zuerst das Pedal.",
+      "change": "Heb das Pedal zwischen den Tönen kurz an – sonst verschwimmen sie.",
+      "step": "Ton {{n}} von {{total}}",
+      "down": "Pedal unten",
+      "up": "Pedal oben",
+      "notMeasured": "Das Pedal meldet nur ein Digitalpiano – hier genügt die richtige Taste. Am echten Klavier übst du das Pedal trotzdem genau so."
+    },
+    "echo": {
+      "task": "Hör zu – dann spiel es nach!",
+      "listen": "Hör gut zu …",
+      "again": "Nochmals hören",
+      "unknown": "unbekannter Ton",
+      "wrong": "Das war {{note}} – hör nochmals zu."
     }
   },
   "badges": {

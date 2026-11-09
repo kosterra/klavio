@@ -565,7 +565,9 @@
       "count_other": "{{count}} stars",
       "progress": "Accompaniment",
       "start": "Let’s go",
-      "again": "Again"
+      "again": "Again",
+      "readyWhite": "Ready? I play an accompaniment in C – you play freely on the white keys. C, E and G always sound nice.",
+      "nudgeWhite": "Try the white keys!"
     },
     "playPiece": "Play with both hands",
     "micMelodyOnly": "With the microphone, the melody counts here.",
@@ -591,6 +593,31 @@
       "task": "Play the chord {{name}}",
       "together": "Press all three notes together.",
       "oneEnough": "Put all three fingers on the keys – one note of the chord is enough for me here."
+    },
+    "dynamics": {
+      "f": "Play the {{note}} loud",
+      "p": "Play the {{note}} soft",
+      "louder": "Firmer still – that was too soft.",
+      "softer": "Gentler still – that was too loud.",
+      "measured": "On the digital piano I can hear how hard you press.",
+      "notMeasured": "Only a digital piano tells exactly how loud – here the right key is enough. Try it anyway: firmly or very gently!"
+    },
+    "pedal": {
+      "task": "Play the key – then lift the pedal briefly and press it again.",
+      "play": "Play the {{note}} with the pedal",
+      "press": "Press the pedal first.",
+      "change": "Lift the pedal briefly between the notes – otherwise they blur.",
+      "step": "Note {{n}} of {{total}}",
+      "down": "Pedal down",
+      "up": "Pedal up",
+      "notMeasured": "Only a digital piano reports the pedal – here the right key is enough. On a real piano you practise the pedal exactly like this."
+    },
+    "echo": {
+      "task": "Listen – then play it back!",
+      "listen": "Listen carefully …",
+      "again": "Listen again",
+      "unknown": "unknown note",
+      "wrong": "That was {{note}} – listen again."
     }
   },
   "badges": {

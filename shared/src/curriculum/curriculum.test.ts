@@ -54,7 +54,11 @@ describe('curriculum data', () => {
                     ? []
                     : e.type === 'chords'
                       ? e.chords.flat()
-                      : e.notes;
+                      : e.type === 'dynamics'
+                        ? e.tasks.map((x) => x.midi)
+                        : e.type === 'echo'
+                          ? e.motifs.flat()
+                          : e.notes;
         for (const n of notes) {
           if (e.type === 'find-key' && e.anyOctave) {
             // some octave of the pitch class must be visible

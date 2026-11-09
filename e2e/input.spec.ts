@@ -171,3 +171,65 @@ test('chords: with a digital piano all three notes have to sound, on the screen 
   await midi(page, [0x90, 55, 100]);
   await expect(page.getByText('Spiel den Akkord F').first()).toBeVisible();
 });
+
+test('loud and soft and the pedal are checked with a digital piano', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.addInitScript(installFakeMidi);
+  await signUpWithEmail(page, uniqueEmail('expr'), 'Familie');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Mira');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await page.getByRole('heading', { name: 'Hallo Mira!' }).waitFor();
+  const { LESSONS } = await import('@klavio/shared');
+  await seedCompletedLessons(
+    page,
+    LESSONS.slice(
+      0,
+      LESSONS.findIndex((l) => l.id === 'expr-pedal'),
+    ).map((l) => l.id),
+  );
+  await page.goto('/input');
+  await page.getByRole('button', { name: 'MIDI verbinden' }).click();
+  await expect(page.getByText('Aktiv: MIDI (Klavio Test Piano)')).toBeVisible();
+
+  const open = async (id: string) => {
+    await page.evaluate((path) => {
+      history.pushState({}, '', path);
+      dispatchEvent(new PopStateEvent('popstate'));
+    }, `/lesson/${id}`);
+    const skip = page.getByRole('button', { name: 'Überspringen' });
+    await expect(skip.or(page.getByTestId('lesson-start'))).toBeVisible();
+    if (await skip.isVisible()) await skip.click();
+    await page.getByTestId('lesson-start').click();
+  };
+
+  // loud: a gentle C is not enough, a firm one is
+  await open('expr-dynamics');
+  await expect(page.getByText('Spiel das C laut').first()).toBeVisible();
+  await midi(page, [0x90, 60, 40]);
+  await expect(page.getByText('Noch kräftiger – das war zu leise.')).toBeVisible();
+  await midi(page, [0x80, 60, 0]);
+  await midi(page, [0x90, 60, 110]);
+  await expect(page.getByText('Spiel das C leise').first()).toBeVisible();
+  await audit(page);
+
+  // pedal: first without, then with the pedal down
+  await open('expr-pedal');
+  await expect(page.getByText('Spiel das C mit Pedal').first()).toBeVisible();
+  await midi(page, [0x90, 48, 90]);
+  await expect(page.getByText('Drück zuerst das Pedal.')).toBeVisible();
+  await midi(page, [0x80, 48, 0]);
+  await midi(page, [0xb0, 64, 127]);
+  await expect(page.getByTestId('pedal-state')).toHaveText('Pedal unten');
+  await midi(page, [0x90, 48, 90]);
+  await expect(page.getByText('Spiel das F mit Pedal').first()).toBeVisible();
+  // the next note without lifting the pedal in between
+  await midi(page, [0x90, 53, 90]);
+  await expect(page.getByText(/Heb das Pedal zwischen den Tönen/)).toBeVisible();
+  await midi(page, [0xb0, 64, 0]);
+  await midi(page, [0xb0, 64, 127]);
+  await midi(page, [0x90, 53, 90]);
+  await expect(page.getByText('Spiel das G mit Pedal').first()).toBeVisible();
+  await audit(page);
+});

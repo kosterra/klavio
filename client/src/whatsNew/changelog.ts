@@ -23,6 +23,14 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Hören und Erfinden: In «Hör zu und spiel nach» spielt Klavi ein paar Töne vor, du spielst sie nach Gehör nach. Dazu «Erfinden auf den weissen Tasten» zu einer Begleitung in C. Alles als Bonus-Lektionen – sie halten niemanden auf.',
+        'Listening and making up: in «Listen and play back» Klavi plays a few notes and you play them back by ear. Plus «Making up music on the white keys» over an accompaniment in C. All as bonus lessons – they hold nobody up.',
+      ),
+      L(
+        'Mehr Musik: der Sechsachteltakt (das Metronom zählt Achtel), die a-Moll-Tonleiter mit Hörspiel «Dur oder Moll?», «Laut und leise» und «Das Pedal» – mit einem Digitalpiano prüft Klavio auch, wie fest du drückst und ob das Pedal unten ist. Damit lassen sich jetzt alle Fähigkeiten für das Traumlied lernen.',
+        'More music: six-eight time (the metronome counts eighths), the A minor scale with the listening game «Major or minor?», «Loud and soft» and «The pedal» – with a digital piano Klavio also checks how hard you press and whether the pedal is down. Every skill for the dream song can now be learned.',
+      ),
+      L(
         'Auftakt und Haltebogen: «Happy Birthday» im Dreivierteltakt beginnt vor dem ersten «eins», und in «Haltebögen» hältst du verbundene Noten einfach weiter. «Im Takt» zählt beides richtig.',
         'Upbeat and ties: «Happy Birthday» in three-four time starts before the first «one», and in «Ties» you simply keep holding tied notes. «In time» counts both correctly.',
       ),

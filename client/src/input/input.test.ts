@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import type { NoteEvent } from '@klavio/shared';
-import { parseMidiMessage } from './midiMessage';
+import { parseMidiMessage, parsePedalMessage } from './midiMessage';
 import { midiForKeyCode } from './computerKeys';
 import { InputHub } from './inputHub';
 
@@ -76,5 +76,14 @@ describe('input hub', () => {
     expect(hub.accept(ev('microphone', 4000))).toBe(false);
     expect(hub.accept(ev('keyboard', 4000))).toBe(true);
     expect(hub.accept(ev('microphone', 6000))).toBe(true);
+  });
+});
+
+describe('sustain pedal', () => {
+  it('reads controller 64: pressed from 64 up, other controllers are ignored', () => {
+    expect(parsePedalMessage([0xb0, 64, 127])).toBe(true);
+    expect(parsePedalMessage([0xb3, 64, 0])).toBe(false);
+    expect(parsePedalMessage([0xb0, 7, 100])).toBeNull(); // volume
+    expect(parsePedalMessage([0x90, 64, 100])).toBeNull(); // a note
   });
 });

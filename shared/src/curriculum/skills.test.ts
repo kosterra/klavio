@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { LESSONS } from './curriculum.ts';
+import { CORE_LESSONS, LESSONS } from './curriculum.ts';
 import {
   BASE_SKILLS,
   GOAL_STYLE_SKILLS,
   LESSON_SKILLS,
   SKILL_IDS,
+  isSkillTaught,
   SKILL_NAMES,
   goalProgress,
   isSkillReached,
@@ -30,28 +31,31 @@ describe('skills', () => {
   it('a skill is reached when every lesson teaching it is done', () => {
     expect(isSkillReached('note-values', done(['rhythm-quarters']))).toBe(false);
     expect(isSkillReached('note-values', done(['rhythm-quarters', 'rhythm-rests']))).toBe(true);
-    expect(isSkillReached('pedal', done(LESSONS.map((l) => l.id)))).toBe(false); // not taught yet
+    expect(isSkillReached('pedal', done(LESSONS.map((l) => l.id)))).toBe(true);
+    // every skill is taught somewhere now
+    expect(SKILL_IDS.every((id) => isSkillTaught(id))).toBe(true);
   });
 
   it('goal progress counts the base skills, orders by curriculum, names the next lesson', () => {
     const p = goalProgress(GOAL_STYLE_SKILLS.ballad, done([]));
     expect(p.skills.slice(0, BASE_SKILLS.length).every((s) => s.taught)).toBe(true);
-    expect(p.skills.at(-1)!.taught).toBe(false); // planned skills last
+    expect(p.skills.every((s) => s.taught)).toBe(true);
     expect(p.reached).toBe(0);
     expect(p.next).toEqual({ skill: 'white-keys', lessonId: 'keys-c' });
 
-    const half = goalProgress(['pedal'], done(LESSONS.map((l) => l.id)));
-    expect(half.reached).toBe(BASE_SKILLS.length);
-    expect(half.total).toBe(BASE_SKILLS.length + 1);
-    expect(half.next).toBeNull(); // only the planned "pedal" is left
+    const all = goalProgress(['pedal'], done(LESSONS.map((l) => l.id)));
+    expect(all.reached).toBe(BASE_SKILLS.length + 1);
+    expect(all.total).toBe(BASE_SKILLS.length + 1);
+    expect(all.next).toBeNull(); // nothing left to learn
   });
 
   it('the next step is the earliest open lesson, never one further ahead', () => {
-    const firstTen = done(LESSONS.slice(0, 10).map((l) => l.id));
+    // the lessons of the path (bonus lessons don't count)
+    const firstTen = done(CORE_LESSONS.slice(0, 10).map((l) => l.id));
     // songs (chapter 4) are still needed, but reading notes (chapter 3) comes first
     expect(goalProgress([], firstTen).next).toEqual({
       skill: 'treble-clef',
-      lessonId: LESSONS[10]!.id,
+      lessonId: CORE_LESSONS[10]!.id,
     });
   });
 

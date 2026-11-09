@@ -1,4 +1,5 @@
-import { parseMidiMessage } from './midiMessage';
+import { parseMidiMessage, parsePedalMessage } from './midiMessage';
+import { setPedal } from './pedal';
 import { inputHub, publishNote } from './noteBus';
 
 export type MidiStatus = 'unsupported' | 'idle' | 'requesting' | 'ready' | 'denied';
@@ -90,6 +91,11 @@ class MidiService {
 
   private onMessage(deviceId: string, e: MIDIMessageEvent) {
     if (!e.data) return;
+    const pedal = parsePedalMessage(e.data);
+    if (pedal !== null) {
+      setPedal(pedal);
+      return;
+    }
     const note = parseMidiMessage(e.data);
     if (!note) return;
     const held = this.held.get(deviceId) ?? new Set<number>();

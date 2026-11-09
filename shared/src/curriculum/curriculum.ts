@@ -106,6 +106,27 @@ export const CURRICULUM: Chapter[] = [
         ],
       },
       {
+        id: 'ear-echo-cde',
+        kind: 'keys',
+        bonus: true,
+        title: { 'de-CH': 'Hör zu und spiel nach', en: 'Listen and play back' },
+        intro: {
+          'de-CH':
+            'Ich spiele dir zwei oder drei Töne vor – C, D oder E. Hör gut zu und spiel sie nach, ohne dass du sie siehst. Mit «Nochmals hören» spiele ich sie nochmals.',
+          en: 'I play you two or three notes – C, D or E. Listen carefully and play them back without seeing them. «Listen again» plays them once more.',
+        },
+        xp: 20,
+        keyboard: C4_C5,
+        keyLabels: 'all',
+        exercises: [
+          {
+            type: 'echo',
+            tempo: 76,
+            motifs: [seq('C4 D4'), seq('E4 C4'), seq('C4 D4 E4'), seq('E4 D4 C4'), seq('D4 E4 C4')],
+          },
+        ],
+      },
+      {
         id: 'keys-f-g',
         kind: 'keys',
         title: { 'de-CH': 'F und G', en: 'F and G' },
@@ -216,6 +237,33 @@ export const CURRICULUM: Chapter[] = [
             'C4/q D4/q E4/q F4/q | G4/h G4/h | A4/q A4/q A4/q A4/q | G4/w | A4/q A4/q A4/q A4/q | G4/w | F4/q F4/q F4/q F4/q | E4/h E4/h | D4/q D4/q D4/q D4/q | C4/w',
             { showNames: true, tempo: 100 },
           ),
+        ],
+      },
+      {
+        id: 'ear-echo-five',
+        kind: 'keys',
+        bonus: true,
+        title: { 'de-CH': 'Hör zu: fünf Töne', en: 'Listen: five notes' },
+        intro: {
+          'de-CH':
+            'Jetzt mit allen fünf Tönen von C bis G. Tipp: Hör, ob der nächste Ton höher oder tiefer ist – und ob er gleich daneben liegt oder springt.',
+          en: 'Now with all five notes from C to G. Tip: listen whether the next note is higher or lower – and whether it is right next to it or jumps.',
+        },
+        xp: 20,
+        keyboard: C4_C5,
+        keyLabels: 'c',
+        exercises: [
+          {
+            type: 'echo',
+            tempo: 80,
+            motifs: [
+              seq('C4 E4 G4'),
+              seq('G4 E4 C4'),
+              seq('C4 D4 E4 F4'),
+              seq('G4 F4 E4 D4'),
+              seq('C4 G4 E4'),
+            ],
+          },
         ],
       },
     ],
@@ -396,6 +444,24 @@ CURRICULUM.push({
           { tempo: 104 },
         ),
       ],
+    },
+    {
+      id: 'improvise-white',
+      kind: 'improvise',
+      bonus: true,
+      title: {
+        'de-CH': 'Erfinden auf den weissen Tasten',
+        en: 'Making up music on the white keys',
+      },
+      intro: {
+        'de-CH':
+          'Ich spiele eine Begleitung in C – du erfindest eine Melodie auf den weissen Tasten. Tipp: Ende auf dem C, dann klingt es fertig.',
+        en: 'I play an accompaniment in C – you make up a melody on the white keys. Tip: end on C, then it sounds finished.',
+      },
+      xp: 20,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [{ type: 'improvise', keys: 'white', tempo: 84, bars: 8, minNotes: 12 }],
     },
   ],
 });
@@ -765,6 +831,22 @@ CURRICULUM.push({
         ),
       ],
     },
+    {
+      id: 'meter-six-eight',
+      kind: 'rhythm',
+      title: { 'de-CH': 'Der Sechsachteltakt', en: 'Six-eight time' },
+      intro: {
+        'de-CH':
+          'Im 6/8-Takt zählst du Achtel: «eins-zwei-drei, vier-fünf-sechs». Die Eins und die Vier sind stark – das schaukelt wie ein Boot.',
+        en: 'In 6/8 you count eighths: «one-two-three, four-five-six». One and four are strong – it rocks like a boat.',
+      },
+      xp: 25,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        rhythm('qd qd | q 8 q 8 | 8 8 8 qd | hd | q 8 8 8 8 | hd', { time: '6/8', tempo: 60 }),
+      ],
+    },
   ],
 });
 
@@ -887,6 +969,29 @@ CURRICULUM.push({
         },
       ],
     },
+    {
+      id: 'keysig-a-minor',
+      kind: 'play',
+      title: { 'de-CH': 'Die a-Moll-Tonleiter', en: 'The A minor scale' },
+      intro: {
+        'de-CH':
+          'a-Moll braucht keine schwarze Taste – wie C-Dur, nur von A bis A. Hör, wie anders sie klingt: dunkler, ein bisschen traurig. Der Daumen schlüpft wieder nach dem dritten Ton unter.',
+        en: 'A minor needs no black key – like C major, only from A to A. Listen how different it sounds: darker, a little sad. The thumb slips under again after the third note.',
+      },
+      xp: 25,
+      keyboard: { from: 69, to: 81 },
+      keyLabels: 'all',
+      exercises: [
+        {
+          type: 'play-along',
+          sequences: [seq('A4 H4 C5 D5 E5 F5 G5 A5'), seq('A5 G5 F5 E5 D5 C5 H4 A4')],
+          fingers: [
+            [1, 2, 3, 1, 2, 3, 4, 5],
+            [5, 4, 3, 2, 1, 3, 2, 1],
+          ],
+        },
+      ],
+    },
   ],
 });
 
@@ -894,7 +999,7 @@ CURRICULUM.push({
 const LH_FINGERS_531 = [5, 3, 1];
 CURRICULUM.push({
   id: 'accomp',
-  title: { 'de-CH': 'Begleiten', en: 'Accompanying' },
+  title: { 'de-CH': 'Begleiten und Ausdruck', en: 'Accompanying and expression' },
   stage: 3,
   lessons: [
     {
@@ -963,6 +1068,48 @@ CURRICULUM.push({
         },
       ],
     },
+    {
+      id: 'expr-dynamics',
+      kind: 'play',
+      title: { 'de-CH': 'Laut und leise', en: 'Loud and soft' },
+      intro: {
+        'de-CH':
+          'forte (f) heisst laut, piano (p) heisst leise. Drück die Taste kräftig für laut und ganz sanft für leise. Mit einem Digitalpiano höre ich genau, wie fest du drückst.',
+        en: 'forte (f) means loud, piano (p) means soft. Press the key firmly for loud and very gently for soft. With a digital piano I can tell exactly how hard you press.',
+      },
+      xp: 25,
+      keyboard: C4_C5,
+      keyLabels: 'all',
+      exercises: [
+        {
+          type: 'dynamics',
+          tasks: [
+            { midi: 60, level: 'f' },
+            { midi: 60, level: 'p' },
+            { midi: 64, level: 'f' },
+            { midi: 64, level: 'p' },
+            { midi: 67, level: 'p' },
+            { midi: 67, level: 'f' },
+            { midi: 72, level: 'p' },
+            { midi: 72, level: 'f' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'expr-pedal',
+      kind: 'play',
+      title: { 'de-CH': 'Das Pedal', en: 'The pedal' },
+      intro: {
+        'de-CH':
+          'Das rechte Pedal lässt die Töne weiterklingen, auch wenn du die Taste loslässt. Der Trick: Erst die neue Taste spielen, dann das Pedal kurz heben und wieder drücken – so verschwimmen die Töne nicht.',
+        en: 'The right pedal lets the notes keep sounding, even when you let go of the key. The trick: play the new key first, then lift the pedal briefly and press it again – that way the notes do not blur.',
+      },
+      xp: 25,
+      keyboard: C3_C5,
+      keyLabels: 'c',
+      exercises: [{ type: 'pedal', notes: seq('C3 F3 G3 C3 E4 F4 G4 C5') }],
+    },
   ],
 });
 
@@ -1009,9 +1156,15 @@ export function lessonTargetCount(lesson: Lesson): number {
               ? pieceSteps(e).length
               : e.type === 'chords'
                 ? e.chords.length
-                : e.type === 'improvise'
-                  ? 1
-                  : e.rounds),
+                : e.type === 'dynamics'
+                  ? e.tasks.length
+                  : e.type === 'echo'
+                    ? e.motifs.reduce((m, x) => m + x.length, 0)
+                    : e.type === 'pedal'
+                      ? e.notes.length
+                      : e.type === 'improvise'
+                        ? 1
+                        : e.rounds),
     0,
   );
 }

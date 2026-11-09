@@ -85,6 +85,9 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
   'song-jakob': ['melodies'],
   'song-jingle': ['melodies'],
   'song-macdonald': ['melodies'],
+  'ear-echo-cde': ['melodies'],
+  'ear-echo-five': ['melodies'],
+  'improvise-white': ['improvise'],
   'rhythm-quarters': ['note-values'],
   'rhythm-rests': ['note-values'],
   'bass-hand': ['left-hand'],
@@ -103,14 +106,18 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
   'meter-waltz': ['three-four'],
   'meter-upbeat': ['three-four'],
   'meter-ties': ['eighths'],
+  'meter-six-eight': ['six-eight'],
   'keysig-flats': ['black-keys'],
   'keysig-g-scale': ['scales'],
   'keysig-g-read': ['scales'],
   'keysig-f-scale': ['scales'],
   'keysig-f-read': ['scales'],
+  'keysig-a-minor': ['minor'],
   'accomp-bass': ['both-hands'],
   'accomp-broken': ['arpeggios'],
   'accomp-chords': ['chords'],
+  'expr-dynamics': ['dynamics'],
+  'expr-pedal': ['pedal'],
 };
 
 /** Lessons (in learning order) that teach a skill; empty = planned for later. */

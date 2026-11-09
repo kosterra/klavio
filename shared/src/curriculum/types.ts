@@ -91,6 +91,35 @@ export interface ChordsExercise {
   fingers?: number[][];
 }
 
+/**
+ * "Laut und leise": each note loud (f) or soft (p). A digital piano (MIDI)
+ * tells how hard the key was struck; otherwise the right key is enough.
+ */
+export interface DynamicsExercise {
+  type: 'dynamics';
+  tasks: { midi: number; level: 'p' | 'f' }[];
+}
+
+/**
+ * "Pedal": each note with the sustain pedal down, and the pedal lifted in
+ * between so the notes don't blur. Only a digital piano (MIDI) reports the
+ * pedal; otherwise the right key is enough.
+ */
+export interface PedalExercise {
+  type: 'pedal';
+  notes: number[];
+}
+
+/**
+ * "Hör zu und spiel nach": Klavi plays a few notes without showing them; the
+ * learner plays them back by ear. After a mistake the motif is played again.
+ */
+export interface EchoExercise {
+  type: 'echo';
+  motifs: number[][];
+  tempo: number;
+}
+
 /** Rhythm values: note values plus rests ("qr" = quarter rest, …). */
 export type RhythmValue = NoteValue | 'qr' | 'hr' | 'wr';
 
@@ -134,7 +163,8 @@ export interface PieceExercise {
  */
 export interface ImproviseExercise {
   type: 'improvise';
-  keys: 'black';
+  /** black keys over an F♯ groove, or white keys over a C groove */
+  keys: 'black' | 'white';
   tempo: number;
   bars: number;
   minNotes: number;
@@ -147,6 +177,9 @@ export type Exercise =
   | SongExercise
   | TimedSongExercise
   | ChordsExercise
+  | EchoExercise
+  | DynamicsExercise
+  | PedalExercise
   | RhythmExercise
   | PieceExercise
   | ImproviseExercise;

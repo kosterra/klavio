@@ -52,6 +52,9 @@ import { ReadNoteExercise } from '../lesson/ReadNoteExercise';
 import { SongExercise } from '../lesson/SongExercise';
 import { TimedSongExercise } from '../lesson/TimedSongExercise';
 import { ChordsExercise } from '../lesson/ChordsExercise';
+import { EchoExercise } from '../lesson/EchoExercise';
+import { DynamicsExercise } from '../lesson/DynamicsExercise';
+import { PedalExercise } from '../lesson/PedalExercise';
 import { RhythmExercise } from '../lesson/RhythmExercise';
 import { PieceExercise } from '../lesson/PieceExercise';
 import { ImproviseExercise } from '../lesson/ImproviseExercise';
@@ -431,6 +434,10 @@ function LessonRun({
               <ReadNoteExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'song' ? (
               <SongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'dynamics' ? (
+              <DynamicsExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'pedal' ? (
+              <PedalExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'chords' ? (
               <ChordsExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'song-timed' ? (
@@ -441,6 +448,8 @@ function LessonRun({
               <ImproviseExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'rhythm' ? (
               <RhythmExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'echo' ? (
+              <EchoExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : (
               <PlayAlongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ))}

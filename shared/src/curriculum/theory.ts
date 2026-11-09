@@ -11,6 +11,82 @@ const C4_C5 = { from: 60, to: 72 };
  * steps with pictures, games and quizzes. Keyed by lesson id.
  */
 export const LESSON_THEORY: Record<string, TheoryStep[]> = {
+  'expr-dynamics': [
+    {
+      type: 'explain',
+      text: L(
+        'Laut und leise kommt beim Klavier von der Geschwindigkeit, mit der die Taste hinuntergeht: schnell und kräftig für forte, langsam und sanft für piano. Die Hand bleibt dabei locker – nicht hämmern!',
+        'On the piano, loud and soft come from how fast the key goes down: fast and firm for forte, slow and gentle for piano. Keep your hand relaxed – no hammering!',
+      ),
+    },
+  ],
+  'expr-pedal': [
+    {
+      type: 'explain',
+      text: L(
+        'Am Klavier gibt es unten Pedale für die Füsse. Das rechte heisst Fortepedal: Solange es gedrückt ist, klingen alle Töne weiter. Der rechte Fuss bleibt mit der Ferse auf dem Boden, nur der Fussballen bewegt sich.',
+        'A piano has pedals at the bottom for your feet. The right one is the sustain pedal: while it is down, all notes keep sounding. Keep your right heel on the floor, only the ball of your foot moves.',
+      ),
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Wann hebst du das Pedal beim Wechsel zum nächsten Ton?',
+        'When do you lift the pedal when moving to the next note?',
+      ),
+      answers: [
+        { text: L('Gleich nach der neuen Taste', 'Right after the new key'), correct: true },
+        { text: L('Gar nie', 'Never') },
+        { text: L('Vor dem ersten Ton', 'Before the first note') },
+      ],
+      hint: L(
+        'Erst die neue Taste, dann kurz heben – so verschwimmt nichts.',
+        'First the new key, then lift briefly – so nothing blurs.',
+      ),
+    },
+  ],
+  'keysig-a-minor': [
+    {
+      type: 'explain',
+      text: L(
+        'Musik kann in Dur oder in Moll sein. Dur klingt hell und fröhlich, Moll dunkler, oft ein bisschen traurig. Den Unterschied macht ein einziger Ton: Bei Moll ist der mittlere Ton des Akkords einen Schritt tiefer.',
+        'Music can be in major or in minor. Major sounds bright and cheerful, minor darker, often a little sad. A single note makes the difference: in minor the middle note of the chord is one step lower.',
+      ),
+    },
+    {
+      type: 'listen',
+      text: L('Hör zu: Dur (hell) oder Moll (dunkel)?', 'Listen: major (bright) or minor (dark)?'),
+      answers: [L('Dur', 'Major'), L('Moll', 'Minor')],
+      rounds: [
+        { notes: [60, 64, 67, 72], answer: 0 },
+        { notes: [60, 63, 67, 72], answer: 1 },
+        { notes: [57, 60, 64, 69], answer: 1 },
+        { notes: [57, 61, 64, 69], answer: 0 },
+      ],
+    },
+  ],
+  'meter-six-eight': [
+    {
+      type: 'explain',
+      text: L(
+        'Im 6/8-Takt hat ein Takt sechs Achtel, in zwei Gruppen zu drei: «eins-zwei-drei, vier-fünf-sechs». Eine punktierte Viertel füllt eine ganze Gruppe. Viele Wiegenlieder und Seemannslieder schaukeln so.',
+        'In 6/8 a bar has six eighths, in two groups of three: «one-two-three, four-five-six». A dotted quarter fills a whole group. Many lullabies and sea shanties rock like this.',
+      ),
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Wie viele Achtel hat ein Takt im 6/8-Takt?',
+        'How many eighths does a bar of 6/8 have?',
+      ),
+      answers: [
+        { text: L('Drei', 'Three') },
+        { text: L('Sechs', 'Six'), correct: true },
+        { text: L('Acht', 'Eight') },
+      ],
+      hint: L('Die obere Zahl sagt es.', 'The top number tells you.'),
+    },
+  ],
   'meter-upbeat': [
     {
       type: 'explain',

@@ -92,7 +92,7 @@ export function GoalSongCard({
                   {world ? (
                     <span
                       className={classes.stone}
-                      style={{ background: `var(--mantine-color-${chapterColor(world, ci)}-8)` }}
+                      style={{ background: `var(--mantine-color-${chapterColor(world, ci)}-9)` }}
                       aria-hidden
                     >
                       {s.reached ? <IconCheck size={12} stroke={3} /> : ci + 1}

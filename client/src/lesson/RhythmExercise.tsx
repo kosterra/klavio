@@ -53,6 +53,11 @@ export function RhythmExercise({
   const pattern = exercise.patterns[index]!;
   const beatsPerBar = barBeats(exercise.time);
   const beatMs = 60000 / exercise.tempo;
+  // 6/8: the metronome counts eighths – six clicks, strong on 1 and 4
+  const unit = exercise.time.endsWith('/8') ? 0.5 : 1;
+  const clicks = beatsPerBar / unit;
+  const clickTempo = exercise.tempo / unit;
+  const strong = unit === 0.5 ? [0, clicks / 2] : [0];
   const onsets = rhythmOnsets(pattern);
   const tolerance = kids ? 150 : 100;
 
@@ -88,9 +93,9 @@ export function RhythmExercise({
     setScore(null);
     played.current = [];
     // bar 1: count-in, bar 2: the learner plays
-    const m = runMetronome(beatsPerBar * 2, exercise.tempo, [0, beatsPerBar]);
+    const m = runMetronome(clicks * 2, clickTempo, [...strong, ...strong.map((b) => b + clicks)]);
     run.current = m;
-    const playStart = m.beatTimes[beatsPerBar]!;
+    const playStart = m.beatTimes[clicks]!;
     setPlayStartAt(playStart);
     const expected = onsets.map((o) => playStart + o * beatMs);
     const end = playStart + beatsPerBar * beatMs;
@@ -116,7 +121,7 @@ export function RhythmExercise({
   const listen = () => {
     clearAll();
     setPhase('listen');
-    const m = runMetronome(beatsPerBar, exercise.tempo, [0]);
+    const m = runMetronome(clicks, clickTempo, strong);
     run.current = m;
     inputHub.muteMicrophoneUntil(m.beatTimes[0]! + beatsPerBar * beatMs + 600);
     follow(m.beatTimes);
@@ -177,7 +182,7 @@ export function RhythmExercise({
     return {
       midi: exercise.midi,
       duration: v,
-      label: rest ? undefined : String(Math.floor(starts[i]!) + 1),
+      label: rest ? undefined : String(Math.floor(starts[i]! / unit) + 1),
       state:
         verdict === 'ok'
           ? 'done'
@@ -190,7 +195,7 @@ export function RhythmExercise({
   });
 
   const counting = phase === 'countin' || phase === 'play' || phase === 'listen';
-  const shownBeat = beat === null ? null : beat % beatsPerBar;
+  const shownBeat = beat === null ? null : beat % clicks;
   const verdictText = (v: string) => t(`lesson.rhythm.${v}`);
 
   return (
@@ -225,7 +230,7 @@ export function RhythmExercise({
       </BuddySays>
 
       <Group gap="sm" aria-hidden>
-        {Array.from({ length: beatsPerBar }, (_, i) => (
+        {Array.from({ length: clicks }, (_, i) => (
           <Box
             key={i}
             w={kids ? 52 : 40}
