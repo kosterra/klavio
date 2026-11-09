@@ -344,6 +344,7 @@ export function TheorySteps({
   doneLabel,
   skipLabel,
   lessonTitle,
+  onStep,
 }: {
   steps: TheoryStep[];
   kids: boolean;
@@ -356,6 +357,8 @@ export function TheorySteps({
   skipLabel?: string;
   /** the lesson's name under the kicker, so one knows where one is */
   lessonTitle?: string;
+  /** called with the index of the step now shown */
+  onStep?: (index: number) => void;
 }) {
   const { t } = useTranslation();
   const loc = useLocalized();
@@ -370,9 +373,11 @@ export function TheorySteps({
 
   const next = () => {
     if (last) {
+      onStep?.(steps.length);
       onDone();
       return;
     }
+    onStep?.(index + 1);
     setIndex(index + 1);
     setSolved(false);
     setFeedback(null);

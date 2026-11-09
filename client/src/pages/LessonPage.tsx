@@ -117,6 +117,9 @@ function localResult(
 }
 
 /** Full-screen lesson: intro → exercises → summary. */
+/** how much of the progress bar the theory part fills, when there is one */
+const THEORY_SHARE = 25;
+
 export function LessonPage() {
   const { lessonId = '' } = useParams();
   // Remount per lesson so "next lesson" loads fresh progress for the unlock check.
@@ -173,6 +176,9 @@ function LessonRun({
   const [phase, setPhase] = useState<'theory' | 'intro' | 'play' | 'result'>(
     discoverFirst && steps.length ? 'theory' : 'intro',
   );
+  // the bar counts «Entdecken» too: its steps fill the first quarter
+  const [theoryAt, setTheoryAt] = useState(0);
+  const theoryShare = discoverFirst && steps.length ? THEORY_SHARE : 0;
   // how the learner played last time on this device: shown first
   const [playOn] = useState(readPlayOn);
   const startLesson = (choice: 'piano' | 'screen' = 'piano') => {
@@ -278,19 +284,31 @@ function LessonRun({
   };
 
   return (
-    <div className={kids ? stage.stage : stage.calm} style={where.vars} data-world={where.world.id}>
+    <div
+      className={`${kids ? stage.stage : stage.calm} ${stage.lit}`}
+      style={where.vars}
+      data-world={where.world.id}
+      // stage lighting: story moments in Klavio's colours, playing in a calm light
+      data-light={phase === 'play' ? 'play' : 'story'}
+    >
       {kids && (
         <div className={stage.scenery} aria-hidden>
           <Scenery world={where.world.id} chapterId="lesson" height={40} />
         </div>
       )}
       <Box mih="100dvh" p="md" maw={1100} mx="auto" pos="relative">
-        <Stack gap="md">
+        <Stack gap="md" className={phase === 'play' ? undefined : stage.storyStack}>
           {/* ------------------------------------------------------ top bar */}
-          <Group justify="space-between" wrap="nowrap" gap="sm">
+          <Group justify="space-between" wrap="nowrap" gap="sm" className={stage.hud}>
             <CloseButton size="xl" aria-label={t('lesson.close')} onClick={() => navigate('/')} />
             <Progress
-              value={phase === 'result' ? 100 : (correct / total) * 100}
+              value={
+                phase === 'result'
+                  ? 100
+                  : phase === 'theory'
+                    ? (theoryAt / steps.length) * THEORY_SHARE
+                    : theoryShare + (correct / total) * (100 - theoryShare)
+              }
               size="xl"
               radius="xl"
               style={{ flex: 1 }}
@@ -339,6 +357,7 @@ function LessonRun({
               steps={steps}
               kids={kids}
               onDone={() => setPhase('intro')}
+              onStep={setTheoryAt}
               lessonTitle={loc(lesson.title)}
             />
           )}
@@ -370,6 +389,7 @@ function LessonRun({
                     variant="subtle"
                     onClick={() => {
                       setSteps(theory);
+                      setTheoryAt(0);
                       setPhase('theory');
                     }}
                     data-testid="theory-again"
@@ -395,33 +415,33 @@ function LessonRun({
                     </Button>
                   </>
                 ) : (
-                  <Stack gap="sm" w="100%" maw={420} mt="sm">
-                    <Text fw={800} ta="center">
-                      {t('lesson.howToPlay')}
-                    </Text>
-                    {(playOn === 'screen'
-                      ? (['screen', 'piano'] as const)
-                      : (['piano', 'screen'] as const)
-                    ).map((choice, i) => (
-                      <Button
-                        key={choice}
-                        size="xl"
-                        variant={i === 0 ? 'filled' : 'light'}
-                        leftSection={
-                          choice === 'piano' ? <IconMicrophone /> : <IconDeviceDesktop />
-                        }
-                        onClick={() => startLesson(choice)}
-                        data-testid={choice === 'piano' ? 'lesson-start' : 'lesson-start-screen'}
-                      >
-                        {choice === 'piano' ? t('lesson.playPiano') : t('lesson.playScreen')}
-                      </Button>
-                    ))}
-                    <Text size="sm" c="dimmed" ta="center">
-                      {t('lesson.playPianoHint')}{' '}
-                      {activeProfile?.calibration.noiseFloorDb == null && (
-                        <Link to="/mic-setup">{t('mic.setup')}</Link>
-                      )}
-                    </Text>
+                  <Stack gap="xs" w="100%" maw={420} mt="sm" align="center">
+                    {/* the way chosen in the start-up questions or last time; the other one a tap away */}
+                    <Button
+                      size="xl"
+                      fullWidth
+                      leftSection={playOn === 'piano' ? <IconMicrophone /> : <IconDeviceDesktop />}
+                      onClick={() => startLesson(playOn)}
+                      data-testid={playOn === 'piano' ? 'lesson-start' : 'lesson-start-screen'}
+                    >
+                      {t(playOn === 'piano' ? 'lesson.startPiano' : 'lesson.startScreen')}
+                    </Button>
+                    {playOn === 'piano' && (
+                      <Text size="sm" c="dimmed" ta="center">
+                        {t('lesson.playPianoHint')}{' '}
+                        {activeProfile?.calibration.noiseFloorDb == null && (
+                          <Link to="/mic-setup">{t('mic.setup')}</Link>
+                        )}
+                      </Text>
+                    )}
+                    <Button
+                      variant="subtle"
+                      size="compact-md"
+                      onClick={() => startLesson(playOn === 'screen' ? 'piano' : 'screen')}
+                      data-testid={playOn === 'piano' ? 'lesson-start-screen' : 'lesson-start'}
+                    >
+                      {t(playOn === 'piano' ? 'lesson.switchToScreen' : 'lesson.switchToPiano')}
+                    </Button>
                   </Stack>
                 )}
               </Stack>

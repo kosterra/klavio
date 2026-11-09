@@ -23,6 +23,14 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Bühnenlicht in den Lektionen: Entdecken, Start und Ergebnis in Klavios Farben wie auf der Startseite, beim Spielen ein ruhiges Licht, damit Tasten und Noten im Vordergrund stehen. Der Fortschrittsbalken zählt jetzt auch das Entdecken.',
+        'Stage lighting in lessons: Discover, start and result in Klavio’s colours like the public page, a calm light while playing so keys and notes stand out. The progress bar now counts Discover too.',
+      ),
+      L(
+        'Lektionsstart: Klavio merkt sich, ob du auf dem Klavier oder auf dem Bildschirm spielst – aus den Startfragen oder vom letzten Mal. Ein grosser Knopf startet, ein kleiner Link wechselt.',
+        'Lesson start: Klavio remembers whether you play on the piano or on the screen – from the start-up questions or from last time. One big button starts, a small link switches.',
+      ),
+      L(
         'Lektionen in Classic: ein ruhiger Hintergrund in der Farbe des Kapitels, der Name der Lektion steht oben im «Entdecken», und kurze Antworten wie Zahlen oder Notennamen sind grosse Felder zum Antippen.',
         'Lessons in Classic: a quiet background in the chapter colour, the lesson name at the top of «Discover», and short answers such as numbers or note names are big tiles to tap.',
       ),

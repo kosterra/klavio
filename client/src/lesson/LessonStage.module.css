@@ -19,6 +19,8 @@
 
 /* Classic: the same world colour, only as a quiet wash at the top */
 .calm {
+  --klavio-dock-bg: var(--klavio-bg-classic);
+
   min-height: 100dvh;
   background: linear-gradient(
     180deg,
@@ -78,5 +80,87 @@
 @media (prefers-reduced-motion: reduce) {
   .heardPop {
     animation: none;
+  }
+}
+
+/* ------------------------------------------------------- stage lighting
+   Story moments (Entdecken, the start, the result) take place in Klavio's own
+   colours, like the public page; while playing the light goes down to the
+   calm chapter colour above, so the keys and notes stand out. A cross-fade,
+   because gradients themselves don't animate. */
+.lit {
+  position: relative;
+  isolation: isolate;
+}
+
+.lit::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 700ms ease;
+  background:
+    radial-gradient(circle at 15% 20%, rgb(255 255 255 / 18%), transparent 30%),
+    radial-gradient(circle at 85% 10%, rgb(255 212 59 / 35%), transparent 28%),
+    linear-gradient(
+      160deg,
+      var(--mantine-color-indigo-7) 0%,
+      var(--mantine-color-grape-7) 55%,
+      var(--mantine-color-orange-6) 100%
+    );
+}
+
+:global([data-mantine-color-scheme='dark']) .lit::before {
+  background:
+    radial-gradient(circle at 15% 20%, rgb(255 255 255 / 8%), transparent 30%),
+    radial-gradient(circle at 85% 10%, rgb(255 212 59 / 16%), transparent 28%),
+    linear-gradient(
+      160deg,
+      var(--mantine-color-indigo-9) 0%,
+      var(--mantine-color-grape-9) 55%,
+      var(--mantine-color-orange-9) 100%
+    );
+}
+
+.lit[data-light='story']::before {
+  opacity: 1;
+}
+
+/* Classic: the same light, a touch calmer */
+.calm.lit[data-light='story']::before {
+  opacity: 0.85;
+}
+
+/* the top bar floats on the colours as a bright strip */
+.hud {
+  border-radius: 999px;
+  transition:
+    background-color 700ms ease,
+    box-shadow 700ms ease;
+}
+
+.lit[data-light='story'] .hud {
+  padding: 4px 10px 4px 4px;
+  background: var(--klavio-surface);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 18%);
+}
+
+/* on a big screen the card sits in the middle of the stage, not at its top */
+@media (min-width: 48em) and (min-height: 40em) {
+  .storyStack {
+    min-height: calc(100dvh - 2 * var(--mantine-spacing-md));
+  }
+
+  .storyStack > :last-child {
+    margin-block: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lit::before,
+  .hud {
+    transition: none;
   }
 }
