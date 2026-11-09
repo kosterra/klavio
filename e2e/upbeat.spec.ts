@@ -7,6 +7,7 @@ import {
   signUpWithEmail,
   skipTheory,
   uniqueEmail,
+  skipSetup,
 } from './helpers';
 
 test('ties are held, not played again; an upbeat is counted in', async ({ page }) => {
@@ -21,6 +22,7 @@ test('ties are held, not played again; an upbeat is counted in', async ({ page }
   await page.getByRole('dialog').getByLabel('Name').fill('Lina');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await page.getByRole('heading', { name: 'Hallo Lina!' }).waitFor();
   await seedCompletedLessons(
     page,

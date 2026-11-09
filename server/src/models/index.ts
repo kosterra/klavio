@@ -84,6 +84,12 @@ const profileSchema = new Schema(
     /** the wardrobe piece the figure wears (unlocked by level) */
     outfit: { type: String, default: null },
     dailyGoalMinutes: { type: Number, default: 10 },
+    /** false for a new profile until the start-up questions are done; missing = done */
+    setupDone: { type: Boolean },
+    /** why the learner plays (read, songs, relax, fun, child) */
+    motive: { type: String, default: null },
+    /** planned practice days per week */
+    weeklyGoalDays: { type: Number, default: null },
     calibration: {
       a4Hz: { type: Number, default: 440 },
       noiseFloorDb: { type: Number, default: null },

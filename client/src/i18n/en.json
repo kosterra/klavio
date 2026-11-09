@@ -192,7 +192,10 @@
     "streak_one": "{{count}} day in a row",
     "micSetupShort": "Set up the microphone once – then I can hear your piano better.",
     "hideHint": "Hide this hint",
-    "xpTotal": "{{xp}} XP"
+    "xpTotal": "{{xp}} XP",
+    "weekGoal_one": "{{count}} of {{goal}} days this week",
+    "weekGoal_other": "{{count}} of {{goal}} days this week",
+    "weekGoalReached": "Weekly goal reached – great!"
   },
   "nav": {
     "home": "Home",
@@ -930,7 +933,12 @@
       "teacher": "If you get stuck: a teacher or a music school helps with the fine-tuning."
     },
     "inChapter": "Chapter {{n}} · {{world}}",
-    "legend": "The number shows the chapter where you learn it. With the clock: comes in a later chapter."
+    "legend": "The number shows the chapter where you learn it. With the clock: comes in a later chapter.",
+    "picks": {
+      "title": "Popular dream songs",
+      "skills_one": "Needs {{count}} skill",
+      "skills_other": "Needs {{count}} skills"
+    }
   },
   "speech": {
     "read": "Read aloud",
@@ -1053,5 +1061,78 @@
     "button": "Start here",
     "confirm": "Start at «{{chapter}}»? The lessons before then count as passed.",
     "done": "Done – the learning path now goes on from there."
+  },
+  "setup": {
+    "title": "Let's start",
+    "hello": "Hello {{name}}!",
+    "skip": "Skip",
+    "notSure": "I'm not sure yet",
+    "progress": "Question {{n}} of {{total}}",
+    "instrument": {
+      "title": "What do you play on?",
+      "hint": "Klavio listens to you – through the microphone or straight from a digital piano.",
+      "acoustic": "On a piano or grand piano",
+      "acousticHint": "Klavio listens through the microphone. The sound stays on your device.",
+      "digital": "On a digital piano or keyboard",
+      "digitalHint": "With a USB cable Klavio recognises every note exactly.",
+      "none": "I don't have an instrument yet",
+      "noneHint": "No problem: you play on the keys on the screen."
+    },
+    "motive": {
+      "title": "What would you like most?",
+      "read": "Learn to read music",
+      "songs": "Play my favourite songs",
+      "relax": "Switch off and relax",
+      "fun": "Simply have fun",
+      "child": "Learn together with my child"
+    },
+    "goal": {
+      "title": "Which song would you like to play one day?",
+      "hint": "Your dream song is the goal of your journey. Klavio shows you which skills it needs.",
+      "other": "Another song? You can enter any title later in «My profile»."
+    },
+    "week": {
+      "title": "How often would you like to practise?",
+      "hint": "Even ten minutes make a difference. You can change this at any time.",
+      "days2": "2 days a week",
+      "days2Hint": "Relaxed – good for getting started.",
+      "days4": "3 to 4 days a week",
+      "days4Hint": "Regular – keeps your fingers in practice.",
+      "days6": "5 to 7 days a week",
+      "days6Hint": "Almost daily – for those who want to progress quickly."
+    },
+    "level": {
+      "title": "Can you already play this?",
+      "hint": "Be honest about what you can do – you can always go back later.",
+      "staffLabel": "Music example",
+      "cantRead": "I can't read music yet",
+      "notYet": "Not yet",
+      "canPlay": "Yes, I can"
+    },
+    "done": {
+      "title": "All set!",
+      "instrument": {
+        "acoustic": "You play on the piano – Klavio listens through the microphone.",
+        "digital": "You play on the digital piano.",
+        "none": "You play on the keys on the screen."
+      },
+      "goal": "Your dream song: «{{title}}»",
+      "week_one": "Your weekly goal: {{count}} day",
+      "week_other": "Your weekly goal: {{count}} days",
+      "chapter": "You start at chapter {{n}}: {{title}}",
+      "fromStart": "You start right at the beginning.",
+      "fromStartButton": "Start from the beginning after all",
+      "midiHow": "Connect the digital piano to this device with a USB cable. This works in Chrome and Edge; on iPhone and iPad Klavio listens through the microphone.",
+      "later": "You can change everything later in «My profile».",
+      "micSetup": "Set up the microphone",
+      "go": "To the learning path"
+    }
+  },
+  "weeklyGoal": {
+    "title": "My weekly goal",
+    "hint": "On how many days a week would you like to practise? The home page shows your week.",
+    "none": "None",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days"
   }
 }

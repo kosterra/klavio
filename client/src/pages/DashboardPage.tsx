@@ -1,4 +1,5 @@
 import { Card, Center, Loader, Stack, Title } from '@mantine/core';
+import { Navigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../components/usePageTitle';
 import { useSession } from '../auth/session';
@@ -26,6 +27,8 @@ export function DashboardPage() {
   const { progress, completed } = useProgress();
   const worldSet = useWorldMode();
   if (!activeProfile) return null;
+  // a new profile starts with a few questions
+  if (!activeProfile.setupDone) return <Navigate to="/start" replace />;
   const current = nextLesson(completed);
   const todayMinutes = Math.floor((progress?.today.seconds ?? 0) / 60);
   const kids = activeProfile.uiMode === 'kids';
@@ -78,6 +81,9 @@ export function DashboardPage() {
         streak={liveStreak(activeProfile.streak, localIsoDate())}
         todayMinutes={todayMinutes}
         goalMinutes={activeProfile.dailyGoalMinutes}
+        today={progress?.today.date ?? localIsoDate()}
+        weekDays={progress?.weekDays ?? []}
+        weeklyGoal={activeProfile.weeklyGoalDays}
       />
 
       {activeProfile.calibration.noiseFloorDb === null && midi.devices.length === 0 && (

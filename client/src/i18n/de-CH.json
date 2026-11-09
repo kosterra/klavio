@@ -192,7 +192,10 @@
     "streak_one": "{{count}} Tag in Folge",
     "micSetupShort": "Richte einmal das Mikrofon ein – dann höre ich dein Klavier besser.",
     "hideHint": "Hinweis ausblenden",
-    "xpTotal": "{{xp}} XP"
+    "xpTotal": "{{xp}} XP",
+    "weekGoal_one": "{{count}} von {{goal}} Tagen diese Woche",
+    "weekGoal_other": "{{count}} von {{goal}} Tagen diese Woche",
+    "weekGoalReached": "Wochenziel erreicht – super!"
   },
   "nav": {
     "home": "Start",
@@ -930,7 +933,12 @@
       "teacher": "Wenn es hakt: Eine Lehrperson oder eine Musikschule hilft beim Feinschliff."
     },
     "inChapter": "Kapitel {{n}} · {{world}}",
-    "legend": "Die Zahl zeigt das Kapitel, in dem du es lernst. Mit der Uhr: kommt in einem späteren Kapitel."
+    "legend": "Die Zahl zeigt das Kapitel, in dem du es lernst. Mit der Uhr: kommt in einem späteren Kapitel.",
+    "picks": {
+      "title": "Beliebte Traumlieder",
+      "skills_one": "Braucht {{count}} Fähigkeit",
+      "skills_other": "Braucht {{count}} Fähigkeiten"
+    }
   },
   "speech": {
     "read": "Vorlesen",
@@ -1053,5 +1061,78 @@
     "button": "Hier beginnen",
     "confirm": "Beginnen bei «{{chapter}}»? Die Lektionen davor zählen dann als bestanden.",
     "done": "Geschafft – der Lernpfad geht jetzt dort weiter."
+  },
+  "setup": {
+    "title": "Los geht's",
+    "hello": "Hallo {{name}}!",
+    "skip": "Überspringen",
+    "notSure": "Weiss ich noch nicht",
+    "progress": "Frage {{n}} von {{total}}",
+    "instrument": {
+      "title": "Worauf spielst du?",
+      "hint": "Klavio hört dir zu – über das Mikrofon oder direkt vom Digitalpiano.",
+      "acoustic": "Auf einem Klavier oder Flügel",
+      "acousticHint": "Klavio hört über das Mikrofon zu. Der Ton bleibt auf deinem Gerät.",
+      "digital": "Auf einem Digitalpiano oder Keyboard",
+      "digitalHint": "Mit einem USB-Kabel erkennt Klavio jeden Ton genau.",
+      "none": "Ich habe noch kein Instrument",
+      "noneHint": "Kein Problem: Du spielst auf den Tasten am Bildschirm."
+    },
+    "motive": {
+      "title": "Was möchtest du am liebsten?",
+      "read": "Noten lesen lernen",
+      "songs": "Meine Lieblingslieder spielen",
+      "relax": "Abschalten und entspannen",
+      "fun": "Einfach Spass haben",
+      "child": "Mit meinem Kind lernen"
+    },
+    "goal": {
+      "title": "Welches Lied möchtest du einmal spielen?",
+      "hint": "Dein Traumlied ist das Ziel deiner Reise. Klavio zeigt dir, welche Fähigkeiten es braucht.",
+      "other": "Ein anderes Lied? Du kannst jeden Titel später in «Mein Profil» eintragen."
+    },
+    "week": {
+      "title": "Wie oft möchtest du üben?",
+      "hint": "Schon zehn Minuten machen einen Unterschied. Du kannst das jederzeit ändern.",
+      "days2": "2 Tage pro Woche",
+      "days2Hint": "Gemütlich – gut zum Reinkommen.",
+      "days4": "3 bis 4 Tage pro Woche",
+      "days4Hint": "Regelmässig – so bleiben die Finger in Übung.",
+      "days6": "5 bis 7 Tage pro Woche",
+      "days6Hint": "Fast täglich – für alle, die schnell weiterkommen möchten."
+    },
+    "level": {
+      "title": "Kannst du das schon spielen?",
+      "hint": "Sag ehrlich, was du kannst – du kannst später jederzeit zurück.",
+      "staffLabel": "Notenbeispiel",
+      "cantRead": "Ich lese noch keine Noten",
+      "notYet": "Noch nicht",
+      "canPlay": "Ja, kann ich"
+    },
+    "done": {
+      "title": "Alles bereit!",
+      "instrument": {
+        "acoustic": "Du spielst auf dem Klavier – Klavio hört über das Mikrofon zu.",
+        "digital": "Du spielst auf dem Digitalpiano.",
+        "none": "Du spielst auf den Tasten am Bildschirm."
+      },
+      "goal": "Dein Traumlied: «{{title}}»",
+      "week_one": "Dein Wochenziel: {{count}} Tag",
+      "week_other": "Dein Wochenziel: {{count}} Tage",
+      "chapter": "Du startest bei Kapitel {{n}}: {{title}}",
+      "fromStart": "Du startest ganz am Anfang.",
+      "fromStartButton": "Doch von vorne beginnen",
+      "midiHow": "Verbinde das Digitalpiano mit einem USB-Kabel mit diesem Gerät. Das klappt in Chrome und Edge; auf dem iPhone und iPad hört Klavio über das Mikrofon zu.",
+      "later": "Alles lässt sich später in «Mein Profil» ändern.",
+      "micSetup": "Mikrofon einrichten",
+      "go": "Zum Lernpfad"
+    }
+  },
+  "weeklyGoal": {
+    "title": "Mein Wochenziel",
+    "hint": "An wie vielen Tagen pro Woche möchtest du üben? Auf der Startseite siehst du deine Woche.",
+    "none": "Keins",
+    "days_one": "{{count}} Tag",
+    "days_other": "{{count}} Tage"
   }
 }

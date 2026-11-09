@@ -1,6 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { audit } from './audit';
-import { grantAdmin, seedCompletedLessons, signUpWithEmail, uniqueEmail } from './helpers';
+import {
+  grantAdmin,
+  seedCompletedLessons,
+  signUpWithEmail,
+  uniqueEmail,
+  skipSetup,
+} from './helpers';
 
 const MAILPIT = process.env.E2E_MAILPIT_URL ?? 'http://localhost:8026';
 
@@ -124,6 +130,7 @@ test('adults travel down into «Die Hölle» and up to their dream song', async 
   await page.getByTestId('profile-more').click();
   await page.getByRole('dialog').getByText('Classic', { exact: true }).click();
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
 
   const journey = page.getByTestId('journey');
   await expect(journey).toContainText('Hinunter in die Hölle');
@@ -166,6 +173,7 @@ test('the year of birth decides whether a profile can choose the journey', async
   await expect(dialog.getByRole('radio', { name: 'Kids' })).toBeChecked();
   await audit(page);
   await dialog.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByTestId('journey')).toBeVisible();
   await expect(page.getByTestId('chapter-keys')).toContainText('Alp');
 });

@@ -23,6 +23,18 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Guter Start: Ein neues Profil beginnt mit ein paar kurzen Fragen – worauf du spielst (Klavier, Digitalpiano oder Bildschirm), was du am liebsten möchtest, dein Traumlied, wie oft du üben möchtest und ob du schon Noten lesen kannst. Wer schon spielt, beginnt gleich beim passenden Kapitel. Jede Frage lässt sich überspringen.',
+        'A good start: a new profile begins with a few short questions – what you play on (piano, digital piano or screen), what you would like most, your dream song, how often you want to practise and whether you can already read music. If you already play, you start right at the matching chapter. Every question can be skipped.',
+      ),
+      L(
+        'Wochenziel: Statt nur Tage in Folge zählt jetzt auch, an wie vielen Tagen pro Woche du übst. Die Startseite zeigt deine Woche, in «Mein Profil» stellst du das Ziel ein.',
+        'Weekly goal: besides days in a row, Klavio now counts on how many days a week you practise. The home page shows your week; set the goal in «My profile».',
+      ),
+      L(
+        'Traumlied: Beliebte Stücke wie «Für Elise» oder «Canon in D» lassen sich mit einem Tipp wählen.',
+        'Dream song: popular pieces like «Für Elise» or «Canon in D» can be chosen with one tap.',
+      ),
+      L(
         'Hören und Erfinden: In «Hör zu und spiel nach» spielt Klavi ein paar Töne vor, du spielst sie nach Gehör nach. Dazu «Erfinden auf den weissen Tasten» zu einer Begleitung in C. Alles als Bonus-Lektionen – sie halten niemanden auf.',
         'Listening and making up: in «Listen and play back» Klavi plays a few notes and you play them back by ear. Plus «Making up music on the white keys» over an accompaniment in C. All as bonus lessons – they hold nobody up.',
       ),

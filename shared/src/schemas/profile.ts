@@ -69,6 +69,14 @@ export const OUTFITS = [
 export const outfitSchema = z.enum(['cap', 'bow', 'glasses', 'scarf', 'headphones', 'crown']);
 export type Outfit = z.infer<typeof outfitSchema>;
 
+/** Why someone plays – asked when a profile starts; it sets Klavi's suggestions. */
+export const MOTIVES = ['read', 'songs', 'relax', 'fun', 'child'] as const;
+export const motiveSchema = z.enum(MOTIVES);
+export type Motive = z.infer<typeof motiveSchema>;
+
+/** Days per week a learner plans to practise (2, 4 or 6 in the start-up flow). */
+export const weeklyGoalSchema = z.number().int().min(1).max(7);
+
 /** Figures a profile can choose; "klavi" (the app's mascot) is the default. */
 export const avatarSchema = z.enum(['klavi', 'fox', 'owl', 'cat', 'bear', 'frog', 'whale']);
 export type Avatar = z.infer<typeof avatarSchema>;
@@ -108,6 +116,10 @@ export const profileUpdateSchema = z
     birthYear: birthYearSchema,
     world: worldSetSchema.nullable(),
     outfit: outfitSchema.nullable(),
+    /** the start-up questions are answered (or skipped) */
+    setupDone: z.literal(true),
+    motive: motiveSchema.nullable(),
+    weeklyGoalDays: weeklyGoalSchema.nullable(),
   })
   .partial();
 
@@ -137,6 +149,11 @@ export interface ProfileDto {
   world: WorldSet | null;
   /** the wardrobe piece the figure wears */
   outfit: Outfit | null;
+  /** false only for a new profile that hasn't seen the start-up questions */
+  setupDone: boolean;
+  motive: Motive | null;
+  /** planned practice days per week; null = no weekly goal */
+  weeklyGoalDays: number | null;
 }
 
 export const MAX_PROFILES_PER_ACCOUNT = 8;

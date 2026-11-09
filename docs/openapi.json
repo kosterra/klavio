@@ -911,6 +911,41 @@
                         "type": "null"
                       }
                     ]
+                  },
+                  "setupDone": {
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
+                  },
+                  "motive": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "read",
+                          "songs",
+                          "relax",
+                          "fun",
+                          "child"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "weeklyGoalDays": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 7
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   }
                 }
               }

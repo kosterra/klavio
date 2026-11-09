@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { LESSONS } from '@klavio/shared';
 import { audit } from './audit';
-import { seedCompletedLessons, signUpWithEmail, uniqueEmail } from './helpers';
+import { seedCompletedLessons, signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
 
 test('play back by ear; improvising on the white keys', async ({ page }) => {
   test.setTimeout(120_000);
@@ -15,6 +15,7 @@ test('play back by ear; improvising on the white keys', async ({ page }) => {
   await page.getByRole('dialog').getByLabel('Name').fill('Lina');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await page.getByRole('heading', { name: 'Hallo Lina!' }).waitFor();
   await seedCompletedLessons(
     page,

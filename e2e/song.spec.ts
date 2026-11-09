@@ -6,6 +6,7 @@ import {
   signUpWithEmail,
   startLesson,
   uniqueEmail,
+  skipSetup,
 } from './helpers';
 import { audit } from './audit';
 
@@ -31,6 +32,7 @@ test('song mode waits for every note; "listen" plays the song first', async ({ p
   await page.getByRole('dialog').getByLabel('Name').fill('Mia');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   await seedCompletedLessons(page, before('hand-entchen'));
   await page.reload();

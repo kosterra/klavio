@@ -14,6 +14,7 @@ import {
   type ProfileDto,
   type ProfileOverviewDto,
   type GoalSong,
+  type Motive,
   type Outfit,
   type WorldSet,
 } from '@klavio/shared';
@@ -57,6 +58,9 @@ export function profileToDto(p: ProfileDoc): ProfileDto {
     birthYear: p.birthYear ?? null,
     world: (p.world as WorldSet | null | undefined) ?? null,
     outfit: (p.outfit as Outfit | null | undefined) ?? null,
+    setupDone: p.setupDone ?? true,
+    motive: (p.motive as Motive | null | undefined) ?? null,
+    weeklyGoalDays: p.weeklyGoalDays ?? null,
     goalSong: p.goalSong?.title
       ? {
           title: p.goalSong.title,
@@ -135,7 +139,7 @@ const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
         throw new HttpError(400, 'PROFILE_LIMIT');
       }
       await checkWorld(req.body.world, req.body.birthYear);
-      const created = await Profile.create({ ...req.body, userId });
+      const created = await Profile.create({ ...req.body, userId, setupDone: false });
       return reply.code(201).send(profileToDto(created.toObject() as ProfileDoc));
     },
   );
@@ -145,11 +149,11 @@ const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
     { schema: { params: idParams, body: profileUpdateSchema } },
     async (req, reply) => {
       const { calibration, ...rest } = req.body;
-      // Learners may pick their own figure, set their goal song and save their
-      // microphone calibration; name, display mode and daily goal are parent area.
-      const parentOnly = Object.keys(rest).filter(
-        (k) => k !== 'avatar' && k !== 'goalSong' && k !== 'outfit',
-      );
+      // Learners may pick their own figure, set their goal song, answer the
+      // start-up questions and save their microphone calibration; name,
+      // display mode and daily goal are parent area.
+      const learnerKeys = ['avatar', 'goalSong', 'outfit', 'setupDone', 'motive', 'weeklyGoalDays'];
+      const parentOnly = Object.keys(rest).filter((k) => !learnerKeys.includes(k));
       if (parentOnly.length > 0) await app.requireParent(req, reply);
       const update: Record<string, unknown> = {};
       if (rest.world === 'journey' || rest.birthYear !== undefined) {

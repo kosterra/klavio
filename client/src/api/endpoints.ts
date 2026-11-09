@@ -83,9 +83,13 @@ export const endpoints = {
       calibration?: Partial<ProfileDto['calibration']>;
       goalSong?: ProfileDto['goalSong'];
       outfit?: ProfileDto['outfit'];
+      setupDone?: true;
+      motive?: ProfileDto['motive'];
+      weeklyGoalDays?: ProfileDto['weeklyGoalDays'];
     },
   ) => api<ProfileDto>('PATCH', `/profiles/${id}`, body),
   deleteProfile: (id: string) => api('DELETE', `/profiles/${id}`),
+  placement: (chapterId: string) => api('POST', '/progress/placement', { chapterId }),
   selectProfile: (profileId: string) => api('POST', '/profiles/select', { profileId }),
 
   progress: (date: string) => api<ProgressDto>('GET', `/progress?date=${encodeURIComponent(date)}`),

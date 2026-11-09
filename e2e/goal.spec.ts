@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { LESSONS } from '@klavio/shared';
 import { audit } from './audit';
-import { seedCompletedLessons, signUpWithEmail, uniqueEmail } from './helpers';
+import { seedCompletedLessons, signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
 
 test('dream song: set it in the profile, see progress and the next step on the dashboard', async ({
   page,
@@ -14,6 +14,7 @@ test('dream song: set it in the profile, see progress and the next step on the d
   await page.getByTestId('profile-more').click();
   await page.getByRole('dialog').getByText('Classic', { exact: true }).click();
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
 
   // adults are invited to set a dream song

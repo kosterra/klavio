@@ -8,6 +8,7 @@ const base = {
     [LESSONS[0]!.id]: { bestStars: 1, completions: 1, lastDate: '2026-11-05', box: 0, reviews: 0 },
   },
   today: { date: '2026-11-07', seconds: 60, xp: 0 },
+  weekDays: [],
 };
 const item = (over: Partial<QueuedResult>): QueuedResult => ({
   id: 'x',

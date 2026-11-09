@@ -1,7 +1,7 @@
 import { Group, Progress, RingProgress, SimpleGrid, Text, ThemeIcon } from '@mantine/core';
 import { IconFlameFilled, IconStarFilled, IconTrophyFilled } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { xpForLevel } from '@klavio/shared';
+import { addDays, weekOf, xpForLevel } from '@klavio/shared';
 import classes from './Dashboard.module.css';
 
 /** Tiles in a soft tint of their colour, with a matching border. */
@@ -24,14 +24,29 @@ export function StatTiles({
   streak,
   todayMinutes,
   goalMinutes,
+  today,
+  weekDays,
+  weeklyGoal,
 }: {
   xp: number;
   level: number;
   streak: number;
   todayMinutes: number;
   goalMinutes: number;
+  /** the learner's local date */
+  today: string;
+  /** days of this week with practice */
+  weekDays: string[];
+  /** planned days per week; null = no weekly goal */
+  weeklyGoal: number | null;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const monday = weekOf(today);
+  const week = Array.from({ length: 7 }, (_, i) => addDays(monday, i));
+  const dayName = new Intl.DateTimeFormat(i18n.language, { weekday: 'narrow', timeZone: 'UTC' });
+  const practised = new Set(weekDays);
+  const weekCount = week.filter((d) => practised.has(d)).length;
+  const weekDone = weeklyGoal !== null && weekCount >= weeklyGoal;
   const from = xpForLevel(level);
   const to = xpForLevel(level + 1);
   const levelPct = Math.min(100, ((xp - from) / (to - from)) * 100);
@@ -78,9 +93,36 @@ export function StatTiles({
           <Text fw={800} fz="xl" lh={1.1}>
             {t('dashboard.streak', { count: streak })}
           </Text>
-          <Text size="sm" fw={600} mt={4}>
-            {streak > 0 ? t('dashboard.streakKeep') : t('dashboard.streakZero')}
-          </Text>
+          {weeklyGoal === null ? (
+            <Text size="sm" fw={600} mt={4}>
+              {streak > 0 ? t('dashboard.streakKeep') : t('dashboard.streakZero')}
+            </Text>
+          ) : (
+            <>
+              <ol
+                className={classes.week}
+                aria-label={t('dashboard.weekGoal', { count: weekCount, goal: weeklyGoal })}
+                data-testid="week-goal"
+              >
+                {week.map((d) => (
+                  <li
+                    key={d}
+                    className={classes.weekDay}
+                    data-done={practised.has(d) || undefined}
+                    data-today={d === today || undefined}
+                    aria-hidden
+                  >
+                    {dayName.format(new Date(`${d}T12:00:00Z`))}
+                  </li>
+                ))}
+              </ol>
+              <Text size="sm" fw={600} mt={4}>
+                {weekDone
+                  ? t('dashboard.weekGoalReached')
+                  : t('dashboard.weekGoal', { count: weekCount, goal: weeklyGoal })}
+              </Text>
+            </>
+          )}
         </div>
       </div>
 

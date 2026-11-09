@@ -2,7 +2,7 @@ import { CURRICULUM } from '@klavio/shared';
 import { expect, test } from '@playwright/test';
 import rootPackage from '../package.json' with { type: 'json' };
 import { audit } from './audit';
-import { signUpWithEmail, uniqueEmail } from './helpers';
+import { signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
 
 test('landing page: sections, login card and easter eggs', async ({ page }) => {
   test.setTimeout(90_000);
@@ -74,6 +74,7 @@ test('profile page: the own figure plays its tune after five taps', async ({ pag
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('radio', { name: 'Quaki, der Frosch' }).click();
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   await page.goto('/profile');
   const figure = page.getByRole('button', { name: 'Quaki, deine Figur' });
@@ -113,6 +114,7 @@ test('language: switch on the landing page, remembered on this device, also in t
   await page.getByRole('dialog').getByLabel('Name').fill('Mia');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   await page.getByRole('button', { name: 'Menü' }).click();
   await page.getByRole('menuitem', { name: 'English' }).click();

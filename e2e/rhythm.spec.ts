@@ -1,6 +1,12 @@
 import { expect, test, type Page } from '@playwright/test';
 import { LESSONS } from '@klavio/shared';
-import { seedCompletedLessons, signUpWithEmail, uniqueEmail, startLesson } from './helpers';
+import {
+  seedCompletedLessons,
+  signUpWithEmail,
+  uniqueEmail,
+  startLesson,
+  skipSetup,
+} from './helpers';
 import { audit } from './audit';
 
 /**
@@ -39,6 +45,7 @@ test('rhythm: count-in, play in time, retry counts as practice', async ({ page }
   await page.getByRole('dialog').getByLabel('Name').fill('Leo');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   const idx = LESSONS.findIndex((l) => l.id === 'rhythm-quarters');
   await seedCompletedLessons(
@@ -86,6 +93,7 @@ test('6/8: the metronome counts six eighths; a bar on time is perfect', async ({
   await page.getByRole('dialog').getByLabel('Name').fill('Leo');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   const idx = LESSONS.findIndex((l) => l.id === 'meter-six-eight');
   await seedCompletedLessons(

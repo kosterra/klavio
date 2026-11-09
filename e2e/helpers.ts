@@ -164,3 +164,9 @@ export async function playTimedSong(page: Page): Promise<string> {
   // read at once: a good run goes on by itself after a moment
   return (await result.textContent()) ?? '';
 }
+
+/** A new profile starts with the start-up questions: skip them. */
+export async function skipSetup(page: Page) {
+  await page.getByTestId('setup-skip').click();
+  await expect(page.getByTestId('setup')).toHaveCount(0);
+}

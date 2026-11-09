@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { audit } from './audit';
-import { signUpWithEmail, startLesson, uniqueEmail } from './helpers';
+import { signUpWithEmail, startLesson, uniqueEmail, skipSetup } from './helpers';
 
 /**
  * The test browser has no voices: a stand-in speech synthesis with one local
@@ -58,6 +58,12 @@ test('Klavi reads tasks and explanations aloud – automatically for Kids, switc
   await page.getByRole('dialog').getByLabel('Name').fill('Noa');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  // Kids hear the start-up questions too
+  await expect.poll(() => spoken(page)).toContain('Worauf spielst du?');
+  await skipSetup(page);
+  await page.evaluate(() => {
+    (window as unknown as { __spoken: string[] }).__spoken.length = 0;
+  });
 
   // Kids profile: the first explanation is read on its own
   await page.getByRole('link', { name: 'Erste Lektion starten' }).click();

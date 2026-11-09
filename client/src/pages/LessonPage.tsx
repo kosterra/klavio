@@ -60,6 +60,7 @@ import { PieceExercise } from '../lesson/PieceExercise';
 import { ImproviseExercise } from '../lesson/ImproviseExercise';
 import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
+import { readPlayOn, writePlayOn } from '../lesson/playOn';
 import { useNoteEvents } from '../input/noteBus';
 import { useLocalized } from '../lesson/useLocalized';
 import { loadProgress, useProgress } from '../lesson/useProgress';
@@ -72,7 +73,6 @@ import { useWorldMode } from '../lesson/useWorldMode';
 import stage from '../lesson/LessonStage.module.css';
 
 /** «Auf meinem Klavier» or «Auf dem Bildschirm», remembered on this device. */
-const PLAY_ON_KEY = 'klavio-play-on';
 
 type ShownResult = LessonResultDto & { pending?: boolean };
 
@@ -170,21 +170,11 @@ function LessonRun({
     discoverFirst && steps.length ? 'theory' : 'intro',
   );
   // how the learner played last time on this device: shown first
-  const [playOn] = useState<'piano' | 'screen'>(() => {
-    try {
-      return localStorage.getItem(PLAY_ON_KEY) === 'screen' ? 'screen' : 'piano';
-    } catch {
-      return 'piano';
-    }
-  });
+  const [playOn] = useState(readPlayOn);
   const startLesson = (choice: 'piano' | 'screen' = 'piano') => {
     // the real piano: the microphone starts with this tap (iOS needs a gesture)
     if (choice === 'piano') input.startPreferred();
-    try {
-      localStorage.setItem(PLAY_ON_KEY, choice);
-    } catch {
-      // not remembered – fine
-    }
+    writePlayOn(choice);
     startedAt.current = performance.now();
     setPhase('play');
   };

@@ -281,3 +281,35 @@
   flex: 1;
   min-width: 0;
 }
+
+/* the weekly goal: one dot per day, Monday first */
+.week {
+  display: flex;
+  gap: 4px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.weekDay {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--mantine-color-text);
+  background: var(--klavio-surface);
+  border: 2px solid color-mix(in srgb, var(--mantine-color-orange-6) 35%, var(--klavio-surface));
+}
+
+.weekDay[data-today] {
+  border-color: var(--mantine-color-orange-8);
+}
+
+.weekDay[data-done] {
+  color: #fff;
+  background: var(--mantine-color-orange-9);
+  border-color: var(--mantine-color-orange-9);
+}

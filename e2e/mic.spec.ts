@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import { expect, test } from '@playwright/test';
-import { signUpWithEmail, uniqueEmail } from './helpers';
+import { signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
 import { audit } from './audit';
 
 const MIC_FIXTURE = join(import.meta.dirname, '..', 'test-results', 'mic-fixture.wav');
@@ -24,6 +24,7 @@ test('microphone setup wizard calibrates and the test page detects notes', async
   await page.getByRole('dialog').getByLabel('Name').fill('Noah');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByText(/Richte einmal das Mikrofon ein/)).toBeVisible();
   await page.getByRole('link', { name: 'Mikrofon einrichten' }).click();
 

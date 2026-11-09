@@ -57,6 +57,9 @@ const MetronomePage = lazy(() =>
 const FreePlayPage = lazy(() =>
   import('./pages/FreePlayPage').then((m) => ({ default: m.FreePlayPage })),
 );
+const OnboardingPage = lazy(() =>
+  import('./pages/OnboardingPage').then((m) => ({ default: m.OnboardingPage })),
+);
 const LessonPage = lazy(() =>
   import('./pages/LessonPage').then((m) => ({ default: m.LessonPage })),
 );
@@ -158,6 +161,7 @@ export function App() {
                 <Route element={<RequireProfile />}>
                   <Route path="/lesson/:lessonId" element={<LessonPage />} />
                   <Route path="/quick" element={<QuickRoundPage />} />
+                  <Route path="/start" element={<OnboardingPage />} />
                 </Route>
                 <Route element={<AppLayout />}>
                   <Route

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { LESSONS } from '@klavio/shared';
 import { audit } from './audit';
-import { seedCompletedLessons, signUpWithEmail, uniqueEmail } from './helpers';
+import { seedCompletedLessons, signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
 
 test('the first lesson starts with "Entdecken": explanations, games and a quiz', async ({
   page,
@@ -12,6 +12,7 @@ test('the first lesson starts with "Entdecken": explanations, games and a quiz',
   await page.getByRole('dialog').getByLabel('Name').fill('Lia');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await page.getByRole('link', { name: 'Erste Lektion starten' }).click();
 
   const text = page.getByTestId('theory-text');
@@ -77,6 +78,7 @@ test('quiz: wrong answers get a hint, the right one unlocks "Weiter"', async ({ 
   await page.getByRole('dialog').getByLabel('Name').fill('Noa');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   // jump to a lesson with a quiz: keys-d-e needs the two lessons before
   await seedCompletedLessons(page, ['keys-c', 'keys-middle-c']);
@@ -107,6 +109,7 @@ test('reading and rhythm theory: staff lines/spaces, pizza note values, clap gam
   await page.getByRole('dialog').getByLabel('Name').fill('Mo');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   const ids = LESSONS.map((l) => l.id);
   // all played: «Nochmals entdecken» opens just the lesson's theory (no recap)
@@ -154,6 +157,7 @@ test('"Wissen" lists what was discovered; a new chapter starts with "Weisst du�
   await page.getByRole('dialog').getByLabel('Name').fill('Ela');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   const ids = LESSONS.map((l) => l.id);
   await seedCompletedLessons(page, ids.slice(0, ids.indexOf('hand-a-h')));

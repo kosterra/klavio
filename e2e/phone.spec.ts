@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { signUpWithEmail, skipTheory, uniqueEmail } from './helpers';
+import { signUpWithEmail, skipTheory, uniqueEmail, skipSetup } from './helpers';
 
 // a phone: narrow, touch only
 test.use({
@@ -25,6 +25,7 @@ test('on a phone the keys are big enough, a swipe scrolls and only a tap plays',
   await page.getByRole('dialog').getByLabel('Name').fill('Lina');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2018');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await page.getByRole('heading', { name: 'Hallo Lina!' }).waitFor();
 
   await page.goto('/lesson/keys-c');

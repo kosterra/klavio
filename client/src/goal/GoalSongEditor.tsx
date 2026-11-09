@@ -17,6 +17,7 @@ import {
   type SkillId,
 } from '@klavio/shared';
 import { useLocalized } from '../lesson/useLocalized';
+import { GoalSongPicks } from './GoalSongPicks';
 
 /**
  * «Mein Traumlied»: the title of the song the learner wants to play one day,
@@ -71,6 +72,12 @@ export function GoalSongEditor({
             </Title>
           </Group>
           <Text>{t('goal.editorIntro')}</Text>
+          <div>
+            <Text fw={500} mb="xs">
+              {t('goal.picks.title')}
+            </Text>
+            <GoalSongPicks value={title} onPick={(song) => changeTitle(song.title)} />
+          </div>
           <Autocomplete
             label={t('goal.songTitle')}
             description={t('goal.songTitleHint')}

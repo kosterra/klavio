@@ -1,6 +1,12 @@
 import { join } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
-import { seedCompletedLessons, signUpWithEmail, skipTheory, uniqueEmail } from './helpers';
+import {
+  seedCompletedLessons,
+  signUpWithEmail,
+  skipTheory,
+  uniqueEmail,
+  skipSetup,
+} from './helpers';
 import { audit } from './audit';
 import { installFakeMidi } from './fixtures/fakeMidi';
 
@@ -33,6 +39,7 @@ test('MIDI, on-screen keyboard and computer keys share one input; MIDI beats the
   await page.getByRole('dialog').getByLabel('Name').fill('Mira');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
 
   await page.getByTestId('nav-toggle').click();
   await page.getByTestId('side-nav').getByRole('link', { name: 'Eingabe' }).click();
@@ -95,6 +102,7 @@ test('with a digital piano the first key starts the lesson; every note heard is 
   await page.getByRole('dialog').getByLabel('Name').fill('Mira');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await page.getByRole('heading', { name: 'Hallo Mira!' }).waitFor();
   await page.goto('/input');
   await page.getByRole('button', { name: 'MIDI verbinden' }).click();
@@ -130,6 +138,7 @@ test('chords: with a digital piano all three notes have to sound, on the screen 
   await page.getByRole('dialog').getByLabel('Name').fill('Mira');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await page.getByRole('heading', { name: 'Hallo Mira!' }).waitFor();
   const { LESSONS } = await import('@klavio/shared');
   await seedCompletedLessons(
@@ -180,6 +189,7 @@ test('loud and soft and the pedal are checked with a digital piano', async ({ pa
   await page.getByRole('dialog').getByLabel('Name').fill('Mira');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await page.getByRole('heading', { name: 'Hallo Mira!' }).waitFor();
   const { LESSONS } = await import('@klavio/shared');
   await seedCompletedLessons(

@@ -5,6 +5,7 @@ import {
   logout,
   signUpWithEmail,
   uniqueEmail,
+  skipSetup,
 } from './helpers';
 
 test('sign up with e-mail, add a passkey in the account, then log in with it', async ({
@@ -28,6 +29,7 @@ test('sign up with e-mail, add a passkey in the account, then log in with it', a
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('radio', { name: 'Olli, die Eule' }).click();
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Hallo Lina!' })).toBeVisible();
   await expect(page.getByText('Was du spielst, bleibt auf deinem Gerät.')).toBeVisible();
 

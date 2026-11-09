@@ -2,6 +2,7 @@ import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { z } from 'zod';
 import {
   addDays,
+  weekOf,
   CURRICULUM,
   coreLessons,
   applyCompletion,
@@ -73,10 +74,14 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
     '/placement',
     {
       schema: { body: z.object({ chapterId: z.string().max(40) }) },
-      preHandler: app.requireParent,
     },
-    async (req) => {
+    async (req, reply) => {
       const profileId = req.auth!.activeProfileId!;
+      // parent area – or the start-up questions of a new profile without progress
+      const profile = await Profile.findById(profileId, { setupDone: 1 }).lean();
+      const starting =
+        profile?.setupDone === false && !(await LessonProgress.exists({ profileId }));
+      if (!starting) await app.requireParent(req, reply);
       const ci = CURRICULUM.findIndex((c) => c.id === req.body.chapterId);
       if (ci < 0) throw new HttpError(400, 'UNKNOWN_CHAPTER');
       const skip = CURRICULUM.slice(0, ci).flatMap((c) => coreLessons(c).map((l) => l.id));
@@ -106,13 +111,22 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
     { schema: { querystring: progressQuerySchema } },
     async (req): Promise<ProgressDto> => {
       const profileId = req.auth!.activeProfileId!;
-      const [lessons, today] = await Promise.all([
+      const monday = weekOf(req.query.date);
+      const [lessons, week] = await Promise.all([
         LessonProgress.find({ profileId }).lean(),
-        DailyActivity.findOne({ profileId, date: req.query.date }).lean(),
+        DailyActivity.find({
+          profileId,
+          date: { $gte: monday, $lte: addDays(monday, 6) },
+        }).lean(),
       ]);
+      const today = week.find((d) => d.date === req.query.date);
       return {
         lessons: Object.fromEntries(lessons.map((l) => [l.lessonId, toDto(l)])),
         today: { date: req.query.date, seconds: today?.seconds ?? 0, xp: today?.xp ?? 0 },
+        weekDays: week
+          .filter((d) => (d.seconds ?? 0) > 0 || (d.xp ?? 0) > 0)
+          .map((d) => d.date)
+          .sort(),
       };
     },
   );

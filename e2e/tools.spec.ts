@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { audit } from './audit';
-import { seedCompletedLessons, signUpWithEmail, uniqueEmail } from './helpers';
+import { seedCompletedLessons, signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
 
 test('free play, metronome, wardrobe, family overview, placement and data export', async ({
   page,
@@ -11,6 +11,7 @@ test('free play, metronome, wardrobe, family overview, placement and data export
   await page.getByRole('dialog').getByLabel('Name').fill('Lina');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await page.getByRole('heading', { name: 'Hallo Lina!' }).waitFor();
 
   // free play: the note played shows up big

@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { signUpWithEmail, uniqueEmail, skipTheory } from './helpers';
+import { signUpWithEmail, uniqueEmail, skipTheory, skipSetup } from './helpers';
 import { audit } from './audit';
 
 /** No MIDI, microphone denied → the lesson falls back to the on-screen keyboard. */
@@ -67,6 +67,7 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await page.getByRole('dialog').getByLabel('Name').fill('Lina');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
 
   // --- dashboard: first lesson current, the rest locked
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
