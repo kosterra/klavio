@@ -514,7 +514,7 @@
     "useScreen": "Du kannst auf der Bildschirm-Klaviatur weiterspielen.",
     "micOn": "Mikrofon an",
     "useMic": "Mikrofon verwenden",
-    "switchToScreen": "Mikrofon ausschalten und auf dem Bildschirm spielen",
+    "switchToScreen": "Lieber auf dem Bildschirm spielen",
     "findKey": "Finde das {{note}}",
     "middleC": "das mittlere C",
     "correct": "Richtig!",
@@ -592,7 +592,6 @@
     "heard": "Ich höre: {{note}}",
     "startPiano": "Los geht’s – auf meinem Klavier",
     "startScreen": "Los geht’s – auf dem Bildschirm",
-    "switchToScreen": "Lieber auf dem Bildschirm spielen",
     "switchToPiano": "Lieber auf dem Klavier spielen",
     "playPianoHint": "Auf dem Klavier höre ich dir über das Mikrofon zu – der Ton bleibt auf deinem Gerät.",
     "waitingForNote": "Ich höre zu – spiel los!",
@@ -952,7 +951,8 @@
       "title": "Beliebte Traumlieder",
       "skills_one": "Braucht {{count}} Fähigkeit",
       "skills_other": "Braucht {{count}} Fähigkeiten"
-    }
+    },
+    "skillsStart": "{{total}} Fähigkeiten bis zu deinem Traumlied – die erste lernst du gleich in der nächsten Lektion."
   },
   "speech": {
     "read": "Vorlesen",
@@ -996,19 +996,45 @@
   },
   "journey": {
     "kicker": "Deine Reise",
-    "title": "Hinunter in die Hölle – und hinauf zum Traumgipfel",
+    "title": "Vier Etappen bis zu deinem Traumlied",
     "titleSong": "Auf dem Weg zu «{{title}}»",
     "dreamSong": "Dein Traumlied",
     "altitude": "{{m}} m",
-    "seaLevel": "0 m",
     "phase": {
-      "down": "Am Anfang geht es leicht bergab, dann immer steiler hinunter bis in die Hölle – das gehört dazu. Wer da durch ist, steigt nur noch auf: zu {{goal}}.",
-      "hell": "Du bist in der Hölle, dem schwersten Teil der Reise. Hier fühlt sich alles zäh an – das ist normal. Halte durch: Ab hier geht es nur noch bergauf.",
-      "up": "Die Hölle liegt hinter dir. Jetzt geht es bergauf – jedes Kapitel bringt dich näher zu {{goal}}.",
-      "summit": "Gipfel erreicht! Du kannst jetzt alles, was Klavio dir beibringt. Die Noten von {{goal}} holst du dir selbst – dann übst du es Stück für Stück, mit dem Metronom."
+      "start": "Jetzt legst du die Grundlagen: Tasten, rechte Hand, erste Noten. Danach wird es eine Weile zäh – das gehört dazu und geht vorbei. Jede Lektion bringt dich näher zu {{goal}}.",
+      "grind": "Du steckst in der Durststrecke. Zäh fühlt sich an wie Stillstand, ist aber Fortschritt. Bleib bei deinem Wochenziel – so kommst du durch.",
+      "climb": "Das Zäheste liegt hinter dir. Jetzt spielen beide Hände zusammen, und mit jedem Kapitel klingt es mehr nach Musik.",
+      "summit": "Die letzte Etappe: Tonarten, Begleitung und Ausdruck. Danach bist du bereit für {{goal}}.",
+      "done": "Gipfel erreicht! Du kannst jetzt alles, was Klavio dir beibringt. Die Noten von {{goal}} holst du dir selbst – dann übst du es Stück für Stück, mit dem Metronom."
     },
-    "summary": "Höhenprofil deiner Reise: Kapitel {{n}} von {{total}}, du bist in «{{world}}». Der tiefste Punkt ist «{{hell}}», ganz oben wartet {{goal}}.",
-    "dreamSongTo": "deinem Traumlied"
+    "dreamSongTo": "deinem Traumlied",
+    "summitKicker": "Dein Gipfel",
+    "estimate_one": "Mit {{days}} Übungstagen pro Woche bist du in etwa {{count}} Woche oben – wenn du an jedem Übungstag eine Lektion schaffst.",
+    "estimate_other": "Mit {{days}} Übungstagen pro Woche bist du in etwa {{count}} Wochen oben – wenn du an jedem Übungstag eine Lektion schaffst.",
+    "estimateNone": "Mit einem Wochenziel rechnet Klavio aus, wann du oben bist.",
+    "setWeeklyGoal": "Wochenziel festlegen",
+    "stagesLabel": "Die vier Etappen bis zum Gipfel",
+    "stageN": "Etappe {{n}}",
+    "stages": {
+      "start": "Aufbruch",
+      "grind": "Durststrecke",
+      "climb": "Aufstieg",
+      "summit": "Gipfelsturm"
+    },
+    "here": "Du bist hier",
+    "reward": "Danach spielst du {{song}}",
+    "rewardDone": "Geschafft – du spielst {{song}}",
+    "survived": "Durchgehalten! Die Durststrecke liegt hinter dir.",
+    "hardTitle": "Hier wird’s zäh – und das ist normal.",
+    "hardText": "Neue Rhythmen und die linke Hand fühlen sich zuerst ungewohnt an. Genau hier lernst du am meisten.",
+    "help": {
+      "tips": "Klavis Tipps in der Übung zeigen dir, worauf es ankommt.",
+      "short": "Lieber jeden Tag kurz als einmal lang: 10 Minuten reichen.",
+      "week": "Dein Wochenziel hält dich dran – auch an Tagen ohne Lust."
+    },
+    "lessonsOf": "{{n}}/{{total}}",
+    "rewardSummit": "Danach bist du bereit für {{song}}",
+    "dreamSongFor": "dein Traumlied"
   },
   "freePlay": {
     "title": "Freies Spielen",

@@ -41,6 +41,7 @@ export function DashboardPage() {
           goalTitle: activeProfile.goalSong?.title,
           avatar: activeProfile.avatar,
           outfit: activeProfile.outfit,
+          weeklyGoalDays: activeProfile.weeklyGoalDays,
         }
       : null;
 

@@ -121,7 +121,9 @@ test('admins name the operator and edit the e-mail texts in both languages', asy
   await expect(page.getByText('Betreiber und Kontakt gespeichert.')).toBeVisible();
 });
 
-test('adults travel down into «Die Hölle» and up to their dream song', async ({ page }) => {
+test('adults travel in four stages – through the hard stretch – up to their dream song', async ({
+  page,
+}) => {
   test.setTimeout(90_000);
   await signUpWithEmail(page, uniqueEmail('journey'), 'Ralph');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
@@ -133,8 +135,12 @@ test('adults travel down into «Die Hölle» and up to their dream song', async 
   await skipSetup(page);
 
   const journey = page.getByTestId('journey');
-  await expect(journey).toContainText('Hinunter in die Hölle');
-  await expect(page.getByTestId('journey-phase')).toContainText('bis in die Hölle');
+  await expect(journey).toContainText('Vier Etappen bis zu deinem Traumlied');
+  await expect(page.getByTestId('journey-phase')).toContainText('Jetzt legst du die Grundlagen');
+  // the hard stretch is announced before it comes, with what helps
+  await expect(page.getByTestId('journey-hard')).toContainText('Hier wird’s zäh');
+  await expect(page.getByTestId('stage-start')).toContainText('Du bist hier');
+  await expect(page.getByTestId('journey-estimate')).toContainText('Wochenziel');
   // the chapters are the journey's stations, with their altitude
   await expect(page.getByTestId('chapter-keys')).toContainText('Alp · 1500 m');
   await audit(page);
@@ -144,7 +150,9 @@ test('adults travel down into «Die Hölle» and up to their dream song', async 
   const before = CURRICULUM.slice(0, 5).flatMap((c) => c.lessons.map((l) => l.id));
   await seedCompletedLessons(page, before);
   await page.reload();
-  await expect(page.getByTestId('journey-phase')).toContainText('Du bist in der Hölle');
+  await expect(page.getByTestId('journey-phase')).toContainText('Du steckst in der Durststrecke');
+  await expect(page.getByTestId('stage-grind')).toContainText('Du bist hier');
+  await expect(page.getByTestId('stage-start')).toContainText('Geschafft');
   await page.getByTestId('stage-switch').getByText(/2/).first().click();
   await expect(page.getByTestId('chapter-bass')).toContainText('Die Hölle · −666 m');
   await audit(page);

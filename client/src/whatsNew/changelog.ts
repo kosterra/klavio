@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Deine Reise in vier Etappen: Oben wartet dein Traumlied als Gipfel, darunter Aufbruch, Durststrecke, Aufstieg und Gipfelsturm. Jede Etappe sagt, was du danach spielst, die Durststrecke kündigt sich ehrlich an – mit dem, was dir hilft – und mit deinem Wochenziel rechnet Klavio aus, wann du ungefähr oben bist.',
+        'Your journey in four stages: your dream song waits as the summit on top, below it setting out, the hard stretch, the climb and the summit push. Each stage says what you’ll play afterwards, the hard stretch is announced honestly – with what helps – and with your weekly goal Klavio works out roughly when you’ll reach the top.',
+      ),
+      L(
         'Bühnenlicht in den Lektionen: Entdecken, Start und Ergebnis in Klavios Farben wie auf der Startseite, beim Spielen ein ruhiges Licht, damit Tasten und Noten im Vordergrund stehen. Der Fortschrittsbalken zählt jetzt auch das Entdecken.',
         'Stage lighting in lessons: Discover, start and result in Klavio’s colours like the public page, a calm light while playing so keys and notes stand out. The progress bar now counts Discover too.',
       ),

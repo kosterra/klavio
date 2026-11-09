@@ -61,7 +61,9 @@ export function GoalSongCard({
             </Text>
           </Group>
           <Text size="sm" fw={600} mt={4}>
-            {t('goal.skillsReached', { reached: p.reached, total: p.total })}
+            {p.reached === 0
+              ? t('goal.skillsStart', { total: p.total })
+              : t('goal.skillsReached', { reached: p.reached, total: p.total })}
           </Text>
         </div>
       </Group>

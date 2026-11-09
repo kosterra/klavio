@@ -514,7 +514,7 @@
     "useScreen": "You can keep playing on the on-screen keyboard.",
     "micOn": "Microphone on",
     "useMic": "Use microphone",
-    "switchToScreen": "Switch off the microphone and play on the screen",
+    "switchToScreen": "Rather play on the screen",
     "findKey": "Find {{note}}",
     "middleC": "middle C",
     "correct": "Correct!",
@@ -592,7 +592,6 @@
     "heard": "I hear: {{note}}",
     "startPiano": "Let’s go – on my piano",
     "startScreen": "Let’s go – on the screen",
-    "switchToScreen": "Rather play on the screen",
     "switchToPiano": "Rather play on the piano",
     "playPianoHint": "On the piano I listen through the microphone – the sound stays on your device.",
     "waitingForNote": "I’m listening – go ahead!",
@@ -952,7 +951,8 @@
       "title": "Popular dream songs",
       "skills_one": "Needs {{count}} skill",
       "skills_other": "Needs {{count}} skills"
-    }
+    },
+    "skillsStart": "{{total}} skills to your dream song – you’ll learn the first one in your next lesson."
   },
   "speech": {
     "read": "Read aloud",
@@ -996,19 +996,45 @@
   },
   "journey": {
     "kicker": "Your journey",
-    "title": "Down into hell – and up to the dream summit",
+    "title": "Four stages to your dream song",
     "titleSong": "On the way to «{{title}}»",
     "dreamSong": "Your dream song",
     "altitude": "{{m}} m",
-    "seaLevel": "0 m",
     "phase": {
-      "down": "It starts gently downhill, then ever steeper down into hell – that is part of it. Once you are through, it only goes up: to {{goal}}.",
-      "hell": "You are in hell, the hardest part of the journey. Everything feels slow here – that is normal. Hold on: from here it only goes uphill.",
-      "up": "Hell is behind you. Now it goes uphill – every chapter brings you closer to {{goal}}.",
-      "summit": "Summit reached! You can now do everything Klavio teaches. Get the sheet music of {{goal}} yourself – then practise it piece by piece, with the metronome."
+      "start": "Right now you’re laying the foundations: keys, right hand, first notes. After that it gets tough for a while – that’s part of it and it passes. Every lesson brings you closer to {{goal}}.",
+      "grind": "You’re in the hard stretch. Tough feels like standing still, but it is progress. Stick to your weekly goal – that’s how you get through.",
+      "climb": "The toughest part is behind you. Now both hands play together, and with every chapter it sounds more like music.",
+      "summit": "The last stage: keys, accompaniment and expression. After that you’re ready for {{goal}}.",
+      "done": "Summit reached! You can now do everything Klavio teaches. Get the sheet music of {{goal}} yourself – then practise it piece by piece, with the metronome."
     },
-    "summary": "Elevation profile of your journey: chapter {{n}} of {{total}}, you are in «{{world}}». The lowest point is «{{hell}}», at the very top {{goal}} is waiting.",
-    "dreamSongTo": "your dream song"
+    "dreamSongTo": "your dream song",
+    "summitKicker": "Your summit",
+    "estimate_one": "With {{days}} practice days a week you’ll be at the top in about {{count}} week – if you manage one lesson per practice day.",
+    "estimate_other": "With {{days}} practice days a week you’ll be at the top in about {{count}} weeks – if you manage one lesson per practice day.",
+    "estimateNone": "With a weekly goal, Klavio works out when you’ll reach the top.",
+    "setWeeklyGoal": "Set a weekly goal",
+    "stagesLabel": "The four stages up to the summit",
+    "stageN": "Stage {{n}}",
+    "stages": {
+      "start": "Setting out",
+      "grind": "The hard stretch",
+      "climb": "The climb",
+      "summit": "Summit push"
+    },
+    "here": "You are here",
+    "reward": "Afterwards you’ll play {{song}}",
+    "rewardDone": "Done – you play {{song}}",
+    "survived": "You kept going! The hard stretch is behind you.",
+    "hardTitle": "This is where it gets tough – and that’s normal.",
+    "hardText": "New rhythms and the left hand feel strange at first. This is exactly where you learn the most.",
+    "help": {
+      "tips": "Klavi’s tips in the exercise show you what matters.",
+      "short": "Short every day beats long once: 10 minutes are enough.",
+      "week": "Your weekly goal keeps you going – even on days you don’t feel like it."
+    },
+    "lessonsOf": "{{n}}/{{total}}",
+    "rewardSummit": "Afterwards you’re ready for {{song}}",
+    "dreamSongFor": "your dream song"
   },
   "freePlay": {
     "title": "Free play",

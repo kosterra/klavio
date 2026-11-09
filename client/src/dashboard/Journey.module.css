@@ -2,121 +2,341 @@
   letter-spacing: 0.05em;
 }
 
-.chart {
-  position: relative;
-  margin-top: var(--mantine-spacing-sm);
-  width: 100%;
+/* the summit on top, the stages below it – climbing reads from bottom to top */
+.expedition {
+  margin-top: var(--mantine-spacing-md);
 }
 
-.chart svg {
-  display: block;
+.summit {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-lg);
+  background:
+    radial-gradient(circle at 85% 0%, rgb(255 212 59 / 30%), transparent 45%),
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--mantine-color-indigo-5) 20%, var(--klavio-surface)),
+      color-mix(in srgb, var(--mantine-color-pink-5) 18%, var(--klavio-surface))
+    );
+  border: 2px solid color-mix(in srgb, var(--mantine-color-pink-5) 45%, var(--klavio-surface));
+}
+
+.peak {
+  flex: none;
+  width: 110px;
+  height: 78px;
   overflow: visible;
 }
 
-/* comic style, like the worlds: dark outlines */
-.ink {
+.rock {
+  fill: color-mix(in srgb, var(--mantine-color-indigo-6) 55%, var(--klavio-surface));
   stroke: var(--klavio-comic-line);
   stroke-width: 2.5;
   stroke-linejoin: round;
 }
 
-.edge {
-  fill: none;
-  stroke: var(--klavio-comic-line);
-  stroke-width: 3;
-  stroke-linejoin: round;
-}
-
-.road {
-  fill: none;
-  stroke: var(--klavio-road);
-  stroke-width: 9;
-  stroke-linecap: round;
-}
-
-.travelled {
-  fill: none;
-  stroke: var(--mantine-color-orange-4);
-  stroke-width: 9;
-  stroke-linecap: round;
-}
-
-.sea {
-  stroke: var(--klavio-comic-line);
-  stroke-width: 1;
-  stroke-dasharray: 3 6;
-  opacity: 0.3;
-}
-
-.seaLabel,
-.altitude {
-  font-size: 11px;
-  font-weight: 700;
-  fill: var(--mantine-color-dimmed);
-}
-
-.label {
-  font-size: 13px;
-  font-weight: 800;
-  fill: var(--mantine-color-text);
-}
-
-.hellLabel {
-  font-size: 14px;
-  font-weight: 900;
-  fill: var(--mantine-color-red-8);
-}
-
-:global([data-mantine-color-scheme='dark']) .hellLabel {
-  fill: var(--mantine-color-red-4);
-}
-
-.number {
-  font-size: 12px;
-  font-weight: 900;
+.snow {
   fill: #fff;
-}
-
-.numberLocked {
-  font-size: 12px;
-  font-weight: 900;
-  fill: var(--klavio-locked-fg);
-}
-
-.summitLabel {
-  font-size: 14px;
-  font-weight: 900;
-  fill: var(--mantine-color-pink-8);
-}
-
-:global([data-mantine-color-scheme='dark']) .summitLabel {
-  fill: var(--mantine-color-pink-3);
+  stroke: var(--klavio-comic-line);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
 }
 
 .pole {
   fill: var(--klavio-flag-pole);
 }
 
-.figure {
-  position: absolute;
-  pointer-events: none;
-  filter: drop-shadow(0 3px 2px rgb(0 0 0 / 18%));
-}
-
-.flame {
+.flag {
+  fill: var(--mantine-color-pink-6);
+  stroke: var(--klavio-comic-line);
+  stroke-width: 2;
+  stroke-linejoin: round;
   transform-box: fill-box;
-  transform-origin: 50% 100%;
-  animation: flicker 1.4s ease-in-out infinite alternate;
+  transform-origin: 0 50%;
+  animation: wave 1.6s ease-in-out infinite alternate;
 }
 
-@keyframes flicker {
+@keyframes wave {
   to {
-    transform: scaleY(1.1) scaleX(0.94);
+    transform: skewY(-6deg) scaleX(0.92);
+  }
+}
+
+.summitText {
+  min-width: 0;
+}
+
+.summitKicker {
+  letter-spacing: 0.05em;
+  color: var(--mantine-color-pink-9);
+}
+
+.summitTitle {
+  overflow-wrap: anywhere;
+}
+
+:global([data-mantine-color-scheme='dark']) .summitKicker {
+  color: var(--mantine-color-pink-3);
+}
+
+/* the stages: a trail from the bottom (stage 1) up to the summit */
+.stages {
+  display: flex;
+  flex-direction: column-reverse;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stage {
+  position: relative;
+  display: flex;
+  gap: var(--mantine-spacing-sm);
+  padding-top: var(--mantine-spacing-md);
+}
+
+/* the trail between the markers */
+.stage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 23px;
+  width: 4px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--klavio-locked-border) 0 6px,
+    transparent 6px 12px
+  );
+}
+
+.stage[data-state='done']::before {
+  background: var(--mantine-color-orange-5);
+}
+
+.stage:first-child::before {
+  bottom: auto;
+  height: calc(var(--mantine-spacing-md) + 25px);
+}
+
+.marker {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--klavio-locked-fg);
+  background: var(--klavio-locked-bg);
+  border: 3px solid var(--klavio-surface);
+  box-shadow: 0 0 0 2px var(--klavio-locked-border);
+}
+
+.stage[data-state='done'] .marker {
+  color: #fff;
+  background: var(--mantine-color-teal-7);
+  box-shadow: 0 0 0 2px var(--mantine-color-teal-7);
+}
+
+.stage[data-state='current'] .marker {
+  background: var(--klavio-surface);
+  box-shadow: 0 0 0 3px var(--mantine-color-orange-5);
+}
+
+.stageBody {
+  flex: 1;
+  min-width: 0;
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-lg);
+  background: var(--klavio-surface);
+  border: 1px solid var(--mantine-color-default-border);
+}
+
+.stage[data-state='current'] .stageBody {
+  border: 2px solid var(--mantine-color-orange-5);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 8%);
+}
+
+.stage[data-state='later'] .stageBody {
+  background: color-mix(in srgb, var(--klavio-surface) 70%, transparent);
+}
+
+/* the hard stretch looks like weather is coming */
+.stage[data-hard][data-state='later'] .stageBody,
+.stage[data-hard][data-state='current'] .stageBody {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mantine-color-gray-6) 16%, var(--klavio-surface)),
+    var(--klavio-surface)
+  );
+}
+
+.stageN {
+  display: block;
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--mantine-color-dimmed);
+}
+
+.stageHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.here {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 800;
+  color: var(--mantine-color-dark-9);
+  background: var(--mantine-color-orange-3);
+}
+
+.storm {
+  margin-left: auto;
+  color: var(--mantine-color-gray-7);
+}
+
+:global([data-mantine-color-scheme='dark']) .storm {
+  color: var(--mantine-color-gray-4);
+}
+
+.reward {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.reward svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--mantine-color-pink-7);
+}
+
+:global([data-mantine-color-scheme='dark']) .reward svg {
+  color: var(--mantine-color-pink-4);
+}
+
+.hard {
+  margin-top: var(--mantine-spacing-sm);
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  border-left: 4px solid var(--mantine-color-orange-6);
+  border-radius: var(--mantine-radius-sm);
+  background: color-mix(in srgb, var(--mantine-color-orange-5) 10%, var(--klavio-surface));
+}
+
+.helps {
+  margin: 4px 0 0;
+  padding-left: 1.2em;
+  font-size: var(--mantine-font-size-sm);
+}
+
+.chapters {
+  display: grid;
+  gap: 6px;
+  margin: var(--mantine-spacing-sm) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chapters li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--mantine-font-size-sm);
+}
+
+.chapterDot {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--klavio-locked-fg);
+  background: var(--klavio-locked-bg);
+}
+
+.chapters li[data-state='done'] .chapterDot {
+  color: #fff;
+  background: var(--mantine-color-teal-7);
+}
+
+.chapters li[data-state='current'] .chapterDot {
+  color: var(--mantine-color-dark-9);
+  background: var(--mantine-color-orange-3);
+}
+
+.chapters li[data-state='current'] .chapterName {
+  font-weight: 800;
+}
+
+.chapterName {
+  flex: 1;
+  min-width: 0;
+}
+
+.chapterCount {
+  flex: none;
+  color: var(--mantine-color-dimmed);
+  font-weight: 700;
+}
+
+/* phones: smaller markers, more room for the text */
+@media (max-width: 36em) {
+  .stage {
+    gap: 8px;
+  }
+
+  .stage::before {
+    left: 16px;
+  }
+
+  .stage:first-child::before {
+    height: calc(var(--mantine-spacing-md) + 18px);
+  }
+
+  .marker {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
+  }
+
+  .stage[data-state='current'] .marker {
+    overflow: hidden;
+  }
+
+  .stageBody {
+    padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  }
+
+  .summit {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .peak {
+    width: 90px;
+    height: 60px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flame {
+  .flag {
     animation: none;
   }
 }

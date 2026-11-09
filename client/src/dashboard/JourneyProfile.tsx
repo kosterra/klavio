@@ -1,36 +1,34 @@
 import { Card, Text, Title } from '@mantine/core';
-import { useElementSize } from '@mantine/hooks';
+import { IconCheck, IconCloudStorm, IconFlag3, IconMedal, IconMusic } from '@tabler/icons-react';
+import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { CURRICULUM, coreLessons, type Avatar, type Outfit } from '@klavio/shared';
+import { CURRICULUM, coreLessons, findLesson, type Avatar, type Outfit } from '@klavio/shared';
 import { Figure } from '../components/Figure';
-import { SUMMIT_ALTITUDE, chapterColor, formatAltitude, worldOf } from '../lesson/worlds';
+import { useLocalized } from '../lesson/useLocalized';
+import { worldOf } from '../lesson/worlds';
 import classes from './Journey.module.css';
 
-const HEIGHT = 268;
-const TOP = 80; // room for the figure, the summit flag and its label
-const BOTTOM = 64; // room for the labels under the lowest point
-const SIDE = 34;
-
-/** A smooth line through the points (Catmull-Rom as cubic Béziers). */
-function smooth(points: { x: number; y: number }[]): string {
-  return points
-    .map((p, i) => {
-      if (i === 0) return `M ${p.x} ${p.y}`;
-      const p0 = points[i - 2] ?? points[i - 1]!;
-      const p1 = points[i - 1]!;
-      const p3 = points[i + 1] ?? p;
-      const c1 = { x: p1.x + (p.x - p0.x) / 6, y: p1.y + (p.y - p0.y) / 6 };
-      const c2 = { x: p.x - (p3.x - p1.x) / 6, y: p.y - (p3.y - p1.y) / 6 };
-      return `C ${c1.x} ${c1.y} ${c2.x} ${c2.y} ${p.x} ${p.y}`;
-    })
-    .join(' ');
-}
+type StageId = 'start' | 'grind' | 'climb' | 'summit';
 
 /**
- * The adults' journey as an elevation profile: down from the alp into «Die
- * Hölle» (the hardest chapter), then up to the summit where the dream song
- * waits – with where one is now. Hard stretches are part of the way, and the
- * picture says so before they come.
+ * The journey in four stages instead of eleven stops – a story one can keep in
+ * mind. Each stage names what one can play afterwards; the second one, down
+ * into «Die Hölle», is announced honestly as the hard stretch, with what helps.
+ */
+const STAGES: { id: StageId; chapters: string[]; reward?: string; color: string }[] = [
+  { id: 'start', chapters: ['keys', 'hand', 'read'], reward: 'hand-entchen', color: 'green' },
+  { id: 'grind', chapters: ['songs', 'rhythm', 'bass'], reward: 'bass-lamb', color: 'red' },
+  { id: 'climb', chapters: ['both', 'black', 'meter'], reward: 'meter-upbeat', color: 'indigo' },
+  // the summit's reward is the dream song itself
+  { id: 'summit', chapters: ['keysigs', 'accomp'], color: 'pink' },
+];
+const HARD: StageId = 'grind';
+
+/**
+ * «Deine Reise» for adults: the dream song as the summit on top, below it the
+ * four stages of the way there – the current one open with its chapters, the
+ * hard one with a storm cloud and what gets one through, and how long the
+ * climb takes with one's weekly goal.
  */
 export function JourneyProfile({
   completed,
@@ -38,6 +36,7 @@ export function JourneyProfile({
   goalTitle,
   avatar,
   outfit,
+  weeklyGoalDays,
   embedded = false,
 }: {
   completed: Set<string>;
@@ -46,215 +45,195 @@ export function JourneyProfile({
   /** the learner's figure stands where they are, as on the learning path */
   avatar: Avatar;
   outfit?: Outfit | null;
+  /** practice days per week, for the estimate; null: no goal set */
+  weeklyGoalDays?: number | null;
   /** inside the dream song card: no frame and no heading of its own */
   embedded?: boolean;
 }) {
-  const { t, i18n } = useTranslation();
-  const { ref, width } = useElementSize();
+  const { t } = useTranslation();
+  const loc = useLocalized();
 
-  const stops = CURRICULUM.map((chapter, ci) => {
-    const world = worldOf(chapter.id, ci, 'journey');
-    return {
-      key: chapter.id,
-      name: t(`path.worlds.${world.id}`),
-      altitude: world.altitude ?? 0,
-      color: chapterColor(world, ci),
-      done: coreLessons(chapter).every((l) => completed.has(l.id)),
-      hell: world.id === 'hell',
-    };
+  const chapterIndex = (id: string) => CURRICULUM.findIndex((c) => c.id === id);
+  const currentChapter = CURRICULUM.findIndex((c) =>
+    c.lessons.some((l) => l.id === currentLessonId),
+  );
+  const chapterDone = (ci: number) =>
+    coreLessons(CURRICULUM[ci]!).every((l) => completed.has(l.id));
+
+  const stages = STAGES.map((s) => {
+    const idx = s.chapters.map(chapterIndex).filter((i) => i >= 0);
+    const done = idx.every(chapterDone);
+    return { ...s, idx, done };
   });
-  const allDone = stops.every((s) => s.done);
-  const currentIndex = allDone
-    ? stops.length
-    : Math.max(
-        0,
-        CURRICULUM.findIndex((c) => c.lessons.some((l) => l.id === currentLessonId)),
-      );
-  const hellIndex = stops.findIndex((s) => s.hell);
-  const deepest = Math.min(...stops.map((s) => s.altitude));
-  const all = [...stops.map((s) => s.altitude), SUMMIT_ALTITUDE];
+  const allDone = stages.every((s) => s.done);
+  const currentStage = allDone ? -1 : stages.findIndex((s) => !s.done);
+  const phase = allDone ? 'done' : stages[currentStage]!.id;
 
-  const phase = allDone
-    ? 'summit'
-    : currentIndex < hellIndex
-      ? 'down'
-      : currentIndex === hellIndex
-        ? 'hell'
-        : 'up';
   const goal = goalTitle || t('journey.dreamSong');
-  // in a sentence: «zu deinem Traumlied» / «zu «Für Elise»»
   const goalTo = goalTitle ? `«${goalTitle}»` : t('journey.dreamSongTo');
-
-  const w = Math.max(width, 280);
-  const wide = w >= 600;
-  const step = (w - 2 * SIDE) / stops.length;
-  const yOf = (m: number) =>
-    TOP + ((SUMMIT_ALTITUDE - m) / (SUMMIT_ALTITUDE - deepest)) * (HEIGHT - TOP - BOTTOM);
-  const points = all.map((m, i) => ({ x: SIDE + i * step, y: yOf(m) }));
-  const line = smooth(points);
-  const area = `${line} L ${points.at(-1)!.x} ${HEIGHT} L ${points[0]!.x} ${HEIGHT} Z`;
-  const here = points[currentIndex]!;
-  const sea = yOf(0);
-  const summit = points.at(-1)!;
-
-  const label = (i: number) => wide || i === currentIndex || i === hellIndex;
-  // stones with their number where there is room, small dots on phones
-  const roomy = step >= 34;
-  const STONE = roomy ? 13 : 7;
-
-  // each stretch of land in its world's colour, as on the learning path
-  const edges = points.map((p, i) => ({
-    from: i === 0 ? 0 : (points[i - 1]!.x + p.x) / 2,
-    to: i === points.length - 1 ? w : (p.x + points[i + 1]!.x) / 2,
-  }));
-  const colorOf = (i: number) => (i < stops.length ? stops[i]!.color : 'pink');
+  const remaining = CURRICULUM.flatMap(coreLessons).filter((l) => !completed.has(l.id)).length;
+  const weeks = weeklyGoalDays ? Math.max(1, Math.ceil(remaining / weeklyGoalDays)) : null;
+  const worldName = (ci: number) =>
+    t(`path.worlds.${worldOf(CURRICULUM[ci]!.id, ci, 'journey').id}`);
 
   const phaseText = (
     <Text mt={embedded ? 'md' : 4} data-testid="journey-phase">
-      {t(`journey.phase.${phase}`, { goal: goalTo })}
+      {t(`journey.phase.${phase}`, {
+        goal:
+          phase === 'summit' ? (goalTitle ? `«${goalTitle}»` : t('journey.dreamSongFor')) : goalTo,
+      })}
     </Text>
   );
 
-  const chart = (
-    <div ref={ref} className={classes.chart}>
-      {width > 0 && (
-        <>
-          <svg
-            width={w}
-            height={HEIGHT}
-            viewBox={`0 0 ${w} ${HEIGHT}`}
-            role="img"
-            aria-label={t('journey.summary', {
-              n: Math.min(currentIndex + 1, stops.length),
-              total: stops.length,
-              world: stops[Math.min(currentIndex, stops.length - 1)]!.name,
-              hell: stops[hellIndex]?.name ?? '',
-              goal: goalTo,
-            })}
-          >
-            <defs>
-              <clipPath id="journey-land">
-                <path d={area} />
-              </clipPath>
-              <clipPath id="journey-travelled">
-                <rect x="0" y="0" width={here.x} height={HEIGHT} />
-              </clipPath>
-            </defs>
-
-            {/* the land, world by world */}
-            <g clipPath="url(#journey-land)">
-              {edges.map((e, i) => (
-                <rect
-                  key={i}
-                  x={e.from}
-                  y="0"
-                  width={e.to - e.from}
-                  height={HEIGHT}
-                  fill={`color-mix(in srgb, var(--mantine-color-${colorOf(i)}-5) ${
-                    i === hellIndex ? 40 : 26
-                  }%, var(--klavio-surface))`}
-                />
-              ))}
-            </g>
-            <line x1={SIDE / 2} x2={w - SIDE / 2} y1={sea} y2={sea} className={classes.sea} />
-            <text x={w - SIDE / 2} y={sea - 5} textAnchor="end" className={classes.seaLabel}>
-              {t('journey.seaLevel')}
-            </text>
-            {/* the road along the surface: grey ahead, coloured where one has been */}
-            <path d={line} className={classes.road} />
-            <path d={line} className={classes.travelled} clipPath="url(#journey-travelled)" />
-            <path d={line} className={classes.edge} />
-
-            {/* the fire at the lowest point */}
-            {hellIndex >= 0 && (
-              <g transform={`translate(${points[hellIndex]!.x} ${points[hellIndex]!.y + 4})`}>
-                <g className={classes.flame}>
-                  <path
-                    d="M-18 0 Q-22 -16 -10 -24 Q-10 -14 -4 -12 Q-8 -28 4 -38 Q4 -24 10 -20 Q12 -30 18 -30 Q24 -14 18 0 Z"
-                    fill="var(--mantine-color-orange-5)"
-                    className={classes.ink}
-                  />
-                  <path
-                    d="M-9 0 Q-11 -9 -4 -13 Q-3 -6 2 -8 Q2 -16 8 -18 Q14 -8 9 0 Z"
-                    fill="var(--mantine-color-yellow-4)"
-                  />
-                </g>
-              </g>
+  const summit = (
+    <div className={classes.summit} data-reached={allDone || undefined}>
+      <svg className={classes.peak} viewBox="0 0 120 70" aria-hidden>
+        <path d="M4 68 L46 18 L62 34 L76 10 L116 68 Z" className={classes.rock} />
+        <path d="M76 10 L86 24 L80 22 L74 28 L68 20 Z" className={classes.snow} />
+        <path d="M46 18 L54 28 L48 26 L42 30 L40 25 Z" className={classes.snow} />
+        <rect x="74.5" y="-14" width="3" height="25" rx="1.5" className={classes.pole} />
+        <path d="M77.5 -13 Q88 -16 98 -11 Q93 -6 98 -1 Q88 -5 77.5 -2 Z" className={classes.flag} />
+      </svg>
+      <div className={classes.summitText}>
+        <Text size="xs" fw={800} tt="uppercase" className={classes.summitKicker}>
+          {t('journey.summitKicker')}
+        </Text>
+        <Text fw={900} fz="xl" lh={1.2} className={classes.summitTitle}>
+          {goal}
+        </Text>
+        {!allDone && (
+          <Text size="sm" mt={4} data-testid="journey-estimate">
+            {weeks !== null ? (
+              t('journey.estimate', { count: weeks, days: weeklyGoalDays })
+            ) : (
+              <>
+                {t('journey.estimateNone')} <Link to="/profile">{t('journey.setWeeklyGoal')}</Link>
+              </>
             )}
+          </Text>
+        )}
+      </div>
+    </div>
+  );
 
-            {stops.map((s, i) => {
-              const p = points[i]!;
-              const state = s.done ? 'done' : i === currentIndex ? 'current' : 'later';
-              const below = p.y + STONE + 16;
-              return (
-                <g key={s.key} data-state={state}>
-                  <circle
-                    cx={p.x}
-                    cy={p.y}
-                    r={STONE}
-                    fill={
-                      state === 'done'
-                        ? `var(--mantine-color-${s.color}-6)`
-                        : state === 'current'
-                          ? 'var(--mantine-color-orange-6)'
-                          : 'var(--klavio-locked-bg)'
-                    }
-                    className={classes.ink}
-                  />
-                  {roomy && (
-                    <text
-                      x={p.x}
-                      y={p.y}
-                      textAnchor="middle"
-                      dominantBaseline="central"
-                      className={state === 'later' ? classes.numberLocked : classes.number}
-                    >
-                      {i + 1}
-                    </text>
-                  )}
-                  {label(i) && (
-                    <text
-                      x={p.x}
-                      y={below}
-                      textAnchor="middle"
-                      className={s.hell ? classes.hellLabel : classes.label}
-                    >
-                      {s.name}
-                    </text>
-                  )}
-                  {wide && (
-                    <text x={p.x} y={below + 14} textAnchor="middle" className={classes.altitude}>
-                      {t('journey.altitude', { m: formatAltitude(s.altitude, i18n.language) })}
-                    </text>
-                  )}
-                </g>
-              );
-            })}
-
-            {/* the summit with the dream song: a flag like the chapter flags */}
-            <g transform={`translate(${summit.x} ${summit.y})`}>
-              <rect x="-2.5" y="-46" width="5" height="46" rx="2.5" className={classes.pole} />
-              <circle cy="-46" r="4.5" fill="var(--mantine-color-yellow-6)" />
-              <path
-                d="M2 -42 Q14 -46 30 -40 Q24 -32 30 -24 Q14 -28 2 -22 Z"
-                fill="var(--mantine-color-pink-6)"
-                className={classes.ink}
-              />
-              <text x="30" y="-56" textAnchor="end" className={classes.summitLabel}>
-                {goal.length > 22 ? `${goal.slice(0, 21)}…` : goal}
-              </text>
-            </g>
-          </svg>
-          {/* you are here: the learner's own figure, as on the learning path */}
-          <span
-            className={classes.figure}
-            style={{ left: here.x - 24, top: here.y - STONE - 50 }}
-            data-testid="journey-figure"
+  const list = (
+    <ol className={classes.stages} aria-label={t('journey.stagesLabel')}>
+      {stages.map((s, si) => {
+        const state = s.done ? 'done' : si === currentStage ? 'current' : 'later';
+        const hard = s.id === HARD;
+        const reward = s.reward ? findLesson(s.reward) : undefined;
+        const rewardTitle = reward
+          ? `«${loc(reward.title)}»`
+          : goalTitle
+            ? `«${goalTitle}»`
+            : t('journey.dreamSongFor');
+        return (
+          <li
+            key={s.id}
+            className={classes.stage}
+            data-state={state}
+            data-hard={hard || undefined}
+            style={{ '--stage-color': `var(--mantine-color-${s.color}-6)` } as React.CSSProperties}
+            data-testid={`stage-${s.id}`}
           >
-            <Figure avatar={avatar} outfit={outfit} mood="happy" size={48} still />
-          </span>
-        </>
-      )}
+            <span className={classes.marker} aria-hidden>
+              {state === 'done' ? (
+                <IconCheck size={20} stroke={3} />
+              ) : state === 'current' ? (
+                <Figure avatar={avatar} outfit={outfit} mood="happy" size={32} still />
+              ) : (
+                si + 1
+              )}
+            </span>
+            <div className={classes.stageBody}>
+              <div className={classes.stageHead}>
+                <Text fw={900} fz="lg" lh={1.2}>
+                  <span className={classes.stageN}>{t('journey.stageN', { n: si + 1 })}</span>
+                  {t(`journey.stages.${s.id}`)}
+                </Text>
+                {state === 'current' && (
+                  <span className={classes.here} data-testid="journey-figure">
+                    {t('journey.here')}
+                  </span>
+                )}
+                {hard && state !== 'done' && (
+                  <IconCloudStorm size={26} className={classes.storm} aria-hidden />
+                )}
+              </div>
+              <Text size="sm" c="dimmed" fw={700}>
+                {s.idx.map(worldName).join(' · ')}
+              </Text>
+
+              <Text size="sm" mt={6} className={classes.reward}>
+                {state === 'done' ? (
+                  <IconMedal size={16} aria-hidden />
+                ) : s.id === 'summit' ? (
+                  <IconFlag3 size={16} aria-hidden />
+                ) : (
+                  <IconMusic size={16} aria-hidden />
+                )}
+                <span>
+                  {state === 'done'
+                    ? hard
+                      ? t('journey.survived')
+                      : t('journey.rewardDone', { song: rewardTitle })
+                    : t(s.reward ? 'journey.reward' : 'journey.rewardSummit', {
+                        song: rewardTitle,
+                      })}
+                </span>
+              </Text>
+
+              {/* the hard stretch: said before it comes, with what helps */}
+              {hard && state !== 'done' && (
+                <div className={classes.hard} data-testid="journey-hard">
+                  <Text fw={800} size="sm">
+                    {t('journey.hardTitle')}
+                  </Text>
+                  <Text size="sm">{t('journey.hardText')}</Text>
+                  <ul className={classes.helps}>
+                    {(['tips', 'short', 'week'] as const).map((k) => (
+                      <li key={k}>{t(`journey.help.${k}`)}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* where one is: the stage's chapters, one by one */}
+              {state === 'current' && (
+                <ul className={classes.chapters}>
+                  {s.idx.map((ci) => {
+                    const ch = CURRICULUM[ci]!;
+                    const core = coreLessons(ch);
+                    const n = core.filter((l) => completed.has(l.id)).length;
+                    const cs =
+                      n === core.length ? 'done' : ci === currentChapter ? 'current' : 'later';
+                    return (
+                      <li key={ch.id} data-state={cs}>
+                        <span className={classes.chapterDot} aria-hidden>
+                          {cs === 'done' ? <IconCheck size={12} stroke={3} /> : ci + 1}
+                        </span>
+                        <span className={classes.chapterName}>
+                          {worldName(ci)}: {loc(ch.title)}
+                        </span>
+                        <span className={classes.chapterCount}>
+                          {t('journey.lessonsOf', { n, total: core.length })}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  );
+
+  const body = (
+    <div className={classes.expedition}>
+      {summit}
+      {list}
     </div>
   );
 
@@ -262,7 +241,7 @@ export function JourneyProfile({
     return (
       <div data-testid="journey">
         {phaseText}
-        {chart}
+        {body}
       </div>
     );
   }
@@ -282,7 +261,7 @@ export function JourneyProfile({
         {goalTitle ? t('journey.titleSong', { title: goalTitle }) : t('journey.title')}
       </Title>
       {phaseText}
-      {chart}
+      {body}
     </Card>
   );
 }
