@@ -248,3 +248,15 @@ describe('bonus lessons', () => {
     expect(CORE_LESSONS.some((l) => l.bonus)).toBe(false);
   });
 });
+
+describe("Klavi's sentences in the exercise", () => {
+  it('belong to existing lessons and have both languages', async () => {
+    const { LESSON_COACH } = await import('./coach.ts');
+    const ids = new Set(LESSONS.map((l) => l.id));
+    for (const [id, text] of Object.entries(LESSON_COACH)) {
+      expect(ids.has(id), id).toBe(true);
+      expect(text['de-CH']).not.toMatch(/ß/);
+      expect(text.en.length).toBeGreaterThan(10);
+    }
+  });
+});

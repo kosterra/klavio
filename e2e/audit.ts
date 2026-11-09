@@ -3,7 +3,9 @@ import { expect, type Page } from '@playwright/test';
 
 /** axe-core WCAG 2.1 AA check of the current page. */
 export async function audit(page: Page) {
-  // let Mantine transitions finish so colours are final
+  // no hover state (the pointer stays where the last click was), and let
+  // Mantine transitions finish so colours are final
+  await page.mouse.move(0, 0);
   await page.waitForTimeout(400);
   const result = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])

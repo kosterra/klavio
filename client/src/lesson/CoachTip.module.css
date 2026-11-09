@@ -1,0 +1,17 @@
+.tip {
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-lg);
+  border: 2px solid var(--mantine-color-yellow-6);
+  background: color-mix(in srgb, var(--mantine-color-yellow-3) 30%, var(--klavio-surface));
+}
+
+.icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  color: var(--klavio-comic-line);
+  background: var(--mantine-color-yellow-4);
+}

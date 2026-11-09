@@ -74,7 +74,7 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await expect(page.getByTestId('path-keys-c')).toHaveAttribute('aria-current', 'step');
   await expect(page.getByTestId('path-keys-middle-c')).toHaveCount(0);
   await expect(
-    page.getByRole('img', { name: /Lektion 2, Das mittlere C, noch gesperrt/ }),
+    page.getByRole('img', { name: /Lektion 2, Tasten finden: Das mittlere C, noch gesperrt/ }),
   ).toBeVisible();
   await audit(page);
 

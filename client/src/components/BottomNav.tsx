@@ -1,4 +1,4 @@
-import { IconBulb, IconMap2, IconPiano, IconUserCircle } from '@tabler/icons-react';
+import { IconBulb, IconMap2, IconPiano, IconPlaylist, IconUserCircle } from '@tabler/icons-react';
 import { NavLink } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import classes from './BottomNav.module.css';
@@ -6,6 +6,7 @@ import classes from './BottomNav.module.css';
 const ITEMS = [
   { to: '/', icon: IconMap2, label: 'nav.learn', end: true },
   { to: '/play', icon: IconPiano, label: 'nav.play', end: false },
+  { to: '/songs', icon: IconPlaylist, label: 'nav.songs', end: false },
   { to: '/knowledge', icon: IconBulb, label: 'nav.knowledge', end: false },
   { to: '/profile', icon: IconUserCircle, label: 'nav.profile', end: false },
 ] as const;

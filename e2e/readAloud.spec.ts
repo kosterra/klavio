@@ -95,7 +95,7 @@ test('Klavi reads tasks and explanations aloud – automatically for Kids, switc
     .first()
     .click();
   await startLesson(page);
-  await expect(page.getByTestId('read-aloud')).toBeVisible();
+  await expect(page.getByTestId('read-aloud').last()).toBeVisible();
   await page.waitForTimeout(500);
   expect((await spoken(page)).length).toBe(before);
 });

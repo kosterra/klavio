@@ -6,6 +6,7 @@ import { useSession } from '../auth/session';
 import { useMidi } from '../input/useMidi';
 import { CORE_LESSONS, liveStreak, localIsoDate, nextLesson } from '@klavio/shared';
 import { LearningPath } from '../lesson/LearningPath';
+import { PathLegend } from '../lesson/LessonTypeIcon';
 import { BadgeShelf } from '../lesson/Badges';
 import { InstallHint } from '../components/InstallHint';
 import { useProgress } from '../lesson/useProgress';
@@ -111,6 +112,7 @@ export function DashboardPage() {
           </Stack>
         )}
       </Card>
+      <PathLegend />
 
       <BadgeShelf earned={activeProfile.badges} />
 

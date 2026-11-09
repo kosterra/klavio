@@ -3,13 +3,7 @@ import { Box, Button, Group, SegmentedControl, Text, UnstyledButton } from '@man
 import { useElementSize } from '@mantine/hooks';
 import {
   IconChevronDown,
-  IconFileMusic,
   IconLock,
-  IconMetronome,
-  IconMusic,
-  IconPiano,
-  IconPlayerPlay,
-  IconSparkles,
   IconStarFilled,
   IconRepeat,
   IconTrophy,
@@ -45,18 +39,14 @@ import {
   worldOf,
 } from './worlds';
 import classes from './LearningPath.module.css';
+import { LessonTypeIcon } from './LessonTypeIcon';
+import { lessonType } from './lessonType';
 
 const NODE = 72;
 const NODE_CURRENT = 88;
 
 function KindIcon({ lesson, size }: { lesson: Lesson; size: number }) {
-  const props = { size, 'aria-hidden': true } as const;
-  if (lesson.kind === 'song') return <IconMusic {...props} />;
-  if (lesson.kind === 'play') return <IconPlayerPlay {...props} />;
-  if (lesson.kind === 'read') return <IconFileMusic {...props} />;
-  if (lesson.kind === 'rhythm') return <IconMetronome {...props} />;
-  if (lesson.kind === 'improvise') return <IconSparkles {...props} />;
-  return <IconPiano {...props} />;
+  return <LessonTypeIcon type={lessonType(lesson)} size={size} />;
 }
 
 interface Point {
@@ -641,7 +631,7 @@ export function LearningPath({
                       : loc(lesson.title);
                     const label = [
                       t('path.lessonN', { n: number }),
-                      title,
+                      `${t(`path.types.${lessonType(lesson)}`)}: ${title}`,
                       state === 'locked'
                         ? t('path.locked')
                         : stars > 0

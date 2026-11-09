@@ -219,7 +219,8 @@
     "toggle": "Navigation ein- oder ausblenden",
     "learnGroup": "Lernen",
     "parentGroup": "Für Eltern",
-    "adminGroup": "Verwaltung"
+    "adminGroup": "Verwaltung",
+    "songs": "Lieder"
   },
   "account": {
     "title": "Konto",
@@ -488,7 +489,19 @@
     "stagesLabel": "Stufe des Lernpfads",
     "nextStage": "Danach geht es weiter: {{stage}}",
     "toStage": "Zu Stufe {{stage}}",
-    "bonus": "Bonus"
+    "bonus": "Bonus",
+    "types": {
+      "keys": "Tasten finden",
+      "play": "Nachspielen",
+      "read": "Noten lesen",
+      "song": "Lied",
+      "rhythm": "Rhythmus",
+      "ear": "Hören",
+      "chords": "Akkorde",
+      "expression": "Ausdruck",
+      "improvise": "Erfinden"
+    },
+    "legend": "Was bedeuten die Zeichen?"
   },
   "lesson": {
     "close": "Lektion beenden",
@@ -1134,5 +1147,18 @@
     "none": "Keins",
     "days_one": "{{count}} Tag",
     "days_other": "{{count}} Tage"
+  },
+  "hand": {
+    "title": "So liegt deine Hand",
+    "right": "Rechte Hand: {{keys}}",
+    "left": "Linke Hand: {{keys}}",
+    "finger": "Finger {{n}} auf {{note}}"
+  },
+  "songs": {
+    "title": "Lieder",
+    "intro_one": "{{count}} Lied ist offen – spiel es, so oft du willst.",
+    "intro_other": "{{count}} Lieder sind offen – spiel sie, so oft du willst.",
+    "new": "Neu – noch nicht gespielt",
+    "locked": "Kommt in Kapitel {{n}}"
   }
 }

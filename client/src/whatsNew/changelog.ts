@@ -23,6 +23,22 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Klavi erklärt mitten in der Übung: Wo etwas Neues kommt, steht in der ersten Übung ein kurzer Tipp direkt über den Tasten.',
+        'Klavi explains in the middle of the exercise: where something new comes up, a short tip sits right above the keys in the first exercise.',
+      ),
+      L(
+        'So liegt deine Hand: Vor Lektionen mit fester Handlage zeigt eine gezeichnete Hand, welcher Finger auf welche Taste gehört.',
+        'This is where your hand goes: before lessons with a fixed hand position, a drawn hand shows which finger belongs on which key.',
+      ),
+      L(
+        'Neu im Menü: «Lieder» – alle Lieder an einem Ort, die offenen zum Nochmals-Spielen.',
+        'New in the menu: «Songs» – every song in one place, the open ones to play again.',
+      ),
+      L(
+        'Lernpfad: Eigene Zeichen für Hören, Akkorde und Ausdruck, und unter dem Pfad erklärt «Was bedeuten die Zeichen?» alle Lektionsarten.',
+        'Learning path: own symbols for listening, chords and expression, and below the path «What do the symbols mean?» explains every kind of lesson.',
+      ),
+      L(
         'Guter Start: Ein neues Profil beginnt mit ein paar kurzen Fragen – worauf du spielst (Klavier, Digitalpiano oder Bildschirm), was du am liebsten möchtest, dein Traumlied, wie oft du üben möchtest und ob du schon Noten lesen kannst. Wer schon spielt, beginnt gleich beim passenden Kapitel. Jede Frage lässt sich überspringen.',
         'A good start: a new profile begins with a few short questions – what you play on (piano, digital piano or screen), what you would like most, your dream song, how often you want to practise and whether you can already read music. If you already play, you start right at the matching chapter. Every question can be skipped.',
       ),

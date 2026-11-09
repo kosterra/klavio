@@ -276,3 +276,56 @@ export function pieceSteps(exercise: PieceExercise): PieceStep[] {
   });
   return [...steps.values()].sort((a, b) => a.at - b.at);
 }
+
+/** Where a hand lies: the key under each finger (1 = thumb … 5). */
+export interface HandShape {
+  side: 'left' | 'right';
+  /** finger → MIDI note; only fingers the lesson uses */
+  keys: Partial<Record<1 | 2 | 3 | 4 | 5, number>>;
+}
+
+/**
+ * The hand position of a lesson, read from the fingering of its first
+ * exercise that has one (a five-finger tune or song) – only when every
+ * finger always plays the same key. Else undefined (e.g. the thumb passes
+ * under in a scale, or the hand moves).
+ */
+export function lessonHandShape(lesson: { exercises: readonly unknown[] }): HandShape | undefined {
+  for (const raw of lesson.exercises) {
+    const e = raw as {
+      type: string;
+      sequences?: number[][];
+      fingers?: number[][];
+      bars?: { midi: number; finger?: number }[][];
+    };
+    const pairs: [number, number][] = [];
+    if (e.type === 'play-along' && e.sequences && e.fingers) {
+      e.sequences.forEach((seq, i) =>
+        seq.forEach((midi, j) => {
+          const f = e.fingers![i]?.[j];
+          if (f) pairs.push([f, midi]);
+        }),
+      );
+    } else if (e.type === 'song' && e.bars) {
+      for (const bar of e.bars) for (const n of bar) if (n.finger) pairs.push([n.finger, n.midi]);
+    }
+    if (pairs.length === 0) continue;
+    const keys: HandShape['keys'] = {};
+    for (const [f, midi] of pairs) {
+      const finger = f as 1 | 2 | 3 | 4 | 5;
+      if (keys[finger] !== undefined && keys[finger] !== midi) return undefined;
+      keys[finger] = midi;
+    }
+    const used = Object.entries(keys).map(([f, m]) => [Number(f), m!] as const);
+    if (used.length < 2) return undefined;
+    used.sort((a, b) => a[0] - b[0]);
+    const side = used.at(-1)![1] > used[0]![1] ? 'right' : 'left';
+    // higher fingers must lie further out, in order
+    for (let i = 1; i < used.length; i++) {
+      const up = used[i]![1] > used[i - 1]![1];
+      if (up !== (side === 'right')) return undefined;
+    }
+    return { side, keys };
+  }
+  return undefined;
+}

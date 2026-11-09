@@ -44,3 +44,17 @@ describe('fingering', () => {
     ]);
   });
 });
+
+describe('lessonHandShape', () => {
+  it('reads the five-finger position from the fingering', async () => {
+    const { lessonHandShape, findLesson } = await import('../index.ts');
+    expect(lessonHandShape(findLesson('keys-five')!)).toEqual({
+      side: 'right',
+      keys: { 1: 60, 2: 62, 3: 64, 4: 65, 5: 67 },
+    });
+    expect(lessonHandShape(findLesson('bass-hand')!)?.side).toBe('left');
+    // a scale with the thumb passing under has no fixed position
+    expect(lessonHandShape(findLesson('hand-scale')!)).toBeUndefined();
+    expect(lessonHandShape(findLesson('keys-c')!)).toBeUndefined();
+  });
+});

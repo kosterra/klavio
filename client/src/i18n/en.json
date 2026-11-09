@@ -219,7 +219,8 @@
     "toggle": "Show or hide the navigation",
     "learnGroup": "Learn",
     "parentGroup": "For parents",
-    "adminGroup": "Administration"
+    "adminGroup": "Administration",
+    "songs": "Songs"
   },
   "account": {
     "title": "Account",
@@ -488,7 +489,19 @@
     "stagesLabel": "Level of the learning path",
     "nextStage": "Up next: {{stage}}",
     "toStage": "To level {{stage}}",
-    "bonus": "Bonus"
+    "bonus": "Bonus",
+    "types": {
+      "keys": "Finding keys",
+      "play": "Playing along",
+      "read": "Reading music",
+      "song": "Song",
+      "rhythm": "Rhythm",
+      "ear": "Listening",
+      "chords": "Chords",
+      "expression": "Expression",
+      "improvise": "Making up music"
+    },
+    "legend": "What do the symbols mean?"
   },
   "lesson": {
     "close": "End lesson",
@@ -1134,5 +1147,18 @@
     "none": "None",
     "days_one": "{{count}} day",
     "days_other": "{{count}} days"
+  },
+  "hand": {
+    "title": "This is where your hand goes",
+    "right": "Right hand: {{keys}}",
+    "left": "Left hand: {{keys}}",
+    "finger": "finger {{n}} on {{note}}"
+  },
+  "songs": {
+    "title": "Songs",
+    "intro_one": "{{count}} song is open – play it as often as you like.",
+    "intro_other": "{{count}} songs are open – play them as often as you like.",
+    "new": "New – not played yet",
+    "locked": "Comes in chapter {{n}}"
   }
 }

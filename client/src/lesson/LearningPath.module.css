@@ -615,3 +615,43 @@ a.node:active {
   --world-bg: var(--klavio-fog);
   --world-sky: var(--klavio-fog);
 }
+
+/* «Was bedeuten die Zeichen?» under the path */
+.legend {
+  margin-top: calc(-1 * var(--mantine-spacing-sm));
+  padding: 0 var(--mantine-spacing-sm);
+}
+
+.legend summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--mantine-color-anchor);
+}
+
+.legend ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mantine-spacing-xs) var(--mantine-spacing-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legendIcon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--mantine-color-indigo-7);
+}

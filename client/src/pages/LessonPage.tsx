@@ -37,6 +37,8 @@ import {
   type LessonResultDto,
   type ProfileDto,
   type ProgressDto,
+  LESSON_COACH,
+  lessonHandShape,
 } from '@klavio/shared';
 import { ApiError } from '../api/client';
 import { enqueueResult } from '../offline/queue';
@@ -61,6 +63,8 @@ import { ImproviseExercise } from '../lesson/ImproviseExercise';
 import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
 import { readPlayOn, writePlayOn } from '../lesson/playOn';
+import { CoachTip } from '../lesson/CoachTip';
+import { HandOnKeys } from '../lesson/HandOnKeys';
 import { useNoteEvents } from '../input/noteBus';
 import { useLocalized } from '../lesson/useLocalized';
 import { loadProgress, useProgress } from '../lesson/useProgress';
@@ -199,6 +203,7 @@ function LessonRun({
   const [saveError, setSaveError] = useState<string | null>(null);
   const total = lessonTargetCount(lesson);
   const chapter = chapterOf(lesson.id);
+  const handShape = lessonHandShape(lesson);
   const where = worldOfLesson(lesson.id, worldSet);
   const next = LESSONS[LESSONS.findIndex((l) => l.id === lesson.id) + 1] ?? null;
   const { stopMicrophone } = input;
@@ -353,6 +358,12 @@ function LessonRun({
                 <Text fz="lg" ta="center">
                   {loc(lesson.intro)}
                 </Text>
+                {handShape && (
+                  <Stack gap={4} w="100%" align="center">
+                    <Text fw={800}>{t('hand.title')}</Text>
+                    <HandOnKeys shape={handShape} />
+                  </Stack>
+                )}
                 {theory.length > 0 && (
                   <Button
                     variant="subtle"
@@ -417,6 +428,11 @@ function LessonRun({
           )}
 
           {/* --------------------------------------------------------- play */}
+          {/* what is new here, for the whole first exercise (no jump while playing) */}
+          {phase === 'play' && exerciseIndex === 0 && LESSON_COACH[lesson.id] && (
+            <CoachTip text={loc(LESSON_COACH[lesson.id]!)} kids={kids} />
+          )}
+
           {phase === 'play' &&
             (exercise.type === 'find-key' ? (
               <FindKeyExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
