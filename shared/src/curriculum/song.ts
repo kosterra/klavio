@@ -75,15 +75,16 @@ export function fingerInPosition(midi: number, position: HandPosition): number |
  *   "C4/q D4/q E4/q F4/q | G4/h G4/h"
  * German "H" is accepted. Every bar must be full (checked against `time`).
  */
-export function parseSong(melody: string, time: string): SongNote[][] {
+export function parseSong(melody: string, time: string, pickup = 0): SongNote[][] {
   const beatsPerBar = barBeats(time);
-  return melody
+  const bars = melody
     .split('|')
     .map((bar) => bar.trim())
     .filter(Boolean)
     .map((bar, i) => {
       const notes = bar.split(/\s+/).map((token) => {
-        const [note, fingerText] = token.split(':');
+        const tie = token.endsWith('~');
+        const [note, fingerText] = (tie ? token.slice(0, -1) : token).split(':');
         const [pitch, value = 'q'] = note!.split('/');
         if (!(value in VALUES) || value.endsWith('r')) {
           throw new Error(`Unknown note value "${value}" in bar ${i + 1}`);
@@ -96,14 +97,37 @@ export function parseSong(melody: string, time: string): SongNote[][] {
           midi: noteNameToMidi(pitch!),
           value: value as NoteValue,
           ...(finger ? { finger } : {}),
+          ...(tie ? { tie: true } : {}),
         };
       });
-      const beats = notes.reduce((n, x) => n + VALUES[x.value], 0);
-      if (beats !== beatsPerBar) {
-        throw new Error(`Bar ${i + 1} has ${beats} beats, expected ${beatsPerBar}: "${bar}"`);
-      }
       return notes;
     });
+  // an upbeat: the first bar is short, the last one makes up the rest
+  bars.forEach((notes, i) => {
+    const beats = notes.reduce((n, x) => n + VALUES[x.value], 0);
+    const expected =
+      pickup && i === 0
+        ? pickup
+        : pickup && i === bars.length - 1
+          ? beatsPerBar - pickup
+          : beatsPerBar;
+    if (beats !== expected) {
+      throw new Error(`Bar ${i + 1} has ${beats} beats, expected ${expected}`);
+    }
+  });
+  // a tie joins two notes of the same pitch
+  const flat = bars.flat();
+  flat.forEach((n, i) => {
+    if (n.tie && flat[i + 1]?.midi !== n.midi) {
+      throw new Error(`A tie needs the same note after it (note ${i + 1})`);
+    }
+  });
+  return bars;
+}
+
+/** Whether the i-th note of a song is only held (the tied continuation of the one before). */
+export function isHeldNote(notes: SongNote[], i: number): boolean {
+  return i > 0 && !!notes[i - 1]!.tie;
 }
 
 export function song(
@@ -115,7 +139,8 @@ export function song(
 ): SongExercise {
   const time = opts.time ?? '4/4';
   const position = opts.position;
-  const bars = parseSong(melody, time).map((bar) =>
+  const pickup = opts.pickup ?? 0;
+  const bars = parseSong(melody, time, pickup).map((bar) =>
     bar.map((n) => {
       const finger = n.finger ?? (position ? fingerInPosition(n.midi, position) : undefined);
       return finger ? { ...n, finger } : n;
@@ -127,6 +152,7 @@ export function song(
     time,
     tempo: opts.tempo ?? 96,
     showNames: opts.showNames ?? false,
+    ...(pickup ? { pickup } : {}),
     bars,
   };
 }

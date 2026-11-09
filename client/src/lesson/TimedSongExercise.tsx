@@ -3,7 +3,13 @@ import { Box, Button, Group, Stack, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconMetronome, IconRefresh } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { barBeats, beatsOf, type NoteEvent, type TimedSongExercise as Spec } from '@klavio/shared';
+import {
+  barBeats,
+  beatsOf,
+  isHeldNote,
+  type NoteEvent,
+  type TimedSongExercise as Spec,
+} from '@klavio/shared';
 import { useNoteEvents } from '../input/noteBus';
 import { runMetronome, type MetronomeRun } from '../audio/metronome';
 import { BuddySays } from '../components/BuddySays';
@@ -56,7 +62,14 @@ export function TimedSongExercise({
 
   // every note with its bar and its start (in beats from the first note)
   const notes = useMemo(() => timeline(exercise.bars), [exercise]);
-  const totalBeats = exercise.bars.length * beatsPerBar;
+  // an upbeat starts before the first «one»: the count-in bar ends with it
+  const pickup = exercise.pickup ?? 0;
+  const totalBeats = notes.reduce((n, x) => n + beatsOf(x.value), 0) - pickup;
+  // the notes that are played (a tied note is only held)
+  const playedIdx = useMemo(
+    () => notes.flatMap((n, i) => (isHeldNote(notes, i) ? [] : [i])),
+    [notes],
+  );
 
   const [phase, setPhase] = useState<Phase>('ready');
   const [now, setNow] = useState<number | null>(null); // beats since the first note
@@ -90,16 +103,20 @@ export function TimedSongExercise({
     setScore(null);
     played.current = [];
     const accents = Array.from({ length: exercise.bars.length + 1 }, (_, i) => i * beatsPerBar);
-    const m = runMetronome(beatsPerBar + totalBeats, tempo, accents);
+    const m = runMetronome(beatsPerBar + Math.ceil(totalBeats), tempo, accents);
     run.current = m;
     const first = m.beatTimes[beatsPerBar]!;
     setFirstAt(first);
-    const expected = notes.map((n) => ({ ms: first + n.at * beatMs, midi: n.midi }));
+    const expected = playedIdx.map((i) => ({
+      ms: first + (notes[i]!.at - pickup) * beatMs,
+      midi: notes[i]!.midi,
+    }));
     const end = first + totalBeats * beatMs;
-    window.current = { from: first - beatMs / 2, to: end };
+    window.current = { from: first - (pickup + 0.5) * beatMs, to: end };
     setPhase('countin');
     const tick = () => {
-      const beat = (performance.now() - first) / beatMs;
+      // beats since the first note (an upbeat starts before the downbeat)
+      const beat = (performance.now() - first) / beatMs + pickup;
       setNow(beat);
       if (beat >= 0) setPhase((p) => (p === 'countin' ? 'play' : p));
       raf.current = requestAnimationFrame(tick);
@@ -129,7 +146,7 @@ export function TimedSongExercise({
   };
 
   const hits = score ? score.perNote.length - score.missed : 0;
-  const good = !!score && hits >= Math.ceil(notes.length * GOOD);
+  const good = !!score && hits >= Math.ceil(playedIdx.length * GOOD);
   useEffect(() => {
     if (!good) return;
     const id = setTimeout(next, 1600);
@@ -154,11 +171,15 @@ export function TimedSongExercise({
     .map((bar) =>
       bar.map((n) => {
         const i = index++;
-        const verdict = score?.perNote[i];
+        // a held note shows like the note it continues
+        const k = playedIdx.indexOf(isHeldNote(notes, i) ? i - 1 : i);
+        const verdict = k >= 0 ? score?.perNote[k] : undefined;
         return {
           midi: n.midi,
           duration: n.value,
-          finger: n.finger,
+          // a held note keeps its finger – no number again
+          finger: isHeldNote(notes, i) ? undefined : n.finger,
+          tie: n.tie,
           state: verdict
             ? verdict === 'missed'
               ? 'wrong'
@@ -169,7 +190,8 @@ export function TimedSongExercise({
         };
       }),
     );
-  const countBeat = now !== null && now < 0 ? Math.floor(now + beatsPerBar) : null;
+  const countBeat =
+    now !== null && now < 0 ? Math.floor(now - pickup + beatsPerBar) % beatsPerBar : null;
   const hint = kids && phase === 'play' ? [notes[current]!.midi] : [];
 
   return (
@@ -180,7 +202,7 @@ export function TimedSongExercise({
       data-testid="timed-song"
       data-first-at={firstAt ?? undefined}
       data-beat-ms={beatMs}
-      data-notes={JSON.stringify(notes.map((n) => [n.midi, n.at]))}
+      data-notes={JSON.stringify(playedIdx.map((i) => [notes[i]!.midi, notes[i]!.at - pickup]))}
     >
       <BuddySays
         mood={good ? 'cheer' : phase === 'result' ? 'think' : 'listen'}
@@ -237,7 +259,7 @@ export function TimedSongExercise({
 
       {phase === 'result' && score && (
         <Stack gap={2} align="center" aria-live="polite" data-testid="timed-result">
-          <Text fw={800}>{t('lesson.timed.hits', { count: hits, total: notes.length })}</Text>
+          <Text fw={800}>{t('lesson.timed.hits', { count: hits, total: playedIdx.length })}</Text>
           {!good && (
             <Text size="sm" c="dimmed" ta="center">
               {t('lesson.timed.tip')}

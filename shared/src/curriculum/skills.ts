@@ -101,6 +101,8 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
   'black-improvise': ['improvise'],
   'meter-eighths': ['eighths'],
   'meter-waltz': ['three-four'],
+  'meter-upbeat': ['three-four'],
+  'meter-ties': ['eighths'],
   'keysig-flats': ['black-keys'],
   'keysig-g-scale': ['scales'],
   'keysig-g-read': ['scales'],

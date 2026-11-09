@@ -13,6 +13,8 @@ export interface StaffNote {
   label?: string;
   /** Finger number above the note (1 = thumb … 5 = little finger). */
   finger?: number;
+  /** Tied to the next note: drawn with a tie arc. */
+  tie?: boolean;
 }
 
 interface Props {
@@ -95,6 +97,8 @@ export function Staff({
       const barWidth = (total - extra) / bars.length;
 
       let x = left;
+      // every drawn note with its tie flag, to draw the tie arcs at the end
+      const drawn: { note: InstanceType<typeof VF.StaveNote>; tie?: boolean }[] = [];
       bars.forEach((bar, i) => {
         const w = barWidth + (i === 0 ? extra : 0);
         const stave = new VF.Stave(x, top, w);
@@ -133,6 +137,7 @@ export function Staff({
             );
           }
           if (n.state) note.setStyle({ fillStyle: COLORS[n.state], strokeStyle: COLORS[n.state] });
+          drawn.push({ note, tie: n.tie });
           return note;
         });
         if (!staveNotes.length) return;
@@ -143,6 +148,18 @@ export function Staff({
         new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
         voice.draw(ctx, stave);
         beams.forEach((b) => b.setContext(ctx).draw());
+      });
+      drawn.forEach(({ note, tie }, i) => {
+        const next = drawn[i + 1];
+        if (!tie || !next) return;
+        new VF.StaveTie({
+          firstNote: note,
+          lastNote: next.note,
+          firstIndexes: [0],
+          lastIndexes: [0],
+        })
+          .setContext(ctx)
+          .draw();
       });
       const svg = el.querySelector('svg');
       svg?.setAttribute('aria-hidden', 'true');

@@ -3,7 +3,7 @@ import { Button, Stack, Text, VisuallyHidden } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconPlayerPlay, IconPlayerStop } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { beatsOf, midiToPitchName, type SongExercise as Spec } from '@klavio/shared';
+import { beatsOf, isHeldNote, midiToPitchName, type SongExercise as Spec } from '@klavio/shared';
 import { inputHub, useNoteEvents } from '../input/noteBus';
 import { playMelody, type Playback } from '../audio/synth';
 import { BuddySays } from '../components/BuddySays';
@@ -58,7 +58,9 @@ export function SongExercise({
       onCorrect();
       setWrong(null);
       setMissedHere(false);
-      const next = pos + 1;
+      // a tied note is only held: go on to the next one that is played
+      let next = pos + 1;
+      while (next < notes.length && isHeldNote(notes, next)) next++;
       setPos(next);
       if (next >= notes.length) timer.current = setTimeout(onDone, FEEDBACK_MS * 1.5);
     } else {
@@ -103,7 +105,9 @@ export function SongExercise({
           midi: n.midi,
           duration: n.value,
           label: exercise.showNames ? midiToPitchName(n.midi, lang) : undefined,
-          finger: n.finger,
+          // a held note keeps its finger – no number again
+          finger: isHeldNote(notes, i) ? undefined : n.finger,
+          tie: n.tie,
           state:
             playingIndex !== null
               ? i === playingIndex

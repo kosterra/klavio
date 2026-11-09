@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Auftakt und Haltebogen: «Happy Birthday» im Dreivierteltakt beginnt vor dem ersten «eins», und in «Haltebögen» hältst du verbundene Noten einfach weiter. «Im Takt» zählt beides richtig.',
+        'Upbeat and ties: «Happy Birthday» in three-four time starts before the first «one», and in «Ties» you simply keep holding tied notes. «In time» counts both correctly.',
+      ),
+      L(
         'Neues Kapitel «Begleiten» (Stufe 3): «Hänschen klein» mit Wechselbass, gebrochene Akkorde und die Akkorde C, F und G. Mit einem Digitalpiano müssen alle drei Töne zusammen klingen.',
         'New chapter «Accompanying» (level 3): «Little Hans» with an alternating bass, broken chords and the chords C, F and G. With a digital piano all three notes have to sound together.',
       ),

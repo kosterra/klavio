@@ -46,6 +46,8 @@ export interface SongNote {
   value: NoteValue;
   /** finger (1 = thumb … 5 = little finger), shown above the note */
   finger?: number;
+  /** tied to the next note (same pitch): that one is held, not played again */
+  tie?: boolean;
 }
 
 /**
@@ -61,6 +63,8 @@ export interface SongExercise {
   tempo: number;
   /** Show note names below the notes (before note reading is learned). */
   showNames: boolean;
+  /** an upbeat: the first bar is only this many beats long (the last one makes up the rest) */
+  pickup?: number;
   bars: SongNote[][];
 }
 

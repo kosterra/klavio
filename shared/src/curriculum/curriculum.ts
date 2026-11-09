@@ -2,6 +2,7 @@ import { noteNameToMidi } from '../music/notes.ts';
 import type { Chapter, Lesson } from './types.ts';
 import {
   fingerInPosition,
+  isHeldNote,
   piece,
   pieceSteps,
   rhythm,
@@ -726,6 +727,44 @@ CURRICULUM.push({
         rhythm('q q q | h q | q q q | hd | q h | 8 8 q q | hd', { time: '3/4', tempo: 92 }),
       ],
     },
+    {
+      id: 'meter-upbeat',
+      kind: 'song',
+      title: { 'de-CH': 'Happy Birthday', en: 'Happy Birthday' },
+      intro: {
+        'de-CH':
+          'Ein Lied im Dreivierteltakt, das mit einem Auftakt beginnt: Die ersten zwei Töne kommen vor dem ersten «eins». Der letzte Takt ist dafür kürzer.',
+        en: 'A song in three-four time that starts with an upbeat: the first two notes come before the first «one». The last bar is shorter to make up for it.',
+      },
+      xp: 30,
+      keyboard: { from: 67, to: 79 },
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'G4/8 G4/8 | A4/q G4/q C5/q | H4/h G4/8 G4/8 | A4/q G4/q D5/q | C5/h G4/8 G4/8 | G5/q E5/q C5/q | H4/q A4/q F5/8 F5/8 | E5/q C5/q D5/q | C5/h',
+          { time: '3/4', tempo: 100, pickup: 1 },
+        ),
+      ],
+    },
+    {
+      id: 'meter-ties',
+      kind: 'song',
+      title: { 'de-CH': 'Haltebögen', en: 'Ties' },
+      intro: {
+        'de-CH':
+          'Ein Bogen zwischen zwei gleichen Noten heisst Haltebogen: Du spielst die erste und hältst sie einfach weiter – die zweite wird nicht nochmals angeschlagen.',
+        en: 'A curve between two equal notes is a tie: you play the first one and simply keep holding it – the second one is not struck again.',
+      },
+      xp: 25,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'C4/q D4/q E4/h~ | E4/h D4/h | E4/q F4/q G4/h~ | G4/w~ | G4/h F4/h | E4/q D4/q C4/h~ | C4/w',
+          { tempo: 88, position: RH_C4 },
+        ),
+      ],
+    },
   ],
 });
 
@@ -963,7 +1002,7 @@ export function lessonTargetCount(lesson: Lesson): number {
       (e.type === 'play-along'
         ? e.sequences.reduce((m, s) => m + s.length, 0)
         : e.type === 'song' || e.type === 'song-timed'
-          ? e.bars.reduce((m, b) => m + b.length, 0)
+          ? e.bars.flat().filter((n, i, all) => !isHeldNote(all, i)).length
           : e.type === 'rhythm'
             ? e.patterns.reduce((m, p) => m + rhythmOnsets(p).length, 0)
             : e.type === 'piece'

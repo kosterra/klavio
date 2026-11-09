@@ -11,6 +11,47 @@ const C4_C5 = { from: 60, to: 72 };
  * steps with pictures, games and quizzes. Keyed by lesson id.
  */
 export const LESSON_THEORY: Record<string, TheoryStep[]> = {
+  'meter-upbeat': [
+    {
+      type: 'explain',
+      text: L(
+        'Manche Lieder beginnen nicht auf «eins»: Ein paar Töne kommen vorher, wie ein Anlauf. Das heisst Auftakt. Dafür ist der letzte Takt kürzer – zusammen ergeben sie einen ganzen Takt.',
+        'Some songs do not start on «one»: a few notes come before, like a run-up. That is called an upbeat. The last bar is shorter to make up for it – together they make one whole bar.',
+      ),
+    },
+    {
+      type: 'quiz',
+      text: L('Was ist ein Auftakt?', 'What is an upbeat?'),
+      answers: [
+        { text: L('Töne vor dem ersten «eins»', 'Notes before the first «one»'), correct: true },
+        { text: L('Ein besonders lauter Ton', 'A particularly loud note') },
+        { text: L('Eine Pause am Anfang', 'A rest at the start') },
+      ],
+      hint: L('Lies nochmals oben nach.', 'Read the text above once more.'),
+    },
+  ],
+  'meter-ties': [
+    {
+      type: 'explain',
+      text: L(
+        'Ein Haltebogen verbindet zwei gleiche Noten. Du spielst nur die erste und hältst die Taste, so lange beide zusammen dauern – oft über den Taktstrich hinweg.',
+        'A tie connects two equal notes. You play only the first one and hold the key as long as both last together – often across the bar line.',
+      ),
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Eine halbe Note mit Haltebogen zu einer Viertel – wie lange hältst du?',
+        'A half note tied to a quarter – how long do you hold?',
+      ),
+      answers: [
+        { text: L('Zwei Schläge', 'Two beats') },
+        { text: L('Drei Schläge', 'Three beats'), correct: true },
+        { text: L('Vier Schläge', 'Four beats') },
+      ],
+      hint: L('Halbe (2) plus Viertel (1).', 'Half (2) plus quarter (1).'),
+    },
+  ],
   'accomp-bass': [
     {
       type: 'explain',
