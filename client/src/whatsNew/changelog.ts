@@ -23,6 +23,14 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Lektionen in Classic: ein ruhiger Hintergrund in der Farbe des Kapitels, der Name der Lektion steht oben im «Entdecken», und kurze Antworten wie Zahlen oder Notennamen sind grosse Felder zum Antippen.',
+        'Lessons in Classic: a quiet background in the chapter colour, the lesson name at the top of «Discover», and short answers such as numbers or note names are big tiles to tap.',
+      ),
+      L(
+        'Korrektur: Die Fragen «Und diese?» in den Übungen sagen jetzt ganz, wonach sie fragen – zum Beispiel «Und welche Nummer hat dieser Finger?».',
+        'Fix: the questions «And this one?» in the exercises now say in full what they ask – for example «And which number is this finger?».',
+      ),
+      L(
         'Klavi erklärt mitten in der Übung: Wo etwas Neues kommt, steht in der ersten Übung ein kurzer Tipp direkt über den Tasten.',
         'Klavi explains in the middle of the exercise: where something new comes up, a short tip sits right above the keys in the first exercise.',
       ),

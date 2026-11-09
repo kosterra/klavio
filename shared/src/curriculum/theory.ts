@@ -550,7 +550,7 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     },
     {
       type: 'quiz',
-      text: L('Und dieser?', 'And this one?'),
+      text: L('Und welche Nummer hat dieser Finger?', 'And which number is this finger?'),
       picture: { kind: 'hand', highlight: 5, numbers: false },
       answers: [{ text: L('1', '1') }, { text: L('4', '4') }, { text: L('5', '5'), correct: true }],
       hint: L(
@@ -849,7 +849,7 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     },
     {
       type: 'quiz',
-      text: L('Und diese?', 'And this one?'),
+      text: L('Und wie heisst diese Note?', 'And what is this note called?'),
       picture: { kind: 'staff', clef: 'treble', notes: [67] },
       answers: [{ text: L('F', 'F') }, { text: L('G', 'G'), correct: true }, { text: L('A', 'A') }],
       hint: L('Um diese Linie rollt sich der G-Schlüssel.', 'The G clef curls around this line.'),
@@ -1209,7 +1209,10 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     },
     {
       type: 'quiz',
-      text: L('Und diese?', 'And this one?'),
+      text: L(
+        'Und wie heisst diese Note im Bassschlüssel?',
+        'And what is this note called in the bass clef?',
+      ),
       picture: { kind: 'staff', clef: 'bass', notes: [53] },
       answers: [{ text: L('E', 'E') }, { text: L('F', 'F'), correct: true }, { text: L('G', 'G') }],
       hint: L(
@@ -1362,7 +1365,7 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     },
     {
       type: 'quiz',
-      text: L('Und diese?', 'And this one?'),
+      text: L('Und welche Hand spielt diese Note?', 'And which hand plays this note?'),
       picture: { kind: 'grand-staff', notes: [67] },
       answers: [
         { text: L('Die linke Hand', 'The left hand') },

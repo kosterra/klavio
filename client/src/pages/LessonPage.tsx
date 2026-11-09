@@ -278,11 +278,7 @@ function LessonRun({
   };
 
   return (
-    <div
-      className={kids ? stage.stage : undefined}
-      style={kids ? where.vars : undefined}
-      data-world={kids ? where.world.id : undefined}
-    >
+    <div className={kids ? stage.stage : stage.calm} style={where.vars} data-world={where.world.id}>
       {kids && (
         <div className={stage.scenery} aria-hidden>
           <Scenery world={where.world.id} chapterId="lesson" height={40} />
@@ -339,7 +335,12 @@ function LessonRun({
 
           {/* ------------------------------------------- theory ("Entdecken") */}
           {phase === 'theory' && (
-            <TheorySteps steps={steps} kids={kids} onDone={() => setPhase('intro')} />
+            <TheorySteps
+              steps={steps}
+              kids={kids}
+              onDone={() => setPhase('intro')}
+              lessonTitle={loc(lesson.title)}
+            />
           )}
 
           {/* -------------------------------------------------------- intro */}

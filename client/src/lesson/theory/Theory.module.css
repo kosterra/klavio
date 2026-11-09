@@ -141,6 +141,20 @@
   padding-block: 6px;
 }
 
+/* short answers (numbers, note names): big square tiles */
+.tile.tile {
+  height: 76px;
+  min-width: 76px;
+  padding-inline: 8px;
+  font-size: 28px;
+  border-width: 2px;
+  font-weight: 800;
+}
+
+.tile :global(.mantine-Button-section) {
+  margin-inline-end: 4px;
+}
+
 .noteSymbol {
   width: 40px;
   height: 60px;

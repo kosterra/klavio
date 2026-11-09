@@ -17,6 +17,16 @@
   --klavio-dock-bg: color-mix(in srgb, var(--chapter-color) 6%, var(--klavio-bg-kids));
 }
 
+/* Classic: the same world colour, only as a quiet wash at the top */
+.calm {
+  min-height: 100dvh;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--chapter-color) 11%, var(--klavio-bg-classic)) 0,
+    var(--klavio-bg-classic) 420px
+  );
+}
+
 .scenery {
   position: fixed;
   left: 0;
