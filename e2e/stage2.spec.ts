@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { LESSONS } from '@klavio/shared';
+import { findLesson, LESSONS, midiToName, pieceSteps, type PieceExercise } from '@klavio/shared';
 import { audit } from './audit';
 import {
   seedCompletedLessons,
@@ -54,6 +54,31 @@ test('level 2: own map, piece for both hands on the grand staff', async ({ page 
   await keys.getByRole('button', { name: 'D4', exact: true }).click();
   await expect(status).toHaveText('Ton 3 von 27');
   await audit(page);
+});
+
+test('level 2: more steps with both hands – together, mirror, hold', async ({ page }) => {
+  test.setTimeout(150_000);
+  await learner(page, 'both-steps');
+  await seedCompletedLessons(page, ids.slice(0, ids.indexOf('both-together')));
+  const keys = page.getByRole('group', { name: 'Klaviatur' });
+  for (const id of ['both-together', 'both-mirror'] as const) {
+    await page.goto(`/lesson/${id}`);
+    await startLesson(page);
+    await expect(page.getByTestId('coach-tip')).toBeVisible();
+    // every step: the left and the right hand's note
+    const steps = pieceSteps(findLesson(id)!.exercises[0] as PieceExercise);
+    for (const step of steps) {
+      for (const midi of [step.lh, step.rh]) {
+        if (midi !== null)
+          await keys.getByRole('button', { name: midiToName(midi), exact: true }).click();
+      }
+    }
+    await expect(page.getByRole('heading', { name: 'Perfekt!' })).toBeVisible();
+    await audit(page);
+  }
+  // after the mirror comes the grand staff, then holding a note
+  await page.getByRole('button', { name: 'Nächste Lektion' }).click();
+  await expect(page.getByRole('heading', { name: 'Das grosse Notensystem' })).toBeVisible();
 });
 
 test('level 2: improvising on the black keys – no wrong notes', async ({ page }) => {

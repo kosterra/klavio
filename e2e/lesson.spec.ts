@@ -15,19 +15,35 @@ const key = (page: Page, name: string) => page.getByRole('button', { name, exact
 const summary = (page: Page) => page.getByRole('button', { name: 'Zum Lernpfad' });
 
 /**
- * "Finde die Taste": read the asked note, tap it in the 4th octave. Waits for
- * lasting state (task counter / summary), not for the short feedback text.
+ * Plays a lesson to its summary, part by part: "Finde die Taste" (read the
+ * asked note, tap it in the 4th octave) and "Spiel nach" (tap the highlighted
+ * bubble's note). Waits for lasting state (task counter, sequence, summary),
+ * not for the short feedback text.
  */
-async function solveFindKey(page: Page, { mistakeFirst = false } = {}) {
+async function solveLesson(page: Page, { mistakeFirst = false } = {}) {
   const counter = page.getByText(/^Aufgabe \d+ von \d+$/);
+  const prompt = page.getByTestId('prompt');
+  const sequence = page.getByTestId('sequence');
   let first = true;
   while (!(await summary(page).isVisible())) {
-    // allTextContents() does not wait for the element (it disappears at the end)
+    if (await sequence.isVisible()) {
+      // "Spiel nach"
+      const current = sequence.locator('[aria-current="step"]');
+      if (!(await current.count())) {
+        await page.waitForTimeout(100); // between two sequences
+        continue;
+      }
+      const note = (await current.getAttribute('aria-label'))!.split(',')[0]!;
+      await key(page, `${note}4`).click();
+      continue;
+    }
+    // "Finde die Taste" – allTextContents() does not wait (it disappears at the end)
     const before = (await counter.allTextContents())[0] ?? null;
-    const note = /Finde das (\S+)/.exec(
-      (await page.getByTestId('prompt').textContent()) ?? '',
-    )?.[1];
-    if (!note || before === null) continue;
+    const note = /Finde das (\S+)/.exec((await prompt.allTextContents())[0] ?? '')?.[1];
+    if (!note || before === null) {
+      await page.waitForTimeout(100);
+      continue;
+    }
     if (first && mistakeFirst) {
       await key(page, note === 'D' ? 'E4' : 'D4').click();
       // kids mode: after a miss the right key gets marked
@@ -35,21 +51,12 @@ async function solveFindKey(page: Page, { mistakeFirst = false } = {}) {
     }
     first = false;
     await key(page, /\d$/.test(note) ? note : `${note}4`).click();
-    // next task (counter changed) or the lesson summary
-    await expect(summary(page).or(counter.filter({ hasNotText: before }))).toBeVisible();
-  }
-}
-
-/** "Spiel nach": tap the highlighted bubble's note, one after the other. */
-async function solvePlayAlong(page: Page) {
-  while (!(await summary(page).isVisible())) {
-    const current = page.getByTestId('sequence').locator('[aria-current="step"]');
-    if (!(await current.count())) {
-      await page.waitForTimeout(100); // between two sequences
-      continue;
-    }
-    const note = (await current.getAttribute('aria-label'))!.split(',')[0]!;
-    await key(page, `${note}4`).click();
+    // next task (counter changed), the next part or the lesson summary
+    await expect(
+      summary(page)
+        .or(sequence)
+        .or(counter.filter({ hasNotText: before })),
+    ).toBeVisible();
   }
 }
 
@@ -87,7 +94,7 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await page.getByTestId('mic-off').getByRole('button', { name: 'Warum?' }).click();
   await expect(page.getByText(/Zugriff auf das Mikrofon wurde verweigert/)).toBeVisible();
   await audit(page);
-  await solveFindKey(page, { mistakeFirst: true });
+  await solveLesson(page, { mistakeFirst: true });
   await expect(page.getByRole('heading', { name: 'Sehr gut!' })).toBeVisible();
   await expect(page.getByTestId('xp-gained')).toHaveText('+20 XP');
   await expect(page.getByText('1 Tag in Folge')).toBeVisible();
@@ -98,7 +105,7 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   // --- lesson 2 via "next", perfect → 3 stars
   await page.getByRole('button', { name: 'Nächste Lektion' }).click();
   await startLesson(page, 'Das mittlere C');
-  await solveFindKey(page);
+  await solveLesson(page);
   await expect(page.getByRole('heading', { name: 'Perfekt!' })).toBeVisible();
   await expect(page.getByTestId('xp-gained')).toHaveText('+25 XP');
   await expect(page.getByTestId('new-badges')).toContainText('Perfekt!');
@@ -106,14 +113,14 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   // --- lessons 3 (find D/E) and 4 (play along C-D-E)
   await page.getByRole('button', { name: 'Nächste Lektion' }).click();
   await startLesson(page, 'D und E');
-  await solveFindKey(page);
+  await solveLesson(page);
   // 20 + 25 + 25 = 70 XP → level 2 (from 50 XP)
   await expect(page.getByText('Neues Level: 2!')).toBeVisible();
   await page.getByRole('button', { name: 'Nächste Lektion' }).click();
   await startLesson(page, 'C, D, E nachspielen');
   await expect(page.getByTestId('sequence')).toBeVisible();
   await audit(page);
-  await solvePlayAlong(page);
+  await solveLesson(page);
   await expect(page.getByRole('heading', { name: 'Perfekt!' })).toBeVisible();
   await expect(page.getByTestId('xp-gained')).toHaveText('+30 XP'); // 100 XP in total
   await expect(page.getByText(/Neues Level/)).toHaveCount(0);
@@ -136,6 +143,6 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   // --- a replay is possible and keeps the best result
   await page.getByTestId('path-keys-c').click();
   await startLesson(page, 'Wo ist das C?');
-  await solveFindKey(page);
+  await solveLesson(page);
   await expect(page.getByTestId('xp-gained')).toHaveText('+10 XP'); // half of 10 + 5 for the extra star
 });

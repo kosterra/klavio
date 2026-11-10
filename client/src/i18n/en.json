@@ -312,6 +312,25 @@
       "never": "Accounts stay until they are deleted by their owners.",
       "howItWorks": "The warning's text is below, with the e-mail templates.",
       "saved": "Setting saved."
+    },
+    "season": {
+      "title": "Try out the festive season",
+      "hint": "Shows Advent, Christmas and New Year on a day of your choice – on this device and only for you. Everyone else sees today.",
+      "off": "Off (today)",
+      "day": "Or a particular day",
+      "look": "To the start page",
+      "active": "On this device the festive season uses: {{day}}.",
+      "inactive": "Off – the festive season follows today’s date.",
+      "presets": {
+        "advent1": "1st Sunday of Advent",
+        "advent2": "2nd Sunday of Advent",
+        "advent3": "3rd Sunday of Advent",
+        "advent4": "4th Sunday of Advent",
+        "christmasEve": "Christmas Eve",
+        "between": "28 December",
+        "newYearsEve": "New Year’s Eve",
+        "newYear": "New Year’s Day"
+      }
     }
   },
   "errors": {
@@ -590,8 +609,8 @@
     "micOff": "Microphone off – play on the screen keyboard.",
     "why": "Why?",
     "heard": "I hear: {{note}}",
-    "startPiano": "Let’s go – on my piano",
-    "startScreen": "Let’s go – on the screen",
+    "startPiano": "on my piano",
+    "startScreen": "on the screen",
     "switchToPiano": "Rather play on the piano",
     "playPianoHint": "On the piano I listen through the microphone – the sound stays on your device.",
     "waitingForNote": "I’m listening – go ahead!",
@@ -650,6 +669,22 @@
       "over": "Three notes have landed. Again?",
       "done": "All caught – great reading!",
       "note": "Falling note"
+    },
+    "parts": {
+      "label": "Part {{n}} of {{total}}",
+      "find-key": "Find the key",
+      "play-along": "Play along",
+      "read-note": "Read notes",
+      "note-rain": "Note rain",
+      "song": "Get to know",
+      "song-timed": "In time",
+      "chords": "Chords",
+      "echo": "By ear",
+      "dynamics": "Loud and soft",
+      "pedal": "Pedal",
+      "rhythm": "Rhythm",
+      "piece": "Both hands",
+      "improvise": "Make it up"
     }
   },
   "badges": {
@@ -1055,6 +1090,13 @@
   "freePlay": {
     "title": "Free play",
     "hint": "Play whatever you like – no tasks here.",
+    "startMic": "Play on my piano",
+    "listening": "I’m listening",
+    "stopMic": "Microphone off",
+    "midi": "Digital piano: {{device}}",
+    "staffLabel": "The note {{note}} on the staff",
+    "staffEmpty": "Empty staff – play a key",
+    "trail": "Your last notes",
     "sound": "Sound",
     "sounds": {
       "piano": "Piano",
@@ -1184,6 +1226,12 @@
       "go": "To the learning path"
     }
   },
+  "playOn": {
+    "title": "Where do you play?",
+    "hint": "What every lesson start offers you first – on this device. You can switch there at any time.",
+    "piano": "On my piano",
+    "screen": "On the screen"
+  },
   "weeklyGoal": {
     "title": "My weekly goal",
     "hint": "On how many days a week would you like to practise? The home page shows your week.",
@@ -1212,5 +1260,28 @@
     "christmas": "Merry Christmas, {{name}}!",
     "eve": "Happy New Year’s Eve, {{name}}!",
     "newYear": "Happy New Year {{year}}, {{name}}!"
+  },
+  "rainGame": {
+    "title": "Note rain",
+    "intro": "Endless: notes rain down until three have landed – faster and faster. How many can you catch?",
+    "clef": "Clef",
+    "clefs": {
+      "treble": "Treble clef",
+      "bass": "Bass clef",
+      "both": "Both"
+    },
+    "range": "Notes",
+    "ranges": {
+      "few": "Few",
+      "more": "Many"
+    },
+    "caught_one": "{{count}} caught",
+    "caught_other": "{{count}} caught",
+    "best_one": "Best {{count}}",
+    "best_other": "Best {{count}}",
+    "over_one": "You caught {{count}} note. Again?",
+    "over_other": "You caught {{count}} notes. Again?",
+    "record_one": "New record: {{count}} note!",
+    "record_other": "New record: {{count}} notes!"
   }
 }

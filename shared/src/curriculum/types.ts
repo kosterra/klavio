@@ -45,7 +45,8 @@ export interface ReadNoteExercise {
  */
 export interface NoteRainExercise {
   type: 'note-rain';
-  clef: 'treble' | 'bass';
+  /** 'both': every note on its own staff (from middle C up in the treble) */
+  clef: 'treble' | 'bass' | 'both';
   notes: number[];
   /** notes to catch for the round */
   goal: number;

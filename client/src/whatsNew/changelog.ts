@@ -20,6 +20,39 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: '2026.11.2',
+    changes: [
+      L(
+        'Mehr Schritte mit beiden Händen: «Beide zugleich» (der gleiche Ton links und rechts), «Spiegelbild» (die Hände gehen auseinander und wieder zusammen) und «Halten und spielen» (links ein langer Ton, rechts die Melodie) – vor dem ersten Lied mit Begleitung.',
+        'More steps with both hands: «Beide zugleich» (the same note left and right), «Spiegelbild» (the hands move apart and back together) and «Halten und spielen» (a long note on the left, the melody on the right) – before the first song with accompaniment.',
+      ),
+      L(
+        'Abwechslung in den Lektionen: Viele Lektionen haben jetzt zwei Teile – zum Beispiel erst Noten lesen, dann ein kurzer Notenregen, oder erst Tasten finden, dann nachspielen. Oben siehst du, in welchem Teil du bist.',
+        'Variety in the lessons: many lessons now have two parts – for example first reading notes, then a short note rain, or first finding keys, then playing along. At the top you see which part you are in.',
+      ),
+      L(
+        'Notenregen ohne Ende: Unter «Spielen» regnet es Noten, bis drei gelandet sind – im Violinschlüssel, im Bassschlüssel oder in beiden, mit wenigen oder vielen Tönen. Es wird immer schneller, und dein Rekord wartet darauf, geschlagen zu werden.',
+        'Endless note rain: under «Spielen» notes rain down until three have landed – in treble clef, bass clef or both, with few or many notes. It keeps getting faster, and your record is waiting to be beaten.',
+      ),
+      L(
+        'Für Admins: «Festzeit ausprobieren» unter «Verwaltung» zeigt Advent, Weihnachten und Neujahr an einem Tag deiner Wahl – nur auf deinem Gerät.',
+        'For admins: «Festzeit ausprobieren» under «Verwaltung» shows Advent, Christmas and New Year on a day of your choice – on your device only.',
+      ),
+      L(
+        'Freies Spielen auf dem Klavier: Mit «Auf meinem Klavier spielen» hört Klavio über das Mikrofon zu, ein Digitalpiano ist einfach da. Jeder Ton leuchtet auf der Klaviatur auf, springt mit seinem Namen hervor und steht im Notensystem – dazu deine letzten Töne als kleine Spur.',
+        'Free play on the piano: with «Play on my piano» Klavio listens through the microphone, a digital piano just works. Every note lights up on the keyboard, pops up with its name and appears on the staff – with your last notes as a little trail.',
+      ),
+      L(
+        'Wo spielst du? In «Mein Profil» stellst du ein, ob die Lektionen zuerst das Klavier oder den Bildschirm anbieten – für jedes Profil auf diesem Gerät.',
+        'Where do you play? In «Mein Profil» you choose whether lessons offer the piano or the screen first – for each profile on this device.',
+      ),
+      L(
+        'Korrektur: Der Startknopf der Lektion schneidet auf schmalen Bildschirmen den Text nicht mehr ab.',
+        'Fix: the lesson start button no longer cuts off its text on narrow screens.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.1',
     changes: [
       L(

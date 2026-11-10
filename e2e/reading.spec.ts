@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { LESSONS } from '@klavio/shared';
+import { LESSONS, midiToName } from '@klavio/shared';
 import {
   seedCompletedLessons,
   signUpWithEmail,
@@ -44,7 +44,9 @@ test('note reading: the staff shows a note, playing it is checked exactly', asyn
 
   const round = page.getByTestId('round');
   const summary = page.getByRole('button', { name: 'Zum Lernpfad' });
-  while (!(await summary.isVisible())) {
+  const rain = page.getByTestId('note-rain');
+  await expect(page.getByTestId('lesson-parts')).toContainText('Noten lesen');
+  while (!(await rain.isVisible())) {
     const before = (await round.allTextContents())[0];
     if (!before) continue;
     // G4 is never asked in this lesson: a miss reveals the note's name
@@ -53,9 +55,24 @@ test('note reading: the staff shows a note, playing it is checked exactly', asyn
       (await page.getByText(/^Das ist ein \S+\.$/).textContent()) ?? '',
     )![1];
     await page.getByRole('button', { name: `${name}4`, exact: true }).click();
-    await expect(summary.or(round.filter({ hasNotText: before }))).toBeVisible();
+    await expect(rain.or(round.filter({ hasNotText: before }))).toBeVisible();
   }
-  // one miss per note → 6 / 12 correct → 1 star, still finished
+  // part 2: the same notes as a short note rain
+  await expect(page.getByTestId('lesson-parts').locator('[aria-current="step"]')).toHaveText(
+    'Notenregen',
+  );
+  await audit(page);
+  const field = rain.locator('[data-drops]');
+  await page.getByTestId('rain-start').click();
+  for (let caught = 0; caught < 6;) {
+    const drops = JSON.parse((await field.getAttribute('data-drops')) ?? '[]') as number[];
+    if (!drops.length) continue;
+    await page.getByRole('button', { name: midiToName(drops[0]!), exact: true }).click();
+    caught++;
+    await expect(page.getByTestId('rain-status')).toContainText(`${caught} von 6 gefangen`);
+  }
+  // one miss per read note → 12 / 18 correct → 1 star, still finished
   await expect(page.getByRole('heading', { name: 'Geschafft!' })).toBeVisible();
   await expect(page.getByRole('img', { name: '1 von 3 Sternen' })).toBeVisible();
+  await expect(summary).toBeVisible();
 });

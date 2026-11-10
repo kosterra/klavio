@@ -11,6 +11,7 @@ import { OperatorCard } from '../admin/OperatorCard';
 import { MailTemplatesCard } from '../admin/MailTemplatesCard';
 import { WorldsCard } from '../admin/WorldsCard';
 import { DataCard } from '../admin/DataCard';
+import { SeasonPreviewCard } from '../admin/SeasonPreviewCard';
 
 /** Settings for admins (role granted via `npm run admin:grant`). */
 export function AdminPage() {
@@ -70,6 +71,7 @@ export function AdminPage() {
         }}
       />
       <MailTemplatesCard />
+      <SeasonPreviewCard />
     </Stack>
   );
 }

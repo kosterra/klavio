@@ -47,3 +47,34 @@ test('Notenregen: catch the falling notes before they land', async ({ page }) =>
   // the lesson ends with its result
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible({ timeout: 10_000 });
 });
+
+test('endless Notenregen under «Spielen»: until three land, with a record', async ({ page }) => {
+  test.setTimeout(120_000);
+  await signUpWithEmail(page, uniqueEmail('rain-endless'), 'Familie');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Mia');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
+
+  await page.goto('/play');
+  await page.getByTestId('play-tabs').getByRole('link', { name: 'Notenregen' }).click();
+  await expect(page.getByRole('heading', { name: 'Notenregen', level: 1 })).toBeVisible();
+  await page.getByText('Beide').click();
+  await audit(page);
+
+  const field = page.getByTestId('note-rain').locator('[data-drops]');
+  await page.getByTestId('rain-start').click();
+  for (let caught = 0; caught < 3;) {
+    const drops = JSON.parse((await field.getAttribute('data-drops')) ?? '[]') as number[];
+    if (!drops.length) continue;
+    await page.getByRole('button', { name: midiToName(drops[0]!), exact: true }).click();
+    caught++;
+    await expect(page.getByTestId('rain-status')).toContainText(`${caught} gefangen`);
+  }
+  // no more keys: three notes land, the round is over – a first record
+  await expect(page.getByText('Neuer Rekord: 3 Noten!')).toBeVisible({ timeout: 40_000 });
+  await audit(page);
+  await page.getByTestId('rain-again').click();
+  await expect(page.getByTestId('rain-status')).toContainText('Rekord 3');
+});

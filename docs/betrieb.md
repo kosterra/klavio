@@ -115,6 +115,8 @@ Ebenfalls unter «Verwaltung»:
 - **Betreiber und Kontakt:** Name und Kontakt-E-Mail stehen in der Fusszeile und auf der Seite
   «Datenschutz» (`/privacy`) als verantwortliche Stelle – bitte ausfüllen, eine Datenschutzerklärung
   muss sie nennen.
+- **Festzeit ausprobieren:** zeigt Advent, Weihnachten und Neujahr an einem gewählten Tag – nur auf
+  dem Gerät des Admins (im Browser gespeichert); alle anderen sehen den heutigen Tag.
 - **E-Mail-Vorlagen:** Betreff, Überschrift und die Texte vor und nach dem Code der beiden Code-Mails
   (Anmeldung, neue Adresse bestätigen), auf Deutsch und Englisch, mit Platzhaltern `{{code}}`,
   `{{app}}`, `{{minutes}}`. Gestaltung und Code-Feld bleiben fest; jede Mail geht in der Sprache, in

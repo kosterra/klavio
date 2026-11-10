@@ -2,13 +2,38 @@
   min-height: calc(100dvh - 160px);
 }
 
+/* the note's name (with the last ones) and where it sits in the notes, side by side */
+.show {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--mantine-spacing-md);
+  width: 100%;
+  max-width: 720px;
+  margin-inline: auto;
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-xl);
+  background: var(--mantine-color-body);
+}
+
+.left {
+  display: grid;
+  gap: var(--mantine-spacing-xs);
+  justify-items: center;
+}
+
 .note {
   display: grid;
   place-items: center;
-  min-height: 120px;
-  font-size: clamp(3.5rem, 14vw, 6rem);
+  min-height: 100px;
+  font-size: clamp(3rem, 12vw, 6rem);
   font-weight: 900;
   color: var(--mantine-primary-color-filled);
+}
+
+.staff {
+  min-width: 0;
 }
 
 .pop {
@@ -19,6 +44,33 @@
   opacity: 0.3;
 }
 
+/* the last notes as a little trail, the newest on the right */
+.trail {
+  min-height: 1.6em; /* no jump when the first notes arrive */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trail li {
+  min-width: 2.6em;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--mantine-color-default-hover);
+  font-weight: 700;
+  text-align: center;
+}
+
+.trail .trailLast {
+  background: var(--mantine-primary-color-light);
+  color: var(--mantine-primary-color-light-color);
+  animation: pop 300ms ease-out both;
+}
+
 @keyframes pop {
   from {
     transform: scale(0.6);
@@ -27,7 +79,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pop {
+  .pop,
+  .trail .trailLast {
     animation: none;
   }
 }

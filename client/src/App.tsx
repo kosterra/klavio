@@ -57,6 +57,9 @@ const MetronomePage = lazy(() =>
 const FreePlayPage = lazy(() =>
   import('./pages/FreePlayPage').then((m) => ({ default: m.FreePlayPage })),
 );
+const RainGamePage = lazy(() =>
+  import('./pages/RainGamePage').then((m) => ({ default: m.RainGamePage })),
+);
 const SongsPage = lazy(() => import('./pages/SongsPage').then((m) => ({ default: m.SongsPage })));
 const OnboardingPage = lazy(() =>
   import('./pages/OnboardingPage').then((m) => ({ default: m.OnboardingPage })),
@@ -221,6 +224,7 @@ export function App() {
                     <Route path="/knowledge" element={<KnowledgePage />} />
                     <Route path="/songs" element={<SongsPage />} />
                     <Route path="/play" element={<FreePlayPage />} />
+                    <Route path="/play/rain" element={<RainGamePage />} />
                     <Route path="/metronome" element={<MetronomePage />} />
                   </Route>
                 </Route>

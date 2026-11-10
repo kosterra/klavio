@@ -312,6 +312,25 @@
       "never": "Konten bleiben, bis man sie selbst löscht.",
       "howItWorks": "Den Text der Warnung findest du unten bei den E-Mail-Vorlagen.",
       "saved": "Einstellung gespeichert."
+    },
+    "season": {
+      "title": "Festzeit ausprobieren",
+      "hint": "Zeigt Advent, Weihnachten und Neujahr an einem Tag deiner Wahl – nur auf diesem Gerät und nur für dich. Alle anderen sehen den heutigen Tag.",
+      "off": "Aus (heute)",
+      "day": "Oder ein bestimmter Tag",
+      "look": "Zur Startseite",
+      "active": "Auf diesem Gerät gilt für die Festzeit: {{day}}.",
+      "inactive": "Aus – die Festzeit richtet sich nach dem heutigen Tag.",
+      "presets": {
+        "advent1": "1. Advent",
+        "advent2": "2. Advent",
+        "advent3": "3. Advent",
+        "advent4": "4. Advent",
+        "christmasEve": "Heiligabend",
+        "between": "28. Dezember",
+        "newYearsEve": "Silvester",
+        "newYear": "Neujahr"
+      }
     }
   },
   "errors": {
@@ -590,8 +609,8 @@
     "micOff": "Mikrofon aus – spiel auf der Bildschirm-Klaviatur.",
     "why": "Warum?",
     "heard": "Ich höre: {{note}}",
-    "startPiano": "Los geht’s – auf meinem Klavier",
-    "startScreen": "Los geht’s – auf dem Bildschirm",
+    "startPiano": "auf meinem Klavier",
+    "startScreen": "auf dem Bildschirm",
     "switchToPiano": "Lieber auf dem Klavier spielen",
     "playPianoHint": "Auf dem Klavier höre ich dir über das Mikrofon zu – der Ton bleibt auf deinem Gerät.",
     "waitingForNote": "Ich höre zu – spiel los!",
@@ -650,6 +669,22 @@
       "over": "Drei Noten sind gelandet. Nochmals?",
       "done": "Alle gefangen – super gelesen!",
       "note": "Fallende Note"
+    },
+    "parts": {
+      "label": "Teil {{n}} von {{total}}",
+      "find-key": "Taste finden",
+      "play-along": "Nachspielen",
+      "read-note": "Noten lesen",
+      "note-rain": "Notenregen",
+      "song": "Kennenlernen",
+      "song-timed": "Im Takt",
+      "chords": "Akkorde",
+      "echo": "Nach Gehör",
+      "dynamics": "Laut und leise",
+      "pedal": "Pedal",
+      "rhythm": "Rhythmus",
+      "piece": "Beide Hände",
+      "improvise": "Erfinden"
     }
   },
   "badges": {
@@ -1055,6 +1090,13 @@
   "freePlay": {
     "title": "Freies Spielen",
     "hint": "Spiel, was du willst – hier gibt es keine Aufgaben.",
+    "startMic": "Auf meinem Klavier spielen",
+    "listening": "Ich höre dir zu",
+    "stopMic": "Mikrofon aus",
+    "midi": "Digitalpiano: {{device}}",
+    "staffLabel": "Die Note {{note}} im Notensystem",
+    "staffEmpty": "Leeres Notensystem – spiel eine Taste",
+    "trail": "Deine letzten Töne",
     "sound": "Klang",
     "sounds": {
       "piano": "Klavier",
@@ -1184,6 +1226,12 @@
       "go": "Zum Lernpfad"
     }
   },
+  "playOn": {
+    "title": "Wo spielst du?",
+    "hint": "Das bietet dir der Start jeder Lektion zuerst an – auf diesem Gerät. Wechseln kannst du dort jederzeit.",
+    "piano": "Auf meinem Klavier",
+    "screen": "Auf dem Bildschirm"
+  },
   "weeklyGoal": {
     "title": "Mein Wochenziel",
     "hint": "An wie vielen Tagen pro Woche möchtest du üben? Auf der Startseite siehst du deine Woche.",
@@ -1212,5 +1260,28 @@
     "christmas": "Frohe Weihnachten, {{name}}!",
     "eve": "Guten Rutsch, {{name}}!",
     "newYear": "Gutes neues Jahr {{year}}, {{name}}!"
+  },
+  "rainGame": {
+    "title": "Notenregen",
+    "intro": "Endlos: Es regnet Noten, bis drei gelandet sind – und immer schneller. Wie viele fängst du?",
+    "clef": "Schlüssel",
+    "clefs": {
+      "treble": "Violinschlüssel",
+      "bass": "Bassschlüssel",
+      "both": "Beide"
+    },
+    "range": "Töne",
+    "ranges": {
+      "few": "Wenige",
+      "more": "Viele"
+    },
+    "caught_one": "{{count}} gefangen",
+    "caught_other": "{{count}} gefangen",
+    "best_one": "Rekord {{count}}",
+    "best_other": "Rekord {{count}}",
+    "over_one": "{{count}} Note gefangen. Nochmals?",
+    "over_other": "{{count}} Noten gefangen. Nochmals?",
+    "record_one": "Neuer Rekord: {{count}} Note!",
+    "record_other": "Neuer Rekord: {{count}} Noten!"
   }
 }
