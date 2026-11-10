@@ -18,6 +18,13 @@ test('free play, metronome, wardrobe, family overview, placement and data export
   await page.goto('/play');
   await page.getByRole('button', { name: 'E4', exact: true }).click();
   await expect(page.getByTestId('free-note')).toHaveText('E');
+  // … where it sits in the notes, and the last notes as a trail
+  await expect(page.getByTestId('free-staff').locator('svg .vf-stavenote')).toHaveCount(1);
+  await page.getByRole('button', { name: 'G4', exact: true }).click();
+  await expect(page.getByTestId('free-note')).toHaveText('G');
+  await expect(page.getByRole('list', { name: 'Deine letzten Töne' })).toHaveText('EG');
+  // the real piano: an acoustic one through the microphone
+  await expect(page.getByTestId('free-mic')).toBeVisible();
   await page.getByText('Spieluhr').click();
   await audit(page);
 

@@ -1055,6 +1055,13 @@
   "freePlay": {
     "title": "Freies Spielen",
     "hint": "Spiel, was du willst – hier gibt es keine Aufgaben.",
+    "startMic": "Auf meinem Klavier spielen",
+    "listening": "Ich höre dir zu",
+    "stopMic": "Mikrofon aus",
+    "midi": "Digitalpiano: {{device}}",
+    "staffLabel": "Die Note {{note}} im Notensystem",
+    "staffEmpty": "Leeres Notensystem – spiel eine Taste",
+    "trail": "Deine letzten Töne",
     "sound": "Klang",
     "sounds": {
       "piano": "Klavier",

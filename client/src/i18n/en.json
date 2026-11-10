@@ -1055,6 +1055,13 @@
   "freePlay": {
     "title": "Free play",
     "hint": "Play whatever you like – no tasks here.",
+    "startMic": "Play on my piano",
+    "listening": "I’m listening",
+    "stopMic": "Microphone off",
+    "midi": "Digital piano: {{device}}",
+    "staffLabel": "The note {{note}} on the staff",
+    "staffEmpty": "Empty staff – play a key",
+    "trail": "Your last notes",
     "sound": "Sound",
     "sounds": {
       "piano": "Piano",

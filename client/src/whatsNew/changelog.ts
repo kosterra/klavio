@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Freies Spielen auf dem Klavier: Mit «Auf meinem Klavier spielen» hört Klavio über das Mikrofon zu, ein Digitalpiano ist einfach da. Jeder Ton leuchtet auf der Klaviatur auf, springt mit seinem Namen hervor und steht im Notensystem – dazu deine letzten Töne als kleine Spur.',
+        'Free play on the piano: with «Play on my piano» Klavio listens through the microphone, a digital piano just works. Every note lights up on the keyboard, pops up with its name and appears on the staff – with your last notes as a little trail.',
+      ),
+      L(
         'Wo spielst du? In «Mein Profil» stellst du ein, ob die Lektionen zuerst das Klavier oder den Bildschirm anbieten – für jedes Profil auf diesem Gerät.',
         'Where do you play? In «Mein Profil» you choose whether lessons offer the piano or the screen first – for each profile on this device.',
       ),
