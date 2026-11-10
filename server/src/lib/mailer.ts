@@ -15,14 +15,21 @@ export interface Mailer {
 }
 
 /**
- * SMTP mailer; without SMTP_HOST mails are only logged (development).
+ * SMTP mailer; without SMTP_HOST mails are only logged (development – in
+ * production without their content).
  * The mails themselves come from lib/mailTemplates.ts.
  */
 export function createMailer(config: AppConfig, log: (msg: string) => void): Mailer {
   if (!config.SMTP_HOST) {
     return {
       async send(mail) {
-        log(`[mail disabled — no SMTP_HOST] to=${mail.to} subject="${mail.subject}"\n${mail.text}`);
+        // development: the whole mail (with its code) in the log; in production
+        // never – a code in a log file would be a way into the account
+        log(
+          config.NODE_ENV === 'production'
+            ? `[mail not sent — no SMTP_HOST configured] subject="${mail.subject}"`
+            : `[mail disabled — no SMTP_HOST] to=${mail.to} subject="${mail.subject}"\n${mail.text}`,
+        );
       },
     };
   }

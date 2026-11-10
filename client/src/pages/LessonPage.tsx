@@ -96,7 +96,8 @@ function localResult(
   const stars = starsFor(lessonTargetCount(lesson), body.mistakes);
   const previousBest = before.lessons[lesson.id]?.bestStars ?? 0;
   const { wasDue, bonusXp } = applyCompletion(before.lessons[lesson.id], stars, body.localDate);
-  const xpGained = xpFor(lesson.xp, stars, previousBest) + bonusXp;
+  const replayedToday = before.lessons[lesson.id]?.lastDate === body.localDate;
+  const xpGained = xpFor(lesson.xp, stars, previousBest, replayedToday) + bonusXp;
   const xp = profile.xp + xpGained;
   const level = levelForXp(xp);
   return {

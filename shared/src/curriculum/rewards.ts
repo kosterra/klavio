@@ -14,11 +14,18 @@ export function starsFor(targets: number, mistakes: number): Stars {
 
 /**
  * First completion: full lesson XP + 5 per star. Replays: half the lesson XP
- * (practice still counts) + 5 per star improved.
+ * (practice still counts) + 5 per star improved – the half only once a day
+ * per lesson (`replayedToday`), so repeating one lesson doesn't farm levels.
  */
-export function xpFor(lessonXp: number, stars: Stars, previousBestStars: number): number {
+export function xpFor(
+  lessonXp: number,
+  stars: Stars,
+  previousBestStars: number,
+  replayedToday = false,
+): number {
   if (previousBestStars === 0) return lessonXp + 5 * stars;
-  return Math.round(lessonXp / 2) + 5 * Math.max(0, stars - previousBestStars);
+  const practice = replayedToday ? 0 : Math.round(lessonXp / 2);
+  return practice + 5 * Math.max(0, stars - previousBestStars);
 }
 
 /** Total XP needed to reach a level: 0, 50, 150, 300, 500, … */

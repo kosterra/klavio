@@ -263,14 +263,40 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
         consume: true,
         userId,
       });
+      const old = req.auth!.user.email;
       try {
         await User.updateOne({ _id: userId }, { email: pending.email });
       } catch {
         throw new HttpError(409, 'EMAIL_IN_USE');
       }
+      // whoever was logged in elsewhere logs in again; the old address hears of it
+      await Session.deleteMany({ userId, _id: { $ne: req.auth!.sessionId } });
+      const en = req.auth!.user.locale === 'en';
+      void mailer
+        .send({
+          to: old,
+          subject: en
+            ? 'Klavio: your e-mail address was changed'
+            : 'Klavio: Deine E-Mail-Adresse wurde geändert',
+          text: en
+            ? `The e-mail address of your Klavio account was changed to ${pending.email}. If that wasn't you, log in with a passkey or contact the operator of this Klavio.`
+            : `Die E-Mail-Adresse deines Klavio-Kontos wurde auf ${pending.email} geändert. Warst du das nicht, melde dich mit einem Passkey an oder wende dich an die Betreiberin oder den Betreiber dieses Klavio.`,
+        })
+        .catch((err: unknown) => req.log.error(err, 'e-mail change notice failed'));
       return { email: pending.email };
     },
   );
+
+  // ----------------------------------------------------- other devices
+  // «Auf allen anderen Geräten abmelden»: every session but this one ends
+  app.post('/sessions/logout-others', async (req) => {
+    const { user, sessionId } = req.auth!;
+    const { deletedCount } = await Session.deleteMany({
+      userId: user._id,
+      _id: { $ne: sessionId },
+    });
+    return { loggedOut: deletedCount };
+  });
 
   // ------------------------------------------------------------ display name
   app.patch('/', { schema: { body: accountUpdateSchema } }, async (req) => {

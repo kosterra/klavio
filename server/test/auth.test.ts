@@ -449,6 +449,42 @@ describe('changing the e-mail address', () => {
     expect((await call(jar, 'GET', '/api/auth/me')).json().user.email).toBe('paul@neu.ch');
   });
 
+  it('logs out the other devices and tells the old address', async () => {
+    const jar = new CookieJar();
+    await signUp(jar, 'eva@example.ch', 'Eva');
+    // a second device
+    const other = new CookieJar();
+    await call(other, 'POST', '/api/auth/email/request', { email: 'eva@example.ch' });
+    await call(other, 'POST', '/api/auth/email/verify', {
+      email: 'eva@example.ch',
+      code: lastCode(),
+    });
+    expect((await call(other, 'GET', '/api/auth/me')).statusCode).toBe(200);
+
+    await call(jar, 'POST', '/api/account/email/request', { email: 'eva@neu.ch' });
+    await call(jar, 'POST', '/api/account/email/verify', { code: lastCode() });
+    expect((await call(other, 'GET', '/api/auth/me')).statusCode).toBe(401);
+    expect((await call(jar, 'GET', '/api/auth/me')).statusCode).toBe(200);
+    const notice = ctx.outbox.find((m) => m.to === 'eva@example.ch' && /geändert/.test(m.subject));
+    expect(notice?.text).toContain('eva@neu.ch');
+  });
+
+  it('can log out all other devices', async () => {
+    const jar = new CookieJar();
+    await signUp(jar, 'tom@example.ch', 'Tom');
+    const other = new CookieJar();
+    await call(other, 'POST', '/api/auth/email/request', { email: 'tom@example.ch' });
+    await call(other, 'POST', '/api/auth/email/verify', {
+      email: 'tom@example.ch',
+      code: lastCode(),
+    });
+    expect((await call(jar, 'POST', '/api/account/sessions/logout-others')).json()).toEqual({
+      loggedOut: 1,
+    });
+    expect((await call(other, 'GET', '/api/auth/me')).statusCode).toBe(401);
+    expect((await call(jar, 'GET', '/api/auth/me')).statusCode).toBe(200);
+  });
+
   it('refuses an address used by another account; the address cannot be removed', async () => {
     await signUp(new CookieJar(), 'taken@example.ch', 'T');
     const jar = new CookieJar();

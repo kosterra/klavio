@@ -115,7 +115,14 @@ export const profileUpdateSchema = z
     avatar: avatarSchema,
     uiMode: uiModeSchema,
     dailyGoalMinutes: z.number().int().min(5).max(60),
-    calibration: calibrationSchema.partial(),
+    // without defaults: saving one value must not reset the others
+    calibration: z
+      .object({
+        a4Hz: z.number().min(415).max(466),
+        noiseFloorDb: z.number().min(-120).max(0).nullable(),
+        inputGain: z.number().min(0.1).max(10),
+      })
+      .partial(),
     goalSong: goalSongSchema.nullable(),
     birthYear: birthYearSchema,
     world: worldSetSchema.nullable(),

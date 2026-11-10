@@ -631,6 +631,15 @@
         }
       }
     },
+    "/api/account/sessions/logout-others": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
     "/api/account/": {
       "patch": {
         "requestBody": {
@@ -825,13 +834,11 @@
                     "type": "object",
                     "properties": {
                       "a4Hz": {
-                        "default": 440,
                         "type": "number",
                         "minimum": 415,
                         "maximum": 466
                       },
                       "noiseFloorDb": {
-                        "default": null,
                         "anyOf": [
                           {
                             "type": "number",
@@ -844,7 +851,6 @@
                         ]
                       },
                       "inputGain": {
-                        "default": 1,
                         "type": "number",
                         "minimum": 0.1,
                         "maximum": 10

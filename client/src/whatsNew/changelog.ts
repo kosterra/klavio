@@ -23,6 +23,14 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Konto: «Auf allen anderen Geräten abmelden» – und wer die E-Mail-Adresse ändert, wird überall sonst abgemeldet; die alte Adresse bekommt eine Nachricht.',
+        'Account: «Log out on all other devices» – and changing the e-mail address logs out everywhere else; the old address gets a notice.',
+      ),
+      L(
+        'Fair üben: Dieselbe Lektion bringt beim Wiederholen einmal am Tag die halben Punkte, danach zählen nur noch bessere Sterne. Die Figur eines Geschwisters ändert man nur noch im Elternbereich.',
+        'Fair practice: replaying the same lesson gives half the points once a day, after that only better stars count. A sibling’s figure can only be changed in the parent area.',
+      ),
+      L(
         'Sicherheit: Nach einer neuen Anmeldung bleibt der Elternbereich gesperrt, wenn eine PIN eingerichtet ist. Wer die PIN vergessen hat, bekommt mit «PIN vergessen?» einen Code an die E-Mail-Adresse des Kontos. Falsche PINs und falsche E-Mail-Codes sperren nach einigen Versuchen für eine Weile – unabhängig davon, von wo sie kommen.',
         'Security: after a new login the parent area stays locked when a PIN is set. If you forgot the PIN, «PIN vergessen?» sends a code to the account’s e-mail address. Wrong PINs and wrong e-mail codes lock for a while after a few tries – wherever they come from.',
       ),

@@ -181,6 +181,33 @@ describe('parent PIN', () => {
     expect((await call(again, 'PUT', '/api/account/pin', { pin: '13579' })).statusCode).toBe(204);
   });
 
+  it("a learner changes their own figure, a sibling's only with the parent area", async () => {
+    const { jar, kid } = await family();
+    const sibling = (
+      await call(jar, 'POST', '/api/profiles', { name: 'Ben', birthYear: 2018 })
+    ).json();
+    await call(jar, 'PUT', '/api/account/pin', { pin: '2468' });
+    await call(jar, 'POST', '/api/profiles/select', { profileId: kid.id });
+    expect(
+      (await call(jar, 'PATCH', `/api/profiles/${kid.id}`, { avatar: 'fox' })).statusCode,
+    ).toBe(200);
+    expect(
+      (await call(jar, 'PATCH', `/api/profiles/${sibling.id}`, { avatar: 'fox' })).json(),
+    ).toEqual(LOCKED);
+    // siblings' progress stays visible (family overview)
+    expect((await call(jar, 'GET', '/api/profiles/overview?date=2026-11-10')).statusCode).toBe(200);
+  });
+
+  it('a code request alone does not change the language of the account’s mails', async () => {
+    await family();
+    await call(new CookieJar(), 'POST', '/api/auth/email/request', {
+      email: 'eltern@example.ch',
+      lang: 'en',
+    });
+    const { User } = await import('../src/models/index.js');
+    expect((await User.findOne({ email: 'eltern@example.ch' }).lean())!.locale).not.toBe('en');
+  });
+
   it('locks the PIN after five wrong tries – also across restarts (kept in the database)', async () => {
     const { jar, kid } = await family();
     await call(jar, 'PUT', '/api/account/pin', { pin: '2468' });

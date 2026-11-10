@@ -144,5 +144,6 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await page.getByTestId('path-keys-c').click();
   await startLesson(page, 'Wo ist das C?');
   await solveLesson(page);
-  await expect(page.getByTestId('xp-gained')).toHaveText('+10 XP'); // half of 10 + 5 for the extra star
+  // the same day: only the extra star counts (the practice half comes once a day)
+  await expect(page.getByTestId('xp-gained')).toHaveText('+5 XP');
 });

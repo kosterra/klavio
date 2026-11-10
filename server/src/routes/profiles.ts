@@ -142,6 +142,11 @@ const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
       }
       await checkWorld(req.body.world, req.body.birthYear);
       const created = await Profile.create({ ...req.body, userId, setupDone: false });
+      // two at once can both pass the count above – the later one gives way
+      if ((await Profile.countDocuments({ userId })) > MAX_PROFILES_PER_ACCOUNT) {
+        await Profile.deleteOne({ _id: created._id });
+        throw new HttpError(400, 'PROFILE_LIMIT');
+      }
       return reply.code(201).send(profileToDto(created.toObject() as ProfileDoc));
     },
   );
@@ -164,7 +169,9 @@ const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
         'playOn',
       ];
       const parentOnly = Object.keys(rest).filter((k) => !learnerKeys.includes(k));
-      if (parentOnly.length > 0) await app.requireParent(req, reply);
+      // a learner changes their own profile – a sibling's only with the parent area
+      const own = req.auth!.activeProfileId?.toString() === req.params.id;
+      if (parentOnly.length > 0 || !own) await app.requireParent(req, reply);
       const update: Record<string, unknown> = {};
       if (rest.world === 'journey' || rest.birthYear !== undefined) {
         const current = await Profile.findOne(

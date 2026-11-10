@@ -251,7 +251,12 @@
     "changeEmail": "Change e-mail address",
     "export": "Your data",
     "exportHint": "Download everything Klavio keeps about your account – account, passkeys, profiles, progress and practice days – as one file (JSON).",
-    "exportButton": "Download data"
+    "exportButton": "Download data",
+    "devices": "Other devices",
+    "devicesHint": "Lost or sold a device? Log your account out everywhere else – only this device stays logged in.",
+    "devicesButton": "Log out on all other devices",
+    "devicesDone_one": "{{count}} other device logged out.",
+    "devicesDone_other": "{{count}} other devices logged out."
   },
   "admin": {
     "title": "Administration",

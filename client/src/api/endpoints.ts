@@ -62,6 +62,7 @@ export const endpoints = {
   updateAccount: (displayName: string) =>
     api<{ displayName: string }>('PATCH', '/account', { displayName }),
   deleteAccount: () => api('DELETE', '/account'),
+  logoutOtherDevices: () => api<{ loggedOut: number }>('POST', '/account/sessions/logout-others'),
   setParentPin: (pin: string) => api('PUT', '/account/pin', { pin }),
   removeParentPin: () => api('DELETE', '/account/pin'),
   verifyParentPin: (pin: string) =>

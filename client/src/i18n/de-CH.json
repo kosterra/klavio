@@ -251,7 +251,12 @@
     "changeEmail": "E-Mail-Adresse ändern",
     "export": "Deine Daten",
     "exportHint": "Lade alles herunter, was Klavio über dein Konto gespeichert hat – Konto, Passkeys, Profile, Fortschritt und Übungstage – als eine Datei (JSON).",
-    "exportButton": "Daten herunterladen"
+    "exportButton": "Daten herunterladen",
+    "devices": "Andere Geräte",
+    "devicesHint": "Ein Gerät verloren oder verkauft? Hier meldest du dein Konto überall sonst ab – nur dieses Gerät bleibt angemeldet.",
+    "devicesButton": "Auf allen anderen Geräten abmelden",
+    "devicesDone_one": "{{count}} anderes Gerät abgemeldet.",
+    "devicesDone_other": "{{count}} andere Geräte abgemeldet."
   },
   "admin": {
     "title": "Verwaltung",

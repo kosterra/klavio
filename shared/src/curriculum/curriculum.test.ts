@@ -187,6 +187,9 @@ describe('rewards', () => {
     expect(xpFor(10, 3, 0)).toBe(25);
     expect(xpFor(10, 2, 3)).toBe(5);
     expect(xpFor(10, 3, 1)).toBe(15);
+    // the same lesson again on the same day: only stars improved count
+    expect(xpFor(10, 3, 1, true)).toBe(10);
+    expect(xpFor(10, 3, 3, true)).toBe(0);
   });
 
   it('maps XP to levels', () => {
