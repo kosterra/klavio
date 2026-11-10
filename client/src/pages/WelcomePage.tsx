@@ -439,7 +439,7 @@ export function WelcomePage() {
       </section>
 
       <SiteFooter />
-      <InstallHint variant="banner" />
+      <InstallHint variant="popup" />
     </div>
   );
 }

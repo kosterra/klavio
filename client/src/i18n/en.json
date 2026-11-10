@@ -701,12 +701,21 @@
     "pendingResult": "You are offline right now. Your result is stored on this device and will be sent once you are back online. Badges will follow then."
   },
   "install": {
-    "title": "Install Klavio",
-    "text": "Install the app: it then starts like a real app in full screen and also works without internet.",
-    "ios": "In Safari, tap “Share” (square with an arrow) and then “Add to Home Screen”. Klavio then starts like a real app and also works without internet.",
-    "button": "Install app",
-    "android": "Open the browser's menu (⋮ or ☰) and tap «Install app» or «Add to Home screen». Klavio then starts like a real app in full screen and also works without internet.",
-    "how": "How?"
+    "title": "Klavio as an app",
+    "button": "Install now",
+    "how": "How to install Klavio",
+    "perks": {
+      "start": "Starts with one tap from your home screen",
+      "full": "Full screen – more room for the keys",
+      "offline": "Works without internet too"
+    },
+    "ios1": "In Safari, tap «Share» at the bottom.",
+    "ios2": "Choose «Add to Home Screen».",
+    "ios3": "Tap «Add» at the top right – done.",
+    "menu1": "Open the browser menu – the three dots at the top right.",
+    "menu2": "Tap «Install app» or «Add to Home screen».",
+    "later": "Later",
+    "never": "Don’t show again"
   },
   "update": {
     "title": "New version available",

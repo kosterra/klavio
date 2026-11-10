@@ -701,12 +701,21 @@
     "pendingResult": "Du bist gerade offline. Dein Ergebnis ist auf diesem Gerät gespeichert und wird übertragen, sobald du wieder online bist. Abzeichen gibt es dann auch."
   },
   "install": {
-    "title": "Klavio installieren",
-    "text": "Installiere die App: Sie startet dann wie eine richtige App im Vollbild und funktioniert auch ohne Internet.",
-    "ios": "Tippe in Safari auf «Teilen» (Quadrat mit Pfeil) und dann auf «Zum Home-Bildschirm». Dann startet Klavio wie eine richtige App und funktioniert auch ohne Internet.",
-    "button": "App installieren",
-    "android": "Öffne das Menü des Browsers (⋮ oder ☰) und tippe auf «App installieren» oder «Zum Startbildschirm hinzufügen». Dann startet Klavio wie eine richtige App im Vollbild und funktioniert auch ohne Internet.",
-    "how": "So geht's"
+    "title": "Klavio als App",
+    "button": "Jetzt installieren",
+    "how": "So installierst du Klavio",
+    "perks": {
+      "start": "Startet mit einem Tipp vom Home-Bildschirm",
+      "full": "Ganzer Bildschirm – mehr Platz für die Tasten",
+      "offline": "Funktioniert auch ohne Internet"
+    },
+    "ios1": "Tippe in Safari unten auf «Teilen».",
+    "ios2": "Wähle «Zum Home-Bildschirm».",
+    "ios3": "Tippe oben rechts auf «Hinzufügen» – fertig.",
+    "menu1": "Öffne das Menü des Browsers – die drei Punkte oben rechts.",
+    "menu2": "Tippe auf «App installieren» oder «Zum Startbildschirm hinzufügen».",
+    "later": "Später",
+    "never": "Nicht mehr zeigen"
   },
   "update": {
     "title": "Neue Version verfügbar",

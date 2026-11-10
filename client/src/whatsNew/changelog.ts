@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Klavio als App: Auf dem Handy erscheint nach einem Moment ein Hinweis von unten – mit dem Installieren-Knopf des Browsers oder Schritt für Schritt für Safari und das Browser-Menü. «Später» fragt in einer Woche wieder, «Nicht mehr zeigen» nie mehr.',
+        'Klavio as an app: on phones a hint slides up after a moment – with the browser’s install button, or step by step for Safari and the browser menu. «Later» asks again in a week, «Don’t show again» never.',
+      ),
+      L(
         'Wo spielst du? gilt jetzt auf allen Geräten: Die Wahl gehört zum Profil, nicht mehr zum Gerät.',
         'Where do you play? now applies on every device: the choice belongs to the profile, no longer to the device.',
       ),
