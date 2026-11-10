@@ -14,6 +14,7 @@ import { chapterColor, worldOf } from '../lesson/worlds';
 import { useWorldMode } from '../lesson/useWorldMode';
 import { useLocalized } from '../lesson/useLocalized';
 import classes from './Goal.module.css';
+import { useLessonFor } from '../lesson/useLessonFor';
 
 /**
  * «Mein Traumlied» on the dashboard: how far along the way to the goal song
@@ -31,6 +32,7 @@ export function GoalSongCard({
 }) {
   const { t } = useTranslation();
   const loc = useLocalized();
+  const forMe = useLessonFor();
   const worldSet = useWorldMode();
   const p = goalProgress(goal.skills, completed);
   const nextLesson = p.next ? findLesson(p.next.lessonId) : undefined;
@@ -123,7 +125,7 @@ export function GoalSongCard({
             color="pink.8"
             rightSection={<IconArrowRight size={16} />}
           >
-            {loc(nextLesson.title)}
+            {loc(forMe(nextLesson).title)}
           </Button>
         </Group>
       ) : p.reached === p.total ? (

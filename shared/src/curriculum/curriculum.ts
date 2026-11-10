@@ -238,6 +238,20 @@ export const CURRICULUM: Chapter[] = [
             { showNames: true, tempo: 100 },
           ),
         ],
+        adult: {
+          title: { 'de-CH': 'Morgenstimmung', en: 'Morning Mood' },
+          intro: {
+            'de-CH':
+              'Dein erstes Stück: der Sonnenaufgang aus Edvard Griegs «Peer Gynt» – vereinfacht für fünf Finger und das A. Unter jeder Note steht ihr Name. Ich warte bei jedem Ton auf dich.',
+            en: 'Your first piece: the sunrise from Edvard Grieg’s “Peer Gynt” – simplified for five fingers and A. The name of each note is written below it. I wait for every note.',
+          },
+          exercises: [
+            song(
+              'G4/q E4/q D4/q C4/q | D4/q E4/q G4/q E4/q | D4/q C4/q D4/q E4/q | D4/q E4/q G4/q E4/q | G4/q A4/q E4/q A4/q | G4/q E4/q D4/q C4/q | C4/w',
+              { showNames: true, tempo: 96 },
+            ),
+          ],
+        },
       },
       {
         id: 'ear-echo-five',
@@ -368,6 +382,20 @@ CURRICULUM.push({
           { tempo: 100, position: RH_C4 },
         ),
       ],
+      adult: {
+        title: { 'de-CH': 'Going Home – Dvořák', en: 'Going Home – Dvořák' },
+        intro: {
+          'de-CH':
+            'Die ruhige Melodie aus Antonín Dvořáks Sinfonie «Aus der Neuen Welt», mit fünf Tönen von C bis G. Diesmal stehen keine Namen unter den Noten – lies sie auf den Notenlinien.',
+          en: 'The calm melody from Antonín Dvořák’s “New World” Symphony, with five notes from C to G. This time there are no names below the notes – read them on the staff.',
+        },
+        exercises: [
+          song(
+            'E4/q G4/q G4/h | E4/q D4/q C4/h | D4/q E4/q G4/q E4/q | D4/w | E4/q G4/q G4/h | E4/q D4/q C4/h | D4/q E4/q D4/q C4/q | C4/w',
+            { tempo: 84, position: RH_C4 },
+          ),
+        ],
+      },
     },
     {
       id: 'song-freude',
@@ -406,6 +434,23 @@ CURRICULUM.push({
           { tempo: 100 },
         ),
       ],
+      adult: {
+        title: {
+          'de-CH': 'Ah, vous dirai-je, Maman – Mozart',
+          en: 'Ah, vous dirai-je, Maman – Mozart',
+        },
+        intro: {
+          'de-CH':
+            'Über diese alte französische Melodie hat Mozart zwölf Variationen geschrieben. Du spielst das Thema – man kennt es auch als «Twinkle, Twinkle, Little Star». Jetzt kommt das A dazu.',
+          en: 'Mozart wrote twelve variations on this old French melody. You play the theme – it is also known as “Twinkle, Twinkle, Little Star”. Now A joins in.',
+        },
+        exercises: [
+          song(
+            'C4/q C4/q G4/q G4/q | A4/q A4/q G4/h | F4/q F4/q E4/q E4/q | D4/q D4/q C4/h | G4/q G4/q F4/q F4/q | E4/q E4/q D4/h | G4/q G4/q F4/q F4/q | E4/q E4/q D4/h | C4/q C4/q G4/q G4/q | A4/q A4/q G4/h | F4/q F4/q E4/q E4/q | D4/q D4/q C4/h',
+            { tempo: 100 },
+          ),
+        ],
+      },
     },
     // bonus songs: open together with the chapter, never in the way
     {
@@ -627,6 +672,20 @@ CURRICULUM.push({
           { clef: 'bass', tempo: 96, position: LH_C3 },
         ),
       ],
+      adult: {
+        title: { 'de-CH': 'Freude im Bass', en: 'Ode to Joy in the bass' },
+        intro: {
+          'de-CH':
+            'Beethovens Melodie kennst du schon – jetzt ganz für die linke Hand, im Bassschlüssel. Fünf Finger, fünf Töne von C bis G.',
+          en: 'You already know Beethoven’s melody – now all for the left hand, in the bass clef. Five fingers, five notes from C to G.',
+        },
+        exercises: [
+          song(
+            'E3/q E3/q F3/q G3/q | G3/q F3/q E3/q D3/q | C3/q C3/q D3/q E3/q | E3/qd D3/8 D3/h | E3/q E3/q F3/q G3/q | G3/q F3/q E3/q D3/q | C3/q C3/q D3/q E3/q | D3/qd C3/8 C3/h',
+            { clef: 'bass', tempo: 96, position: LH_C3 },
+          ),
+        ],
+      },
     },
   ],
 });
@@ -700,6 +759,21 @@ CURRICULUM.push({
           { tempo: 90, showNames: true },
         ),
       ],
+      adult: {
+        title: { 'de-CH': 'Morgenstimmung mit Begleitung', en: 'Morning Mood with accompaniment' },
+        intro: {
+          'de-CH':
+            'Griegs Sonnenaufgang kennst du schon. Die rechte Hand spielt die Melodie, die linke hält dazu einen langen tiefen Ton. Mit dem Digitalpiano zählen beide Töne, mit dem Mikrofon die Melodie.',
+          en: 'You already know Grieg’s sunrise. The right hand plays the melody, the left holds a long low note. With a digital piano both notes count, with the microphone the melody.',
+        },
+        exercises: [
+          piece(
+            'G4/q E4/q D4/q C4/q | D4/q E4/q G4/q E4/q | D4/q C4/q D4/q E4/q | D4/q E4/q G4/q E4/q | G4/q A4/q E4/q A4/q | G4/q E4/q D4/q C4/q | C4/w',
+            'C3/w | C3/w | G3/w | C3/w | F3/w | G3/w | C3/w',
+            { tempo: 84, showNames: true },
+          ),
+        ],
+      },
     },
     {
       id: 'both-freude',
@@ -1163,8 +1237,10 @@ CURRICULUM.push({
 // note), then «Im Takt» – the same notes with count-in and metronome.
 for (const chapter of CURRICULUM) {
   for (const lesson of chapter.lessons) {
-    const known = lesson.exercises.filter((e) => e.type === 'song');
-    for (const e of known) lesson.exercises.push({ ...e, type: 'song-timed' });
+    for (const list of [lesson.exercises, lesson.adult?.exercises ?? []]) {
+      const known = list.filter((e) => e.type === 'song');
+      for (const e of known) list.push({ ...e, type: 'song-timed' });
+    }
   }
 }
 
@@ -1215,6 +1291,14 @@ export function lessonTargetCount(lesson: Lesson): number {
                           : e.rounds),
     0,
   );
+}
+
+/**
+ * The lesson as a profile sees it: grown-ups on the journey get the piece
+ * instead of the children's song where there is one.
+ */
+export function lessonFor(lesson: Lesson, world: 'kids' | 'journey'): Lesson {
+  return world === 'journey' && lesson.adult ? { ...lesson, ...lesson.adult } : lesson;
 }
 
 /** A lesson is open once the previous one (in learning order) has been completed. */

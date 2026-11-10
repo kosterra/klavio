@@ -11,6 +11,7 @@ import { useLocalized } from '../lesson/useLocalized';
 import { worldOfLesson } from '../lesson/worlds';
 import { useWorldMode } from '../lesson/useWorldMode';
 import classes from './Dashboard.module.css';
+import { useLessonFor } from '../lesson/useLessonFor';
 
 /**
  * Kids' greeting as a little stage in the colours of the world the learner is
@@ -32,6 +33,7 @@ export function HeroStage({
 }) {
   const { t } = useTranslation();
   const loc = useLocalized();
+  const forMe = useLessonFor();
   const where = worldOfLesson(lesson?.id ?? '', useWorldMode());
   const narrow = useMediaQuery('(max-width: 36em)') ?? false;
   return (
@@ -69,7 +71,7 @@ export function HeroStage({
               <span className={classes.playLabel}>
                 {firstTime
                   ? t('dashboard.startFirst')
-                  : t('dashboard.continue', { lesson: loc(lesson.title) })}
+                  : t('dashboard.continue', { lesson: loc(forMe(lesson).title) })}
               </span>
             </span>
           </Link>

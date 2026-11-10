@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Stücke für Erwachsene: Auf der Reise spielst du statt Kinderliedern bekannte Stücke mit den gleichen Tönen – Griegs «Morgenstimmung», Dvořáks «Going Home», Mozarts «Ah, vous dirai-je, Maman» und Beethovens «Freude» in der linken Hand. Fortschritt und Sterne bleiben, wie sie sind.',
+        'Pieces for grown-ups: on the journey you play well-known pieces with the same notes instead of children’s songs – Grieg’s “Morning Mood”, Dvořák’s “Going Home”, Mozart’s “Ah, vous dirai-je, Maman” and Beethoven’s “Ode to Joy” in the left hand. Progress and stars stay as they are.',
+      ),
+      L(
         'Notenregen: Noten fallen vom Himmel, und du spielst jede, bevor sie landet. Je länger du durchhältst, desto schneller regnet es. Als Bonus-Lektion im Violinschlüssel (Kapitel 3) und im Bassschlüssel (Kapitel 6).',
         'Note rain: notes fall from the sky and you play each one before it lands. The longer you keep going, the faster it rains. As a bonus lesson in the treble clef (chapter 3) and the bass clef (chapter 6).',
       ),

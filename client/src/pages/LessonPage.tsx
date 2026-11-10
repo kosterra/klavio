@@ -75,6 +75,7 @@ import { WorldDone } from '../lesson/WorldDone';
 import { Scenery } from '../lesson/WorldScenery';
 import { finishesWorld, worldOfLesson } from '../lesson/worlds';
 import { useWorldMode } from '../lesson/useWorldMode';
+import { useLessonFor } from '../lesson/useLessonFor';
 import stage from '../lesson/LessonStage.module.css';
 
 /** «Auf meinem Klavier» or «Auf dem Bildschirm», remembered on this device. */
@@ -131,6 +132,7 @@ function LessonGate({ lessonId }: { lessonId: string }) {
   const lesson = findLesson(lessonId);
   const { completed, progress } = useProgress();
   const [attempt, setAttempt] = useState(0);
+  const forMe = useLessonFor();
 
   if (!lesson) return <Navigate to="/" replace />;
   if (!progress) return null; // short wait for the unlock check
@@ -138,7 +140,7 @@ function LessonGate({ lessonId }: { lessonId: string }) {
   return (
     <LessonRun
       key={`${lesson.id}-${attempt}`}
-      lesson={lesson}
+      lesson={forMe(lesson)}
       // the theory part comes first only until the lesson has been played once
       discoverFirst={attempt === 0 && !completed.has(lesson.id)}
       completedBefore={completed}
@@ -169,7 +171,7 @@ function LessonRun({
   const input = useLessonInput();
   const kids = activeProfile?.uiMode !== 'classic';
   const worldSet = useWorldMode();
-  const theory = theoryFor(lesson.id);
+  const theory = theoryFor(lesson.id, worldSet);
   // first visit: "Weisst du's noch?" (start of a chapter) + the lesson's theory
   const [steps, setSteps] = useState(() =>
     discoverFirst ? [...recapFor(lesson.id), ...theory] : theory,

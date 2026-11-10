@@ -2,7 +2,14 @@ import { Card, Text, Title } from '@mantine/core';
 import { IconCheck, IconCloudStorm, IconFlag3, IconMedal, IconMusic } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { CURRICULUM, coreLessons, findLesson, type Avatar, type Outfit } from '@klavio/shared';
+import {
+  CURRICULUM,
+  coreLessons,
+  findLesson,
+  lessonFor,
+  type Avatar,
+  type Outfit,
+} from '@klavio/shared';
 import { Figure } from '../components/Figure';
 import { useLocalized } from '../lesson/useLocalized';
 import { worldOf } from '../lesson/worlds';
@@ -121,7 +128,9 @@ export function JourneyProfile({
       {stages.map((s, si) => {
         const state = s.done ? 'done' : si === currentStage ? 'current' : 'later';
         const hard = s.id === HARD;
-        const reward = s.reward ? findLesson(s.reward) : undefined;
+        // the journey is the grown-ups' way: their pieces
+        const found = s.reward ? findLesson(s.reward) : undefined;
+        const reward = found ? lessonFor(found, 'journey') : undefined;
         const rewardTitle = reward
           ? `«${loc(reward.title)}»`
           : goalTitle

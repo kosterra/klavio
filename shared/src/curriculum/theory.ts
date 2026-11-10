@@ -1574,9 +1574,112 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
   ],
 };
 
-export function theoryFor(lessonId: string): TheoryStep[] {
-  return LESSON_THEORY[lessonId] ?? [];
+/**
+ * Grown-ups play a piece where children play a children's song (see
+ * `Lesson.adult`): the steps about the song are told about the piece. Each
+ * entry replaces the step at that place.
+ */
+const ADULT_THEORY: Record<string, Record<number, TheoryStep>> = {
+  'hand-entchen': {
+    2: {
+      type: 'explain',
+      text: L(
+        '«Morgenstimmung» hat Edvard Grieg 1875 für das Theaterstück «Peer Gynt» geschrieben: Die Sonne geht über der Wüste auf. Die Flöte spielt diese Melodie – du jetzt auch.',
+        'Edvard Grieg wrote “Morning Mood” in 1875 for the play “Peer Gynt”: the sun rises over the desert. The flute plays this melody – and now so do you.',
+      ),
+      picture: { kind: 'sticker', sticker: 'star' },
+    },
+    4: {
+      type: 'listen',
+      text: L(
+        'Hör dir den Anfang an: Geht die Melodie hinauf oder hinunter?',
+        'Listen to the beginning: does the melody go up or down?',
+      ),
+      answers: [L('Hinauf', 'Up'), L('Hinunter', 'Down')],
+      rounds: [{ notes: [67, 64, 62, 60], answer: 1 }],
+    },
+  },
+  'song-haenschen': {
+    0: {
+      type: 'explain',
+      text: L(
+        'Antonín Dvořák schrieb diese Melodie 1893 in Amerika, für seine Sinfonie «Aus der Neuen Welt». Später bekam sie einen Text: «Going Home» – nach Hause gehen.',
+        'Antonín Dvořák wrote this melody in America in 1893, for his “New World” Symphony. Later it got words: “Going Home”.',
+      ),
+      picture: { kind: 'sticker', sticker: 'moon' },
+    },
+    1: {
+      type: 'explain',
+      text: L(
+        'Diesmal stehen keine Namen unter den Noten – du liest sie selbst. Tipp: Tippe zuerst auf «Anhören», dann weisst du, wie es klingen soll.',
+        'This time there are no names below the notes – you read them yourself. Tip: tap “Listen” first, then you know how it should sound.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [64, 67, 67, 64, 62, 60] },
+    },
+    2: {
+      type: 'listen',
+      text: L(
+        'Hör dir den Anfang an: Geht die Melodie hinauf oder hinunter?',
+        'Listen to the beginning: does the melody go up or down?',
+      ),
+      answers: [L('Hinauf', 'Up'), L('Hinunter', 'Down')],
+      rounds: [
+        { notes: [64, 67, 67], answer: 0 },
+        { notes: [64, 62, 60], answer: 1 },
+      ],
+    },
+  },
+  'bass-lamb': {
+    0: {
+      type: 'explain',
+      text: L(
+        'Beethovens «Freude» kennst du aus der rechten Hand. Die gleiche Melodie, eine Oktave tiefer: So lernt die linke Hand am schnellsten – sie spielt etwas, das du schon im Ohr hast.',
+        'You know Beethoven’s “Ode to Joy” from the right hand. The same melody an octave lower: that is how the left hand learns fastest – it plays something you already have in your ear.',
+      ),
+      picture: { kind: 'sticker', sticker: 'star' },
+    },
+    1: {
+      type: 'explain',
+      text: L(
+        'Du brauchst C, D, E, F und G – die Finger 5, 4, 3, 2 und 1 der linken Hand.',
+        'You need C, D, E, F and G – fingers 5, 4, 3, 2 and 1 of the left hand.',
+      ),
+      picture: {
+        kind: 'keyboard',
+        from: 48,
+        to: 60,
+        labels: 'all',
+        fingering: [
+          [48, 5],
+          [50, 4],
+          [52, 3],
+          [53, 2],
+          [55, 1],
+        ],
+      },
+    },
+    2: {
+      type: 'listen',
+      text: L(
+        'Hör dir den Anfang an: Geht die Melodie hinauf oder hinunter?',
+        'Listen to the beginning: does the melody go up or down?',
+      ),
+      answers: [L('Hinauf', 'Up'), L('Hinunter', 'Down')],
+      rounds: [{ notes: [52, 52, 53, 55], answer: 0 }],
+    },
+  },
+};
+
+export function theoryFor(lessonId: string, world: 'kids' | 'journey' = 'kids'): TheoryStep[] {
+  const steps = LESSON_THEORY[lessonId] ?? [];
+  const adult = world === 'journey' ? ADULT_THEORY[lessonId] : undefined;
+  return adult ? steps.map((s, i) => adult[i] ?? s) : steps;
 }
+
+/** For tests: which steps the grown-ups' version replaces. */
+export const ADULT_THEORY_STEPS: Record<string, number[]> = Object.fromEntries(
+  Object.entries(ADULT_THEORY).map(([id, p]) => [id, Object.keys(p).map(Number)]),
+);
 
 /** How many questions the recap at the start of a chapter asks. */
 const RECAP_QUESTIONS = 3;

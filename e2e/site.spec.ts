@@ -141,6 +141,11 @@ test('adults travel in four stages – through the hard stretch – up to their 
   await expect(page.getByTestId('journey-hard')).toContainText('Hier wird’s zäh');
   await expect(page.getByTestId('stage-start')).toContainText('Du bist hier');
   await expect(page.getByTestId('journey-estimate')).toContainText('Wochenziel');
+  // grown-ups play pieces where children play children's songs
+  await page.goto('/songs');
+  await expect(page.getByTestId('song-song-haenschen')).toContainText('Going Home – Dvořák');
+  await expect(page.getByTestId('song-hand-entchen')).toContainText('Morgenstimmung');
+  await page.goto('/');
   // the chapters are the journey's stations, with their altitude
   await expect(page.getByTestId('chapter-keys')).toContainText('Alp · 1500 m');
   await audit(page);

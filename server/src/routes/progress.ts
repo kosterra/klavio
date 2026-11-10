@@ -10,6 +10,7 @@ import {
   isLessonUnlocked,
   lessonCompleteSchema,
   lessonTargetCount,
+  lessonFor,
   newlyEarnedBadges,
   levelForXp,
   nextStreak,
@@ -146,7 +147,12 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
       if (!isLessonUnlocked(lesson.id, completed)) throw new HttpError(403, 'LESSON_LOCKED');
 
       // Stars and XP come from the server's copy of the curriculum, not the client.
-      const stars = starsFor(lessonTargetCount(lesson), mistakes);
+      // a lesson with a grown-ups' piece: both versions are about as long – the longer counts
+      const target = Math.max(
+        lessonTargetCount(lesson),
+        lesson.adult ? lessonTargetCount(lessonFor(lesson, 'journey')) : 0,
+      );
+      const stars = starsFor(target, mistakes);
       const previous = await LessonProgress.findOne({ profileId, lessonId: lesson.id }).lean();
       const previousBest = previous?.bestStars ?? 0;
       // repetition: due reviews move the lesson on in the schedule and give a bonus

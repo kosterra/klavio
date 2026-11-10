@@ -10,6 +10,7 @@ import { useLocalized } from '../lesson/useLocalized';
 import { useProgress } from '../lesson/useProgress';
 import { worldOf } from '../lesson/worlds';
 import { useWorldMode } from '../lesson/useWorldMode';
+import { useLessonFor } from '../lesson/useLessonFor';
 
 /**
  * "Wissen": everything the learner has discovered so far, to look up again –
@@ -20,6 +21,7 @@ export function KnowledgePage() {
   const { t } = useTranslation();
   usePageTitle(t('knowledge.title'));
   const loc = useLocalized();
+  const forMe = useLessonFor();
   const { activeProfile } = useSession();
   const { completed, progress } = useProgress();
   const kids = activeProfile?.uiMode !== 'classic';
@@ -72,13 +74,13 @@ export function KnowledgePage() {
                       <Group gap="sm" wrap="nowrap">
                         <IconLock aria-hidden />
                         <Text fw={700}>
-                          {loc(lesson.title)} – {t('knowledge.locked')}
+                          {loc(forMe(lesson).title)} – {t('knowledge.locked')}
                         </Text>
                       </Group>
                     </Card>
                   );
                 }
-                const cards = theoryFor(lesson.id).filter(
+                const cards = theoryFor(lesson.id, worldSet).filter(
                   (s): s is ExplainStep => s.type === 'explain',
                 );
                 return (
@@ -91,7 +93,7 @@ export function KnowledgePage() {
                   >
                     <Group justify="space-between" mb="sm" wrap="wrap">
                       <Title order={3} size="h4">
-                        {loc(lesson.title)}
+                        {loc(forMe(lesson).title)}
                       </Title>
                       <Button
                         component={Link}

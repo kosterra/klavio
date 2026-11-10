@@ -220,6 +220,11 @@ export interface Lesson {
   /** Song lessons are drawn differently on the learning path. */
   kind: 'keys' | 'play' | 'read' | 'song' | 'rhythm' | 'improvise';
   exercises: Exercise[];
+  /**
+   * For grown-ups (the journey): the same lesson with a piece instead of a
+   * children's song – same keys, same skill, same place in the path.
+   */
+  adult?: { title: Localized; intro: Localized; exercises: Exercise[] };
 }
 
 export interface Chapter {

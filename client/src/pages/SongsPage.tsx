@@ -7,6 +7,7 @@ import { usePageTitle } from '../components/usePageTitle';
 import { useLocalized } from '../lesson/useLocalized';
 import { useProgress } from '../lesson/useProgress';
 import classes from './SongsPage.module.css';
+import { useLessonFor } from '../lesson/useLessonFor';
 
 /**
  * «Lieder»: every song of the course in one place. Songs that are open can be
@@ -16,6 +17,7 @@ export function SongsPage() {
   const { t } = useTranslation();
   usePageTitle(t('songs.title'));
   const loc = useLocalized();
+  const forMe = useLessonFor();
   const { progress, completed } = useProgress();
 
   if (!progress) {
@@ -62,7 +64,7 @@ export function SongsPage() {
                   </ThemeIcon>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <Text fw={800} lh={1.25}>
-                      {loc(lesson.title)}
+                      {loc(forMe(lesson).title)}
                     </Text>
                     <Text size="sm" c="dimmed">
                       {!unlocked

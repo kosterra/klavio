@@ -41,6 +41,7 @@ import {
 import classes from './LearningPath.module.css';
 import { LessonTypeIcon } from './LessonTypeIcon';
 import { lessonType } from './lessonType';
+import { useLessonFor } from './useLessonFor';
 
 const NODE = 72;
 const NODE_CURRENT = 88;
@@ -251,6 +252,7 @@ export function LearningPath({
 }) {
   const { t, i18n } = useTranslation();
   const loc = useLocalized();
+  const forMe = useLessonFor();
   const { ref, width } = useElementSize();
   const [toggled, setToggled] = useState<ReadonlySet<string>>(new Set());
   const toggle = (id: string) =>
@@ -627,8 +629,8 @@ export function LearningPath({
                           ? 'open'
                           : 'locked';
                     const title = lesson.bonus
-                      ? `${t('path.bonus')}: ${loc(lesson.title)}`
-                      : loc(lesson.title);
+                      ? `${t('path.bonus')}: ${loc(forMe(lesson).title)}`
+                      : loc(forMe(lesson).title);
                     const label = [
                       t('path.lessonN', { n: number }),
                       `${t(`path.types.${lessonType(lesson)}`)}: ${title}`,

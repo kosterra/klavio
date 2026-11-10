@@ -8,14 +8,15 @@ import { useSession } from '../auth/session';
 import { Buddy } from '../components/Buddy';
 import { TheorySteps } from '../lesson/theory/TheorySteps';
 import { useProgress } from '../lesson/useProgress';
+import { useWorldMode } from '../lesson/useWorldMode';
 
 /** Questions per quick round. */
 const ROUND_SIZE = 5;
 
 /** Games and quizzes of all lessons played so far, shuffled. */
-function pickSteps(played: Set<string>): TheoryStep[] {
+function pickSteps(played: Set<string>, world: 'kids' | 'journey'): TheoryStep[] {
   const pool = LESSONS.filter((l) => played.has(l.id)).flatMap((l) =>
-    theoryFor(l.id).filter(
+    theoryFor(l.id, world).filter(
       (s) => s.type === 'quiz' || s.type === 'tap-keys' || s.type === 'listen',
     ),
   );
@@ -38,12 +39,13 @@ export function QuickRoundPage() {
   const { activeProfile } = useSession();
   const { progress, completed } = useProgress();
   const kids = activeProfile?.uiMode !== 'classic';
+  const world = useWorldMode();
   const [steps, setSteps] = useState<TheoryStep[] | null>(null);
   const [done, setDone] = useState(false);
 
   if (progress && steps === null) {
     // pick once, as soon as the progress is known
-    setSteps(pickSteps(completed));
+    setSteps(pickSteps(completed, world));
   }
 
   return (
@@ -84,7 +86,7 @@ export function QuickRoundPage() {
                 <Button
                   variant="default"
                   onClick={() => {
-                    setSteps(pickSteps(completed));
+                    setSteps(pickSteps(completed, world));
                     setDone(false);
                   }}
                 >
