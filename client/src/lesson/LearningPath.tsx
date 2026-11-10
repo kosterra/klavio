@@ -33,7 +33,6 @@ import {
   chapterColor,
   chapterVars,
   formatAltitude,
-  isChristmasSeason,
   loadRevealed,
   saveRevealed,
   worldOf,
@@ -42,6 +41,8 @@ import classes from './LearningPath.module.css';
 import { LessonTypeIcon } from './LessonTypeIcon';
 import { lessonType } from './lessonType';
 import { useLessonFor } from './useLessonFor';
+import { hasPiece } from '../season/season';
+import { useSeason } from '../season/useSeason';
 
 const NODE = 72;
 const NODE_CURRENT = 88;
@@ -262,7 +263,11 @@ export function LearningPath({
       else next.add(id);
       return next;
     });
-  const christmas = isChristmasSeason();
+  // Advent: the Christmas pieces arrive one by one
+  const season = useSeason();
+  const festiveStickers = hasPiece(season, 'stickers');
+  const snowy = hasPiece(season, 'snow');
+  const snowfall = hasPiece(season, 'pathSnow');
   // worlds the fog has already lifted from (read once per profile, so the lift plays once)
   const revealed = useMemo(() => loadRevealed(profileId), [profileId]);
   const completed = new Set(Object.keys(progress).filter((id) => progress[id]!.bestStars > 0));
@@ -433,7 +438,7 @@ export function LearningPath({
         const rows = points.length ? points[points.length - 1]!.row + 1 : 0;
         const emptyCells = points.length ? rows * sec.cols - points.length : 0;
         // decoration stickers: free spots only, chosen deterministically per chapter
-        const kinds = christmas ? CHRISTMAS_STICKERS : world.stickers;
+        const kinds = festiveStickers ? CHRISTMAS_STICKERS : world.stickers;
         const kind = (k: number) => kinds[(ci * 2 + k) % kinds.length]!;
         const stickers: { kind: StickerKind; x: number; y: number; size: number; tilt: number }[] =
           [];
@@ -476,7 +481,7 @@ export function LearningPath({
             data-deep={(world.altitude ?? 0) < 0 || undefined}
             aria-labelledby={`chapter-${chapter.id}`}
           >
-            <Scenery world={world.id} chapterId={chapter.id} height={height} snowy={christmas} />
+            <Scenery world={world.id} chapterId={chapter.id} height={height} snowy={snowy} />
             {!narrow && (
               <Landmark
                 world={world.id}
@@ -531,9 +536,7 @@ export function LearningPath({
                 strokeLinecap={world.road.cap}
               />
             </svg>
-            {!first && (
-              <WorldGate style={{ left: markerX - 32, top: -FOOT - 2 }} snowy={christmas} />
-            )}
+            {!first && <WorldGate style={{ left: markerX - 32, top: -FOOT - 2 }} snowy={snowy} />}
 
             {/* signpost: a flag on the road, title and status beside it */}
             <ChapterFlag
@@ -768,7 +771,7 @@ export function LearningPath({
           </Button>
         </div>
       )}
-      {christmas && totalHeight > 0 && <Snowfall height={totalHeight} />}
+      {snowfall && totalHeight > 0 && <Snowfall height={totalHeight} />}
     </div>
   );
 }

@@ -290,20 +290,7 @@ export function worldOf(chapterId: string, index: number, set: WorldSet = 'kids'
   return WORLDS[BY_CHAPTER[chapterId] ?? ORDER[index % ORDER.length]!];
 }
 
-/**
- * Christmas season: from the first Sunday of Advent until 26 December every
- * world is snowed in and decorated.
- */
-export function isChristmasSeason(now = new Date()): boolean {
-  const year = now.getFullYear();
-  const christmas = new Date(year, 11, 25);
-  // 4th Advent is the last Sunday before Christmas (a week before when Christmas is a Sunday)
-  const fourth = 25 - (christmas.getDay() || 7);
-  const firstAdvent = new Date(year, 11, fourth - 21);
-  const end = new Date(year, 11, 27); // until 26 December inclusive
-  return now >= firstAdvent && now < end;
-}
-
+/** Christmas stickers for the path in Advent (see season/season.ts). */
 export const CHRISTMAS_STICKERS: StickerKind[] = [
   'tree',
   'gift',

@@ -12,6 +12,9 @@ import { worldOfLesson } from '../lesson/worlds';
 import { useWorldMode } from '../lesson/useWorldMode';
 import classes from './Dashboard.module.css';
 import { useLessonFor } from '../lesson/useLessonFor';
+import { SeasonDecor } from '../season/SeasonDecor';
+import { hasPiece } from '../season/season';
+import { useSeason } from '../season/useSeason';
 
 /**
  * Kids' greeting as a little stage in the colours of the world the learner is
@@ -36,10 +39,16 @@ export function HeroStage({
   const forMe = useLessonFor();
   const where = worldOfLesson(lesson?.id ?? '', useWorldMode());
   const narrow = useMediaQuery('(max-width: 36em)') ?? false;
+  const season = useSeason();
   return (
     <section className={classes.hero} style={where.vars} aria-labelledby="hero-title">
       <div className={classes.heroScenery} aria-hidden>
-        <Scenery world={where.world.id} chapterId="hero" height={40} />
+        <Scenery
+          world={where.world.id}
+          chapterId="hero"
+          height={40}
+          snowy={hasPiece(season, 'snow')}
+        />
       </div>
       <Landmark
         world={where.world.id}
@@ -47,6 +56,7 @@ export function HeroStage({
         style={{ right: 24, bottom: 18 }}
         className={classes.heroLandmark}
       />
+      <SeasonDecor season={season} />
       <div className={classes.heroContent}>
         <div className={classes.heroTalk}>
           <div className={classes.heroFigure}>
@@ -54,7 +64,13 @@ export function HeroStage({
           </div>
           <div className={classes.heroBubble}>
             <Title order={1} id="hero-title" className={classes.heroTitle}>
-              {t('dashboard.greeting', { name })}
+              {season.phase === 'christmas'
+                ? t('season.christmas', { name })
+                : season.phase === 'newyear' && season.greeting === 'eve'
+                  ? t('season.eve', { name })
+                  : season.phase === 'newyear' && season.greeting === 'new'
+                    ? t('season.newYear', { name, year: season.year })
+                    : t('dashboard.greeting', { name })}
             </Title>
             <Text fz="lg">{allDone ? t('dashboard.allDone') : greeting}</Text>
           </div>

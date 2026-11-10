@@ -1,5 +1,5 @@
-import type { Avatar, Outfit as OutfitId } from '@klavio/shared';
-import { Outfit } from './Outfit';
+import type { Avatar } from '@klavio/shared';
+import { Outfit, type WearId } from './Outfit';
 import { Mascot, type MascotMood } from './Mascot';
 import classes from './Figure.module.css';
 
@@ -201,7 +201,7 @@ export function Figure({
   /** No motion (small avatars in lists and menus). */
   still?: boolean;
   /** the wardrobe piece the figure wears */
-  outfit?: OutfitId | null;
+  outfit?: WearId | null;
 }) {
   if (avatar === 'klavi')
     return <Mascot mood={mood} size={size} label={label} still={still} outfit={outfit} />;

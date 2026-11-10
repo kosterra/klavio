@@ -1,0 +1,145 @@
+/* the festive layer on the start page's stage: decoration only, never in the way */
+.decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.lights {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 34px;
+}
+
+.bulb {
+  animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    opacity: 0.55;
+  }
+}
+
+.wreath {
+  position: absolute;
+  top: 30px;
+  right: 18px;
+  width: 116px;
+}
+
+.flame {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flicker 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes flicker {
+  to {
+    transform: scaleY(1.15) scaleX(0.9);
+  }
+}
+
+.tree {
+  position: absolute;
+  right: 150px;
+  bottom: 22px;
+  width: 104px;
+}
+
+.star {
+  filter: drop-shadow(0 0 6px var(--mantine-color-yellow-3));
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: twinkle 2.4s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+.streamers svg {
+  position: absolute;
+  top: 0;
+  width: 18px;
+  height: 80px;
+}
+
+/* New Year's Eve: the sky turns to night, so the fireworks shine */
+.night {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mantine-color-indigo-9) 92%, transparent) 0%,
+    color-mix(in srgb, var(--mantine-color-grape-9) 70%, transparent) 75%,
+    transparent 100%
+  );
+}
+
+.fireworks {
+  position: absolute;
+  inset: 0;
+}
+
+.burst {
+  position: absolute;
+  width: 110px;
+  height: 110px;
+  margin: -55px 0 0 -55px;
+  opacity: 0;
+  animation: burst 3.2s ease-out infinite;
+}
+
+@keyframes burst {
+  0% {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+
+  12% {
+    opacity: 1;
+  }
+
+  45% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+}
+
+/* phones: the small pieces, the tree stays for bigger screens */
+@media (max-width: 36em) {
+  .wreath {
+    top: auto;
+    right: 8px;
+    bottom: 4px;
+    width: 64px;
+  }
+
+  .tree {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bulb,
+  .flame,
+  .star {
+    animation: none;
+  }
+
+  .burst {
+    animation: none;
+    opacity: 0.85;
+  }
+}

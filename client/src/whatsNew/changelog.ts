@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Advent bis Neujahr: Ab dem ersten Advent kommt jeden Tag ein Stück Weihnachten dazu – Adventskranz (jeden Sonntag eine Kerze mehr), Schnee, Zipfelmütze, Lichterkette, Christbaum, Geschenke und Stern. Nach Weihnachten Partyhut und Girlanden, an Silvester und Neujahr ein Feuerwerk. Ab dem 2. Januar ist alles wieder wie immer.',
+        'Advent to New Year: from the first Sunday of Advent a piece of Christmas arrives every day – Advent wreath (one more candle every Sunday), snow, Santa cap, fairy lights, Christmas tree, presents and star. After Christmas a party hat and streamers, fireworks on New Year’s Eve and New Year’s Day. From 2 January everything is as usual again.',
+      ),
+      L(
         'Mehr Musik auf dem Weg: «Hot Cross Buns» schon im ersten Kapitel, «Au clair de la lune» zum Notenlesen, das «Menuett in G» bei den Tonarten und zum Schluss ein Abschlusskonzert – Beethovens «Freude» ganz, mit Wechselbass. Alles als Bonus, niemand wird aufgehalten.',
         'More music along the way: “Hot Cross Buns” already in the first chapter, “Au clair de la lune” for reading notes, the “Minuet in G” with the keys and at the end a final concert – Beethoven’s “Ode to Joy” in full, with alternating bass. All as bonus lessons, nobody is held up.',
       ),

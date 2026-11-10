@@ -1207,5 +1207,10 @@
   "duet": {
     "label": "Klavi spielt mit",
     "micHint": "Am besten mit Kopfhörern – sonst hört das Mikrofon Klavi mit."
+  },
+  "season": {
+    "christmas": "Frohe Weihnachten, {{name}}!",
+    "eve": "Guten Rutsch, {{name}}!",
+    "newYear": "Gutes neues Jahr {{year}}, {{name}}!"
   }
 }

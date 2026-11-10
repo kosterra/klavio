@@ -1,5 +1,4 @@
-import type { Outfit as OutfitId } from '@klavio/shared';
-import { Outfit, type Head } from './Outfit';
+import { Outfit, type WearId, type Head } from './Outfit';
 import classes from './Mascot.module.css';
 
 export type MascotMood = 'happy' | 'cheer' | 'think' | 'listen';
@@ -12,7 +11,7 @@ interface Props {
   /** No motion (small avatars in lists and menus). */
   still?: boolean;
   /** the wardrobe piece Klavi wears */
-  outfit?: OutfitId | null;
+  outfit?: WearId | null;
 }
 
 /** Klavi's head, for the wardrobe (the note head; the stem stays free). */

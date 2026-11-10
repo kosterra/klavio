@@ -1207,5 +1207,10 @@
   "duet": {
     "label": "Klavi plays along",
     "micHint": "Best with headphones – otherwise the microphone hears Klavi too."
+  },
+  "season": {
+    "christmas": "Merry Christmas, {{name}}!",
+    "eve": "Happy New Year’s Eve, {{name}}!",
+    "newYear": "Happy New Year {{year}}, {{name}}!"
   }
 }

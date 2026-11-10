@@ -17,10 +17,30 @@ const line = { stroke: INK, strokeWidth: 2.5, strokeLinejoin: 'round' as const }
  * The wardrobe's pieces, drawn onto any figure (own artwork, comic style).
  * Sized by the head's radius, so they fit Klavi and every animal.
  */
-export function Outfit({ id, head }: { id: OutfitId; head: Head }) {
+/** What a figure can wear: the wardrobe, plus the party hat at New Year. */
+export type WearId = OutfitId | 'party';
+
+export function Outfit({ id, head }: { id: WearId; head: Head }) {
   const s = head.r / 32;
   const at = (x: number, y: number) => `translate(${x} ${y}) scale(${s})`;
   switch (id) {
+    case 'party':
+      // New Year: a striped party hat with a pompom
+      return (
+        <g transform={at(head.cx + 4 * s, head.top + 4 * s)}>
+          <path
+            d="M-16 4 L4 -40 L20 4 Q2 10 -16 4 Z"
+            fill="var(--mantine-color-grape-5)"
+            {...line}
+          />
+          <path
+            d="M-9 -12 L13 -12 M-3 -26 L9 -26"
+            stroke="var(--mantine-color-yellow-4)"
+            strokeWidth="5"
+          />
+          <circle cx="4" cy="-42" r="6" fill="var(--mantine-color-yellow-4)" {...line} />
+        </g>
+      );
     case 'cap':
       return (
         <g transform={at(head.cx, head.top + 6 * s)}>
