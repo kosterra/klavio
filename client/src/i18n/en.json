@@ -1244,5 +1244,28 @@
     "christmas": "Merry Christmas, {{name}}!",
     "eve": "Happy New Year’s Eve, {{name}}!",
     "newYear": "Happy New Year {{year}}, {{name}}!"
+  },
+  "rainGame": {
+    "title": "Note rain",
+    "intro": "Endless: notes rain down until three have landed – faster and faster. How many can you catch?",
+    "clef": "Clef",
+    "clefs": {
+      "treble": "Treble clef",
+      "bass": "Bass clef",
+      "both": "Both"
+    },
+    "range": "Notes",
+    "ranges": {
+      "few": "Few",
+      "more": "Many"
+    },
+    "caught_one": "{{count}} caught",
+    "caught_other": "{{count}} caught",
+    "best_one": "Best {{count}}",
+    "best_other": "Best {{count}}",
+    "over_one": "You caught {{count}} note. Again?",
+    "over_other": "You caught {{count}} notes. Again?",
+    "record_one": "New record: {{count}} note!",
+    "record_other": "New record: {{count}} notes!"
   }
 }

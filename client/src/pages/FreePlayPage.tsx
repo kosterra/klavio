@@ -1,17 +1,14 @@
 import { useState } from 'react';
-import { Alert, Badge, Button, Group, SegmentedControl, Stack, Text, Title } from '@mantine/core';
-import { IconMicrophone, IconPiano, IconPlayerStop } from '@tabler/icons-react';
+import { Group, SegmentedControl, Stack, Text, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { midiToPitchName } from '@klavio/shared';
 import type { Timbre } from '../audio/synth';
-import { usePitchDetection } from '../audio/usePitchDetection';
-import { microphoneSupported } from '../audio/microphone';
-import { useMicErrorText } from '../audio/micErrorText';
 import { useSession } from '../auth/session';
 import { BuddySays } from '../components/BuddySays';
+import { PlayTabs } from '../components/PlayTabs';
+import { RealPianoInput } from '../components/RealPianoInput';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { usePageTitle } from '../components/usePageTitle';
-import { useMidi } from '../input/useMidi';
 import { useNoteEvents } from '../input/noteBus';
 import { GrandStaff } from '../notation/GrandStaff';
 import classes from './FreePlayPage.module.css';
@@ -40,14 +37,6 @@ export function FreePlayPage() {
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
   const [timbre, setTimbre] = useState<Timbre>('piano');
   const [played, setPlayed] = useState<Played[]>([]);
-  const midi = useMidi();
-  const mic = usePitchDetection({
-    a4Hz: activeProfile?.calibration.a4Hz ?? 440,
-    noiseFloorDb: activeProfile?.calibration.noiseFloorDb ?? null,
-  });
-  const micErrorText = useMicErrorText();
-  const midiDevice = midi.devices[0]?.name ?? null;
-  const listening = mic.status === 'running';
 
   useNoteEvents((e) => {
     if (e.type !== 'note-on') return;
@@ -60,6 +49,7 @@ export function FreePlayPage() {
   return (
     <Stack gap="lg" maw={1100} mx="auto" className={classes.page}>
       <Title order={1}>{t('freePlay.title')}</Title>
+      <PlayTabs />
       <BuddySays
         mood={last ? 'cheer' : 'happy'}
         size={kids ? 96 : 64}
@@ -73,46 +63,7 @@ export function FreePlayPage() {
 
       {/* the real piano: a digital piano is simply there, an acoustic one listens through the mic */}
       <Group justify="center" gap="md">
-        <Group justify="center" gap="sm" data-testid="free-input">
-          {midiDevice ? (
-            <Badge size="lg" color="teal" variant="light" leftSection={<IconPiano size={16} />}>
-              {t('freePlay.midi', { device: midiDevice })}
-            </Badge>
-          ) : listening ? (
-            <>
-              <Badge
-                size="lg"
-                color="teal"
-                variant="light"
-                leftSection={<IconMicrophone size={16} />}
-                className={classes.listening}
-                data-testid="free-listening"
-              >
-                {t('freePlay.listening')}
-              </Badge>
-              <Button
-                variant="subtle"
-                leftSection={<IconPlayerStop size={18} />}
-                onClick={() => void mic.stop()}
-              >
-                {t('freePlay.stopMic')}
-              </Button>
-            </>
-          ) : (
-            microphoneSupported() && (
-              <Button
-                size="md"
-                variant="light"
-                leftSection={<IconMicrophone />}
-                loading={mic.status === 'starting'}
-                onClick={() => void mic.start()}
-                data-testid="free-mic"
-              >
-                {t('freePlay.startMic')}
-              </Button>
-            )
-          )}
-        </Group>
+        <RealPianoInput />
         <SegmentedControl
           value={timbre}
           onChange={(v) => setTimbre(v as Timbre)}
@@ -121,11 +72,6 @@ export function FreePlayPage() {
           size="sm"
         />
       </Group>
-      {mic.status === 'error' && (
-        <Alert color="red" variant="light">
-          {micErrorText(mic.error)}
-        </Alert>
-      )}
 
       <div className={classes.show}>
         <div className={classes.left}>

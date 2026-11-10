@@ -24,7 +24,7 @@ test('free play, metronome, wardrobe, family overview, placement and data export
   await expect(page.getByTestId('free-note')).toHaveText('G');
   await expect(page.getByRole('list', { name: 'Deine letzten Töne' })).toHaveText('EG');
   // the real piano: an acoustic one through the microphone
-  await expect(page.getByTestId('free-mic')).toBeVisible();
+  await expect(page.getByTestId('real-piano-mic')).toBeVisible();
   await page.getByText('Spieluhr').click();
   await audit(page);
 

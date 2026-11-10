@@ -69,7 +69,18 @@
   inset: 0;
   display: grid;
   place-items: center;
+  align-content: center;
+  gap: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-md);
   background: color-mix(in srgb, var(--klavio-surface) 40%, transparent);
+}
+
+/* the end of an endless round, readable over the notes */
+.overText {
+  padding: 8px 18px;
+  border-radius: var(--mantine-radius-xl);
+  background: var(--klavio-surface);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 12%);
 }
 
 .heart {

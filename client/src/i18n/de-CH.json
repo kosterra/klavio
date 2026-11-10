@@ -1244,5 +1244,28 @@
     "christmas": "Frohe Weihnachten, {{name}}!",
     "eve": "Guten Rutsch, {{name}}!",
     "newYear": "Gutes neues Jahr {{year}}, {{name}}!"
+  },
+  "rainGame": {
+    "title": "Notenregen",
+    "intro": "Endlos: Es regnet Noten, bis drei gelandet sind – und immer schneller. Wie viele fängst du?",
+    "clef": "Schlüssel",
+    "clefs": {
+      "treble": "Violinschlüssel",
+      "bass": "Bassschlüssel",
+      "both": "Beide"
+    },
+    "range": "Töne",
+    "ranges": {
+      "few": "Wenige",
+      "more": "Viele"
+    },
+    "caught_one": "{{count}} gefangen",
+    "caught_other": "{{count}} gefangen",
+    "best_one": "Rekord {{count}}",
+    "best_other": "Rekord {{count}}",
+    "over_one": "{{count}} Note gefangen. Nochmals?",
+    "over_other": "{{count}} Noten gefangen. Nochmals?",
+    "record_one": "Neuer Rekord: {{count}} Note!",
+    "record_other": "Neuer Rekord: {{count}} Noten!"
   }
 }

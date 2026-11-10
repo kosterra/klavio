@@ -6,6 +6,7 @@ import {
   IconMap2,
   IconMetronome,
   IconMusic,
+  IconCloudRain,
   IconPiano,
   IconPlaylist,
   IconShield,
@@ -29,13 +30,14 @@ export function SideNav({ onNavigate }: { onNavigate: () => void }) {
   const lock = parentUnlocked ? null : <IconLock size={14} aria-label={t('parent.title')} />;
 
   const item = (to: string, label: string, icon: ReactNode, right?: ReactNode) => {
-    const active = to === '/' ? pathname === '/' : pathname.startsWith(to);
+    // «Freies Spielen» is /play itself; /play/rain has its own entry
+    const active = to === '/' || to === '/play' ? pathname === to : pathname.startsWith(to);
     return (
       <MantineNavLink
         key={to}
         component={NavLink}
         to={to}
-        end={to === '/'}
+        end={to === '/' || to === '/play'}
         label={label}
         leftSection={icon}
         rightSection={right}
@@ -64,6 +66,7 @@ export function SideNav({ onNavigate }: { onNavigate: () => void }) {
           {item('/', t('dashboard.learnPath'), <IconMap2 size={20} />)}
           {item('/songs', t('songs.title'), <IconPlaylist size={20} />)}
           {item('/play', t('freePlay.title'), <IconMusic size={20} />)}
+          {item('/play/rain', t('rainGame.title'), <IconCloudRain size={20} />)}
           {item('/metronome', t('metronome.title'), <IconMetronome size={20} />)}
           {item('/knowledge', t('nav.knowledge'), <IconBulb size={20} />)}
         </>

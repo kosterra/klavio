@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Notenregen ohne Ende: Unter «Spielen» regnet es Noten, bis drei gelandet sind – im Violinschlüssel, im Bassschlüssel oder in beiden, mit wenigen oder vielen Tönen. Es wird immer schneller, und dein Rekord wartet darauf, geschlagen zu werden.',
+        'Endless note rain: under «Spielen» notes rain down until three have landed – in treble clef, bass clef or both, with few or many notes. It keeps getting faster, and your record is waiting to be beaten.',
+      ),
+      L(
         'Für Admins: «Festzeit ausprobieren» unter «Verwaltung» zeigt Advent, Weihnachten und Neujahr an einem Tag deiner Wahl – nur auf deinem Gerät.',
         'For admins: «Festzeit ausprobieren» under «Verwaltung» shows Advent, Christmas and New Year on a day of your choice – on your device only.',
       ),

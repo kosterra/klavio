@@ -71,10 +71,6 @@
   animation: pop 300ms ease-out both;
 }
 
-.listening {
-  animation: pulse 1.6s ease-in-out infinite;
-}
-
 @keyframes pop {
   from {
     transform: scale(0.6);
@@ -82,16 +78,9 @@
   }
 }
 
-@keyframes pulse {
-  50% {
-    opacity: 0.6;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .pop,
-  .trail .trailLast,
-  .listening {
+  .trail .trailLast {
     animation: none;
   }
 }
