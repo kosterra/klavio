@@ -128,13 +128,13 @@ export async function registerWeb(app: FastifyInstance, config: AppConfig, root:
     wildcard: true,
     // our own rules below (the plugin's default would set max-age=0 on everything)
     cacheControl: false,
-    setHeaders: (res, path) => {
+    setHeaders: (reply, path) => {
       if (path.includes(`${join(root, 'assets')}`)) {
-        res.setHeader('cache-control', 'public, max-age=31536000, immutable');
+        reply.header('cache-control', 'public, max-age=31536000, immutable');
       } else if (path.endsWith('sw.js') || path.endsWith('.webmanifest')) {
-        res.setHeader('cache-control', 'no-cache');
+        reply.header('cache-control', 'no-cache');
       } else {
-        res.setHeader('cache-control', 'public, max-age=3600');
+        reply.header('cache-control', 'public, max-age=3600');
       }
     },
   });
