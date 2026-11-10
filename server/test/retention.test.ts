@@ -50,7 +50,11 @@ describe('data export', () => {
     const data = res.json();
     expect(data.account).toMatchObject({ email: 'eva@example.ch', parentPin: 'not set' });
     expect(data.profiles[0]).toMatchObject({ name: 'Lina', birthYear: 2016, lessons: [] });
-    expect(JSON.stringify(data)).not.toMatch(/publicKey|Hash|webauthnUserId/);
+    expect(data.sessions).toHaveLength(1);
+    expect(data.sessions[0]).toHaveProperty('expiresAt');
+    expect(data.account).toHaveProperty('inactiveWarnedAt');
+    expect(data.failedAttempts).toEqual([]);
+    expect(JSON.stringify(data)).not.toMatch(/publicKey|Hash|webauthnUserId|token/);
     expect((await ctx.app.inject({ url: '/api/account/export' })).statusCode).toBe(401);
   });
 });

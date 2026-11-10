@@ -42,16 +42,17 @@
       "title": "Was auf dem Server gespeichert wird",
       "text": "Damit du auf mehreren Geräten weiterlernen kannst, liegt auf dem Server:",
       "items": {
-        "1": "Konto: ein Name (z. B. «Familie Muster»), deine E-Mail-Adresse, ob du Admin bist, und – falls gesetzt – eine verschlüsselte Eltern-PIN.",
+        "1": "Konto: ein Name (z. B. «Familie Muster»), deine E-Mail-Adresse, die Sprache für E-Mails, ob du Admin bist, wann das Konto zuletzt benutzt wurde (und ob eine Warnung vor dem Löschen verschickt wurde) und – falls gesetzt – eine verschlüsselte Eltern-PIN.",
         "2": "Passkeys: nur der öffentliche Schlüssel und Angaben wie der Name des Passwort-Managers. Fingerabdruck, Gesicht und private Schlüssel bleiben auf deinem Gerät.",
-        "3": "Profile: Name oder Spitzname, Geburtsjahr, Figur, Darstellung und Welt, Tagesziel, Mikrofon-Einstellung, XP, Level, Streak, Abzeichen und – falls gewählt – der Titel deines Traumlieds.",
-        "4": "Lernfortschritt: Sterne und Wiederholungen je Lektion sowie die Übungszeit pro Tag.",
-        "5": "Server-Protokoll: Zeitpunkt, aufgerufene Adresse und Antwort – ohne IP-Adresse."
+        "3": "Profile: Name oder Spitzname, Geburtsjahr, Figur und Kleidungsstück, Darstellung und Welt, Tagesziel und Wochenziel, ob du auf dem Klavier oder dem Bildschirm spielst, Mikrofon-Einstellung, die Antworten aus den Startfragen (z. B. warum du spielst), XP, Level, Streak, Abzeichen und – falls gewählt – der Titel deines Traumlieds.",
+        "4": "Lernfortschritt: Sterne, Wiederholungen und das Datum je Lektion sowie die Übungszeit pro Tag.",
+        "5": "Server-Protokoll: Zeitpunkt, aufgerufene Adresse und Antwort – ohne IP-Adresse. In der mitgelieferten Einrichtung wird es laufend überschrieben (höchstens drei Dateien à 10 MB).",
+        "6": "Fehlversuche bei E-Mail-Codes und Eltern-PIN: wie viele und wann zuletzt – damit niemand raten kann. Nach einem Tag ohne weiteren Fehlversuch wird das vergessen."
       }
     },
     "device": {
       "title": "Was auf deinem Gerät gespeichert wird",
-      "text": "Klavio setzt nur zwei Cookies, beide technisch notwendig: eines hält dich angemeldet, eines schützt die Anmeldung mit Passkey. Im Speicher des Browsers liegen dein letzter Stand (damit Klavio auch offline funktioniert), noch nicht übertragene Ergebnisse und Einstellungen wie Sprache und Farbschema. Beim Abmelden wird dein Stand vom Gerät gelöscht."
+      "text": "Klavio setzt nur zwei Cookies, beide technisch notwendig: eines hält dich angemeldet, eines schützt die Anmeldung mit Passkey. Im Speicher des Browsers liegen dein letzter Stand (damit Klavio auch offline funktioniert), noch nicht übertragene Ergebnisse, Einstellungen je Profil (z. B. Vorlesen, Rekord im Notenregen) und allgemeine Einstellungen wie Sprache und Farbschema. Beim Abmelden werden dein Stand, deine noch nicht übertragenen Ergebnisse und die Einstellungen deiner Profile vom Gerät gelöscht; nur allgemeine Einstellungen wie Sprache und Farbschema bleiben."
     },
     "sharing": {
       "title": "Wer Daten bekommt",
@@ -69,7 +70,8 @@
         "2": "Angemeldet bleibst du 60 Tage, danach meldest du dich neu an.",
         "3": "E-Mail-Codes verfallen nach 10 Minuten.",
         "4": "In Sicherungskopien bleiben Daten, bis die Sicherung abläuft – wie lange, legt der Betreiber fest.",
-        "5": "Falls die Betreiberin oder der Betreiber es eingestellt hat: Konten, die lange nicht benutzt wurden, werden nach einer Warnung per E-Mail gelöscht."
+        "5": "Falls die Betreiberin oder der Betreiber es eingestellt hat: Konten, die lange nicht benutzt wurden, werden nach einer Warnung per E-Mail gelöscht.",
+        "6": "Fehlversuche bei Codes und PIN werden nach einem Tag vergessen; Protokolle werden laufend überschrieben."
       },
       "text": "Gelöscht wird so:"
     },

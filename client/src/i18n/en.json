@@ -42,16 +42,17 @@
       "title": "What is stored on the server",
       "text": "So that you can keep learning on several devices, the server keeps:",
       "items": {
-        "1": "Account: a name (e.g. «The Smiths»), your e-mail address, whether you are an admin and – if set – an encrypted parent PIN.",
+        "1": "Account: a name (e.g. «The Smiths»), your e-mail address, the language for e-mails, whether you are an admin, when the account was last used (and whether a warning before deletion was sent) and – if set – an encrypted parent PIN.",
         "2": "Passkeys: only the public key and details like the name of the password manager. Fingerprint, face and private keys stay on your device.",
-        "3": "Profiles: name or nickname, year of birth, figure, view and world, daily goal, microphone setting, XP, level, streak, badges and – if chosen – the title of your dream song.",
-        "4": "Learning progress: stars and reviews per lesson and the practice time per day.",
-        "5": "Server log: time, address called and answer – without IP addresses."
+        "3": "Profiles: name or nickname, year of birth, figure and outfit, view and world, daily and weekly goal, whether you play on the piano or the screen, microphone setting, the answers to the start-up questions (e.g. why you play), XP, level, streak, badges and – if chosen – the title of your dream song.",
+        "4": "Learning progress: stars, reviews and the date per lesson and the practice time per day.",
+        "5": "Server log: time, address called and answer – without IP addresses. In the bundled setup it is overwritten continuously (at most three files of 10 MB).",
+        "6": "Failed attempts at e-mail codes and the parent PIN: how many and when the last one was – so nobody can guess. Forgotten after a day without another failed attempt."
       }
     },
     "device": {
       "title": "What is stored on your device",
-      "text": "Klavio sets only two cookies, both technically necessary: one keeps you signed in, one protects signing in with a passkey. The browser's storage keeps your latest state (so Klavio also works offline), results not sent yet and settings like language and colour scheme. Signing out deletes your state from the device."
+      "text": "Klavio sets only two cookies, both technically necessary: one keeps you signed in, one protects signing in with a passkey. The browser's storage keeps your latest state (so Klavio also works offline), results not sent yet, settings per profile (e.g. read-aloud, note rain record) and general settings like language and colour scheme. Signing out deletes your state, results not sent yet and your profiles' settings from the device; only general settings like language and colour scheme stay."
     },
     "sharing": {
       "title": "Who gets data",
@@ -70,7 +71,8 @@
         "2": "You stay signed in for 60 days, then you sign in again.",
         "3": "E-mail codes expire after 10 minutes.",
         "4": "Backups keep data until they expire – the operator decides how long.",
-        "5": "If the operator has set it: accounts unused for a long time are deleted after a warning by e-mail."
+        "5": "If the operator has set it: accounts unused for a long time are deleted after a warning by e-mail.",
+        "6": "Failed attempts at codes and the PIN are forgotten after a day; logs are overwritten continuously."
       }
     },
     "rights": {

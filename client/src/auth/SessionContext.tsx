@@ -4,6 +4,7 @@ import { ApiError } from '../api/client';
 import { endpoints } from '../api/endpoints';
 import { SessionContext, type SessionStatus, type SessionValue } from './session';
 import { KEYS, readJson, removeKey, removeKeysWithPrefix, writeJson } from '../offline/storage';
+import { forgetAccount } from '../offline/forget';
 import { flushQueue, hasQueued } from '../offline/sync';
 import { notify } from '../components/notify';
 import i18n from '../i18n';
@@ -106,6 +107,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     await endpoints.logout().catch(() => undefined);
+    // a deliberate logout also forgets the account's unsent results and its
+    // profiles' settings on this device (an expired session keeps them to sync later)
+    const cached = readJson<Cached>(KEYS.snapshot);
+    forgetAccount(
+      cached?.me?.user.id ?? null,
+      (cached?.profiles ?? []).map((p) => p.id),
+    );
     clearCaches();
     setSnap((s) => ({ ...s, status: 'anonymous', offline: false, me: null, profiles: [] }));
   }, []);

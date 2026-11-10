@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Datenschutz: Die Seite «Datenschutz» nennt jetzt alle gespeicherten Angaben (auch Wochenziel, Startfragen und Fehlversuche), der Daten-Download enthält zusätzlich die angemeldeten Geräte, und beim Abmelden werden auch die Einstellungen der Profile und noch nicht übertragene Ergebnisse vom Gerät gelöscht.',
+        'Privacy: the privacy page now lists everything stored (including the weekly goal, start-up answers and failed attempts), the data download also contains the logged-in devices, and signing out also removes the profiles’ settings and results not sent yet from the device.',
+      ),
+      L(
         'Konto: «Auf allen anderen Geräten abmelden» – und wer die E-Mail-Adresse ändert, wird überall sonst abgemeldet; die alte Adresse bekommt eine Nachricht.',
         'Account: «Log out on all other devices» – and changing the e-mail address logs out everywhere else; the old address gets a notice.',
       ),

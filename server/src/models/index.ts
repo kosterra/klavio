@@ -59,7 +59,7 @@ const sessionSchema = new Schema(
     tokenHash: { type: String, required: true, unique: true },
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     activeProfileId: { type: Schema.Types.ObjectId, ref: 'Profile', default: null },
-    /** Parent area (PIN-protected) open until then; set by entering the PIN or a fresh login. */
+    /** Parent area (PIN-protected) open until then; set by entering the PIN (or resetting it by e-mail). */
     parentUnlockedUntil: { type: Date, default: null },
     expiresAt: { type: Date, required: true },
   },
