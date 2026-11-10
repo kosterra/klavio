@@ -20,7 +20,7 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
-    version: UPCOMING,
+    version: '2026.11.1',
     changes: [
       L(
         'Advent bis Neujahr: Ab dem ersten Advent kommt jeden Tag ein Stück Weihnachten dazu – Adventskranz (jeden Sonntag eine Kerze mehr), Schnee, Zipfelmütze, Lichterkette, Christbaum, Geschenke und Stern. Nach Weihnachten Partyhut und Girlanden, an Silvester und Neujahr ein Feuerwerk. Ab dem 2. Januar ist alles wieder wie immer.',
