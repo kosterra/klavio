@@ -19,6 +19,14 @@ export function initialLanguage(stored: string | null, browser: readonly string[
   return APP_CONFIG.defaultLocale;
 }
 
+/** «?lang=en» / «?lang=de» in the address (links from search engines): wins once and is remembered. */
+export function languageFromUrl(search: string): Locale | null {
+  const lang = new URLSearchParams(search).get('lang')?.toLowerCase();
+  if (lang?.startsWith('en')) return 'en';
+  if (lang?.startsWith('de')) return 'de-CH';
+  return null;
+}
+
 export function readStoredLanguage(): string | null {
   try {
     return localStorage.getItem(LANGUAGE_KEY);

@@ -14,9 +14,12 @@ import {
 } from '@mantine/core';
 import { IconDeviceDesktop, IconMicrophone, IconPiano } from '@tabler/icons-react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router';
+import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import {
   LESSONS,
+  midiToPitchName,
   applyCompletion,
   chapterOf,
   findLesson,
@@ -34,6 +37,8 @@ import {
   type LessonResultDto,
   type ProfileDto,
   type ProgressDto,
+  LESSON_COACH,
+  lessonHandShape,
 } from '@klavio/shared';
 import { ApiError } from '../api/client';
 import { enqueueResult } from '../offline/queue';
@@ -47,18 +52,33 @@ import { FindKeyExercise } from '../lesson/FindKeyExercise';
 import { PlayAlongExercise } from '../lesson/PlayAlongExercise';
 import { ReadNoteExercise } from '../lesson/ReadNoteExercise';
 import { SongExercise } from '../lesson/SongExercise';
+import { TimedSongExercise } from '../lesson/TimedSongExercise';
+import { ChordsExercise } from '../lesson/ChordsExercise';
+import { EchoExercise } from '../lesson/EchoExercise';
+import { DynamicsExercise } from '../lesson/DynamicsExercise';
+import { PedalExercise } from '../lesson/PedalExercise';
 import { RhythmExercise } from '../lesson/RhythmExercise';
 import { PieceExercise } from '../lesson/PieceExercise';
 import { ImproviseExercise } from '../lesson/ImproviseExercise';
 import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
+import { readPlayOn, writePlayOn } from '../lesson/playOn';
+import { CoachTip } from '../lesson/CoachTip';
+import { HandOnKeys } from '../lesson/HandOnKeys';
+import { useNoteEvents } from '../input/noteBus';
 import { useLocalized } from '../lesson/useLocalized';
 import { loadProgress, useProgress } from '../lesson/useProgress';
 import { TheorySteps } from '../lesson/theory/TheorySteps';
+import { NoteRainExercise } from '../lesson/NoteRainExercise';
 import { GoalMilestone } from '../goal/GoalMilestone';
+import { WorldDone } from '../lesson/WorldDone';
 import { Scenery } from '../lesson/WorldScenery';
-import { worldOfLesson } from '../lesson/worlds';
+import { finishesWorld, worldOfLesson } from '../lesson/worlds';
+import { useWorldMode } from '../lesson/useWorldMode';
+import { useLessonFor } from '../lesson/useLessonFor';
 import stage from '../lesson/LessonStage.module.css';
+
+/** «Auf meinem Klavier» or «Auf dem Bildschirm», remembered on this device. */
 
 type ShownResult = LessonResultDto & { pending?: boolean };
 
@@ -99,6 +119,9 @@ function localResult(
 }
 
 /** Full-screen lesson: intro → exercises → summary. */
+/** how much of the progress bar the theory part fills, when there is one */
+const THEORY_SHARE = 25;
+
 export function LessonPage() {
   const { lessonId = '' } = useParams();
   // Remount per lesson so "next lesson" loads fresh progress for the unlock check.
@@ -109,6 +132,7 @@ function LessonGate({ lessonId }: { lessonId: string }) {
   const lesson = findLesson(lessonId);
   const { completed, progress } = useProgress();
   const [attempt, setAttempt] = useState(0);
+  const forMe = useLessonFor();
 
   if (!lesson) return <Navigate to="/" replace />;
   if (!progress) return null; // short wait for the unlock check
@@ -116,7 +140,7 @@ function LessonGate({ lessonId }: { lessonId: string }) {
   return (
     <LessonRun
       key={`${lesson.id}-${attempt}`}
-      lesson={lesson}
+      lesson={forMe(lesson)}
       // the theory part comes first only until the lesson has been played once
       discoverFirst={attempt === 0 && !completed.has(lesson.id)}
       completedBefore={completed}
@@ -139,13 +163,15 @@ function LessonRun({
 }) {
   const { t } = useTranslation();
   const loc = useLocalized();
+  usePageTitle(loc(lesson.title));
   const navigate = useNavigate();
   const errorText = useErrorText();
   const micErrorText = useMicErrorText();
   const { me, activeProfile, refresh, applyLocalResult } = useSession();
   const input = useLessonInput();
   const kids = activeProfile?.uiMode !== 'classic';
-  const theory = theoryFor(lesson.id);
+  const worldSet = useWorldMode();
+  const theory = theoryFor(lesson.id, worldSet);
   // first visit: "Weisst du's noch?" (start of a chapter) + the lesson's theory
   const [steps, setSteps] = useState(() =>
     discoverFirst ? [...recapFor(lesson.id), ...theory] : theory,
@@ -153,6 +179,30 @@ function LessonRun({
   const [phase, setPhase] = useState<'theory' | 'intro' | 'play' | 'result'>(
     discoverFirst && steps.length ? 'theory' : 'intro',
   );
+  // the bar counts «Entdecken» too: its steps fill the first quarter
+  const [theoryAt, setTheoryAt] = useState(0);
+  const theoryShare = discoverFirst && steps.length ? THEORY_SHARE : 0;
+  // how the learner played last time on this device: shown first
+  const [playOn] = useState(readPlayOn);
+  const startLesson = (choice: 'piano' | 'screen' = 'piano') => {
+    // the real piano: the microphone starts with this tap (iOS needs a gesture)
+    if (choice === 'piano') input.startPreferred();
+    writePlayOn(choice);
+    startedAt.current = performance.now();
+    setPhase('play');
+  };
+  // a digital piano: the first key played on the start card starts the lesson
+  useNoteEvents((e) => {
+    if (phase === 'intro' && e.type === 'note-on' && e.source === 'midi') startLesson('piano');
+  });
+
+  // every step of a lesson starts at the top (the button to it may sit far down on a phone)
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [phase]);
+  // a phone held sideways has little height: smaller figures
+  const short = useMediaQuery('(max-height: 32em)') ?? false;
+  const [micDetails, setMicDetails] = useState(false);
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
   const mistakes = useRef(0);
@@ -162,7 +212,8 @@ function LessonRun({
   const [saveError, setSaveError] = useState<string | null>(null);
   const total = lessonTargetCount(lesson);
   const chapter = chapterOf(lesson.id);
-  const where = worldOfLesson(lesson.id);
+  const handShape = lessonHandShape(lesson);
+  const where = worldOfLesson(lesson.id, worldSet);
   const next = LESSONS[LESSONS.findIndex((l) => l.id === lesson.id) + 1] ?? null;
   const { stopMicrophone } = input;
 
@@ -223,18 +274,25 @@ function LessonRun({
     lesson,
     inputMode: input.mode,
     kids,
-    onCorrect: () => setCorrect((c) => c + 1),
+    onCorrect: () => {
+      setCorrect((c) => c + 1);
+      // a short tap on the screen keys (never with the microphone: it would hear the buzz)
+      if (input.mode === 'screen') navigator.vibrate?.(15);
+    },
     onMistake: () => {
       mistakes.current++;
+      if (input.mode === 'screen') navigator.vibrate?.([30, 40, 30]);
     },
     onDone: finishExercise,
   };
 
   return (
     <div
-      className={kids ? stage.stage : undefined}
-      style={kids ? where.vars : undefined}
-      data-world={kids ? where.world.id : undefined}
+      className={`${kids ? stage.stage : stage.calm} ${stage.lit}`}
+      style={where.vars}
+      data-world={where.world.id}
+      // stage lighting: story moments in Klavio's colours, playing in a calm light
+      data-light={phase === 'play' ? 'play' : 'story'}
     >
       {kids && (
         <div className={stage.scenery} aria-hidden>
@@ -242,12 +300,18 @@ function LessonRun({
         </div>
       )}
       <Box mih="100dvh" p="md" maw={1100} mx="auto" pos="relative">
-        <Stack gap="md">
+        <Stack gap="md" className={phase === 'play' ? undefined : stage.storyStack}>
           {/* ------------------------------------------------------ top bar */}
-          <Group justify="space-between" wrap="nowrap" gap="sm">
+          <Group justify="space-between" wrap="nowrap" gap="sm" className={stage.hud}>
             <CloseButton size="xl" aria-label={t('lesson.close')} onClick={() => navigate('/')} />
             <Progress
-              value={phase === 'result' ? 100 : (correct / total) * 100}
+              value={
+                phase === 'result'
+                  ? 100
+                  : phase === 'theory'
+                    ? (theoryAt / steps.length) * THEORY_SHARE
+                    : theoryShare + (correct / total) * (100 - theoryShare)
+              }
               size="xl"
               radius="xl"
               style={{ flex: 1 }}
@@ -260,22 +324,52 @@ function LessonRun({
             {phase === 'play' ? <InputSwitch input={input} /> : <PrivacyBadge />}
           </Group>
 
+          {/* every note heard gets an answer, whatever the exercise */}
+          {phase === 'play' && <HeardNote mode={input.mode} />}
+
+          {/* one line – the task matters more; the details on request */}
           {input.micError && phase === 'play' && (
-            <Alert color="orange">
-              {micErrorText(input.micError)} {t('lesson.useScreen')}
+            <Alert color="orange" p="xs" data-testid="mic-off">
+              <Group gap="xs" wrap="nowrap" justify="space-between">
+                <Text size="sm" fw={700}>
+                  {t('lesson.micOff')}
+                </Text>
+                <Button
+                  variant="transparent"
+                  size="compact-sm"
+                  c="inherit"
+                  td="underline"
+                  style={{ flex: 'none' }}
+                  onClick={() => setMicDetails((d) => !d)}
+                  aria-expanded={micDetails}
+                >
+                  {t('lesson.why')}
+                </Button>
+              </Group>
+              {micDetails && (
+                <Text size="sm" mt={4}>
+                  {micErrorText(input.micError)} {t('lesson.useScreen')}
+                </Text>
+              )}
             </Alert>
           )}
 
           {/* ------------------------------------------- theory ("Entdecken") */}
           {phase === 'theory' && (
-            <TheorySteps steps={steps} kids={kids} onDone={() => setPhase('intro')} />
+            <TheorySteps
+              steps={steps}
+              kids={kids}
+              onDone={() => setPhase('intro')}
+              onStep={setTheoryAt}
+              lessonTitle={loc(lesson.title)}
+            />
           )}
 
           {/* -------------------------------------------------------- intro */}
           {phase === 'intro' && (
             <Card withBorder radius="xl" padding="xl" maw={640} mx="auto" w="100%">
               <Stack align="center" gap="md">
-                <Buddy mood="happy" size={kids ? 120 : 80} />
+                <Buddy mood="happy" size={short ? 56 : kids ? 120 : 80} />
                 {chapter && (
                   <Text size="sm" fw={700} c="indigo.8" tt="uppercase">
                     {loc(chapter.title)}
@@ -287,16 +381,18 @@ function LessonRun({
                 <Text fz="lg" ta="center">
                   {loc(lesson.intro)}
                 </Text>
-                <InputInfo
-                  mode={input.mode}
-                  midiDevice={input.midiDevice}
-                  micSupported={input.micSupported}
-                />
+                {handShape && (
+                  <Stack gap={4} w="100%" align="center">
+                    <Text fw={800}>{t('hand.title')}</Text>
+                    <HandOnKeys shape={handShape} />
+                  </Stack>
+                )}
                 {theory.length > 0 && (
                   <Button
                     variant="subtle"
                     onClick={() => {
                       setSteps(theory);
+                      setTheoryAt(0);
                       setPhase('theory');
                     }}
                     data-testid="theory-again"
@@ -304,35 +400,88 @@ function LessonRun({
                     {t('theory.again')}
                   </Button>
                 )}
-                <Button
-                  size="xl"
-                  mt="sm"
-                  onClick={() => {
-                    input.startPreferred();
-                    startedAt.current = performance.now();
-                    setPhase('play');
-                  }}
-                >
-                  {t('lesson.start')}
-                </Button>
+                {/* how to play: a clear choice, the real piano first */}
+                {input.mode === 'midi' || !input.micSupported ? (
+                  <>
+                    <InputInfo
+                      mode={input.mode}
+                      midiDevice={input.midiDevice}
+                      micSupported={input.micSupported}
+                    />
+                    <Button
+                      size="xl"
+                      mt="sm"
+                      onClick={() => startLesson('piano')}
+                      data-testid="lesson-start"
+                    >
+                      {t('lesson.start')}
+                    </Button>
+                  </>
+                ) : (
+                  <Stack gap="xs" w="100%" maw={420} mt="sm" align="center">
+                    {/* the way chosen in the start-up questions or last time; the other one a tap away */}
+                    <Button
+                      size="xl"
+                      fullWidth
+                      leftSection={playOn === 'piano' ? <IconMicrophone /> : <IconDeviceDesktop />}
+                      onClick={() => startLesson(playOn)}
+                      data-testid={playOn === 'piano' ? 'lesson-start' : 'lesson-start-screen'}
+                    >
+                      {t(playOn === 'piano' ? 'lesson.startPiano' : 'lesson.startScreen')}
+                    </Button>
+                    {playOn === 'piano' && (
+                      <Text size="sm" c="dimmed" ta="center">
+                        {t('lesson.playPianoHint')}{' '}
+                        {activeProfile?.calibration.noiseFloorDb == null && (
+                          <Link to="/mic-setup">{t('mic.setup')}</Link>
+                        )}
+                      </Text>
+                    )}
+                    <Button
+                      variant="subtle"
+                      size="compact-md"
+                      onClick={() => startLesson(playOn === 'screen' ? 'piano' : 'screen')}
+                      data-testid={playOn === 'piano' ? 'lesson-start-screen' : 'lesson-start'}
+                    >
+                      {t(playOn === 'piano' ? 'lesson.switchToScreen' : 'lesson.switchToPiano')}
+                    </Button>
+                  </Stack>
+                )}
               </Stack>
             </Card>
           )}
 
           {/* --------------------------------------------------------- play */}
+          {/* what is new here, for the whole first exercise (no jump while playing) */}
+          {phase === 'play' && exerciseIndex === 0 && LESSON_COACH[lesson.id] && (
+            <CoachTip text={loc(LESSON_COACH[lesson.id]!)} kids={kids} />
+          )}
+
           {phase === 'play' &&
             (exercise.type === 'find-key' ? (
               <FindKeyExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'note-rain' ? (
+              <NoteRainExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'read-note' ? (
               <ReadNoteExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'song' ? (
               <SongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'dynamics' ? (
+              <DynamicsExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'pedal' ? (
+              <PedalExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'chords' ? (
+              <ChordsExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'song-timed' ? (
+              <TimedSongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'piece' ? (
               <PieceExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'improvise' ? (
               <ImproviseExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'rhythm' ? (
               <RhythmExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'echo' ? (
+              <EchoExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : (
               <PlayAlongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ))}
@@ -349,17 +498,22 @@ function LessonRun({
               onNext={next ? () => navigate(`/lesson/${next.id}`) : null}
               onPath={() => navigate('/')}
               extra={
-                activeProfile?.goalSong && result && result.stars > 0 ? (
-                  <GoalMilestone
-                    goal={activeProfile.goalSong}
-                    reached={newlyReachedGoalSkills(
-                      activeProfile.goalSong.skills,
-                      completedBefore,
-                      lesson.id,
-                    )}
-                    completed={new Set(completedBefore).add(lesson.id)}
-                  />
-                ) : null
+                <>
+                  {result && result.stars > 0 && finishesWorld(lesson.id, completedBefore) && (
+                    <WorldDone lessonId={lesson.id} />
+                  )}
+                  {activeProfile?.goalSong && result && result.stars > 0 ? (
+                    <GoalMilestone
+                      goal={activeProfile.goalSong}
+                      reached={newlyReachedGoalSkills(
+                        activeProfile.goalSong.skills,
+                        completedBefore,
+                        lesson.id,
+                      )}
+                      completed={new Set(completedBefore).add(lesson.id)}
+                    />
+                  ) : null}
+                </>
               }
             />
           )}
@@ -403,6 +557,41 @@ function InputInfo({
     <Alert color="gray" variant="light" icon={<IconDeviceDesktop />} w="100%">
       {t('lesson.inputScreen')}
     </Alert>
+  );
+}
+
+/**
+ * «Ich höre: E» – shows each recognised note for a moment, so one always
+ * knows the app heard the piano. Before the first note: that it listens.
+ */
+function HeardNote({ mode }: { mode: LessonInputMode }) {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language.startsWith('de') ? 'de' : 'en';
+  const [heard, setHeard] = useState<{ midi: number; n: number } | null>(null);
+  const [fresh, setFresh] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useNoteEvents((e) => {
+    if (e.type !== 'note-on') return;
+    setHeard((h) => ({ midi: e.midi, n: (h?.n ?? 0) + 1 }));
+    setFresh(true);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setFresh(false), 1500);
+  });
+  useEffect(() => () => clearTimeout(timer.current), []);
+  if (mode === 'screen' && !heard) return null;
+  return (
+    <div className={stage.heard} data-fresh={fresh || undefined} aria-hidden data-testid="heard">
+      {heard ? (
+        <span key={heard.n} className={stage.heardPop}>
+          {t('lesson.heard', { note: midiToPitchName(heard.midi, lang) })}
+        </span>
+      ) : (
+        <span>
+          {mode === 'midi' ? <IconPiano size={16} /> : <IconMicrophone size={16} />}{' '}
+          {t('lesson.waitingForNote')}
+        </span>
+      )}
+    </div>
   );
 }
 

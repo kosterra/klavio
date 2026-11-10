@@ -3,6 +3,7 @@ import { Alert, Button, Card, Group, SimpleGrid, Stack, Table, Text, Title } fro
 import { IconAdjustments, IconMicrophone, IconPlayerStop } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import { midiToName, type NoteEvent } from '@klavio/shared';
 import { useSession } from '../auth/session';
 import { usePitchDetection } from '../audio/usePitchDetection';
@@ -18,6 +19,7 @@ const TOLERANCE = 35;
 /** Live view of the microphone pitch detection: note, tuning, level, event log. */
 export function MicTestPage() {
   const { t, i18n } = useTranslation();
+  usePageTitle(t('nav.input'));
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
   const { activeProfile } = useSession();
   const micErrorText = useMicErrorText();

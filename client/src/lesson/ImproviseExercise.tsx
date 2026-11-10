@@ -12,8 +12,8 @@ import type { ExerciseProps } from './exercises';
 import classes from './Improvise.module.css';
 
 const BEATS_PER_BAR = 4;
-/** the groove's bass: F sharp and C sharp – everything on the black keys fits */
-const BASS = [42, 49];
+/** the groove's bass: F sharp and C sharp for the black keys, C and G for the white ones */
+const BASS = { black: [42, 49], white: [48, 43] };
 
 /**
  * "Improvisieren": free play on the black keys over a little groove. There are
@@ -63,7 +63,7 @@ export function ImproviseExercise({
       if (inputMode !== 'microphone' && i % 2 === 0) {
         timers.current.push(
           setTimeout(() => {
-            const v = playNote(BASS[(i / 2) % 2]!, 0.35);
+            const v = playNote(BASS[exercise.keys][(i / 2) % 2]!, 0.35);
             setTimeout(() => v?.release(), beatMs * 1.8);
           }, at - now),
         );
@@ -85,7 +85,7 @@ export function ImproviseExercise({
 
   useNoteEvents((e) => {
     if (e.type !== 'note-on' || phase !== 'play') return;
-    if (!isBlackKey(e.midi)) {
+    if (isBlackKey(e.midi) !== (exercise.keys === 'black')) {
       setNudge(true);
       timers.current.push(setTimeout(() => setNudge(false), 1500));
       return;
@@ -97,10 +97,12 @@ export function ImproviseExercise({
     timers.current.push(setTimeout(() => setSparks((s) => s.filter((x) => x.id !== id)), 1200));
   });
 
-  const blackKeys: number[] = [];
+  // the keys that fit: all black ones, or C, E and G (they always sound good over the C groove)
+  const fitting: number[] = [];
   for (let m = lesson.keyboard.from; m <= lesson.keyboard.to; m++) {
-    if (isBlackKey(m)) blackKeys.push(m);
+    if (exercise.keys === 'black' ? isBlackKey(m) : [0, 4, 7].includes(m % 12)) fitting.push(m);
   }
+  const white = exercise.keys === 'white';
 
   return (
     <Stack align="center" gap="md" w="100%">
@@ -108,14 +110,14 @@ export function ImproviseExercise({
         mood={phase === 'done' ? 'cheer' : phase === 'play' ? 'happy' : 'listen'}
         size={kids ? 90 : 64}
         kids={kids}
-        say={t('lesson.improvise.ready')}
+        say={t(white ? 'lesson.improvise.readyWhite' : 'lesson.improvise.ready')}
       >
         <Text fz={kids ? 26 : 22} fw={800} ta="center" aria-live="polite">
           {phase === 'ready'
-            ? t('lesson.improvise.ready')
+            ? t(white ? 'lesson.improvise.readyWhite' : 'lesson.improvise.ready')
             : phase === 'play'
               ? nudge
-                ? t('lesson.improvise.nudge')
+                ? t(white ? 'lesson.improvise.nudgeWhite' : 'lesson.improvise.nudge')
                 : t('lesson.improvise.play')
               : phase === 'more'
                 ? t('lesson.improvise.more', { min: exercise.minNotes })
@@ -147,16 +149,15 @@ export function ImproviseExercise({
           {phase === 'ready' ? t('lesson.improvise.start') : t('lesson.improvise.again')}
         </Button>
       )}
-      <div style={{ width: '100%' }}>
-        <VirtualKeyboard
-          from={lesson.keyboard.from}
-          to={lesson.keyboard.to}
-          labels="none"
-          height={kids ? 180 : 160}
-          interactive={inputMode === 'screen'}
-          hints={phase === 'play' || kids ? blackKeys : []}
-        />
-      </div>
+      <VirtualKeyboard
+        dock
+        from={lesson.keyboard.from}
+        to={lesson.keyboard.to}
+        labels="none"
+        height={kids ? 180 : 160}
+        interactive={inputMode === 'screen'}
+        hints={phase === 'play' || kids ? fitting : []}
+      />
     </Stack>
   );
 }

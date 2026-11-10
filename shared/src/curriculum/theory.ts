@@ -11,8 +11,342 @@ const C4_C5 = { from: 60, to: 72 };
  * steps with pictures, games and quizzes. Keyed by lesson id.
  */
 export const LESSON_THEORY: Record<string, TheoryStep[]> = {
+  'expr-dynamics': [
+    {
+      type: 'explain',
+      text: L(
+        'Laut und leise kommt beim Klavier von der Geschwindigkeit, mit der die Taste hinuntergeht: schnell und kräftig für forte, langsam und sanft für piano. Die Hand bleibt dabei locker – nicht hämmern!',
+        'On the piano, loud and soft come from how fast the key goes down: fast and firm for forte, slow and gentle for piano. Keep your hand relaxed – no hammering!',
+      ),
+    },
+  ],
+  'expr-pedal': [
+    {
+      type: 'explain',
+      text: L(
+        'Am Klavier gibt es unten Pedale für die Füsse. Das rechte heisst Fortepedal: Solange es gedrückt ist, klingen alle Töne weiter. Der rechte Fuss bleibt mit der Ferse auf dem Boden, nur der Fussballen bewegt sich.',
+        'A piano has pedals at the bottom for your feet. The right one is the sustain pedal: while it is down, all notes keep sounding. Keep your right heel on the floor, only the ball of your foot moves.',
+      ),
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Wann hebst du das Pedal beim Wechsel zum nächsten Ton?',
+        'When do you lift the pedal when moving to the next note?',
+      ),
+      answers: [
+        { text: L('Gleich nach der neuen Taste', 'Right after the new key'), correct: true },
+        { text: L('Gar nie', 'Never') },
+        { text: L('Vor dem ersten Ton', 'Before the first note') },
+      ],
+      hint: L(
+        'Erst die neue Taste, dann kurz heben – so verschwimmt nichts.',
+        'First the new key, then lift briefly – so nothing blurs.',
+      ),
+    },
+  ],
+  'keysig-a-minor': [
+    {
+      type: 'explain',
+      text: L(
+        'Musik kann in Dur oder in Moll sein. Dur klingt hell und fröhlich, Moll dunkler, oft ein bisschen traurig. Den Unterschied macht ein einziger Ton: Bei Moll ist der mittlere Ton des Akkords einen Schritt tiefer.',
+        'Music can be in major or in minor. Major sounds bright and cheerful, minor darker, often a little sad. A single note makes the difference: in minor the middle note of the chord is one step lower.',
+      ),
+    },
+    {
+      type: 'listen',
+      text: L('Hör zu: Dur (hell) oder Moll (dunkel)?', 'Listen: major (bright) or minor (dark)?'),
+      answers: [L('Dur', 'Major'), L('Moll', 'Minor')],
+      rounds: [
+        { notes: [60, 64, 67, 72], answer: 0 },
+        { notes: [60, 63, 67, 72], answer: 1 },
+        { notes: [57, 60, 64, 69], answer: 1 },
+        { notes: [57, 61, 64, 69], answer: 0 },
+      ],
+    },
+  ],
+  'meter-six-eight': [
+    {
+      type: 'explain',
+      text: L(
+        'Im 6/8-Takt hat ein Takt sechs Achtel, in zwei Gruppen zu drei: «eins-zwei-drei, vier-fünf-sechs». Eine punktierte Viertel füllt eine ganze Gruppe. Viele Wiegenlieder und Seemannslieder schaukeln so.',
+        'In 6/8 a bar has six eighths, in two groups of three: «one-two-three, four-five-six». A dotted quarter fills a whole group. Many lullabies and sea shanties rock like this.',
+      ),
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Wie viele Achtel hat ein Takt im 6/8-Takt?',
+        'How many eighths does a bar of 6/8 have?',
+      ),
+      answers: [
+        { text: L('Drei', 'Three') },
+        { text: L('Sechs', 'Six'), correct: true },
+        { text: L('Acht', 'Eight') },
+      ],
+      hint: L('Die obere Zahl sagt es.', 'The top number tells you.'),
+    },
+  ],
+  'meter-upbeat': [
+    {
+      type: 'explain',
+      text: L(
+        'Manche Lieder beginnen nicht auf «eins»: Ein paar Töne kommen vorher, wie ein Anlauf. Das heisst Auftakt. Dafür ist der letzte Takt kürzer – zusammen ergeben sie einen ganzen Takt.',
+        'Some songs do not start on «one»: a few notes come before, like a run-up. That is called an upbeat. The last bar is shorter to make up for it – together they make one whole bar.',
+      ),
+    },
+    {
+      type: 'quiz',
+      text: L('Was ist ein Auftakt?', 'What is an upbeat?'),
+      answers: [
+        { text: L('Töne vor dem ersten «eins»', 'Notes before the first «one»'), correct: true },
+        { text: L('Ein besonders lauter Ton', 'A particularly loud note') },
+        { text: L('Eine Pause am Anfang', 'A rest at the start') },
+      ],
+      hint: L('Lies nochmals oben nach.', 'Read the text above once more.'),
+    },
+  ],
+  'meter-ties': [
+    {
+      type: 'explain',
+      text: L(
+        'Ein Haltebogen verbindet zwei gleiche Noten. Du spielst nur die erste und hältst die Taste, so lange beide zusammen dauern – oft über den Taktstrich hinweg.',
+        'A tie connects two equal notes. You play only the first one and hold the key as long as both last together – often across the bar line.',
+      ),
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Eine halbe Note mit Haltebogen zu einer Viertel – wie lange hältst du?',
+        'A half note tied to a quarter – how long do you hold?',
+      ),
+      answers: [
+        { text: L('Zwei Schläge', 'Two beats') },
+        { text: L('Drei Schläge', 'Three beats'), correct: true },
+        { text: L('Vier Schläge', 'Four beats') },
+      ],
+      hint: L('Halbe (2) plus Viertel (1).', 'Half (2) plus quarter (1).'),
+    },
+  ],
+  'accomp-bass': [
+    {
+      type: 'explain',
+      text: L(
+        'Begleiten heisst: Die linke Hand legt einen Boden unter die Melodie. Am einfachsten mit Grundton und Quinte im Wechsel – zum C-Dur spielst du C und G, zum G-Dur G und D.',
+        'Accompanying means: the left hand lays a floor under the melody. The easiest way is root and fifth in turn – with C major you play C and G, with G major G and D.',
+      ),
+      picture: { kind: 'keyboard', from: 48, to: 60, labels: 'all', marks: [48, 55] },
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Welche zwei Töne spielt die linke Hand zum C-Dur?',
+        'Which two notes does the left hand play with C major?',
+      ),
+      answers: [
+        { text: L('C und G', 'C and G'), correct: true },
+        { text: L('C und D', 'C and D') },
+        { text: L('E und A', 'E and A') },
+      ],
+      hint: L('Grundton C, und fünf Töne weiter: G.', 'Root C, and five notes up: G.'),
+    },
+  ],
+  'accomp-broken': [
+    {
+      type: 'explain',
+      text: L(
+        'Ein Dur-Akkord besteht aus drei Tönen: dem Grundton, dem Ton zwei weisse Tasten höher und noch einmal zwei höher. C-Dur ist C – E – G. Das sieht aus wie ein Schneemann auf den Notenlinien!',
+        'A major chord has three notes: the root, the note two white keys higher, and two higher again. C major is C – E – G. On the staff it looks like a snowman!',
+      ),
+      picture: { kind: 'keyboard', from: 48, to: 60, labels: 'all', marks: [48, 52, 55] },
+    },
+    {
+      type: 'quiz',
+      text: L('Aus welchen Tönen besteht der F-Dur-Akkord?', 'Which notes make the F major chord?'),
+      answers: [
+        { text: L('F – A – C', 'F – A – C'), correct: true },
+        { text: L('F – G – A', 'F – G – A') },
+        { text: L('F – H – D', 'F – B – D') },
+      ],
+      hint: L(
+        'Vom F aus immer eine weisse Taste überspringen.',
+        'From F, always skip one white key.',
+      ),
+    },
+  ],
+  'accomp-chords': [
+    {
+      type: 'explain',
+      text: L(
+        'Mit nur drei Akkorden – C, F und G – lassen sich sehr viele Lieder begleiten. Meist beginnt und endet ein Lied mit C; das G führt zurück nach Hause zum C.',
+        'With just three chords – C, F and G – you can accompany a great many songs. Most songs begin and end with C; the G leads back home to C.',
+      ),
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Welcher Akkord führt am Schluss zurück nach Hause zum C?',
+        'Which chord leads back home to C at the end?',
+      ),
+      answers: [{ text: L('F', 'F') }, { text: L('G', 'G'), correct: true }, { text: L('C', 'C') }],
+      hint: L('Lies nochmals oben nach.', 'Read the text above once more.'),
+    },
+  ],
+  'meter-eighths': [
+    {
+      type: 'explain',
+      text: L(
+        'Eine Achtelnote hat ein Fähnchen – zwei Achtel hintereinander bekommen einen Balken. Sie sind halb so lang wie eine Viertel. Zähl «eins-und, zwei-und»: Die Achtel kommen auf die Zahl und auf das «und».',
+        'An eighth note has a little flag – two eighths in a row get a beam. They are half as long as a quarter. Count «one-and, two-and»: the eighths come on the number and on the «and».',
+      ),
+    },
+    {
+      type: 'clap',
+      text: L(
+        'Klatsch mit: Viertel, zwei schnelle Achtel, Viertel, Viertel.',
+        'Tap along: quarter, two quick eighths, quarter, quarter.',
+      ),
+      tempo: 72,
+      pattern: ['q', '8', '8', 'q', 'q'],
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Wie viele Achtel dauern so lang wie eine Viertel?',
+        'How many eighths last as long as a quarter?',
+      ),
+      answers: [
+        { text: L('Eine', 'One') },
+        { text: L('Zwei', 'Two'), correct: true },
+        { text: L('Vier', 'Four') },
+      ],
+      hint: L(
+        'Zähl «eins-und»: zwei Achtel auf einen Schlag.',
+        'Count «one-and»: two eighths on one beat.',
+      ),
+    },
+  ],
+  'meter-waltz': [
+    {
+      type: 'explain',
+      text: L(
+        'Der Walzer hat nur drei Schläge pro Takt: «eins, zwei, drei». Der erste ist der schwere – so wiegt sich die Musik hin und her. Eine halbe Note mit Punkt dauert drei Schläge und füllt einen ganzen Takt.',
+        'A waltz has only three beats per bar: «one, two, three». The first one is heavy – that is how the music sways. A dotted half note lasts three beats and fills a whole bar.',
+      ),
+    },
+    {
+      type: 'clap',
+      text: L(
+        'Klatsch mit: eine Halbe und eine Viertel – «eins-zwei, drei».',
+        'Tap along: a half and a quarter – «one-two, three».',
+      ),
+      tempo: 92,
+      pattern: ['h', 'q'],
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Wie viele Schläge hat ein Takt im Walzer?',
+        'How many beats does a bar of a waltz have?',
+      ),
+      answers: [
+        { text: L('Zwei', 'Two') },
+        { text: L('Drei', 'Three'), correct: true },
+        { text: L('Vier', 'Four') },
+      ],
+      hint: L('«Eins, zwei, drei – eins, zwei, drei.»', '«One, two, three – one, two, three.»'),
+    },
+  ],
+  'keysig-flats': [
+    {
+      type: 'explain',
+      text: L(
+        'Ein ♭ macht eine Note einen Schritt tiefer: Aus E wird Es. Im Deutschen hängt man «-es» an – nur das H wird zum B, und aus A wird As.',
+        'A flat ♭ makes a note one step lower: E becomes E flat. In German you add «-es» – only B becomes «B» (and German «H» is your B).',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [64, 63], names: true, spelling: 'flat' },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Lustig: Cis und Des sind dieselbe schwarze Taste – sie heisst nur verschieden, je nachdem, ob man von unten (♯) oder von oben (♭) kommt.',
+        'Fun fact: C sharp and D flat are the same black key – it just has two names, depending on whether you come from below (♯) or from above (♭).',
+      ),
+      picture: { kind: 'keyboard', from: 60, to: 72, labels: 'all', marks: [61] },
+    },
+    {
+      type: 'quiz',
+      text: L('Welche Taste spielst du für diese Note?', 'Which key do you play for this note?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [70], spelling: 'flat' },
+      answers: [
+        { text: L('A', 'A') },
+        { text: L('B', 'B flat'), correct: true },
+        { text: L('H', 'B') },
+      ],
+      hint: L(
+        'Das ♭ heisst: einen Schritt tiefer als das H.',
+        'The ♭ means: one step lower than B.',
+      ),
+    },
+  ],
+  'keysig-g-scale': [
+    {
+      type: 'explain',
+      text: L(
+        'Jede Dur-Tonleiter klingt gleich – egal, wo sie beginnt. Damit G-Dur so klingt wie C-Dur, braucht sie eine schwarze Taste: das Fis. Darum steht in G-Dur ein ♯ gleich am Anfang jeder Zeile.',
+        'Every major scale sounds the same – wherever it starts. For G major to sound like C major, it needs one black key: F sharp. That is why G major has a ♯ right at the start of every line.',
+      ),
+      picture: {
+        kind: 'staff',
+        clef: 'treble',
+        notes: [67, 69, 71, 72, 74, 76, 78, 79],
+        keySignature: 'G',
+      },
+    },
+    {
+      type: 'quiz',
+      text: L('Welche schwarze Taste gehört zu G-Dur?', 'Which black key belongs to G major?'),
+      answers: [
+        { text: L('Fis', 'F sharp'), correct: true },
+        { text: L('B', 'B flat') },
+        { text: L('Cis', 'C sharp') },
+      ],
+      hint: L(
+        'Schau, wo das ♯ am Zeilenanfang steht: auf der F-Linie.',
+        'Look where the ♯ at the start of the line sits: on the F line.',
+      ),
+    },
+  ],
+  'keysig-f-read': [
+    {
+      type: 'explain',
+      text: L(
+        'Das ♮ heisst Auflösungszeichen: Es hebt ♯ oder ♭ auf, bis zum Ende des Takts. Hier steht ein ♭ am Anfang – das zweite H bekommt ein ♮ und wird wieder zum weissen H.',
+        'The ♮ is a natural sign: it cancels a ♯ or ♭ until the end of the bar. Here a ♭ stands at the start – the second B gets a ♮ and becomes the white B again.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [70, 71], names: true, keySignature: 'F' },
+    },
+    {
+      type: 'quiz',
+      text: L('Was macht das ♮?', 'What does the ♮ do?'),
+      answers: [
+        { text: L('Es macht die Note höher', 'It makes the note higher') },
+        { text: L('Es hebt ♯ oder ♭ auf', 'It cancels a ♯ or ♭'), correct: true },
+        { text: L('Es macht die Note länger', 'It makes the note longer') },
+      ],
+      hint: L('Lies nochmals oben nach.', 'Read the text above once more.'),
+    },
+  ],
   // ------------------------------------------------------------ chapter 1
   'keys-c': [
+    {
+      type: 'explain',
+      text: L(
+        'Bevor es losgeht: So sitzt du gut am Klavier. Setz dich vor die Mitte der Tasten, nur auf die vordere Hälfte des Stuhls. Deine Unterarme sind ungefähr waagrecht, die Schultern locker, die Füsse stehen auf dem Boden – oder auf einem Hocker.',
+        'Before we start: this is how you sit well at the piano. Sit in front of the middle of the keys, only on the front half of the chair. Your forearms are about level, your shoulders relaxed, your feet on the floor – or on a stool.',
+      ),
+      picture: { kind: 'sticker', sticker: 'piano' },
+    },
     {
       type: 'explain',
       text: L(
@@ -216,7 +550,7 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     },
     {
       type: 'quiz',
-      text: L('Und dieser?', 'And this one?'),
+      text: L('Und welche Nummer hat dieser Finger?', 'And which number is this finger?'),
       picture: { kind: 'hand', highlight: 5, numbers: false },
       answers: [{ text: L('1', '1') }, { text: L('4', '4') }, { text: L('5', '5'), correct: true }],
       hint: L(
@@ -388,6 +722,27 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     {
       type: 'explain',
       text: L(
+        'Töne kann man verschieden spielen: gebunden (legato) – ein Ton geht weich in den nächsten über, du lässt die Taste erst los, wenn die nächste klingt. Oder kurz (staccato) – die Taste springt sofort wieder hoch. In den Noten steht dafür ein Bogen oder ein Punkt über der Note.',
+        'Notes can be played in different ways: connected (legato) – one note flows softly into the next, you let go of a key only when the next one sounds. Or short (staccato) – the key springs straight back up. In the music this is a curved line or a dot above the note.',
+      ),
+    },
+    {
+      type: 'listen',
+      text: L(
+        'Hör zu: Klingt das gebunden oder kurz?',
+        'Listen: does it sound connected or short?',
+      ),
+      answers: [L('Gebunden', 'Connected'), L('Kurz', 'Short')],
+      rounds: [
+        { notes: [60, 62, 64, 65, 67], answer: 0, touch: 'legato' },
+        { notes: [67, 65, 64, 62, 60], answer: 1, touch: 'staccato' },
+        { notes: [64, 64, 65, 67], answer: 1, touch: 'staccato' },
+        { notes: [67, 65, 64, 62], answer: 0, touch: 'legato' },
+      ],
+    },
+    {
+      type: 'explain',
+      text: L(
         '«Alle meine Entchen» ist ein sehr altes Kinderlied – niemand weiss genau, wer es erfunden hat. Kennst du es? Dann sing beim Spielen mit!',
         '“Alle meine Entchen” is a very old German children’s song – nobody knows exactly who made it up. Do you know it? Then sing along while you play!',
       ),
@@ -494,7 +849,7 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     },
     {
       type: 'quiz',
-      text: L('Und diese?', 'And this one?'),
+      text: L('Und wie heisst diese Note?', 'And what is this note called?'),
       picture: { kind: 'staff', clef: 'treble', notes: [67] },
       answers: [{ text: L('F', 'F') }, { text: L('G', 'G'), correct: true }, { text: L('A', 'A') }],
       hint: L('Um diese Linie rollt sich der G-Schlüssel.', 'The G clef curls around this line.'),
@@ -604,6 +959,15 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       ),
     },
     {
+      type: 'clap',
+      text: L(
+        'Klatsch mit: zwei Viertel, dann «daaa-da» – die punktierte Viertel und die kurze Achtel.',
+        'Tap along: two quarters, then «daaa-da» – the dotted quarter and the short eighth.',
+      ),
+      tempo: 72,
+      pattern: ['q', 'q', 'qd', '8'],
+    },
+    {
       type: 'listen',
       text: L(
         'Hör zu: Geht die Melodie hinauf oder hinunter?',
@@ -618,6 +982,24 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
   ],
 
   'song-weihnachtsmann': [
+    {
+      type: 'explain',
+      text: L(
+        'Das Klavier heisst eigentlich «Pianoforte»: piano heisst leise, forte heisst laut. Je kräftiger du die Taste drückst, desto lauter klingt sie. In den Noten steht p für leise und f für laut.',
+        'The piano is really called «pianoforte»: piano means soft, forte means loud. The harder you press a key, the louder it sounds. In the music, p means soft and f means loud.',
+      ),
+    },
+    {
+      type: 'listen',
+      text: L('Hör zu: Klingt das laut (f) oder leise (p)?', 'Listen: is it loud (f) or soft (p)?'),
+      answers: [L('Laut (f)', 'Loud (f)'), L('Leise (p)', 'Soft (p)')],
+      rounds: [
+        { notes: [60, 60, 67, 67], answer: 0, velocity: 1 },
+        { notes: [69, 69, 67], answer: 1, velocity: 0.15 },
+        { notes: [65, 65, 64, 64], answer: 1, velocity: 0.15 },
+        { notes: [62, 62, 60], answer: 0, velocity: 1 },
+      ],
+    },
     {
       type: 'explain',
       text: L(
@@ -827,7 +1209,10 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     },
     {
       type: 'quiz',
-      text: L('Und diese?', 'And this one?'),
+      text: L(
+        'Und wie heisst diese Note im Bassschlüssel?',
+        'And what is this note called in the bass clef?',
+      ),
       picture: { kind: 'staff', clef: 'bass', notes: [53] },
       answers: [{ text: L('E', 'E') }, { text: L('F', 'F'), correct: true }, { text: L('G', 'G') }],
       hint: L(
@@ -980,7 +1365,7 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     },
     {
       type: 'quiz',
-      text: L('Und diese?', 'And this one?'),
+      text: L('Und welche Hand spielt diese Note?', 'And which hand plays this note?'),
       picture: { kind: 'grand-staff', notes: [67] },
       answers: [
         { text: L('Die linke Hand', 'The left hand') },
@@ -1189,9 +1574,112 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
   ],
 };
 
-export function theoryFor(lessonId: string): TheoryStep[] {
-  return LESSON_THEORY[lessonId] ?? [];
+/**
+ * Grown-ups play a piece where children play a children's song (see
+ * `Lesson.adult`): the steps about the song are told about the piece. Each
+ * entry replaces the step at that place.
+ */
+const ADULT_THEORY: Record<string, Record<number, TheoryStep>> = {
+  'hand-entchen': {
+    2: {
+      type: 'explain',
+      text: L(
+        '«Morgenstimmung» hat Edvard Grieg 1875 für das Theaterstück «Peer Gynt» geschrieben: Die Sonne geht über der Wüste auf. Die Flöte spielt diese Melodie – du jetzt auch.',
+        'Edvard Grieg wrote “Morning Mood” in 1875 for the play “Peer Gynt”: the sun rises over the desert. The flute plays this melody – and now so do you.',
+      ),
+      picture: { kind: 'sticker', sticker: 'star' },
+    },
+    4: {
+      type: 'listen',
+      text: L(
+        'Hör dir den Anfang an: Geht die Melodie hinauf oder hinunter?',
+        'Listen to the beginning: does the melody go up or down?',
+      ),
+      answers: [L('Hinauf', 'Up'), L('Hinunter', 'Down')],
+      rounds: [{ notes: [67, 64, 62, 60], answer: 1 }],
+    },
+  },
+  'song-haenschen': {
+    0: {
+      type: 'explain',
+      text: L(
+        'Antonín Dvořák schrieb diese Melodie 1893 in Amerika, für seine Sinfonie «Aus der Neuen Welt». Später bekam sie einen Text: «Going Home» – nach Hause gehen.',
+        'Antonín Dvořák wrote this melody in America in 1893, for his “New World” Symphony. Later it got words: “Going Home”.',
+      ),
+      picture: { kind: 'sticker', sticker: 'moon' },
+    },
+    1: {
+      type: 'explain',
+      text: L(
+        'Diesmal stehen keine Namen unter den Noten – du liest sie selbst. Tipp: Tippe zuerst auf «Anhören», dann weisst du, wie es klingen soll.',
+        'This time there are no names below the notes – you read them yourself. Tip: tap “Listen” first, then you know how it should sound.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [64, 67, 67, 64, 62, 60] },
+    },
+    2: {
+      type: 'listen',
+      text: L(
+        'Hör dir den Anfang an: Geht die Melodie hinauf oder hinunter?',
+        'Listen to the beginning: does the melody go up or down?',
+      ),
+      answers: [L('Hinauf', 'Up'), L('Hinunter', 'Down')],
+      rounds: [
+        { notes: [64, 67, 67], answer: 0 },
+        { notes: [64, 62, 60], answer: 1 },
+      ],
+    },
+  },
+  'bass-lamb': {
+    0: {
+      type: 'explain',
+      text: L(
+        'Beethovens «Freude» kennst du aus der rechten Hand. Die gleiche Melodie, eine Oktave tiefer: So lernt die linke Hand am schnellsten – sie spielt etwas, das du schon im Ohr hast.',
+        'You know Beethoven’s “Ode to Joy” from the right hand. The same melody an octave lower: that is how the left hand learns fastest – it plays something you already have in your ear.',
+      ),
+      picture: { kind: 'sticker', sticker: 'star' },
+    },
+    1: {
+      type: 'explain',
+      text: L(
+        'Du brauchst C, D, E, F und G – die Finger 5, 4, 3, 2 und 1 der linken Hand.',
+        'You need C, D, E, F and G – fingers 5, 4, 3, 2 and 1 of the left hand.',
+      ),
+      picture: {
+        kind: 'keyboard',
+        from: 48,
+        to: 60,
+        labels: 'all',
+        fingering: [
+          [48, 5],
+          [50, 4],
+          [52, 3],
+          [53, 2],
+          [55, 1],
+        ],
+      },
+    },
+    2: {
+      type: 'listen',
+      text: L(
+        'Hör dir den Anfang an: Geht die Melodie hinauf oder hinunter?',
+        'Listen to the beginning: does the melody go up or down?',
+      ),
+      answers: [L('Hinauf', 'Up'), L('Hinunter', 'Down')],
+      rounds: [{ notes: [52, 52, 53, 55], answer: 0 }],
+    },
+  },
+};
+
+export function theoryFor(lessonId: string, world: 'kids' | 'journey' = 'kids'): TheoryStep[] {
+  const steps = LESSON_THEORY[lessonId] ?? [];
+  const adult = world === 'journey' ? ADULT_THEORY[lessonId] : undefined;
+  return adult ? steps.map((s, i) => adult[i] ?? s) : steps;
 }
+
+/** For tests: which steps the grown-ups' version replaces. */
+export const ADULT_THEORY_STEPS: Record<string, number[]> = Object.fromEntries(
+  Object.entries(ADULT_THEORY).map(([id, p]) => [id, Object.keys(p).map(Number)]),
+);
 
 /** How many questions the recap at the start of a chapter asks. */
 const RECAP_QUESTIONS = 3;

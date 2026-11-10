@@ -3,13 +3,7 @@ import { Box, Button, Group, SegmentedControl, Text, UnstyledButton } from '@man
 import { useElementSize } from '@mantine/hooks';
 import {
   IconChevronDown,
-  IconFileMusic,
   IconLock,
-  IconMetronome,
-  IconMusic,
-  IconPiano,
-  IconPlayerPlay,
-  IconSparkles,
   IconStarFilled,
   IconRepeat,
   IconTrophy,
@@ -18,12 +12,15 @@ import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import {
   CURRICULUM,
+  coreLessons,
   isLessonUnlocked,
   isReviewDue,
   localIsoDate,
   type Avatar,
   type Lesson,
   type ProgressDto,
+  type Outfit,
+  type WorldSet,
 } from '@klavio/shared';
 import { Figure } from '../components/Figure';
 import { useLocalized } from './useLocalized';
@@ -32,27 +29,26 @@ import { Landmark } from './Landmarks';
 import type { StickerKind } from './stickerKinds';
 import { Fog, Scenery, Snowfall, WorldGate } from './WorldScenery';
 import {
-  CHAPTER_COLORS,
   CHRISTMAS_STICKERS,
+  chapterColor,
   chapterVars,
-  isChristmasSeason,
+  formatAltitude,
   loadRevealed,
   saveRevealed,
   worldOf,
 } from './worlds';
 import classes from './LearningPath.module.css';
+import { LessonTypeIcon } from './LessonTypeIcon';
+import { lessonType } from './lessonType';
+import { useLessonFor } from './useLessonFor';
+import { hasPiece } from '../season/season';
+import { useSeason } from '../season/useSeason';
 
 const NODE = 72;
 const NODE_CURRENT = 88;
 
 function KindIcon({ lesson, size }: { lesson: Lesson; size: number }) {
-  const props = { size, 'aria-hidden': true } as const;
-  if (lesson.kind === 'song') return <IconMusic {...props} />;
-  if (lesson.kind === 'play') return <IconPlayerPlay {...props} />;
-  if (lesson.kind === 'read') return <IconFileMusic {...props} />;
-  if (lesson.kind === 'rhythm') return <IconMetronome {...props} />;
-  if (lesson.kind === 'improvise') return <IconSparkles {...props} />;
-  return <IconPiano {...props} />;
+  return <LessonTypeIcon type={lessonType(lesson)} size={size} />;
 }
 
 interface Point {
@@ -241,6 +237,8 @@ export function LearningPath({
   avatar,
   profileId,
   title,
+  worlds = 'kids',
+  outfit = null,
 }: {
   progress: ProgressDto['lessons'];
   currentLessonId: string;
@@ -248,9 +246,14 @@ export function LearningPath({
   profileId: string;
   /** heading drawn on the first world's background, so the map fills the whole panel */
   title?: React.ReactNode;
+  /** the colourful kids' worlds, or the journey down into «Die Hölle» and up to the summit */
+  worlds?: WorldSet;
+  /** the wardrobe piece of the figure on the path */
+  outfit?: Outfit | null;
 }) {
   const { t, i18n } = useTranslation();
   const loc = useLocalized();
+  const forMe = useLessonFor();
   const { ref, width } = useElementSize();
   const [toggled, setToggled] = useState<ReadonlySet<string>>(new Set());
   const toggle = (id: string) =>
@@ -260,7 +263,11 @@ export function LearningPath({
       else next.add(id);
       return next;
     });
-  const christmas = isChristmasSeason();
+  // Advent: the Christmas pieces arrive one by one
+  const season = useSeason();
+  const festiveStickers = hasPiece(season, 'stickers');
+  const snowy = hasPiece(season, 'snow');
+  const snowfall = hasPiece(season, 'pathSnow');
   // worlds the fog has already lifted from (read once per profile, so the lift plays once)
   const revealed = useMemo(() => loadRevealed(profileId), [profileId]);
   const completed = new Set(Object.keys(progress).filter((id) => progress[id]!.bestStars > 0));
@@ -284,11 +291,17 @@ export function LearningPath({
   let lessonNumber = 0;
   const sections = width
     ? CURRICULUM.map((chapter, ci) => {
-        const color = CHAPTER_COLORS[ci % CHAPTER_COLORS.length]!;
-        const earned = chapter.lessons.reduce((n, l) => n + (progress[l.id]?.bestStars ?? 0), 0);
-        const total = chapter.lessons.length * 3;
-        const done = chapter.lessons.filter((l) => completed.has(l.id)).length;
-        const finished = done === chapter.lessons.length;
+        const world = worldOf(chapter.id, ci, worlds);
+        const color = chapterColor(world, ci);
+        const earned = coreLessons(chapter).reduce(
+          (n, l) => n + (progress[l.id]?.bestStars ?? 0),
+          0,
+        );
+        const core = coreLessons(chapter);
+        const total = core.length * 3;
+        const done = core.filter((l) => completed.has(l.id)).length;
+        // bonus lessons don't count for finishing a chapter
+        const finished = done === core.length;
         const reached = isLessonUnlocked(chapter.lessons[0]!.id, completed);
         const defaultOpen = chapter.lessons.some((l) => l.id === currentLessonId);
         const open = defaultOpen !== toggled.has(chapter.id);
@@ -354,7 +367,7 @@ export function LearningPath({
         });
         return {
           chapter,
-          world: worldOf(chapter.id, ci),
+          world,
           ci,
           first,
           color,
@@ -394,11 +407,13 @@ export function LearningPath({
       {(title || stages.length > 1) && (
         <div
           className={`${classes.section} ${classes.mapTitle}`}
-          style={chapterVars(
-            CHAPTER_COLORS[
-              CURRICULUM.findIndex((c) => c.id === stageChapters[0]?.id) % CHAPTER_COLORS.length
-            ]!,
-          )}
+          style={(() => {
+            const i = Math.max(
+              0,
+              CURRICULUM.findIndex((c) => c.id === stageChapters[0]?.id),
+            );
+            return chapterVars(chapterColor(worldOf(CURRICULUM[i]!.id, i, worlds), i));
+          })()}
         >
           {title}
           {stages.length > 1 && (
@@ -423,7 +438,7 @@ export function LearningPath({
         const rows = points.length ? points[points.length - 1]!.row + 1 : 0;
         const emptyCells = points.length ? rows * sec.cols - points.length : 0;
         // decoration stickers: free spots only, chosen deterministically per chapter
-        const kinds = christmas ? CHRISTMAS_STICKERS : world.stickers;
+        const kinds = festiveStickers ? CHRISTMAS_STICKERS : world.stickers;
         const kind = (k: number) => kinds[(ci * 2 + k) % kinds.length]!;
         const stickers: { kind: StickerKind; x: number; y: number; size: number; tilt: number }[] =
           [];
@@ -463,9 +478,10 @@ export function LearningPath({
             key={chapter.id}
             className={`${classes.section} ${sec.reached ? '' : classes.foggy}`}
             style={{ ...vars, height }}
+            data-deep={(world.altitude ?? 0) < 0 || undefined}
             aria-labelledby={`chapter-${chapter.id}`}
           >
-            <Scenery world={world.id} chapterId={chapter.id} height={height} snowy={christmas} />
+            <Scenery world={world.id} chapterId={chapter.id} height={height} snowy={snowy} />
             {!narrow && (
               <Landmark
                 world={world.id}
@@ -520,9 +536,7 @@ export function LearningPath({
                 strokeLinecap={world.road.cap}
               />
             </svg>
-            {!first && (
-              <WorldGate style={{ left: markerX - 32, top: -FOOT - 2 }} snowy={christmas} />
-            )}
+            {!first && <WorldGate style={{ left: markerX - 32, top: -FOOT - 2 }} snowy={snowy} />}
 
             {/* signpost: a flag on the road, title and status beside it */}
             <ChapterFlag
@@ -542,6 +556,13 @@ export function LearningPath({
               <Box component="span" className={classes.signpostText}>
                 <Text component="span" display="block" size="xs" fw={800} tt="uppercase" c="dimmed">
                   {t('path.chapter', { n: ci + 1 })} · {t(`path.worlds.${world.id}`)}
+                  {world.altitude !== undefined && (
+                    <>
+                      {' '}
+                      ·{' '}
+                      {t('journey.altitude', { m: formatAltitude(world.altitude, i18n.language) })}
+                    </>
+                  )}
                 </Text>
                 <Text
                   component="span"
@@ -610,10 +631,12 @@ export function LearningPath({
                         : unlocked
                           ? 'open'
                           : 'locked';
-                    const title = loc(lesson.title);
+                    const title = lesson.bonus
+                      ? `${t('path.bonus')}: ${loc(forMe(lesson).title)}`
+                      : loc(forMe(lesson).title);
                     const label = [
                       t('path.lessonN', { n: number }),
-                      title,
+                      `${t(`path.types.${lessonType(lesson)}`)}: ${title}`,
                       state === 'locked'
                         ? t('path.locked')
                         : stars > 0
@@ -678,7 +701,7 @@ export function LearningPath({
                         )}
                         {current && (
                           <span className={classes.figure} data-testid="path-figure">
-                            <Figure avatar={avatar} mood="happy" size={62} />
+                            <Figure avatar={avatar} outfit={outfit} mood="happy" size={62} />
                           </span>
                         )}
                         <Text
@@ -748,7 +771,7 @@ export function LearningPath({
           </Button>
         </div>
       )}
-      {christmas && totalHeight > 0 && <Snowfall height={totalHeight} />}
+      {snowfall && totalHeight > 0 && <Snowfall height={totalHeight} />}
     </div>
   );
 }

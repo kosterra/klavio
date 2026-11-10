@@ -117,7 +117,7 @@ export async function seedCompletedLessons(page: Page, lessonIds: string[]) {
 
 /** Skips the "Entdecken" part if the lesson starts with it; returns at the start card. */
 export async function skipTheory(page: Page) {
-  const start = page.getByRole('button', { name: 'Los geht’s!' });
+  const start = page.getByTestId('lesson-start');
   const skip = page.getByRole('button', { name: 'Überspringen' });
   await expect(start.or(skip)).toBeVisible();
   if (await skip.isVisible()) await skip.click();
@@ -127,5 +127,46 @@ export async function skipTheory(page: Page) {
 /** Skips the theory part (if any) and starts the lesson. */
 export async function startLesson(page: Page) {
   await skipTheory(page);
-  await page.getByRole('button', { name: 'Los geht’s!' }).click();
+  await page.getByTestId('lesson-start').click();
+}
+
+/**
+ * «Im Takt»: starts the run and plays every note of the song on the screen
+ * keys exactly on time (scheduled in the page, on the app's clock).
+ */
+export async function playTimedSong(page: Page): Promise<string> {
+  const song = page.getByTestId('timed-song');
+  await page.getByTestId('timed-start').click();
+  await expect(song).toHaveAttribute('data-first-at', /\d/);
+  await song.evaluate((el) => {
+    const first = Number(el.dataset.firstAt);
+    const beatMs = Number(el.dataset.beatMs);
+    const notes = JSON.parse(el.dataset.notes!) as [number, number][];
+    const names = ['C', 'Cis', 'D', 'Dis', 'E', 'F', 'Fis', 'G', 'Gis', 'A', 'Ais', 'H'];
+    for (const [midi, at] of notes) {
+      setTimeout(
+        () => {
+          const key = document.querySelector<HTMLButtonElement>(
+            `button[aria-label="${names[midi % 12]}${Math.floor(midi / 12) - 1}"]`,
+          );
+          key?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+          setTimeout(
+            () => key?.dispatchEvent(new PointerEvent('pointerup', { bubbles: true })),
+            60,
+          );
+        },
+        first + at * beatMs - performance.now(),
+      );
+    }
+  });
+  const result = page.getByTestId('timed-result');
+  await expect(result).toBeVisible({ timeout: 90_000 });
+  // read at once: a good run goes on by itself after a moment
+  return (await result.textContent()) ?? '';
+}
+
+/** A new profile starts with the start-up questions: skip them. */
+export async function skipSetup(page: Page) {
+  await page.getByTestId('setup-skip').click();
+  await expect(page.getByTestId('setup')).toHaveCount(0);
 }

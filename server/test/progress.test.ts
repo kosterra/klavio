@@ -34,7 +34,9 @@ async function learner(email = 'kid@example.ch') {
   await call(jar, 'POST', '/api/auth/email/request', { email });
   const code = /(\d{6})/.exec(ctx.outbox.at(-1)!.text)![1];
   await call(jar, 'POST', '/api/auth/email/verify', { email, code, displayName: 'Familie' });
-  const profile = (await call(jar, 'POST', '/api/profiles', { name: 'Lina' })).json();
+  const profile = (
+    await call(jar, 'POST', '/api/profiles', { name: 'Lina', birthYear: 2016 })
+  ).json();
   await call(jar, 'POST', '/api/profiles/select', { profileId: profile.id });
   return { jar, profileId: profile.id as string };
 }
@@ -139,7 +141,7 @@ describe('lesson progress', () => {
     const a = (await complete(jar, first!.id, { localDate: yesterday })).json();
     expect(a.streak.current).toBe(1);
     const b = (await complete(jar, second!.id)).json();
-    expect(b.streak).toEqual({ current: 2, longest: 2, lastActiveDate: today });
+    expect(b.streak).toMatchObject({ current: 2, longest: 2, lastActiveDate: today });
     expect(b.xp).toBeGreaterThanOrEqual(50);
     expect(b).toMatchObject({ level: 2, leveledUp: true });
   });
@@ -148,7 +150,7 @@ describe('lesson progress', () => {
     const { jar } = await learner();
     await complete(jar, first!.id);
     const late = (await complete(jar, second!.id, { localDate: addDays(today, -5) })).json();
-    expect(late.streak).toEqual({ current: 1, longest: 1, lastActiveDate: today });
+    expect(late.streak).toMatchObject({ current: 1, longest: 1, lastActiveDate: today });
     expect(late.today).toMatchObject({ date: addDays(today, -5), seconds: 120 });
   });
 
@@ -168,7 +170,9 @@ describe('lesson progress', () => {
   it('is scoped to the profile and removed with it', async () => {
     const { jar, profileId } = await learner();
     await complete(jar, first!.id);
-    const other = (await call(jar, 'POST', '/api/profiles', { name: 'Ben' })).json();
+    const other = (
+      await call(jar, 'POST', '/api/profiles', { name: 'Ben', birthYear: 2018 })
+    ).json();
     await call(jar, 'POST', '/api/profiles/select', { profileId: other.id });
     expect((await call(jar, 'GET', `/api/progress?date=${today}`)).json().lessons).toEqual({});
 

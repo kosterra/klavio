@@ -19,6 +19,7 @@ import { AppLayout } from './components/AppLayout';
 import { ReloadPrompt } from './components/ReloadPrompt';
 import { Mascot } from './components/Mascot';
 import { WhatsNewPage } from './whatsNew/WhatsNewPage';
+import { PrivacyPage } from './privacy/PrivacyPage';
 import { WelcomePage } from './pages/WelcomePage';
 import { EmailLoginPage } from './pages/EmailLoginPage';
 import { ProfilesPage } from './pages/ProfilesPage';
@@ -46,6 +47,19 @@ const QuickRoundPage = lazy(() =>
 );
 const KnowledgePage = lazy(() =>
   import('./pages/KnowledgePage').then((m) => ({ default: m.KnowledgePage })),
+);
+const FamilyPage = lazy(() =>
+  import('./family/FamilyPage').then((m) => ({ default: m.FamilyPage })),
+);
+const MetronomePage = lazy(() =>
+  import('./pages/MetronomePage').then((m) => ({ default: m.MetronomePage })),
+);
+const FreePlayPage = lazy(() =>
+  import('./pages/FreePlayPage').then((m) => ({ default: m.FreePlayPage })),
+);
+const SongsPage = lazy(() => import('./pages/SongsPage').then((m) => ({ default: m.SongsPage })));
+const OnboardingPage = lazy(() =>
+  import('./pages/OnboardingPage').then((m) => ({ default: m.OnboardingPage })),
 );
 const LessonPage = lazy(() =>
   import('./pages/LessonPage').then((m) => ({ default: m.LessonPage })),
@@ -148,6 +162,7 @@ export function App() {
                 <Route element={<RequireProfile />}>
                   <Route path="/lesson/:lessonId" element={<LessonPage />} />
                   <Route path="/quick" element={<QuickRoundPage />} />
+                  <Route path="/start" element={<OnboardingPage />} />
                 </Route>
                 <Route element={<AppLayout />}>
                   <Route
@@ -155,6 +170,14 @@ export function App() {
                     element={
                       <ParentGate>
                         <AccountPage />
+                      </ParentGate>
+                    }
+                  />
+                  <Route
+                    path="/family"
+                    element={
+                      <ParentGate>
+                        <FamilyPage />
                       </ParentGate>
                     }
                   />
@@ -196,11 +219,15 @@ export function App() {
                     />
                     <Route path="/profile" element={<ProfileSettingsPage />} />
                     <Route path="/knowledge" element={<KnowledgePage />} />
+                    <Route path="/songs" element={<SongsPage />} />
+                    <Route path="/play" element={<FreePlayPage />} />
+                    <Route path="/metronome" element={<MetronomePage />} />
                   </Route>
                 </Route>
               </Route>
               {/* for visitors and learners alike */}
               <Route path="/whats-new" element={<WhatsNewPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>

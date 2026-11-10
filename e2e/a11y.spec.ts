@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
 import { audit } from './audit';
-import { addVirtualAuthenticator, signUpWithEmail, uniqueEmail } from './helpers';
+import { addVirtualAuthenticator, signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
 
 test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ page, context }) => {
   test.setTimeout(240_000); // eleven axe audits; slow on the on-demand dev server
@@ -18,8 +18,10 @@ test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ p
 
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Kim');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await audit(page);
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await page.getByRole('heading', { name: 'Hallo Kim!' }).waitFor();
   await audit(page);
 
@@ -35,8 +37,11 @@ test('key screens have no WCAG 2.1 AA violations (Kids and Classic)', async ({ p
   await page.goto('/profiles');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Max');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByTestId('profile-more').click();
   await page.getByRole('dialog').getByText('Classic', { exact: true }).click();
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await page.getByRole('heading', { name: 'Hallo Max!' }).waitFor();
   await audit(page);
   await page.goto('/account');

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Group, Stack, Text } from '@mantine/core';
 import { IconCheck } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+import classes from './PlayAlong.module.css';
 import { midiToPitchName, type PlayAlongExercise as Spec } from '@klavio/shared';
 import { useNoteEvents } from '../input/noteBus';
 import { BuddySays } from '../components/BuddySays';
@@ -30,6 +31,7 @@ export function PlayAlongExercise({
   useEffect(() => () => clearTimeout(timer.current), []);
 
   const sequence = exercise.sequences[seqIndex]!;
+  const fingers = exercise.fingers?.[seqIndex];
   const expected = sequence[pos];
   const finishedSeq = pos >= sequence.length;
 
@@ -91,7 +93,7 @@ export function PlayAlongExercise({
               key={i}
               role="listitem"
               aria-current={now ? 'step' : undefined}
-              aria-label={`${midiToPitchName(m, lang)}${done ? `, ${t('lesson.played')}` : ''}`}
+              aria-label={`${midiToPitchName(m, lang, exercise.spelling)}${done ? `, ${t('lesson.played')}` : ''}`}
               style={{
                 minWidth: kids ? 64 : 52,
                 height: kids ? 64 : 52,
@@ -112,27 +114,32 @@ export function PlayAlongExercise({
               }}
             >
               {done && <IconCheck size={16} aria-hidden />}
-              {midiToPitchName(m, lang)}
+              {midiToPitchName(m, lang, exercise.spelling)}
+              {fingers?.[i] && (
+                <sup className={classes.finger} aria-label={t('lesson.finger', { n: fingers[i] })}>
+                  {fingers[i]}
+                </sup>
+              )}
             </div>
           );
         })}
       </Group>
       <Text size="sm" c="dimmed" mih={22}>
         {wrong !== null
-          ? t('lesson.wrongPlay', { note: midiToPitchName(wrong, lang) })
+          ? t('lesson.wrongPlay', { note: midiToPitchName(wrong, lang, exercise.spelling) })
           : t('lesson.part', { n: seqIndex + 1, total: exercise.sequences.length })}
       </Text>
-      <div style={{ width: '100%' }}>
-        <VirtualKeyboard
-          from={lesson.keyboard.from}
-          to={lesson.keyboard.to}
-          labels={lesson.keyLabels}
-          height={kids ? 200 : 170}
-          interactive={inputMode === 'screen'}
-          hints={hint}
-          wrong={wrong !== null ? [wrong] : []}
-        />
-      </div>
+      <VirtualKeyboard
+        dock
+        from={lesson.keyboard.from}
+        to={lesson.keyboard.to}
+        labels={lesson.keyLabels}
+        height={kids ? 200 : 170}
+        interactive={inputMode === 'screen'}
+        hints={hint}
+        fingers={hint.length && fingers?.[pos] ? { [hint[0]!]: fingers[pos]! } : undefined}
+        wrong={wrong !== null ? [wrong] : []}
+      />
     </Stack>
   );
 }

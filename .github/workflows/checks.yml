@@ -32,6 +32,7 @@ jobs:
       # the server's tests run against an in-memory MongoDB (mongodb-memory-server)
       - run: npm test
       - run: node --test scripts/version.test.mjs
+      - run: npm run openapi -- --check
       - run: npm run build
 
   # the app in a browser against the real server, MongoDB and Mailpit (e-mail codes)

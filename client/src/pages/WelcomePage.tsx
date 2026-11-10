@@ -11,7 +11,10 @@ import {
 } from '@mantine/core';
 import {
   IconArrowRight,
+  IconBrandDocker,
   IconBrandGithub,
+  IconGift,
+  IconServer,
   IconBulb,
   IconCode,
   IconDeviceTablet,
@@ -27,6 +30,7 @@ import {
 } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import { APP_CONFIG, CURRICULUM } from '@klavio/shared';
 import { useSession } from '../auth/session';
 import { playMelody } from '../audio/synth';
@@ -40,6 +44,8 @@ import { ThemeSwitch } from '../landing/ThemeSwitch';
 import { LanguageSwitch } from '../landing/LanguageSwitch';
 import { DuckParade, NoteRain } from '../landing/Effects';
 import { tapCounter, useKonami } from '../landing/easterEggs';
+import { SiteFooter } from '../components/SiteFooter';
+import { InstallHint } from '../components/InstallHint';
 import classes from '../landing/Landing.module.css';
 
 const FEATURES = [
@@ -67,6 +73,7 @@ const ELISE = [76, 75, 76, 75, 76, 71, 74, 72, 69];
  */
 export function WelcomePage() {
   const { t } = useTranslation();
+  usePageTitle(null, '/welcome');
   const loc = useLocalized();
   const { config } = useSession();
   const registrationOpen = config?.registrationOpen ?? true;
@@ -123,8 +130,11 @@ export function WelcomePage() {
               <Title order={1} className={classes.headline}>
                 {t('landing.headline')}
               </Title>
-              <Text fz="xl" className={classes.lead}>
+              <Text fz="xl" className={`${classes.lead} ${classes.leadLong}`}>
                 {t('landing.lead')}
+              </Text>
+              <Text fz="lg" className={`${classes.lead} ${classes.leadShort}`}>
+                {t('landing.leadShort')}
               </Text>
               <Group gap="sm" mt="lg">
                 {cta}
@@ -139,6 +149,9 @@ export function WelcomePage() {
                 </Button>
               </Group>
               <Group gap="lg" mt="lg" className={classes.badges}>
+                <span>
+                  <IconGift size={18} aria-hidden /> {t('landing.badgeFree')}
+                </span>
                 <span>
                   <IconShieldLock size={18} aria-hidden /> {t('landing.badgeAudio')}
                 </span>
@@ -185,6 +198,33 @@ export function WelcomePage() {
                 </Title>
                 <Text>{t(`landing.steps.${s.key}.text`)}</Text>
               </div>
+            ))}
+          </SimpleGrid>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------- what it looks like */}
+      <section className={`${classes.section} ${classes.tinted}`} aria-labelledby="look-title">
+        <Container size="lg">
+          <Title order={2} ta="center" id="look-title" className={classes.sectionTitle}>
+            {t('landing.lookTitle')}
+          </Title>
+          <Text ta="center" fz="lg" maw={680} mx="auto">
+            {t('landing.lookText')}
+          </Text>
+          <SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl" mt="xl">
+            {(['path', 'lesson'] as const).map((shot) => (
+              <figure key={shot} className={classes.shot}>
+                <img
+                  src={`/screens/${shot}.webp`}
+                  alt={t(`landing.look.${shot}Alt`)}
+                  width={1200}
+                  height={shot === 'path' ? 834 : 656}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <figcaption>{t(`landing.look.${shot}`)}</figcaption>
+              </figure>
             ))}
           </SimpleGrid>
         </Container>
@@ -249,6 +289,40 @@ export function WelcomePage() {
         </Container>
       </section>
 
+      {/* ----------------------------------------------- adults: the journey */}
+      <section className={classes.section} aria-labelledby="journey-title">
+        <Container size="lg">
+          <div className={classes.journey}>
+            <div>
+              <Text fw={800} tt="uppercase" size="sm" className={classes.kicker}>
+                {t('landing.journeyKicker')}
+              </Text>
+              <Title order={2} id="journey-title" className={classes.sectionTitle}>
+                {t('landing.journeyTitle')}
+              </Title>
+              <Text fz="lg" mt="sm">
+                {t('landing.journeyText')}
+              </Text>
+              <ul className={classes.checks}>
+                {(['dream', 'hell', 'choose'] as const).map((k) => (
+                  <li key={k}>{t(`landing.journey.${k}`)}</li>
+                ))}
+              </ul>
+            </div>
+            <figure className={classes.shot}>
+              <img
+                src="/screens/journey.webp"
+                alt={t('landing.journeyAlt')}
+                width={1100}
+                height={391}
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+          </div>
+        </Container>
+      </section>
+
       {/* -------------------------------------------------------- try it */}
       <section className={`${classes.section} ${classes.tinted}`} aria-labelledby="try-title">
         <Container size="sm">
@@ -288,6 +362,50 @@ export function WelcomePage() {
         </Container>
       </section>
 
+      {/* --------------------------------------------------- run it yourself */}
+      <section className={classes.section} aria-labelledby="host-title">
+        <Container size="lg">
+          <div className={classes.privacy}>
+            <ThemeIcon size={72} radius="xl" color="grape" aria-hidden>
+              <IconServer size={40} />
+            </ThemeIcon>
+            <div>
+              <Title order={2} id="host-title" className={classes.sectionTitle}>
+                {t('landing.hostTitle')}
+              </Title>
+              <Text fz="lg" mt="xs">
+                {t('landing.hostText')}
+              </Text>
+              <pre className={classes.code}>
+                <code>docker pull kosterra/klavio</code>
+              </pre>
+              <Group gap="sm" mt="md">
+                <Button
+                  component="a"
+                  href={`${APP_CONFIG.sourceUrl}#readme`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="light"
+                  leftSection={<IconBrandGithub size={20} />}
+                >
+                  {t('landing.hostGuide')}
+                </Button>
+                <Button
+                  component="a"
+                  href="https://hub.docker.com/r/kosterra/klavio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  variant="subtle"
+                  leftSection={<IconBrandDocker size={20} />}
+                >
+                  Docker Hub
+                </Button>
+              </Group>
+            </div>
+          </div>
+        </Container>
+      </section>
+
       {/* ------------------------------------------------------------- faq */}
       <section className={`${classes.section} ${classes.tinted}`} aria-labelledby="faq-title">
         <Container size="sm">
@@ -295,7 +413,7 @@ export function WelcomePage() {
             {t('landing.faqTitle')}
           </Title>
           <Accordion variant="separated" radius="lg" mt="lg">
-            {(['piano', 'who', 'devices', 'offline'] as const).map((k) => (
+            {(['cost', 'adults', 'piano', 'who', 'devices', 'offline'] as const).map((k) => (
               <Accordion.Item key={k} value={k}>
                 <Accordion.Control>{t(`landing.faq.${k}.q`)}</Accordion.Control>
                 <Accordion.Panel>{t(`landing.faq.${k}.a`)}</Accordion.Panel>
@@ -320,31 +438,8 @@ export function WelcomePage() {
         </Container>
       </section>
 
-      {/* ---------------------------------------------------------- footer */}
-      <footer className={classes.footer}>
-        <Container size="lg">
-          <Group justify="space-between" gap="sm">
-            <Group gap="xs">
-              <IconPiano size={20} aria-hidden />
-              <Text fw={800}>{APP_CONFIG.name}</Text>
-              <Text size="sm">{t('about.license', { license: APP_CONFIG.license })}</Text>
-            </Group>
-            <Group gap="lg">
-              <Link to="/whats-new" className={classes.footerLink}>
-                {t('whatsNew.link')}
-              </Link>
-              <a
-                href={APP_CONFIG.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={classes.footerLink}
-              >
-                <IconBrandGithub size={18} aria-hidden /> {t('about.source')}
-              </a>
-            </Group>
-          </Group>
-        </Container>
-      </footer>
+      <SiteFooter />
+      <InstallHint variant="banner" />
     </div>
   );
 }

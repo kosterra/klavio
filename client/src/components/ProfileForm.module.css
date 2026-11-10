@@ -16,3 +16,7 @@
     outline-offset: 2px;
   }
 }
+
+.flip {
+  transform: rotate(180deg);
+}

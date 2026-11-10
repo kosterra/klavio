@@ -223,7 +223,7 @@ describe('admin switch: registration open/closed', () => {
     const admin = new CookieJar();
     await makeAdmin(admin);
     const res = await call(admin, 'PUT', '/api/admin/settings', { registrationOpen: false });
-    expect(res.json()).toEqual({ registrationOpen: false });
+    expect(res.json()).toMatchObject({ registrationOpen: false });
     expect((await call(anon, 'GET', '/api/config')).json().registrationOpen).toBe(false);
   });
 
@@ -424,7 +424,11 @@ describe('profiles', () => {
     const jar = new CookieJar();
     await signUp(jar);
 
-    const created = await call(jar, 'POST', '/api/profiles', { name: 'Lina', avatar: 'owl' });
+    const created = await call(jar, 'POST', '/api/profiles', {
+      name: 'Lina',
+      avatar: 'owl',
+      birthYear: 2016,
+    });
     expect(created.statusCode).toBe(201);
     const profile = created.json();
     expect(profile).toMatchObject({
@@ -460,7 +464,7 @@ describe('profiles', () => {
   it('rejects calibration outside the plausible range', async () => {
     const jar = new CookieJar();
     await signUp(jar);
-    const p = (await call(jar, 'POST', '/api/profiles', { name: 'X' })).json();
+    const p = (await call(jar, 'POST', '/api/profiles', { name: 'X', birthYear: 2016 })).json();
     expect(
       (await call(jar, 'PATCH', `/api/profiles/${p.id}`, { calibration: { a4Hz: 500 } }))
         .statusCode,
@@ -473,7 +477,7 @@ describe('account deletion', () => {
     const jar = new CookieJar();
     await signUp(jar);
     await addPasskey(jar, 'del');
-    await call(jar, 'POST', '/api/profiles', { name: 'Lina' });
+    await call(jar, 'POST', '/api/profiles', { name: 'Lina', birthYear: 2016 });
     expect((await call(jar, 'DELETE', '/api/account')).statusCode).toBe(204);
     expect((await call(jar, 'GET', '/api/auth/me')).statusCode).toBe(401);
     const { Profile, Passkey, User } = await import('../src/models/index.js');

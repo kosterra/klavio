@@ -1,6 +1,12 @@
 import { expect, test, type Page } from '@playwright/test';
 import { LESSONS } from '@klavio/shared';
-import { seedCompletedLessons, signUpWithEmail, uniqueEmail, startLesson } from './helpers';
+import {
+  seedCompletedLessons,
+  signUpWithEmail,
+  uniqueEmail,
+  startLesson,
+  skipSetup,
+} from './helpers';
 import { audit } from './audit';
 
 /**
@@ -37,7 +43,9 @@ test('rhythm: count-in, play in time, retry counts as practice', async ({ page }
   await signUpWithEmail(page, uniqueEmail('rhythm'), 'Familie');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Leo');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   const idx = LESSONS.findIndex((l) => l.id === 'rhythm-quarters');
   await seedCompletedLessons(
@@ -72,4 +80,33 @@ test('rhythm: count-in, play in time, retry counts as practice', async ({ page }
 
   // the retried bar does not cost stars
   await expect(page.getByRole('heading', { name: 'Perfekt!' })).toBeVisible();
+});
+
+test('6/8: the metronome counts six eighths; a bar on time is perfect', async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.addInitScript(() => {
+    navigator.mediaDevices.getUserMedia = () =>
+      Promise.reject(new DOMException('denied', 'NotAllowedError'));
+  });
+  await signUpWithEmail(page, uniqueEmail('six'), 'Familie');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Leo');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
+  await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
+  const idx = LESSONS.findIndex((l) => l.id === 'meter-six-eight');
+  await seedCompletedLessons(
+    page,
+    LESSONS.slice(0, idx).map((l) => l.id),
+  );
+  await page.goto('/lesson/meter-six-eight');
+  await startLesson(page);
+  await expect(page.getByRole('img', { name: 'Rhythmus 1 von 6' }).locator('svg')).toBeVisible();
+  // six count circles instead of three
+  await expect(page.getByTestId('rhythm').getByText('6', { exact: true })).toBeVisible();
+  await audit(page);
+  // qd qd: on 1 and 4 (beats 0 and 1.5 in quarters)
+  await playBar(page, [0, 1.5]);
+  await expect(page.getByText('Super im Takt!')).toBeVisible();
 });

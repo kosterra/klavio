@@ -13,6 +13,20 @@
   --world-hill: color-mix(in srgb, var(--chapter-color) 22%, var(--klavio-surface));
   --world-hill-2: color-mix(in srgb, var(--chapter-color) 34%, var(--klavio-surface));
   --world-outline: color-mix(in srgb, var(--chapter-dark) 45%, var(--klavio-surface));
+  /* behind the docked keyboard: the colour at the bottom of the sky */
+  --klavio-dock-bg: color-mix(in srgb, var(--chapter-color) 6%, var(--klavio-bg-kids));
+}
+
+/* Classic: the same world colour, only as a quiet wash at the top */
+.calm {
+  --klavio-dock-bg: var(--klavio-bg-classic);
+
+  min-height: 100dvh;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--chapter-color) 11%, var(--klavio-bg-classic)) 0,
+    var(--klavio-bg-classic) 420px
+  );
 }
 
 .scenery {
@@ -22,4 +36,131 @@
   bottom: 0;
   height: 40px;
   pointer-events: none;
+}
+
+/* «Ich höre: E» – a small chip under the top bar */
+.heard {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 800;
+  color: var(--mantine-color-dimmed);
+  background: var(--klavio-surface);
+  border: 1px solid var(--mantine-color-default-border);
+  transition:
+    color 150ms,
+    border-color 150ms;
+}
+
+.heard span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.heard[data-fresh] {
+  color: var(--klavio-success);
+  border-color: var(--mantine-color-teal-5);
+}
+
+.heardPop {
+  animation: heard-pop 220ms ease-out both;
+}
+
+@keyframes heard-pop {
+  from {
+    transform: scale(0.8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heardPop {
+    animation: none;
+  }
+}
+
+/* ------------------------------------------------------- stage lighting
+   Story moments (Entdecken, the start, the result) take place in Klavio's own
+   colours, like the public page; while playing the light goes down to the
+   calm chapter colour above, so the keys and notes stand out. A cross-fade,
+   because gradients themselves don't animate. */
+.lit {
+  position: relative;
+  isolation: isolate;
+}
+
+.lit::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 700ms ease;
+  background:
+    radial-gradient(circle at 15% 20%, rgb(255 255 255 / 18%), transparent 30%),
+    radial-gradient(circle at 85% 10%, rgb(255 212 59 / 35%), transparent 28%),
+    linear-gradient(
+      160deg,
+      var(--mantine-color-indigo-7) 0%,
+      var(--mantine-color-grape-7) 55%,
+      var(--mantine-color-orange-6) 100%
+    );
+}
+
+:global([data-mantine-color-scheme='dark']) .lit::before {
+  background:
+    radial-gradient(circle at 15% 20%, rgb(255 255 255 / 8%), transparent 30%),
+    radial-gradient(circle at 85% 10%, rgb(255 212 59 / 16%), transparent 28%),
+    linear-gradient(
+      160deg,
+      var(--mantine-color-indigo-9) 0%,
+      var(--mantine-color-grape-9) 55%,
+      var(--mantine-color-orange-9) 100%
+    );
+}
+
+.lit[data-light='story']::before {
+  opacity: 1;
+}
+
+/* Classic: the same light, a touch calmer */
+.calm.lit[data-light='story']::before {
+  opacity: 0.85;
+}
+
+/* the top bar floats on the colours as a bright strip */
+.hud {
+  border-radius: 999px;
+  transition:
+    background-color 700ms ease,
+    box-shadow 700ms ease;
+}
+
+.lit[data-light='story'] .hud {
+  padding: 4px 10px 4px 4px;
+  background: var(--klavio-surface);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 18%);
+}
+
+/* on a big screen the card sits in the middle of the stage, not at its top */
+@media (min-width: 48em) and (min-height: 40em) {
+  .storyStack {
+    min-height: calc(100dvh - 2 * var(--mantine-spacing-md));
+  }
+
+  .storyStack > :last-child {
+    margin-block: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lit::before,
+  .hud {
+    transition: none;
+  }
 }

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Box, Loader, useComputedColorScheme } from '@mantine/core';
-import { loadVexFlow, midiToVexKey } from './vexflow';
+import { spellingOf, type KeySignature, type Spelling } from '@klavio/shared';
+import { accidentalFor, loadVexFlow, midiToVexKey } from './vexflow';
 
 export interface StaffNote {
   midi: number;
@@ -10,6 +11,10 @@ export interface StaffNote {
   state?: 'current' | 'done' | 'wrong';
   /** Small text below the note (e.g. its name). */
   label?: string;
+  /** Finger number above the note (1 = thumb … 5 = little finger). */
+  finger?: number;
+  /** Tied to the next note: drawn with a tie arc. */
+  tie?: boolean;
 }
 
 interface Props {
@@ -23,6 +28,10 @@ interface Props {
   height?: number;
   /** Text alternative for screen readers. */
   label: string;
+  /** Key signature after the clef (G major: F♯, F major: B♭). */
+  keySignature?: KeySignature;
+  /** Black keys with ♭ or ♯ (default: as the key signature says, else ♯). */
+  spelling?: Spelling;
 }
 
 const COLORS = {
@@ -32,7 +41,17 @@ const COLORS = {
 };
 
 /** One line of music, drawn with VexFlow as SVG and scaled to the container width. */
-export function Staff({ clef, notes, bars: barsProp, time, height = 160, label }: Props) {
+export function Staff({
+  clef,
+  notes,
+  bars: barsProp,
+  time,
+  height = 160,
+  label,
+  keySignature = 'C',
+  spelling: spellingProp,
+}: Props) {
+  const spelling = spellingProp ?? spellingOf(keySignature);
   const bars = barsProp ?? [notes ?? []];
   const host = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
@@ -48,7 +67,7 @@ export function Staff({ clef, notes, bars: barsProp, time, height = 160, label }
   }, []);
 
   const scheme = useComputedColorScheme('light');
-  const key = JSON.stringify({ clef, bars, time, height, width, scheme });
+  const key = JSON.stringify({ clef, bars, time, height, width, scheme, keySignature, spelling });
   useEffect(() => {
     const el = host.current;
     if (!el || width < 50) return;
@@ -74,15 +93,18 @@ export function Staff({ clef, notes, bars: barsProp, time, height = 160, label }
       const top = (height / scale - 90) / 2 - (bars.some((b) => b.some((n) => n.label)) ? 10 : 0);
       const [num = 4, den = 4] = (time ?? '4/4').split('/').map(Number);
       // the first bar also carries clef and time signature
-      const extra = time ? 70 : 45;
+      const extra = (time ? 70 : 45) + (keySignature !== 'C' ? 18 : 0);
       const barWidth = (total - extra) / bars.length;
 
       let x = left;
+      // every drawn note with its tie flag, to draw the tie arcs at the end
+      const drawn: { note: InstanceType<typeof VF.StaveNote>; tie?: boolean }[] = [];
       bars.forEach((bar, i) => {
         const w = barWidth + (i === 0 ? extra : 0);
         const stave = new VF.Stave(x, top, w);
         if (i === 0) {
           stave.addClef(clef);
+          if (keySignature !== 'C') stave.addKeySignature(keySignature);
           if (time) stave.addTimeSignature(time);
         }
         if (i === bars.length - 1 && bars.length > 1) stave.setEndBarType(VF.Barline.type.SINGLE);
@@ -93,9 +115,10 @@ export function Staff({ clef, notes, bars: barsProp, time, height = 160, label }
           const duration = n.duration ?? 'w';
           const rest = duration.endsWith('r');
           // rests sit in the middle of the staff, whatever the pitch
-          const vexKey = rest ? (clef === 'bass' ? 'd/3' : 'b/4') : midiToVexKey(n.midi);
+          const vexKey = rest ? (clef === 'bass' ? 'd/3' : 'b/4') : midiToVexKey(n.midi, spelling);
           const note = new VF.StaveNote({ keys: [vexKey], duration, clef });
-          if (!rest && vexKey.includes('#')) note.addModifier(new VF.Accidental('#'), 0);
+          const sign = rest ? null : accidentalFor(n.midi, spelling, keySignature);
+          if (sign) note.addModifier(new VF.Accidental(sign), 0);
           if (/^\w+d$/.test(duration) && !rest) VF.Dot.buildAndAttach([note], { all: true });
           if (n.label) {
             note.addModifier(
@@ -105,7 +128,16 @@ export function Staff({ clef, notes, bars: barsProp, time, height = 160, label }
               0,
             );
           }
+          if (n.finger && !rest) {
+            note.addModifier(
+              new VF.Annotation(String(n.finger))
+                .setFont('Nunito Variable', 12, 'bold')
+                .setVerticalJustification(VF.Annotation.VerticalJustify.TOP),
+              0,
+            );
+          }
           if (n.state) note.setStyle({ fillStyle: COLORS[n.state], strokeStyle: COLORS[n.state] });
+          drawn.push({ note, tie: n.tie });
           return note;
         });
         if (!staveNotes.length) return;
@@ -116,6 +148,18 @@ export function Staff({ clef, notes, bars: barsProp, time, height = 160, label }
         new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
         voice.draw(ctx, stave);
         beams.forEach((b) => b.setContext(ctx).draw());
+      });
+      drawn.forEach(({ note, tie }, i) => {
+        const next = drawn[i + 1];
+        if (!tie || !next) return;
+        new VF.StaveTie({
+          firstNote: note,
+          lastNote: next.note,
+          firstIndexes: [0],
+          lastIndexes: [0],
+        })
+          .setContext(ctx)
+          .draw();
       });
       const svg = el.querySelector('svg');
       svg?.setAttribute('aria-hidden', 'true');

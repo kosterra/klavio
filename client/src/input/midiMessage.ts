@@ -11,6 +11,16 @@ export interface MidiNote {
  * Decodes raw MIDI bytes. Only note on/off are relevant for exercises;
  * "note on" with velocity 0 is the common running-status way to say note off.
  */
+/**
+ * The sustain pedal (controller 64): true = pressed (values from 64 up),
+ * false = released, null = not a pedal message.
+ */
+export function parsePedalMessage(data: ArrayLike<number>): boolean | null {
+  if (data.length < 3) return null;
+  if ((data[0]! & 0xf0) !== 0xb0 || (data[1]! & 0x7f) !== 64) return null;
+  return (data[2]! & 0x7f) >= 64;
+}
+
 export function parseMidiMessage(data: ArrayLike<number>): MidiNote | null {
   if (data.length < 3) return null;
   const status = data[0]! & 0xf0;

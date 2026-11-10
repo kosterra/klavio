@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { signUpWithEmail, uniqueEmail, skipTheory } from './helpers';
+import { signUpWithEmail, uniqueEmail, skipTheory, skipSetup } from './helpers';
 import { audit } from './audit';
 
 const key = (page: Page, name: string) => page.getByRole('button', { name, exact: true });
@@ -24,7 +24,9 @@ test('lessons work offline; results are synced when back online', async ({ page,
   await signUpWithEmail(page, uniqueEmail('offline'), 'Familie');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Ida');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
 
   // open the lesson once while online (the dev server has no service worker
@@ -41,7 +43,7 @@ test('lessons work offline; results are synced when back online', async ({ page,
 
   // --- offline: play the whole lesson
   await context.setOffline(true);
-  await page.getByRole('button', { name: 'Los geht’s!' }).click();
+  await page.getByTestId('lesson-start').click();
   await solveFindC(page);
   await expect(page.getByRole('heading', { name: 'Perfekt!' })).toBeVisible();
   await expect(page.getByTestId('pending')).toContainText('Du bist gerade offline');

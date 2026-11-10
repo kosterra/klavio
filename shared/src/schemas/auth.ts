@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { mailLangSchema } from '../mail/templates.ts';
 
 export const displayNameSchema = z
   .string()
@@ -28,13 +29,19 @@ export const webauthnVerifyRequestSchema = z.object({
   response: webauthnResponseSchema,
 });
 
-export const emailRequestSchema = z.object({ email: emailSchema });
+export const emailRequestSchema = z.object({
+  email: emailSchema,
+  /** the language the code mail is written in (the app's language) */
+  lang: mailLangSchema.optional(),
+});
 
 export const emailVerifySchema = z.object({
   email: emailSchema,
   code: emailCodeSchema,
   /** Required only when no account exists for this e-mail yet (sign-up). */
   displayName: displayNameSchema.optional(),
+  /** the app's language: later mails to the account use it */
+  lang: mailLangSchema.optional(),
 });
 
 export const passkeyRenameSchema = z.object({ name: z.string().trim().min(1).max(60) });
@@ -79,13 +86,40 @@ export interface PasskeyDto {
   deviceType: string;
 }
 
-export interface PublicConfigResponse {
+/** Who runs this instance – shown in the footer and on the privacy page. */
+export interface OperatorInfo {
+  /** person or organisation responsible, e.g. «Familie Muster» or «Musikschule Bern» */
+  operatorName: string;
+  /** where to write about the data (privacy, deletion, questions) */
+  contactEmail: string;
+}
+
+export interface PublicConfigResponse extends OperatorInfo {
   appName: string;
   registrationOpen: boolean;
+  /** from this age a profile can choose between the kids' worlds and the journey */
+  journeyMinAge: number;
 }
 
-export interface AdminSettingsDto {
+export interface AdminSettingsDto extends OperatorInfo {
   registrationOpen: boolean;
+  journeyMinAge: number;
+  /** false: the instance asks search engines not to list it */
+  searchIndexing: boolean;
+  /** accounts without sign-in for this many months are deleted after a warning (0 = never) */
+  inactiveDeleteMonths: number;
 }
 
-export const adminSettingsSchema = z.object({ registrationOpen: z.boolean() });
+export const adminSettingsSchema = z.object({
+  registrationOpen: z.boolean().optional(),
+  operatorName: z
+    .string()
+    .trim()
+    .max(120)
+    .regex(/^[^\p{C}]*$/u)
+    .optional(),
+  contactEmail: z.union([emailSchema, z.literal('')]).optional(),
+  journeyMinAge: z.number().int().min(0).max(99).optional(),
+  searchIndexing: z.boolean().optional(),
+  inactiveDeleteMonths: z.number().int().min(0).max(120).optional(),
+});

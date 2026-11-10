@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { initialLanguage } from './language';
+import { initialLanguage, languageFromUrl } from './language';
 
 describe('initialLanguage', () => {
   it('keeps the language chosen on this device', () => {
@@ -16,5 +16,11 @@ describe('initialLanguage', () => {
   it('falls back to Swiss German for unknown values', () => {
     expect(initialLanguage('xx', [])).toBe('de-CH');
     expect(initialLanguage(null, ['it-CH'])).toBe('de-CH');
+  });
+
+  it('takes the language from the address (links from search engines)', () => {
+    expect(languageFromUrl('?lang=en')).toBe('en');
+    expect(languageFromUrl('?x=1&lang=de')).toBe('de-CH');
+    expect(languageFromUrl('')).toBeNull();
   });
 });

@@ -33,12 +33,14 @@ export function BuddySays({
   const speaker = say ? (
     <ReadAloudButton text={say} auto={autoRead} size={kids ? 'xl' : 'lg'} />
   ) : null;
-  // phones: a smaller figure leaves room for the speech bubble
+  // phones: a smaller figure leaves room for the speech bubble – and held
+  // sideways (little height) the figure stands beside the text, small
   const narrow = useMediaQuery('(max-width: 36em)') ?? false;
-  if (!kids && classicRow) {
+  const short = useMediaQuery('(max-height: 32em)') ?? false;
+  if (!kids && (classicRow || short)) {
     return (
       <Group justify="center" gap="md" wrap="nowrap">
-        <Buddy mood={mood} size={size} />
+        <Buddy mood={mood} size={short ? Math.min(size, 48) : size} />
         {children}
         {speaker}
       </Group>
@@ -56,7 +58,7 @@ export function BuddySays({
   return (
     <div className={classes.row}>
       <div className={classes.figure}>
-        <Buddy mood={mood} size={narrow ? Math.min(size, 56) : size} />
+        <Buddy mood={mood} size={short ? Math.min(size, 48) : narrow ? Math.min(size, 56) : size} />
       </div>
       <div className={classes.bubble}>{children}</div>
       {speaker}

@@ -32,6 +32,8 @@
   --klavio-ink: #000;
   /* destructive actions (delete, log out): ≥ 4.5:1 on the page and on cards */
   --klavio-danger: var(--mantine-color-red-9);
+  /* hints after a mistake: warm, but ≥ 4.5:1 on white and on the stage colours */
+  --klavio-hint: #a63a06;
   --klavio-flag-pole: var(--mantine-color-gray-7);
   --klavio-locked-flag: var(--mantine-color-gray-3);
 }
@@ -68,6 +70,7 @@
   --klavio-avatar-bg-klavi: #283056;
   --klavio-ink: #e9ecef;
   --klavio-danger: var(--mantine-color-red-4);
+  --klavio-hint: var(--mantine-color-orange-4);
   --klavio-flag-pole: var(--mantine-color-gray-4);
   --klavio-locked-flag: var(--mantine-color-dark-4);
 }
@@ -99,8 +102,16 @@ html .mantine-AppShell-header {
   background-repeat: no-repeat;
 }
 
+/* Classic: calm – one plain background, no floating notes and colour fields */
 html[data-ui-mode='classic'] body {
   background-color: var(--klavio-bg-classic);
+  background-image: none;
+}
+
+/* Classic: the stat tiles and cards on plain surfaces, colour only in the icons */
+html[data-ui-mode='classic'] [data-tile] {
+  background: var(--klavio-surface) !important;
+  border-color: var(--mantine-color-default-border) !important;
 }
 
 /* Respect users who prefer less motion (mascot bounce, transitions). */
@@ -127,4 +138,51 @@ html[data-ui-mode='classic'] body {
 :root[data-mantine-color-scheme='light'] {
   --mantine-color-teal-light: var(--mantine-color-teal-0);
   --mantine-color-teal-light-hover: var(--mantine-color-teal-1);
+}
+
+/* ------------------------------------------------------------ phones */
+
+/* dialogs fill the screen on phones instead of floating squeezed in the middle */
+@media (max-width: 36em) {
+  .mantine-Modal-inner {
+    padding: 0;
+  }
+
+  .mantine-Modal-content {
+    flex: 1 0 100%;
+    max-height: 100dvh;
+    min-height: 100dvh;
+    border-radius: 0;
+  }
+}
+
+/* segmented switches with long labels wrap rather than cut words off */
+.mantine-SegmentedControl-label {
+  white-space: normal;
+  line-height: 1.25;
+}
+
+/* phones held sideways: the task (notes, buttons) on the left, the docked
+   keyboard on the right – both visible at once */
+@media (max-height: 32em) and (orientation: landscape) {
+  :has(> [data-keyboard-dock]) {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    column-gap: var(--mantine-spacing-md);
+    align-items: start;
+  }
+
+  :has(> [data-keyboard-dock]) > * {
+    grid-column: 1;
+  }
+
+  [data-keyboard-dock] {
+    grid-column: 2;
+    grid-row: 1 / span 30;
+    top: var(--mantine-spacing-xs);
+    bottom: auto;
+    align-self: start;
+    background: none;
+    padding-block: 0;
+  }
 }

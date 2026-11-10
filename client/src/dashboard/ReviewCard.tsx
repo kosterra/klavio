@@ -5,7 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { findLesson, localIsoDate, reviewQueue, type ProgressDto } from '@klavio/shared';
 import { useLocalized } from '../lesson/useLocalized';
 import { worldOfLesson } from '../lesson/worlds';
+import { useWorldMode } from '../lesson/useWorldMode';
 import classes from './Dashboard.module.css';
+import { useLessonFor } from '../lesson/useLessonFor';
 
 /**
  * "Heute wiederholen": lessons that are due again (flash-card style), at most
@@ -14,6 +16,8 @@ import classes from './Dashboard.module.css';
 export function ReviewCard({ progress }: { progress: ProgressDto }) {
   const { t } = useTranslation();
   const loc = useLocalized();
+  const forMe = useLessonFor();
+  const mode = useWorldMode();
   const played = Object.values(progress.lessons).some((l) => l.bestStars > 0);
   if (!played) return null;
   const due = reviewQueue(progress.lessons, localIsoDate());
@@ -37,11 +41,11 @@ export function ReviewCard({ progress }: { progress: ProgressDto }) {
         <Stack gap="xs" component="ul" className={classes.reviewList}>
           {due.map(({ lessonId, daysAgo }) => {
             const lesson = findLesson(lessonId)!;
-            const where = worldOfLesson(lessonId);
+            const where = worldOfLesson(lessonId, mode);
             return (
               <li key={lessonId} style={where.vars} className={classes.reviewItem}>
                 <div className={classes.reviewText}>
-                  <Text fw={800}>{loc(lesson.title)}</Text>
+                  <Text fw={800}>{loc(forMe(lesson).title)}</Text>
                   <Text size="sm" fw={600}>
                     {t(`path.worlds.${where.world.id}`)} · {t('review.daysAgo', { count: daysAgo })}
                   </Text>
@@ -50,7 +54,7 @@ export function ReviewCard({ progress }: { progress: ProgressDto }) {
                   component={Link}
                   to={`/lesson/${lessonId}`}
                   leftSection={<IconPlayerPlay size={18} />}
-                  aria-label={t('review.play', { lesson: loc(lesson.title) })}
+                  aria-label={t('review.play', { lesson: loc(forMe(lesson).title) })}
                   data-testid={`review-${lessonId}`}
                   // phones: only the icon, so the lesson name keeps its room
                   px={{ base: 'sm', xs: 'lg' }}

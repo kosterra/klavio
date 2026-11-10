@@ -1,0 +1,68 @@
+import { expect, test } from '@playwright/test';
+import { signUpWithEmail, skipTheory, uniqueEmail, skipSetup } from './helpers';
+
+// a phone: narrow, touch only
+test.use({
+  viewport: { width: 390, height: 844 },
+  isMobile: true,
+  hasTouch: true,
+  userAgent:
+    'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36',
+});
+
+test('on a phone the keys are big enough, a swipe scrolls and only a tap plays', async ({
+  page,
+}) => {
+  test.setTimeout(90_000);
+  // no MIDI, microphone denied → the on-screen keyboard
+  await page.addInitScript(() => {
+    Object.defineProperty(Navigator.prototype, 'requestMIDIAccess', { value: undefined });
+    navigator.mediaDevices.getUserMedia = () =>
+      Promise.reject(new DOMException('denied', 'NotAllowedError'));
+  });
+  await signUpWithEmail(page, uniqueEmail('phone'), 'Familie');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Lina');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2018');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
+  await page.getByRole('heading', { name: 'Hallo Lina!' }).waitFor();
+
+  await page.goto('/lesson/keys-c');
+  await skipTheory(page);
+  await page.getByTestId('lesson-start').click();
+  const c4 = page.getByRole('button', { name: 'C4', exact: true });
+  await expect(c4).toBeVisible();
+
+  // finger-sized keys: the keyboard is wider than the screen and scrolls sideways
+  const box = (await c4.boundingBox())!;
+  expect(box.width).toBeGreaterThanOrEqual(34);
+  // the keyboard stays in reach at the bottom of the screen
+  expect(box.y + box.height).toBeLessThanOrEqual(844);
+
+  // a swipe that starts on a key is a scroll, not a note
+  const d4 = (await page.getByRole('button', { name: 'D4', exact: true }).boundingBox())!;
+  const cdp = await page.context().newCDPSession(page);
+  const at = (x: number, y: number) => [{ x, y, id: 1 }];
+  const sx = d4.x + d4.width / 2;
+  const sy = d4.y + d4.height * 0.8;
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: at(sx, sy) });
+  for (let i = 1; i <= 6; i++) {
+    await cdp.send('Input.dispatchTouchEvent', {
+      type: 'touchMove',
+      touchPoints: at(sx, sy - i * 25),
+    });
+  }
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await page.waitForTimeout(300);
+  await expect(page.getByText(/Das war/)).toHaveCount(0);
+  await expect(page.getByText('Richtig!')).toHaveCount(0);
+
+  // a tap plays
+  const asked = /Finde das (\S+)/.exec((await page.getByTestId('prompt').textContent()) ?? '')![1]!;
+  const target = page.getByRole('button', { name: `${asked}4`, exact: true });
+  await target.scrollIntoViewIfNeeded();
+  const t = (await target.boundingBox())!;
+  await page.touchscreen.tap(t.x + t.width / 2, t.y + t.height * 0.85);
+  await expect(page.getByText(/^Aufgabe 2 von/)).toBeVisible();
+});

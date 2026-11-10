@@ -387,6 +387,7 @@ a.node:active {
 
 :global([data-mantine-color-scheme='dark']) .foggy {
   --world-bg: var(--klavio-fog);
+  --world-sky: var(--klavio-fog);
   --world-hill: color-mix(in srgb, var(--chapter-color) 10%, var(--klavio-locked-border));
   --world-hill-2: var(--world-hill);
 }
@@ -597,4 +598,60 @@ a.node:active {
   justify-content: space-between;
   gap: var(--mantine-spacing-sm);
   padding: var(--mantine-spacing-md) var(--mantine-spacing-lg);
+}
+
+/* the journey's worlds below sea level: the deeper, the darker and warmer the rock */
+.section[data-deep] {
+  --world-bg: color-mix(in srgb, var(--chapter-dark) 14%, var(--klavio-surface));
+  --world-sky: color-mix(in srgb, var(--chapter-dark) 30%, var(--klavio-surface));
+}
+
+:global([data-mantine-color-scheme='dark']) .section[data-deep] {
+  --world-bg: color-mix(in srgb, var(--chapter-dark) 30%, var(--klavio-surface));
+  --world-sky: color-mix(in srgb, var(--chapter-color) 34%, var(--klavio-surface));
+}
+
+.section[data-deep].foggy {
+  --world-bg: var(--klavio-fog);
+  --world-sky: var(--klavio-fog);
+}
+
+/* «Was bedeuten die Zeichen?» under the path */
+.legend {
+  margin-top: calc(-1 * var(--mantine-spacing-sm));
+  padding: 0 var(--mantine-spacing-sm);
+}
+
+.legend summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--mantine-color-anchor);
+}
+
+.legend ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mantine-spacing-xs) var(--mantine-spacing-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legendIcon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--mantine-color-indigo-7);
 }

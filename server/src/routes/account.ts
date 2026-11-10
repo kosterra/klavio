@@ -9,18 +9,13 @@ import {
   webauthnVerifyRequestSchema,
 } from '@klavio/shared';
 import type { AppConfig } from '../config.js';
-import {
-  DailyActivity,
-  EmailCode,
-  LessonProgress,
-  Passkey,
-  Profile,
-  Session,
-  User,
-} from '../models/index.js';
+import { EmailCode, Passkey, Session, User } from '../models/index.js';
 import { HttpError, badRequest } from '../lib/errors.js';
 import { checkEmailCode, issueEmailCode } from '../lib/emailCodes.js';
-import { verifyEmailMail, type Mailer } from '../lib/mailer.js';
+import type { Mailer } from '../lib/mailer.js';
+import { codeMail } from '../lib/mailTemplates.js';
+import { deleteAccount } from '../lib/accounts.js';
+import { exportAccount } from '../lib/dataExport.js';
 import { PARENT_UNLOCK_MS, destroySession } from '../lib/session.js';
 import { hmac, safeEqualHex } from '../lib/crypto.js';
 import { consumeChallenge, storeChallenge } from '../lib/challenge.js';
@@ -180,7 +175,9 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
         userId,
       });
       if (!code) throw new HttpError(429, 'TOO_MANY_CODES');
-      await mailer.send(verifyEmailMail(req.body.email, code));
+      await mailer.send(
+        await codeMail(config, 'verify-email', req.body.email, code, req.body.lang),
+      );
       return reply.code(204).send();
     },
   );
@@ -223,18 +220,19 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
   });
 
   // ------------------------------------------------- delete account entirely
+  /** Everything stored about the account, as one JSON file (right to data portability). */
+  app.get('/export', async (req, reply) => {
+    const data = await exportAccount(req.auth!.user._id);
+    const day = new Date().toISOString().slice(0, 10);
+    return reply
+      .header('content-disposition', `attachment; filename="klavio-${day}.json"`)
+      .header('cache-control', 'no-store')
+      .type('application/json; charset=utf-8')
+      .send(JSON.stringify(data, null, 2));
+  });
+
   app.delete('/', async (req, reply) => {
-    const userId = req.auth!.user._id;
-    const profileIds = (await Profile.find({ userId }, { _id: 1 }).lean()).map((p) => p._id);
-    await Promise.all([
-      LessonProgress.deleteMany({ profileId: { $in: profileIds } }),
-      DailyActivity.deleteMany({ profileId: { $in: profileIds } }),
-      Profile.deleteMany({ userId }),
-      Passkey.deleteMany({ userId }),
-      EmailCode.deleteMany({ userId }),
-      Session.deleteMany({ userId }),
-    ]);
-    await User.deleteOne({ _id: userId });
+    await deleteAccount(req.auth!.user._id);
     await destroySession(req, reply, config);
     return reply.code(204).send();
   });

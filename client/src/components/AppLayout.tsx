@@ -1,6 +1,9 @@
+import { useState } from 'react';
+import { useDisclosure } from '@mantine/hooks';
 import {
   ActionIcon,
   AppShell,
+  Burger,
   Badge,
   Group,
   Menu,
@@ -13,45 +16,93 @@ import {
   IconCloudOff,
   IconDeviceDesktop,
   IconLanguage,
-  IconLock,
   IconMoon,
   IconSun,
   IconLogout,
-  IconPiano,
   IconSettings,
-  IconSparkles,
-  IconShield,
   IconUserCircle,
-  IconBulb,
   IconUsers,
 } from '@tabler/icons-react';
 import { Link, Outlet, useNavigate } from 'react-router';
+import { SiteFooter } from './SiteFooter';
+import { SideNav } from './SideNav';
+import { BottomNav } from './BottomNav';
+import classes from './BottomNav.module.css';
 import { useTranslation } from 'react-i18next';
 import { APP_CONFIG } from '@klavio/shared';
 import { useSession } from '../auth/session';
-import { useParentUnlocked } from '../auth/useParentUnlocked';
 import { ProfileAvatar } from './ProfileAvatar';
 import { PrivacyBadge } from './PrivacyNote';
 
+/** Side navigation open or closed (wider screens), remembered on the device. */
+const SIDEBAR_KEY = 'klavio-sidebar';
+
 export function AppLayout() {
   const { t, i18n } = useTranslation();
-  const parentUnlocked = useParentUnlocked();
-  const { me, activeProfile, logout, offline } = useSession();
+  const { activeProfile, logout, offline } = useSession();
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const navigate = useNavigate();
+  // the side navigation: an overlay on phones; beside the page on wider screens,
+  // open by default only where there is room (desktop), remembered on the device
+  const [mobileOpen, { toggle: toggleMobile, close: closeMobile }] = useDisclosure(false);
+  const [desktopOpen, setDesktopOpen] = useState(() => {
+    try {
+      const saved = localStorage.getItem(SIDEBAR_KEY);
+      if (saved !== null) return saved === 'open';
+    } catch {
+      // storage blocked: decide by width
+    }
+    return window.matchMedia('(min-width: 75em)').matches;
+  });
+  const toggleDesktop = () =>
+    setDesktopOpen((open) => {
+      try {
+        localStorage.setItem(SIDEBAR_KEY, open ? 'closed' : 'open');
+      } catch {
+        // not remembered
+      }
+      return !open;
+    });
 
   return (
-    <AppShell header={{ height: 72 }} padding="md">
+    <AppShell
+      header={{ height: 72 }}
+      navbar={{
+        width: 260,
+        breakpoint: 'sm',
+        collapsed: { mobile: !mobileOpen, desktop: !desktopOpen },
+      }}
+      padding="md"
+    >
       <AppShell.Header px="md">
         <Group h="100%" justify="space-between" wrap="nowrap">
-          <UnstyledButton component={Link} to="/" aria-label={t('nav.home')}>
-            <Group gap="xs" wrap="nowrap">
-              <img src="/logo.svg" alt="" width={40} height={40} />
-              <Text fw={800} fz="xl">
-                {APP_CONFIG.name}
-              </Text>
-            </Group>
-          </UnstyledButton>
+          <Group gap="xs" wrap="nowrap">
+            <Burger
+              opened={mobileOpen}
+              onClick={toggleMobile}
+              hiddenFrom="sm"
+              size="md"
+              aria-label={t('nav.toggle')}
+              aria-expanded={mobileOpen}
+            />
+            <Burger
+              opened={desktopOpen}
+              onClick={toggleDesktop}
+              visibleFrom="sm"
+              size="md"
+              aria-label={t('nav.toggle')}
+              aria-expanded={desktopOpen}
+              data-testid="nav-toggle"
+            />
+            <UnstyledButton component={Link} to="/" aria-label={t('nav.home')}>
+              <Group gap="xs" wrap="nowrap">
+                <img src="/logo.svg" alt="" width={40} height={40} />
+                <Text fw={800} fz="xl" visibleFrom="xs">
+                  {APP_CONFIG.name}
+                </Text>
+              </Group>
+            </UnstyledButton>
+          </Group>
           <Group gap="sm" wrap="nowrap">
             {offline && (
               <Badge
@@ -70,7 +121,11 @@ export function AppLayout() {
               <Menu.Target>
                 <ActionIcon variant="subtle" radius="xl" size={56} aria-label={t('nav.menu')}>
                   {activeProfile ? (
-                    <ProfileAvatar avatar={activeProfile.avatar} size={48} />
+                    <ProfileAvatar
+                      avatar={activeProfile.avatar}
+                      outfit={activeProfile.outfit}
+                      size={48}
+                    />
                   ) : (
                     <IconUsers />
                   )}
@@ -92,46 +147,12 @@ export function AppLayout() {
                     {t('nav.profile')}
                   </Menu.Item>
                 )}
-                {activeProfile && (
-                  <Menu.Item
-                    leftSection={<IconBulb size={18} />}
-                    onClick={() => navigate('/knowledge')}
-                  >
-                    {t('nav.knowledge')}
-                  </Menu.Item>
-                )}
-                {activeProfile && (
-                  <Menu.Item
-                    leftSection={<IconPiano size={18} />}
-                    // parent area: the input setup
-                    rightSection={
-                      parentUnlocked ? null : <IconLock size={14} aria-label={t('parent.title')} />
-                    }
-                    onClick={() => navigate('/input')}
-                  >
-                    {t('nav.input')}
-                  </Menu.Item>
-                )}
                 <Menu.Item
                   leftSection={<IconSettings size={18} />}
                   onClick={() => navigate('/account')}
                 >
                   {t('nav.account')}
                 </Menu.Item>
-                <Menu.Item
-                  leftSection={<IconSparkles size={18} />}
-                  onClick={() => navigate('/whats-new')}
-                >
-                  {t('whatsNew.link')}
-                </Menu.Item>
-                {me?.user.role === 'admin' && (
-                  <Menu.Item
-                    leftSection={<IconShield size={18} />}
-                    onClick={() => navigate('/admin')}
-                  >
-                    {t('nav.admin')}
-                  </Menu.Item>
-                )}
                 <Menu.Divider />
                 <Menu.Label>{t('nav.colorScheme')}</Menu.Label>
                 {(['auto', 'light', 'dark'] as const).map((scheme) => (
@@ -192,9 +213,14 @@ export function AppLayout() {
           </Group>
         </Group>
       </AppShell.Header>
-      <AppShell.Main>
+      <AppShell.Navbar p="sm">
+        <SideNav onNavigate={closeMobile} />
+      </AppShell.Navbar>
+      <AppShell.Main className={activeProfile ? classes.withBottomNav : undefined}>
         <Outlet />
+        <SiteFooter variant="compact" />
       </AppShell.Main>
+      {activeProfile && <BottomNav />}
     </AppShell>
   );
 }

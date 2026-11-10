@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react';
-import type { WorldId } from './worlds';
+import type { KidsWorldId, WorldId } from './worlds';
+import { JOURNEY_TILES } from './journeyArt';
 import classes from './LearningPath.module.css';
 
 /** Height of the landscape strip at the bottom of every world. */
@@ -12,7 +13,7 @@ const LIGHT = 'var(--chapter-light)';
 const SURFACE = 'var(--klavio-surface)';
 
 /** One repeating tile of each landscape (own artwork), drawn into a 40 px high strip. */
-const TILES: Record<WorldId, { width: number; draw: ReactNode }> = {
+const KIDS_TILES: Record<KidsWorldId, { width: number; draw: ReactNode }> = {
   // Tasten-Tal: rolling hills with a little keyboard lying in the grass
   keys: {
     width: 150,
@@ -136,6 +137,11 @@ const TILES: Record<WorldId, { width: number; draw: ReactNode }> = {
       </>
     ),
   },
+};
+
+const TILES: Record<WorldId, { width: number; draw: ReactNode }> = {
+  ...KIDS_TILES,
+  ...JOURNEY_TILES,
 };
 
 /** The landscape along the bottom edge of a world, repeated across the full width. */

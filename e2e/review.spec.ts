@@ -2,14 +2,16 @@ import { execFileSync } from 'node:child_process';
 import { expect, test } from '@playwright/test';
 import { LESSONS, addDays, localIsoDate } from '@klavio/shared';
 import { audit } from './audit';
-import { seedCompletedLessons, signUpWithEmail, uniqueEmail } from './helpers';
+import { seedCompletedLessons, signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
 
 test('lessons come back for review; quick round mixes old questions', async ({ page }) => {
   test.setTimeout(90_000);
   await signUpWithEmail(page, uniqueEmail('review'), 'Familie Repetition');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Tim');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
 
   const played = LESSONS.slice(0, 3).map((l) => l.id);
@@ -52,7 +54,7 @@ test('lessons come back for review; quick round mixes old questions', async ({ p
 
   // the review button opens the lesson (start card: it was played before)
   await page.getByTestId(`review-${played[0]}`).click();
-  await expect(page.getByRole('button', { name: 'Los geht’s!' })).toBeVisible();
+  await expect(page.getByTestId('lesson-start')).toBeVisible();
 
   // quick round
   await page.goto('/');

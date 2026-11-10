@@ -1,5 +1,6 @@
 import {
   addDays,
+  weekOf,
   findLesson,
   lessonTargetCount,
   starsFor,
@@ -44,6 +45,8 @@ export function withQueuedResults(
 ): ProgressDto {
   const lessons = { ...progress.lessons };
   let { seconds } = progress.today;
+  const weekDays = new Set(progress.weekDays ?? []);
+  const monday = weekOf(progress.today.date);
   for (const q of queue) {
     if (q.profileId !== profileId) continue;
     const lesson = findLesson(q.lessonId);
@@ -51,8 +54,14 @@ export function withQueuedResults(
     const stars = starsFor(lessonTargetCount(lesson), q.mistakes);
     lessons[q.lessonId] = applyCompletion(lessons[q.lessonId], stars, q.localDate).next;
     if (q.localDate === progress.today.date) seconds += q.durationSec;
+    if (q.localDate >= monday && q.localDate <= progress.today.date) weekDays.add(q.localDate);
   }
-  return { ...progress, lessons, today: { ...progress.today, seconds } };
+  return {
+    ...progress,
+    lessons,
+    today: { ...progress.today, seconds },
+    weekDays: [...weekDays].sort(),
+  };
 }
 
 /** The server accepts results up to this many days back (synced later). */

@@ -1,7 +1,13 @@
 import { expect, test, type Page } from '@playwright/test';
 import { LESSONS } from '@klavio/shared';
 import { audit } from './audit';
-import { seedCompletedLessons, signUpWithEmail, startLesson, uniqueEmail } from './helpers';
+import {
+  seedCompletedLessons,
+  signUpWithEmail,
+  startLesson,
+  uniqueEmail,
+  skipSetup,
+} from './helpers';
 
 const ids = LESSONS.map((l) => l.id);
 
@@ -9,7 +15,9 @@ async function learner(page: Page, name: string) {
   await signUpWithEmail(page, uniqueEmail(name), 'Familie Stufe');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Ada');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
 }
 

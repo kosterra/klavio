@@ -1,0 +1,17 @@
+.mailSubject {
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-md);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* the mail as it arrives: on its own light page, also in the dark colour scheme */
+.mailPreview {
+  padding: 16px 8px;
+  border-radius: var(--mantine-radius-lg);
+  background: #fff6ea;
+  color: #1f2440;
+  overflow: auto;
+}

@@ -31,7 +31,7 @@ async function family() {
   await call(jar, 'POST', '/api/auth/email/request', { email });
   const code = /(\d{6})/.exec(ctx.outbox.at(-1)!.text)![1];
   await call(jar, 'POST', '/api/auth/email/verify', { email, code, displayName: 'Familie' });
-  const kid = (await call(jar, 'POST', '/api/profiles', { name: 'Lina' })).json();
+  const kid = (await call(jar, 'POST', '/api/profiles', { name: 'Lina', birthYear: 2016 })).json();
   return { jar, kid };
 }
 
@@ -62,7 +62,9 @@ describe('parent PIN', () => {
 
     // parent area is closed …
     expect((await call(jar, 'GET', '/api/passkeys')).json()).toEqual(LOCKED);
-    expect((await call(jar, 'POST', '/api/profiles', { name: 'Ben' })).json()).toEqual(LOCKED);
+    expect(
+      (await call(jar, 'POST', '/api/profiles', { name: 'Ben', birthYear: 2018 })).json(),
+    ).toEqual(LOCKED);
     expect((await call(jar, 'PATCH', `/api/profiles/${kid.id}`, { name: 'X' })).json()).toEqual(
       LOCKED,
     );
@@ -112,6 +114,31 @@ describe('parent PIN', () => {
     // locking explicitly
     await call(jar, 'POST', '/api/account/pin/lock');
     expect((await call(jar, 'GET', '/api/passkeys')).json()).toEqual(LOCKED);
+  });
+
+  it('a new profile answers its start-up questions and may place itself – once', async () => {
+    const { jar, kid } = await family();
+    expect(kid.setupDone).toBe(false);
+    await call(jar, 'PUT', '/api/account/pin', { pin: '2468' });
+    await call(jar, 'POST', '/api/profiles/select', { profileId: kid.id });
+
+    // locked parent area, but a fresh profile without progress: allowed
+    expect(
+      (await call(jar, 'POST', '/api/progress/placement', { chapterId: 'songs' })).json().placed,
+    ).toBeGreaterThan(0);
+    const done = await call(jar, 'PATCH', `/api/profiles/${kid.id}`, {
+      setupDone: true,
+      motive: 'fun',
+      weeklyGoalDays: 4,
+    });
+    expect(done.json()).toMatchObject({ setupDone: true, motive: 'fun', weeklyGoalDays: 4 });
+
+    // afterwards placement is parent area again
+    expect(
+      (await call(jar, 'POST', '/api/progress/placement', { chapterId: 'both' })).json(),
+    ).toEqual(LOCKED);
+    const progress = (await call(jar, 'GET', '/api/progress?date=2026-11-09')).json();
+    expect(progress.weekDays).toEqual([]);
   });
 
   it('a fresh login opens the parent area (PIN forgotten → log in again, set a new one)', async () => {

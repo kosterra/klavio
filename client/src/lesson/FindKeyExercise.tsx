@@ -46,7 +46,7 @@ export function FindKeyExercise({
             {t('lesson.findKey', { note: name })}
           </Text>
           {!exercise.anyOctave && target === 60 && <Text c="dimmed">{t('lesson.middleC')}</Text>}
-          <Text mih={28} fw={700} c={feedback?.ok ? 'teal.8' : 'orange.9'}>
+          <Text mih={28} fw={700} c={feedback?.ok ? 'teal.8' : 'var(--klavio-hint)'}>
             {feedback?.ok
               ? t('lesson.correct')
               : feedback
@@ -60,18 +60,17 @@ export function FindKeyExercise({
       <Text size="sm" c="dimmed">
         {t('lesson.round', { n: round + 1, total })}
       </Text>
-      <div style={{ width: '100%' }}>
-        <VirtualKeyboard
-          from={from}
-          to={to}
-          labels={lesson.keyLabels}
-          height={kids ? 200 : 170}
-          interactive={inputMode === 'screen'}
-          hints={showHint ? matchingKeys(target, exercise.anyOctave, from, to) : []}
-          correct={feedback?.ok ? [feedback.midi] : []}
-          wrong={feedback && !feedback.ok ? [feedback.midi] : []}
-        />
-      </div>
+      <VirtualKeyboard
+        dock
+        from={from}
+        to={to}
+        labels={lesson.keyLabels}
+        height={kids ? 200 : 170}
+        interactive={inputMode === 'screen'}
+        hints={showHint ? matchingKeys(target, exercise.anyOctave, from, to) : []}
+        correct={feedback?.ok ? [feedback.midi] : []}
+        wrong={feedback && !feedback.ok ? [feedback.midi] : []}
+      />
     </Stack>
   );
 }

@@ -14,7 +14,13 @@ describe('web: the app from the same server', () => {
     mkdirSync(join(root, 'assets'));
     writeFileSync(
       join(root, 'index.html'),
-      '<html><head><meta property="og:image" content="__KLAVIO_ORIGIN__/og-image.jpg"></head></html>',
+      [
+        '<html lang="de-CH"><head><title>Klavio</title>',
+        '<meta name="description" content="x" />',
+        '<meta property="og:url" content="__KLAVIO_ORIGIN__/welcome" />',
+        '<meta property="og:image" content="__KLAVIO_ORIGIN__/og-image.jpg"></head>',
+        '<body><div id="root"></div></body></html>',
+      ].join('\n'),
     );
     writeFileSync(join(root, 'assets', 'app-123.js'), 'console.log(1)');
     writeFileSync(join(root, 'sw.js'), '// sw');
@@ -77,5 +83,34 @@ describe('web: the app from the same server', () => {
       status = (await app.inject({ url: '/api/health' })).statusCode;
     }
     expect(status).toBe(429);
+  });
+
+  it('gives search engines title, canonical, languages and text of the public pages', async () => {
+    const de = await app.inject({ url: '/welcome', headers: { accept: 'text/html' } });
+    expect(de.body).toContain('<html lang="de-CH">');
+    expect(de.body).toContain('<title>Klavio – Klavier lernen am echten Klavier');
+    expect(de.body).toContain('<link rel="canonical" href="https://klavio.example.ch/welcome" />');
+    expect(de.body).toContain('hreflang="en" href="https://klavio.example.ch/welcome?lang=en"');
+    expect(de.body).toContain('<h1>Klavier lernen – am echten Klavier, wie im Spiel.</h1>');
+    expect(de.body).not.toContain('noindex');
+
+    const en = await app.inject({ url: '/privacy?lang=en', headers: { accept: 'text/html' } });
+    expect(en.body).toContain('<html lang="en">');
+    expect(en.body).toContain('<title>Privacy – Klavio</title>');
+    expect(en.body).toContain('href="https://klavio.example.ch/privacy?lang=en" />');
+
+    // pages behind the login are never listed
+    const lesson = await app.inject({ url: '/lesson/keys-c', headers: { accept: 'text/html' } });
+    expect(lesson.body).toContain('<meta name="robots" content="noindex, nofollow" />');
+    expect(lesson.body).not.toContain('rel="canonical"');
+  });
+
+  it('has robots.txt and a sitemap with both languages', async () => {
+    const robots = await app.inject({ url: '/robots.txt' });
+    expect(robots.body).toContain('Disallow: /api/');
+    expect(robots.body).toContain('Sitemap: https://klavio.example.ch/sitemap.xml');
+    const map = await app.inject({ url: '/sitemap.xml' });
+    expect(map.headers['content-type']).toContain('application/xml');
+    expect(map.body).toContain('<loc>https://klavio.example.ch/whats-new?lang=en</loc>');
   });
 });

@@ -100,6 +100,11 @@ Was davon personenbezogen ist und wie lange es bleibt: [datenschutz.md](datensch
 
 Alle Routen unter `/api`, JSON, Validierung mit zod (Schemas in `shared/src/schemas/`).
 
+Die vollständige Beschreibung als **OpenAPI 3.1** liegt in [`openapi.json`](openapi.json). Sie wird aus
+denselben zod-Schemas erzeugt (`npm run openapi`); die CI prüft mit `npm run openapi -- --check`, dass
+sie aktuell ist. Der Server selbst veröffentlicht keine Spezifikation. Die API ist für die eigene
+Web-App gedacht, nicht als öffentliche Schnittstelle, und kann sich mit jeder Version ändern.
+
 | Bereich       | Routen                                                                                                                                                                                                                                                                                      |
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | öffentlich    | `GET /config`, `GET /health`                                                                                                                                                                                                                                                                |

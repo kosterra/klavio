@@ -1,6 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { LESSONS } from '@klavio/shared';
-import { seedCompletedLessons, signUpWithEmail, uniqueEmail, startLesson } from './helpers';
+import {
+  seedCompletedLessons,
+  signUpWithEmail,
+  uniqueEmail,
+  startLesson,
+  skipSetup,
+} from './helpers';
 import { audit } from './audit';
 
 test('note reading: the staff shows a note, playing it is checked exactly', async ({ page }) => {
@@ -12,7 +18,9 @@ test('note reading: the staff shows a note, playing it is checked exactly', asyn
   await signUpWithEmail(page, uniqueEmail('read'), 'Familie');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Noa');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
 
   // chapters 1 and 2 done → chapter 3 "Noten lesen" is next

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { publishNote, useNoteEvents } from '../input/noteBus';
 import { SEMITONE_TO_CODE, midiForKeyCode } from '../input/computerKeys';
-import { playNote, type Voice } from '../audio/synth';
+import { playNote, type Timbre, type Voice } from '../audio/synth';
 import { PianoKeyboard, type PianoKeyboardProps } from './PianoKeyboard';
+import classes from './PianoKeyboard.module.css';
 
 /** What a key code looks like on a Swiss / German keyboard (where it differs from the code name). */
 const CODE_LABEL: Record<string, string> = { KeyY: 'Z', Semicolon: 'Ö' };
@@ -27,6 +28,13 @@ interface Props extends Omit<PianoKeyboardProps, 'onPress' | 'onRelease' | 'acti
    * can't be played (when the learner is meant to use the real piano).
    */
   interactive?: boolean;
+  /**
+   * Lessons: the keyboard stays docked at the bottom of the screen while the
+   * task above scrolls – it is always in reach, also on a phone held sideways.
+   */
+  dock?: boolean;
+  /** the sound of the screen keys (free play) */
+  timbre?: Timbre;
 }
 
 /**
@@ -40,6 +48,8 @@ export function VirtualKeyboard({
   showComputerKeys = false,
   computerKeysFrom,
   interactive = true,
+  dock = false,
+  timbre = 'piano',
   ...keyboard
 }: Props) {
   const [held, setHeld] = useState<number[]>([]);
@@ -58,14 +68,14 @@ export function VirtualKeyboard({
     );
   });
 
-  const press = (midi: number) => {
+  const press = (midi: number, time = performance.now()) => {
     if (voices.current.has(midi)) return;
-    voices.current.set(midi, sound ? playNote(midi) : null);
+    voices.current.set(midi, sound ? playNote(midi, 0.8, timbre) : null);
     publishNote({
       type: 'note-on',
       midi,
       velocity: 0.8,
-      time: performance.now(),
+      time,
       source: 'keyboard',
     });
   };
@@ -133,7 +143,7 @@ export function VirtualKeyboard({
     };
   }, []);
 
-  return (
+  const keys = (
     <PianoKeyboard
       {...keyboard}
       active={held}
@@ -148,5 +158,12 @@ export function VirtualKeyboard({
           : undefined
       }
     />
+  );
+  return dock ? (
+    <div className={classes.dock} data-keyboard-dock>
+      {keys}
+    </div>
+  ) : (
+    keys
   );
 }

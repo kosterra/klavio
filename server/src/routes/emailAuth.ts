@@ -4,7 +4,8 @@ import type { AppConfig } from '../config.js';
 import { User } from '../models/index.js';
 import { HttpError } from '../lib/errors.js';
 import { issueEmailCode, checkEmailCode } from '../lib/emailCodes.js';
-import { loginCodeMail, type Mailer } from '../lib/mailer.js';
+import type { Mailer } from '../lib/mailer.js';
+import { codeMail } from '../lib/mailTemplates.js';
 import { randomToken } from '../lib/crypto.js';
 import { createSession } from '../lib/session.js';
 import { getSettings } from '../lib/settings.js';
@@ -43,14 +44,16 @@ const emailAuthRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer
     },
     async (req, reply) => {
       await requestLimit.checkIp(req);
-      const { email } = req.body;
+      const { email, lang } = req.body;
       // Always 204 — never reveal whether an account exists or a mail was throttled.
       // With registration closed, unknown addresses silently get no mail.
       if (!(await User.exists({ email })) && !(await registrationOpen())) {
         return reply.code(204).send();
       }
+      // the language of later mails (e.g. the warning before deleting an unused account)
+      if (lang) await User.updateOne({ email }, { locale: lang === 'en' ? 'en' : 'de-CH' });
       const code = await issueEmailCode(config, { email, purpose: 'login' });
-      if (code) await mailer.send(loginCodeMail(email, code));
+      if (code) await mailer.send(await codeMail(config, 'login-code', email, code, lang));
       return reply.code(204).send();
     },
   );
@@ -63,7 +66,7 @@ const emailAuthRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer
     },
     async (req, reply) => {
       await verifyLimit.checkIp(req);
-      const { email, code, displayName } = req.body;
+      const { email, code, displayName, lang } = req.body;
       const existing = await User.findOne({ email });
 
       if (!existing) {
@@ -84,7 +87,12 @@ const emailAuthRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer
 
       let user;
       try {
-        user = await User.create({ displayName, email, webauthnUserId: randomToken(32) });
+        user = await User.create({
+          displayName,
+          email,
+          webauthnUserId: randomToken(32),
+          locale: lang === 'en' ? 'en' : 'de-CH',
+        });
       } catch {
         // Lost a race against a parallel sign-up with the same address.
         throw new HttpError(409, 'EMAIL_IN_USE');

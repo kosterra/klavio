@@ -1,0 +1,57 @@
+.svg {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  margin-inline: auto;
+}
+
+/* the keys: fixed artwork colours, like a real piano in both schemes */
+.white,
+.usedWhite {
+  fill: #fff;
+  stroke: var(--klavio-comic-line);
+  stroke-width: 2;
+}
+
+.usedWhite {
+  fill: #ffe8a3;
+}
+
+.black,
+.usedBlack {
+  fill: #2b2d42;
+  stroke: var(--klavio-comic-line);
+  stroke-width: 2;
+}
+
+.usedBlack {
+  fill: #7a5a00;
+}
+
+.outline,
+.palmLine {
+  stroke: var(--klavio-hand-line);
+  fill: var(--klavio-hand-line);
+}
+
+.skin,
+.palm {
+  stroke: var(--klavio-hand);
+  fill: var(--klavio-hand);
+}
+
+.number circle {
+  fill: var(--mantine-color-indigo-7);
+}
+
+.number text,
+.numberIdle text {
+  fill: #fff;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.numberIdle circle {
+  fill: var(--mantine-color-gray-7);
+}

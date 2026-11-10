@@ -1,0 +1,56 @@
+.page {
+  min-height: 100dvh;
+}
+
+/* a big option: icon, name, one line of explanation */
+.choice {
+  display: flex;
+  gap: var(--mantine-spacing-md);
+  align-items: center;
+  min-height: 64px;
+  width: 100%;
+  padding: var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-lg);
+  border: 2px solid var(--mantine-color-default-border);
+  background: var(--klavio-surface);
+  text-align: left;
+}
+
+.choice:hover {
+  border-color: var(--mantine-primary-color-filled);
+}
+
+.choice[data-selected] {
+  border-color: var(--mantine-primary-color-filled);
+  background: var(--mantine-primary-color-light);
+}
+
+.choiceIcon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  color: var(--mantine-primary-color-contrast);
+  background: var(--mantine-primary-color-filled);
+}
+
+.staff {
+  width: 100%;
+  padding: var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-lg);
+  background: var(--klavio-surface);
+  border: 1px solid var(--mantine-color-default-border);
+}
+
+.summary {
+  margin: 0;
+  padding-left: 1.25em;
+  font-size: var(--mantine-font-size-lg);
+  line-height: 1.6;
+}
+
+.notSure {
+  align-self: flex-start;
+}

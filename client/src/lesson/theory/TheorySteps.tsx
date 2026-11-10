@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Card, Group, Stack, Text } from '@mantine/core';
+import { Button, Card, Group, Stack, Text, Title } from '@mantine/core';
 import { IconCheck, IconHandStop, IconPlayerPlay, IconVolume, IconX } from '@tabler/icons-react';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
@@ -88,6 +88,8 @@ function Quiz({ step, kids, onSolved, setFeedback }: StepProps<QuizStep>) {
   const loc = useLocalized();
   const [tried, setTried] = useState<number[]>([]);
   const [solved, setSolved] = useState(false);
+  // numbers and note names: big square tiles, easy to hit
+  const tiles = step.answers.every((a) => loc(a.text).length <= 3);
   return (
     <Stack gap="md">
       {step.picture && <TheoryPicture picture={step.picture} kids={kids} />}
@@ -101,7 +103,7 @@ function Quiz({ step, kids, onSolved, setFeedback }: StepProps<QuizStep>) {
               size={kids ? 'xl' : 'lg'}
               variant={right ? 'filled' : 'default'}
               color={right ? 'teal' : wrong ? 'red' : undefined}
-              className={classes.answer}
+              className={tiles ? classes.tile : classes.answer}
               data-wrong={wrong || undefined}
               leftSection={right ? <IconCheck /> : wrong ? <IconX /> : undefined}
               disabled={solved && !a.correct}
@@ -145,7 +147,12 @@ function Listen({ step, kids, onSolved, setFeedback }: StepProps<ListenStep>) {
   const play = () => {
     playback.current?.stop();
     const p = playMelody(
-      r.notes.map((m) => ({ midi: m, beats: 1 })),
+      r.notes.map((m) => ({
+        midi: m,
+        beats: 1,
+        velocity: r.velocity,
+        hold: r.touch === 'staccato' ? 0.25 : r.touch === 'legato' ? 1 : undefined,
+      })),
       tempo,
       (i) => setPlaying(i),
     );
@@ -336,6 +343,8 @@ export function TheorySteps({
   title,
   doneLabel,
   skipLabel,
+  lessonTitle,
+  onStep,
 }: {
   steps: TheoryStep[];
   kids: boolean;
@@ -346,6 +355,10 @@ export function TheorySteps({
   doneLabel?: string;
   /** label of the skip button (default "Überspringen") */
   skipLabel?: string;
+  /** the lesson's name under the kicker, so one knows where one is */
+  lessonTitle?: string;
+  /** called with the index of the step now shown */
+  onStep?: (index: number) => void;
 }) {
   const { t } = useTranslation();
   const loc = useLocalized();
@@ -360,9 +373,11 @@ export function TheorySteps({
 
   const next = () => {
     if (last) {
+      onStep?.(steps.length);
       onDone();
       return;
     }
+    onStep?.(index + 1);
     setIndex(index + 1);
     setSolved(false);
     setFeedback(null);
@@ -387,10 +402,17 @@ export function TheorySteps({
       w="100%"
     >
       <Stack gap="lg">
-        <Group justify="space-between" wrap="nowrap">
-          <Text size="sm" fw={800} tt="uppercase" c="dimmed">
-            {title ?? t('theory.title')}
-          </Text>
+        <Group justify="space-between" wrap="nowrap" align="flex-start">
+          <div>
+            <Text size="sm" fw={800} tt="uppercase" c="dimmed">
+              {title ?? t('theory.title')}
+            </Text>
+            {lessonTitle && (
+              <Title order={1} size="h3" lh={1.2}>
+                {lessonTitle}
+              </Title>
+            )}
+          </div>
           <Group
             gap={6}
             role="img"

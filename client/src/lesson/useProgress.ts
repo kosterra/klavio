@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { localIsoDate, type ProgressDto } from '@klavio/shared';
+import { localIsoDate, weekOf, type ProgressDto } from '@klavio/shared';
 import { ApiError } from '../api/client';
 import { endpoints } from '../api/endpoints';
 import { useSession } from '../auth/session';
@@ -20,10 +20,13 @@ export async function loadProgress(profileId: string): Promise<ProgressDto> {
   } catch (err) {
     if (!(err instanceof ApiError && err.code === 'NETWORK')) throw err;
     const cached = readJson<ProgressDto>(key);
-    progress = cached ?? { lessons: {}, today: { date, seconds: 0, xp: 0 } };
+    progress = cached ?? { lessons: {}, today: { date, seconds: 0, xp: 0 }, weekDays: [] };
     // the cache may be from an earlier day
     if (progress.today.date !== date)
       progress = { ...progress, today: { date, seconds: 0, xp: 0 } };
+    // a cache from an earlier week (or from before week days existed)
+    const monday = weekOf(date);
+    progress = { ...progress, weekDays: (progress.weekDays ?? []).filter((d) => d >= monday) };
   }
   return withQueuedResults(progress, readQueue(), profileId);
 }

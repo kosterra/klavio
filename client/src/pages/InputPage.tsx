@@ -20,6 +20,7 @@ import {
 } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import { midiToName, type NoteEvent } from '@klavio/shared';
 import { useSession } from '../auth/session';
 import { useMidi } from '../input/useMidi';
@@ -38,6 +39,7 @@ type Source = NoteEvent['source'];
  */
 export function InputPage() {
   const { t, i18n } = useTranslation();
+  usePageTitle(t('input.title'));
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
   const { activeProfile } = useSession();
   const midi = useMidi();

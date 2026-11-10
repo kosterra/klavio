@@ -28,6 +28,8 @@ export interface LessonProgressDto {
 export interface ProgressDto {
   lessons: Record<string, LessonProgressDto>;
   today: { date: string; seconds: number; xp: number };
+  /** the days of this week (from Monday) with practice, YYYY-MM-DD */
+  weekDays: string[];
 }
 
 export interface LessonResultDto {

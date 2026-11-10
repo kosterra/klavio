@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { addVirtualAuthenticator, signUpWithEmail, uniqueEmail } from './helpers';
+import { addVirtualAuthenticator, signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
 import { audit } from './audit';
 
 /** Types into a Mantine PinInput (first box focused → digits move on by themselves). */
@@ -13,7 +13,9 @@ test('account name and parent PIN protect the parent area', async ({ page }) => 
   await signUpWithEmail(page, uniqueEmail('parent'), 'Familie Muster');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Lina');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Hallo Lina!' })).toBeVisible();
 
   // --- right after login the parent area is open: rename the account, set a PIN
@@ -90,7 +92,9 @@ test('the input setup belongs to the parent area; a passkey can open it instead 
   await signUpWithEmail(page, uniqueEmail('parentkey'), 'Familie Schlüssel');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Tim');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Hallo Tim!' })).toBeVisible();
 
   // parent: a passkey, a PIN, and the passkey switch

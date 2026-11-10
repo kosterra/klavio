@@ -20,6 +20,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'prompt',
       injectRegister: false,
+      // the manifest is fetched with cookies, so the app stays installable
+      // behind a login in front of it (e.g. Cloudflare Access)
+      useCredentials: true,
       pwaAssets: { config: true, overrideManifestIcons: true },
       manifest: {
         name: APP_CONFIG.name,

@@ -2,17 +2,38 @@ import { Button, Group, Progress, Text, ThemeIcon, Title, Tooltip } from '@manti
 import { IconArrowRight, IconCheck, IconClock, IconMusicHeart } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { SKILL_NAMES, findLesson, goalProgress, type GoalSong } from '@klavio/shared';
+import {
+  CURRICULUM,
+  SKILL_NAMES,
+  findLesson,
+  goalProgress,
+  lessonsForSkill,
+  type GoalSong,
+} from '@klavio/shared';
+import { chapterColor, worldOf } from '../lesson/worlds';
+import { useWorldMode } from '../lesson/useWorldMode';
 import { useLocalized } from '../lesson/useLocalized';
 import classes from './Goal.module.css';
+import { useLessonFor } from '../lesson/useLessonFor';
 
 /**
  * «Mein Traumlied» on the dashboard: how far along the way to the goal song
  * the learner is, the skills it needs (ticked off) and the next step.
  */
-export function GoalSongCard({ goal, completed }: { goal: GoalSong; completed: Set<string> }) {
+export function GoalSongCard({
+  goal,
+  completed,
+  journey,
+}: {
+  goal: GoalSong;
+  completed: Set<string>;
+  /** «Die Reise»: the elevation profile to the dream song, inside this card */
+  journey?: React.ReactNode;
+}) {
   const { t } = useTranslation();
   const loc = useLocalized();
+  const forMe = useLessonFor();
+  const worldSet = useWorldMode();
   const p = goalProgress(goal.skills, completed);
   const nextLesson = p.next ? findLesson(p.next.lessonId) : undefined;
   return (
@@ -42,29 +63,49 @@ export function GoalSongCard({ goal, completed }: { goal: GoalSong; completed: S
             </Text>
           </Group>
           <Text size="sm" fw={600} mt={4}>
-            {t('goal.skillsReached', { reached: p.reached, total: p.total })}
+            {p.reached === 0
+              ? t('goal.skillsStart', { total: p.total })
+              : t('goal.skillsReached', { reached: p.reached, total: p.total })}
           </Text>
         </div>
       </Group>
 
+      {journey}
+
+      <Text size="xs" c="dimmed" mt="md">
+        {t('goal.legend')}
+      </Text>
       <ul className={classes.skills} aria-label={t('goal.skillsLabel')}>
         {p.skills.map((s) => {
           const name = loc(SKILL_NAMES[s.id]);
           const state = s.reached ? 'reached' : s.taught ? 'open' : 'later';
+          // where it is taught: the chapter of its first lesson, in that world's colour
+          const first = lessonsForSkill(s.id)[0];
+          const ci = first
+            ? CURRICULUM.findIndex((c) => c.lessons.some((l) => l.id === first))
+            : -1;
+          const world = ci >= 0 ? worldOf(CURRICULUM[ci]!.id, ci, worldSet) : null;
+          const where = world
+            ? t('goal.inChapter', { n: ci + 1, world: t(`path.worlds.${world.id}`) })
+            : null;
+          const tip = [t(`goal.state.${state}`), where].filter(Boolean).join(' · ');
           return (
             <li key={s.id} data-state={state}>
-              <Tooltip
-                label={t(`goal.state.${state}`)}
-                events={{ hover: true, focus: true, touch: true }}
-              >
+              <Tooltip label={tip} events={{ hover: true, focus: true, touch: true }}>
                 <span className={classes.skill} tabIndex={0}>
-                  {s.reached ? (
-                    <IconCheck size={14} aria-hidden />
-                  ) : s.taught ? null : (
+                  {world ? (
+                    <span
+                      className={classes.stone}
+                      style={{ background: `var(--mantine-color-${chapterColor(world, ci)}-9)` }}
+                      aria-hidden
+                    >
+                      {s.reached ? <IconCheck size={12} stroke={3} /> : ci + 1}
+                    </span>
+                  ) : (
                     <IconClock size={14} aria-hidden />
                   )}
                   {name}
-                  <span className={classes.srOnly}>, {t(`goal.state.${state}`)}</span>
+                  <span className={classes.srOnly}>, {tip}</span>
                 </span>
               </Tooltip>
             </li>
@@ -84,13 +125,27 @@ export function GoalSongCard({ goal, completed }: { goal: GoalSong; completed: S
             color="pink.8"
             rightSection={<IconArrowRight size={16} />}
           >
-            {loc(nextLesson.title)}
+            {loc(forMe(nextLesson).title)}
           </Button>
         </Group>
       ) : p.reached === p.total ? (
-        <Text fw={800} mt="sm">
-          {t('goal.ready', { title: goal.title })}
-        </Text>
+        <div data-testid="goal-ready">
+          <Text fw={800} mt="sm">
+            {t('goal.ready', { title: goal.title })}
+          </Text>
+          {/* honest: Klavio teaches the skills, not this song – here is how to go on */}
+          <Text size="sm" mt={4}>
+            {t('goal.howTo')}
+          </Text>
+          <ol className={classes.steps}>
+            {(['sheet', 'slow', 'metronome', 'teacher'] as const).map((k) => (
+              <li key={k}>{t(`goal.howToSteps.${k}`)}</li>
+            ))}
+          </ol>
+          <Button component={Link} to="/metronome" size="sm" variant="light" color="pink.8">
+            {t('metronome.open')}
+          </Button>
+        </div>
       ) : (
         <Text size="sm" fw={600} mt="sm">
           {t('goal.waiting')}

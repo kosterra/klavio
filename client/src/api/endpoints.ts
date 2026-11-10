@@ -7,7 +7,14 @@ import type {
   PasskeyDto,
   ProfileDto,
   PublicConfigResponse,
+  ProfileOverviewDto,
+  MailLang,
+  MailTemplateDto,
+  MailTemplateId,
+  MailTemplateTexts,
 } from '@klavio/shared';
+import { mailLangOf } from '@klavio/shared';
+import i18n from '../i18n';
 import type {
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON,
@@ -16,7 +23,13 @@ import type {
 } from '@simplewebauthn/browser';
 import { api } from './client';
 
-export type ProfileInput = Pick<ProfileDto, 'name' | 'avatar' | 'uiMode' | 'dailyGoalMinutes'>;
+/** Code mails are written in the language the app is shown in. */
+const lang = () => mailLangOf(i18n.language);
+
+export type ProfileInput = Pick<
+  ProfileDto,
+  'name' | 'avatar' | 'uiMode' | 'dailyGoalMinutes' | 'birthYear' | 'world'
+>;
 
 export const endpoints = {
   config: () => api<PublicConfigResponse>('GET', '/config'),
@@ -27,9 +40,12 @@ export const endpoints = {
   loginVerify: (response: AuthenticationResponseJSON) =>
     api('POST', '/auth/login/verify', { response }),
 
-  emailRequest: (email: string) => api('POST', '/auth/email/request', { email }),
+  emailRequest: (email: string) => api('POST', '/auth/email/request', { email, lang: lang() }),
   emailVerify: (body: { email: string; code: string; displayName?: string }) =>
-    api<{ status: 'ok' | 'needs-display-name' | 'created' }>('POST', '/auth/email/verify', body),
+    api<{ status: 'ok' | 'needs-display-name' | 'created' }>('POST', '/auth/email/verify', {
+      ...body,
+      lang: lang(),
+    }),
 
   passkeys: () => api<PasskeyDto[]>('GET', '/passkeys'),
   addPasskeyOptions: () => api<PublicKeyCredentialCreationOptionsJSON>('POST', '/passkeys/options'),
@@ -39,7 +55,8 @@ export const endpoints = {
     api<PasskeyDto>('PATCH', `/passkeys/${id}`, { name }),
   deletePasskey: (id: string) => api('DELETE', `/passkeys/${id}`),
 
-  accountEmailRequest: (email: string) => api('POST', '/account/email/request', { email }),
+  accountEmailRequest: (email: string) =>
+    api('POST', '/account/email/request', { email, lang: lang() }),
   accountEmailVerify: (code: string) =>
     api<{ email: string }>('POST', '/account/email/verify', { code }),
   updateAccount: (displayName: string) =>
@@ -57,15 +74,22 @@ export const endpoints = {
     api<{ unlockedUntil: string | null }>('POST', '/account/pin/passkey/verify', { response }),
 
   profiles: () => api<ProfileDto[]>('GET', '/profiles'),
+  profileOverview: (date: string) =>
+    api<ProfileOverviewDto[]>('GET', `/profiles/overview?date=${encodeURIComponent(date)}`),
   createProfile: (body: ProfileInput) => api<ProfileDto>('POST', '/profiles', body),
   updateProfile: (
     id: string,
     body: Partial<ProfileInput> & {
       calibration?: Partial<ProfileDto['calibration']>;
       goalSong?: ProfileDto['goalSong'];
+      outfit?: ProfileDto['outfit'];
+      setupDone?: true;
+      motive?: ProfileDto['motive'];
+      weeklyGoalDays?: ProfileDto['weeklyGoalDays'];
     },
   ) => api<ProfileDto>('PATCH', `/profiles/${id}`, body),
   deleteProfile: (id: string) => api('DELETE', `/profiles/${id}`),
+  placement: (chapterId: string) => api('POST', '/progress/placement', { chapterId }),
   selectProfile: (profileId: string) => api('POST', '/profiles/select', { profileId }),
 
   progress: (date: string) => api<ProgressDto>('GET', `/progress?date=${encodeURIComponent(date)}`),
@@ -73,6 +97,13 @@ export const endpoints = {
     api<LessonResultDto>('POST', `/progress/lessons/${lessonId}`, body),
 
   adminSettings: () => api<AdminSettingsDto>('GET', '/admin/settings'),
-  updateAdminSettings: (body: AdminSettingsDto) =>
+  updateAdminSettings: (body: Partial<AdminSettingsDto>) =>
     api<AdminSettingsDto>('PUT', '/admin/settings', body),
+  mailTemplates: () => api<MailTemplateDto[]>('GET', '/admin/mail-templates'),
+  saveMailTemplate: (id: MailTemplateId, texts: MailTemplateTexts) =>
+    api<MailTemplateDto>('PUT', `/admin/mail-templates/${id}`, texts),
+  resetMailTemplate: (id: MailTemplateId) =>
+    api<MailTemplateDto>('DELETE', `/admin/mail-templates/${id}`),
+  testMailTemplate: (id: MailTemplateId, mailLang: MailLang) =>
+    api('POST', `/admin/mail-templates/${id}/test`, { lang: mailLang }),
 };

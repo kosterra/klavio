@@ -16,6 +16,10 @@ const userSchema = new Schema(
     /** the parent area may also be opened with one of the account's passkeys */
     parentPasskeyUnlock: { type: Boolean, default: false },
     locale: { type: String, default: 'de-CH' },
+    /** last day the account was used (for deleting long-inactive accounts, if admins set it) */
+    lastActiveAt: { type: Date, default: null },
+    /** when the warning before deletion went out; cleared when the account is used again */
+    inactiveWarnedAt: { type: Date, default: null },
   },
   { timestamps: true },
 );
@@ -73,7 +77,19 @@ const profileSchema = new Schema(
     name: { type: String, required: true },
     avatar: { type: String, default: 'klavi' },
     uiMode: { type: String, enum: ['kids', 'classic'], default: 'kids' },
+    /** only the year, to offer the right worlds; null for profiles from before it was asked */
+    birthYear: { type: Number, default: null },
+    /** chosen worlds (kids | journey); null = follows uiMode */
+    world: { type: String, enum: ['kids', 'journey', null], default: null },
+    /** the wardrobe piece the figure wears (unlocked by level) */
+    outfit: { type: String, default: null },
     dailyGoalMinutes: { type: Number, default: 10 },
+    /** false for a new profile until the start-up questions are done; missing = done */
+    setupDone: { type: Boolean },
+    /** why the learner plays (read, songs, relax, fun, child) */
+    motive: { type: String, default: null },
+    /** planned practice days per week */
+    weeklyGoalDays: { type: Number, default: null },
     calibration: {
       a4Hz: { type: Number, default: 440 },
       noiseFloorDb: { type: Number, default: null },
@@ -85,6 +101,7 @@ const profileSchema = new Schema(
       current: { type: Number, default: 0 },
       longest: { type: Number, default: 0 },
       lastActiveDate: { type: String, default: null }, // YYYY-MM-DD in the learner's local time
+      freeDayWeek: { type: String, default: null }, // the week whose free day was used
     },
     badges: { type: [{ id: String, earnedAt: Date, _id: false }], default: [] },
     // the learner's goal song: only its title, a style and the skills it needs
@@ -116,6 +133,8 @@ const lessonProgressSchema = new Schema(
     lastLocalDate: { type: String, default: null },
     reviewBox: { type: Number, default: 0 },
     reviews: { type: Number, default: 0 },
+    /** passed by placement («I can already do this»), not played */
+    placed: { type: Boolean, default: false },
   },
   { timestamps: true },
 );
@@ -172,7 +191,38 @@ const appSettingsSchema = new Schema(
     _id: { type: String, default: 'global' },
     /** When false, no new accounts can be created; existing users can still log in. */
     registrationOpen: { type: Boolean, required: true },
+    /** who runs this instance (footer, privacy page); empty until an admin fills it in */
+    operatorName: { type: String, default: '' },
+    contactEmail: { type: String, default: '' },
+    /** from this age profiles can choose between the kids' worlds and the journey */
+    journeyMinAge: { type: Number },
+    /** false: robots noindex everywhere (a private family or school instance) */
+    searchIndexing: { type: Boolean },
+    /** accounts without any sign-in for this many months are deleted (0 = never) */
+    inactiveDeleteMonths: { type: Number },
   },
   { timestamps: true },
 );
 export const AppSettings = model('AppSettings', appSettingsSchema);
+
+// ---------------------------------------------------------------------------
+// E-mail texts changed by admins (one document per mail; missing → built-in texts)
+// ---------------------------------------------------------------------------
+const mailTextSchema = new Schema(
+  {
+    subject: { type: String, required: true },
+    heading: { type: String, required: true },
+    intro: { type: String, default: '' },
+    outro: { type: String, default: '' },
+  },
+  { _id: false },
+);
+const mailTemplateSchema = new Schema(
+  {
+    _id: { type: String, required: true },
+    de: { type: mailTextSchema, required: true },
+    en: { type: mailTextSchema, required: true },
+  },
+  { timestamps: true },
+);
+export const MailTemplate = model('MailTemplate', mailTemplateSchema);

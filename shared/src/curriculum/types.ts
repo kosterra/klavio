@@ -1,3 +1,5 @@
+import type { KeySignature, Spelling } from '../music/notes.ts';
+
 /** Text in every supported UI language. */
 export interface Localized {
   'de-CH': string;
@@ -16,7 +18,11 @@ export interface FindKeyExercise {
 /** "Spiel nach": play the shown notes in order; the app waits for each one. */
 export interface PlayAlongExercise {
   type: 'play-along';
+  /** names of black keys with ♭ instead of ♯ (F major: B, not Ais) */
+  spelling?: Spelling;
   sequences: number[][];
+  /** finger numbers per note (1 = thumb … 5 = little finger), same shape as `sequences` */
+  fingers?: number[][];
 }
 
 /** "Notenlesen": a note is shown on the staff; play exactly that key. */
@@ -26,6 +32,25 @@ export interface ReadNoteExercise {
   clef: 'treble' | 'bass' | 'grand';
   notes: number[];
   rounds: number;
+  /** a key signature at the start of the staff (G major: F♯, F major: B♭) */
+  keySignature?: KeySignature;
+  /** how black keys are written (♭ or ♯) when the key signature doesn't say */
+  spelling?: Spelling;
+}
+
+/**
+ * «Notenregen»: notes on little staves fall from the sky; play each one
+ * before it lands. It gets faster the longer one keeps it up – reading
+ * becomes quick. Three notes may land, the fourth ends the round.
+ */
+export interface NoteRainExercise {
+  type: 'note-rain';
+  clef: 'treble' | 'bass';
+  notes: number[];
+  /** notes to catch for the round */
+  goal: number;
+  /** seconds a note needs to fall at the start */
+  fall: number;
 }
 
 /** Note values (VexFlow notation): whole, half, quarter, eighth; "d" = dotted. */
@@ -34,6 +59,10 @@ export type NoteValue = 'w' | 'h' | 'hd' | 'q' | 'qd' | '8';
 export interface SongNote {
   midi: number;
   value: NoteValue;
+  /** finger (1 = thumb … 5 = little finger), shown above the note */
+  finger?: number;
+  /** tied to the next note (same pitch): that one is held, not played again */
+  tie?: boolean;
 }
 
 /**
@@ -49,7 +78,63 @@ export interface SongExercise {
   tempo: number;
   /** Show note names below the notes (before note reading is learned). */
   showNames: boolean;
+  /** an upbeat: the first bar is only this many beats long (the last one makes up the rest) */
+  pickup?: number;
+  /** a key signature at the start of the staff (G major: F♯) */
+  keySignature?: KeySignature;
   bars: SongNote[][];
+}
+
+/**
+ * "Im Takt": the same song once more, now in time – a bar of count-in, then
+ * the metronome keeps going and every note counts when it comes on time.
+ */
+export interface TimedSongExercise extends Omit<SongExercise, 'type'> {
+  type: 'song-timed';
+}
+
+/**
+ * "Akkorde": several keys at once, one chord after the other. With a digital
+ * piano (MIDI) all notes of a chord have to sound together; with the
+ * microphone or the screen keys one note of the chord is enough.
+ */
+export interface ChordsExercise {
+  type: 'chords';
+  /** the chords in order, each its notes (MIDI) */
+  chords: number[][];
+  /** the chord names shown (C, F, G …) */
+  names: string[];
+  /** finger per note, same shape as `chords` */
+  fingers?: number[][];
+}
+
+/**
+ * "Laut und leise": each note loud (f) or soft (p). A digital piano (MIDI)
+ * tells how hard the key was struck; otherwise the right key is enough.
+ */
+export interface DynamicsExercise {
+  type: 'dynamics';
+  tasks: { midi: number; level: 'p' | 'f' }[];
+}
+
+/**
+ * "Pedal": each note with the sustain pedal down, and the pedal lifted in
+ * between so the notes don't blur. Only a digital piano (MIDI) reports the
+ * pedal; otherwise the right key is enough.
+ */
+export interface PedalExercise {
+  type: 'pedal';
+  notes: number[];
+}
+
+/**
+ * "Hör zu und spiel nach": Klavi plays a few notes without showing them; the
+ * learner plays them back by ear. After a mistake the motif is played again.
+ */
+export interface EchoExercise {
+  type: 'echo';
+  motifs: number[][];
+  tempo: number;
 }
 
 /** Rhythm values: note values plus rests ("qr" = quarter rest, …). */
@@ -95,7 +180,8 @@ export interface PieceExercise {
  */
 export interface ImproviseExercise {
   type: 'improvise';
-  keys: 'black';
+  /** black keys over an F♯ groove, or white keys over a C groove */
+  keys: 'black' | 'white';
   tempo: number;
   bars: number;
   minNotes: number;
@@ -105,7 +191,13 @@ export type Exercise =
   | FindKeyExercise
   | PlayAlongExercise
   | ReadNoteExercise
+  | NoteRainExercise
   | SongExercise
+  | TimedSongExercise
+  | ChordsExercise
+  | EchoExercise
+  | DynamicsExercise
+  | PedalExercise
   | RhythmExercise
   | PieceExercise
   | ImproviseExercise;
@@ -121,9 +213,20 @@ export interface Lesson {
   keyboard: { from: number; to: number };
   /** Note names on the keys (beginners) or not (when finding the key is the point). */
   keyLabels: 'all' | 'c' | 'none';
+  /**
+   * A bonus lesson (e.g. an extra song): open as soon as its chapter is, but
+   * never in the way – the next lessons don't wait for it, and a chapter counts
+   * as done without it. So new bonus lessons can join without holding anyone up.
+   */
+  bonus?: boolean;
   /** Song lessons are drawn differently on the learning path. */
   kind: 'keys' | 'play' | 'read' | 'song' | 'rhythm' | 'improvise';
   exercises: Exercise[];
+  /**
+   * For grown-ups (the journey): the same lesson with a piece instead of a
+   * children's song – same keys, same skill, same place in the path.
+   */
+  adult?: { title: Localized; intro: Localized; exercises: Exercise[] };
 }
 
 export interface Chapter {
@@ -172,6 +275,8 @@ export type TheoryPicture =
       names?: boolean;
       /** colour the lines or the spaces of the staff */
       highlight?: 'lines' | 'spaces';
+      keySignature?: KeySignature;
+      spelling?: Spelling;
     }
   | {
       /** treble and bass staff together; notes from middle C up go into the treble */
@@ -221,7 +326,14 @@ export interface ListenStep {
   type: 'listen';
   text: Localized;
   answers: [Localized, Localized];
-  rounds: { notes: number[]; answer: 0 | 1 }[];
+  rounds: {
+    notes: number[];
+    answer: 0 | 1;
+    /** how the notes sound: connected (legato) or short (staccato) */
+    touch?: 'legato' | 'staccato';
+    /** how hard the keys are struck, 0–1 (loud and soft) */
+    velocity?: number;
+  }[];
 }
 
 /** Tap along on the screen with a metronome: one bar, any rhythm values (rests = don't tap). */

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { LESSONS } from '@klavio/shared';
 import { audit } from './audit';
-import { seedCompletedLessons, signUpWithEmail, uniqueEmail } from './helpers';
+import { seedCompletedLessons, signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
 
 test('the first lesson starts with "Entdecken": explanations, games and a quiz', async ({
   page,
@@ -10,13 +10,18 @@ test('the first lesson starts with "Entdecken": explanations, games and a quiz',
   await signUpWithEmail(page, uniqueEmail('theory'), 'Familie Ton');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Lia');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await page.getByRole('link', { name: 'Erste Lektion starten' }).click();
 
   const text = page.getByTestId('theory-text');
   const next = page.getByTestId('theory-next');
   const status = page.getByRole('status');
 
+  // 0 how to sit at the piano
+  await expect(text).toContainText('So sitzt du gut am Klavier');
+  await next.click();
   // 1 explanation with the groups of black keys
   await expect(text).toContainText('weisse und schwarze');
   await audit(page);
@@ -60,10 +65,10 @@ test('the first lesson starts with "Entdecken": explanations, games and a quiz',
   await expect(next).toHaveText('Jetzt spielen!');
   await next.click();
 
-  await expect(page.getByRole('button', { name: 'Los geht’s!' })).toBeVisible();
+  await expect(page.getByTestId('lesson-start')).toBeVisible();
   // the theory can be opened again from the start card
   await page.getByTestId('theory-again').click();
-  await expect(text).toContainText('weisse und schwarze');
+  await expect(text).toContainText('So sitzt du gut am Klavier');
 });
 
 test('quiz: wrong answers get a hint, the right one unlocks "Weiter"', async ({ page }) => {
@@ -71,7 +76,9 @@ test('quiz: wrong answers get a hint, the right one unlocks "Weiter"', async ({ 
   await signUpWithEmail(page, uniqueEmail('quiz'), 'Familie Quiz');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Noa');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   // jump to a lesson with a quiz: keys-d-e needs the two lessons before
   await seedCompletedLessons(page, ['keys-c', 'keys-middle-c']);
@@ -90,7 +97,7 @@ test('quiz: wrong answers get a hint, the right one unlocks "Weiter"', async ({ 
   await expect(page.getByRole('status')).toContainText('Genau!');
   await audit(page);
   await next.click();
-  await expect(page.getByRole('button', { name: 'Los geht’s!' })).toBeVisible();
+  await expect(page.getByTestId('lesson-start')).toBeVisible();
 });
 
 test('reading and rhythm theory: staff lines/spaces, pizza note values, clap game', async ({
@@ -100,7 +107,9 @@ test('reading and rhythm theory: staff lines/spaces, pizza note values, clap gam
   await signUpWithEmail(page, uniqueEmail('theory2'), 'Familie Takt');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Mo');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   const ids = LESSONS.map((l) => l.id);
   // all played: «Nochmals entdecken» opens just the lesson's theory (no recap)
@@ -146,14 +155,16 @@ test('"Wissen" lists what was discovered; a new chapter starts with "Weisst du�
   await signUpWithEmail(page, uniqueEmail('wissen'), 'Familie Wissen');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Ela');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
   await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   const ids = LESSONS.map((l) => l.id);
   await seedCompletedLessons(page, ids.slice(0, ids.indexOf('hand-a-h')));
 
   // knowledge page via the menu
-  await page.getByRole('button', { name: 'Menü' }).click();
-  await page.getByRole('menuitem', { name: 'Wissen' }).click();
+  await page.getByTestId('nav-toggle').click();
+  await page.getByTestId('side-nav').getByRole('link', { name: 'Wissen' }).click();
   await expect(page.getByRole('heading', { name: 'Wissen', level: 1 })).toBeVisible();
   await expect(page.getByTestId('knowledge-keys-c')).toContainText('schwarze');
   await expect(page.getByTestId('knowledge-hand-a-h')).toBeVisible(); // reached, not played yet

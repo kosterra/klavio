@@ -14,6 +14,7 @@ import {
 import { useForm } from '@mantine/form';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import { displayNameSchema, emailSchema } from '@klavio/shared';
 import { endpoints } from '../api/endpoints';
 import { useSession } from '../auth/session';
@@ -28,6 +29,7 @@ type Step = 'email' | 'code' | 'name';
  */
 export function EmailLoginPage({ intent }: { intent: 'login' | 'register' }) {
   const { t } = useTranslation();
+  usePageTitle(intent === 'register' ? t('email.registerTitle') : t('email.title'));
   const { config, refresh } = useSession();
   const errorText = useErrorText();
   const [step, setStep] = useState<Step>('email');
@@ -139,7 +141,7 @@ export function EmailLoginPage({ intent }: { intent: 'login' | 'register' }) {
                 {...form.getInputProps('displayName')}
               />
             )}
-            <Group grow>
+            <Group grow preventGrowOverflow={false}>
               <Button variant="default" component={Link} to="/welcome">
                 {t('common.back')}
               </Button>

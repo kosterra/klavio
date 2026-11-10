@@ -1,12 +1,22 @@
 import { describe, expect, it } from 'vitest';
 import {
+  CORE_LESSONS,
   CURRICULUM,
   LESSONS,
   isLessonUnlocked,
   lessonTargetCount,
   nextLesson,
 } from './curriculum.ts';
-import { addDays, levelForXp, nextStreak, starsFor, xpFor, xpForLevel } from './rewards.ts';
+import {
+  addDays,
+  levelForXp,
+  liveStreak,
+  nextStreak,
+  starsFor,
+  weekOf,
+  xpFor,
+  xpForLevel,
+} from './rewards.ts';
 
 describe('curriculum data', () => {
   it('has unique, stable-looking ids', () => {
@@ -32,7 +42,7 @@ describe('curriculum data', () => {
         const notes =
           e.type === 'play-along'
             ? e.sequences.flat()
-            : e.type === 'song'
+            : e.type === 'song' || e.type === 'song-timed'
               ? e.bars.flat().map((n) => n.midi)
               : e.type === 'rhythm'
                 ? [e.midi]
@@ -42,7 +52,13 @@ describe('curriculum data', () => {
                       .flatMap((n) => (n.midi === null ? [] : [n.midi]))
                   : e.type === 'improvise'
                     ? []
-                    : e.notes;
+                    : e.type === 'chords'
+                      ? e.chords.flat()
+                      : e.type === 'dynamics'
+                        ? e.tasks.map((x) => x.midi)
+                        : e.type === 'echo'
+                          ? e.motifs.flat()
+                          : e.notes;
         for (const n of notes) {
           if (e.type === 'find-key' && e.anyOctave) {
             // some octave of the pitch class must be visible
@@ -181,12 +197,22 @@ describe('rewards', () => {
   it('keeps, extends or restarts the streak', () => {
     const s = { current: 3, longest: 5, lastActiveDate: '2026-11-06' };
     expect(nextStreak(s, '2026-11-06')).toBe(s);
-    expect(nextStreak(s, '2026-11-07')).toEqual({
+    expect(nextStreak(s, '2026-11-07')).toMatchObject({
       current: 4,
       longest: 5,
       lastActiveDate: '2026-11-07',
     });
-    expect(nextStreak(s, '2026-11-09')).toEqual({
+    // one missed day (Sat 7 Nov) is free …
+    const free = nextStreak(s, '2026-11-08');
+    expect(free).toMatchObject({ current: 4, freeDayWeek: '2026-11-02' });
+    // … but only once a week: Wed 4 Nov free, then Fri 6 Nov missed in the same week
+    const wed = nextStreak({ ...s, lastActiveDate: '2026-11-03' }, '2026-11-05');
+    expect(wed).toMatchObject({ current: 4, freeDayWeek: '2026-11-02' });
+    expect(nextStreak(wed, '2026-11-07').current).toBe(1);
+    // the next week has a free day again (Tue 10 Nov)
+    expect(nextStreak({ ...free, lastActiveDate: '2026-11-09' }, '2026-11-11').current).toBe(5);
+    // two missed days end it
+    expect(nextStreak(s, '2026-11-09')).toMatchObject({
       current: 1,
       longest: 5,
       lastActiveDate: '2026-11-09',
@@ -194,7 +220,43 @@ describe('rewards', () => {
     expect(nextStreak({ current: 0, longest: 0, lastActiveDate: null }, '2026-01-01').current).toBe(
       1,
     );
+    expect(weekOf('2026-11-08')).toBe('2026-11-02');
+    expect(weekOf('2026-11-09')).toBe('2026-11-09');
+    expect(liveStreak(s, '2026-11-07')).toBe(3);
+    expect(liveStreak(s, '2026-11-08')).toBe(3); // yesterday's free day is still open
+    expect(liveStreak(s, '2026-11-09')).toBe(0);
     expect(addDays('2026-12-31', 1)).toBe('2027-01-01');
     expect(addDays('2028-03-01', -1)).toBe('2028-02-29');
+  });
+});
+
+describe('bonus lessons', () => {
+  it('open with their chapter and never block the next lessons', () => {
+    const before = new Set(
+      LESSONS.slice(
+        0,
+        LESSONS.findIndex((l) => l.id === 'song-weihnachtsmann'),
+      ).map((l) => l.id),
+    );
+    expect(isLessonUnlocked('song-jakob', before)).toBe(false);
+    const done = new Set([...before, 'song-weihnachtsmann']);
+    expect(isLessonUnlocked('song-jakob', done)).toBe(true);
+    expect(isLessonUnlocked('song-macdonald', done)).toBe(true);
+    // the path goes on without them
+    expect(isLessonUnlocked('rhythm-quarters', done)).toBe(true);
+    expect(nextLesson(done).id).toBe('rhythm-quarters');
+    expect(CORE_LESSONS.some((l) => l.bonus)).toBe(false);
+  });
+});
+
+describe("Klavi's sentences in the exercise", () => {
+  it('belong to existing lessons and have both languages', async () => {
+    const { LESSON_COACH } = await import('./coach.ts');
+    const ids = new Set(LESSONS.map((l) => l.id));
+    for (const [id, text] of Object.entries(LESSON_COACH)) {
+      expect(ids.has(id), id).toBe(true);
+      expect(text['de-CH']).not.toMatch(/ß/);
+      expect(text.en.length).toBeGreaterThan(10);
+    }
   });
 });

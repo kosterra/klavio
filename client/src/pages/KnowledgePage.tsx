@@ -2,12 +2,15 @@ import { Badge, Button, Card, Center, Group, Loader, Stack, Text, Title } from '
 import { IconLock, IconPlayerPlay } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { usePageTitle } from '../components/usePageTitle';
 import { CURRICULUM, isLessonUnlocked, theoryFor, type ExplainStep } from '@klavio/shared';
 import { useSession } from '../auth/session';
 import { TheoryPicture } from '../lesson/theory/TheoryPicture';
 import { useLocalized } from '../lesson/useLocalized';
 import { useProgress } from '../lesson/useProgress';
 import { worldOf } from '../lesson/worlds';
+import { useWorldMode } from '../lesson/useWorldMode';
+import { useLessonFor } from '../lesson/useLessonFor';
 
 /**
  * "Wissen": everything the learner has discovered so far, to look up again –
@@ -16,10 +19,13 @@ import { worldOf } from '../lesson/worlds';
  */
 export function KnowledgePage() {
   const { t } = useTranslation();
+  usePageTitle(t('knowledge.title'));
   const loc = useLocalized();
+  const forMe = useLessonFor();
   const { activeProfile } = useSession();
   const { completed, progress } = useProgress();
   const kids = activeProfile?.uiMode !== 'classic';
+  const worldSet = useWorldMode();
 
   if (!progress) {
     return (
@@ -42,7 +48,7 @@ export function KnowledgePage() {
           theoryFor(l.id).some((s) => s.type === 'explain'),
         );
         if (!lessons.length) return null;
-        const world = worldOf(chapter.id, ci);
+        const world = worldOf(chapter.id, ci, worldSet);
         return (
           <section key={chapter.id} aria-labelledby={`knowledge-${chapter.id}`}>
             <Group gap="xs" mb="sm">
@@ -68,13 +74,13 @@ export function KnowledgePage() {
                       <Group gap="sm" wrap="nowrap">
                         <IconLock aria-hidden />
                         <Text fw={700}>
-                          {loc(lesson.title)} – {t('knowledge.locked')}
+                          {loc(forMe(lesson).title)} – {t('knowledge.locked')}
                         </Text>
                       </Group>
                     </Card>
                   );
                 }
-                const cards = theoryFor(lesson.id).filter(
+                const cards = theoryFor(lesson.id, worldSet).filter(
                   (s): s is ExplainStep => s.type === 'explain',
                 );
                 return (
@@ -87,7 +93,7 @@ export function KnowledgePage() {
                   >
                     <Group justify="space-between" mb="sm" wrap="wrap">
                       <Title order={3} size="h4">
-                        {loc(lesson.title)}
+                        {loc(forMe(lesson).title)}
                       </Title>
                       <Button
                         component={Link}

@@ -1,0 +1,45 @@
+.card {
+  position: relative;
+  overflow: hidden;
+  padding: var(--mantine-spacing-lg);
+  border-radius: var(--mantine-radius-xl);
+  border: 2px solid var(--chapter-light);
+  background: color-mix(in srgb, var(--chapter-color) 10%, var(--klavio-surface));
+  --world-hill: color-mix(in srgb, var(--chapter-color) 22%, var(--klavio-surface));
+  --world-hill-2: color-mix(in srgb, var(--chapter-color) 34%, var(--klavio-surface));
+}
+
+.confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bit {
+  position: absolute;
+  top: -10%;
+  font-size: 22px;
+  color: var(--chapter-color);
+  animation: fall 2.4s ease-in both;
+}
+
+.bit:nth-child(3n) {
+  color: var(--mantine-color-yellow-6);
+}
+
+@keyframes fall {
+  from {
+    transform: translateY(0) rotate(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(420px) rotate(var(--turn));
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bit {
+    display: none;
+  }
+}

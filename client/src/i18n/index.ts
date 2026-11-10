@@ -3,14 +3,15 @@ import { initReactI18next } from 'react-i18next';
 import { APP_CONFIG } from '@klavio/shared';
 import deCH from './de-CH.json';
 import en from './en.json';
-import { initialLanguage, readStoredLanguage, storeLanguage } from './language';
+import { initialLanguage, languageFromUrl, readStoredLanguage, storeLanguage } from './language';
 
 export const resources = { 'de-CH': { translation: deCH }, en: { translation: en } } as const;
 
 void i18n.use(initReactI18next).init({
   resources,
   lng: initialLanguage(
-    readStoredLanguage(),
+    (typeof location === 'undefined' ? null : languageFromUrl(location.search)) ??
+      readStoredLanguage(),
     typeof navigator === 'undefined' ? [] : (navigator.languages ?? [navigator.language]),
   ),
   fallbackLng: 'de-CH',
@@ -23,6 +24,8 @@ const applyLang = (lng: string) => {
   if (typeof document !== 'undefined') document.documentElement.lang = lng;
 };
 applyLang(i18n.language);
+if (typeof location !== 'undefined' && languageFromUrl(location.search))
+  storeLanguage(i18n.language);
 i18n.on('languageChanged', (lng) => {
   applyLang(lng);
   storeLanguage(lng);

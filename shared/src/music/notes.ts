@@ -2,6 +2,35 @@
 
 export const NOTE_NAMES_DE = ['C', 'Cis', 'D', 'Dis', 'E', 'F', 'Fis', 'G', 'Gis', 'A', 'Ais', 'H'];
 export const NOTE_NAMES_EN = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+/** The same keys spelled with flats (German: Es, As, B …). */
+export const NOTE_NAMES_DE_FLAT = [
+  'C',
+  'Des',
+  'D',
+  'Es',
+  'E',
+  'F',
+  'Ges',
+  'G',
+  'As',
+  'A',
+  'B',
+  'H',
+];
+export const NOTE_NAMES_EN_FLAT = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+
+/** How black keys are named and written: with ♯ (Cis) or with ♭ (Des). */
+export type Spelling = 'sharp' | 'flat';
+
+/** The key signatures Klavio teaches: none, one ♯ (G major), one ♭ (F major). */
+export type KeySignature = 'C' | 'G' | 'F';
+
+/** The keys a key signature changes (pitch classes): G major F♯, F major B♭. */
+export const KEY_SIGNATURE_ALTERS: Record<KeySignature, number[]> = { C: [], G: [6], F: [10] };
+
+export function spellingOf(key: KeySignature): Spelling {
+  return key === 'F' ? 'flat' : 'sharp';
+}
 
 export const MIDI_A4 = 69;
 export const MIDI_MIDDLE_C = 60;
@@ -46,7 +75,18 @@ export function noteNameToMidi(name: string): number {
 }
 
 /** Note name without octave in the learner's language: 60 → "C", 71 → "H" (de) / "B" (en). */
-export function midiToPitchName(midi: number, locale: 'de' | 'en' = 'de'): string {
-  const names = locale === 'de' ? NOTE_NAMES_DE : NOTE_NAMES_EN;
+export function midiToPitchName(
+  midi: number,
+  locale: 'de' | 'en' = 'de',
+  spelling: Spelling = 'sharp',
+): string {
+  const names =
+    spelling === 'flat'
+      ? locale === 'de'
+        ? NOTE_NAMES_DE_FLAT
+        : NOTE_NAMES_EN_FLAT
+      : locale === 'de'
+        ? NOTE_NAMES_DE
+        : NOTE_NAMES_EN;
   return names[((midi % 12) + 12) % 12]!;
 }

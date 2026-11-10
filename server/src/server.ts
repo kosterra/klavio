@@ -4,7 +4,7 @@ import { buildApp } from './app.js';
 
 const config = loadConfig();
 await connectDb(config.MONGO_URL);
-const app = await buildApp({ config });
+const app = await buildApp({ config, jobs: true });
 
 const shutdown = async (signal: string) => {
   app.log.info(`${signal} received, shutting down`);
