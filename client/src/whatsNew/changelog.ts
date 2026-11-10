@@ -20,7 +20,7 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
-    version: UPCOMING,
+    version: '2026.11.2',
     changes: [
       L(
         'Mehr Schritte mit beiden Händen: «Beide zugleich» (der gleiche Ton links und rechts), «Spiegelbild» (die Hände gehen auseinander und wieder zusammen) und «Halten und spielen» (links ein langer Ton, rechts die Melodie) – vor dem ersten Lied mit Begleitung.',
