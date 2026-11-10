@@ -1004,7 +1004,7 @@
       "start": "Jetzt legst du die Grundlagen: Tasten, rechte Hand, erste Noten. Danach wird es eine Weile zäh – das gehört dazu und geht vorbei. Jede Lektion bringt dich näher zu {{goal}}.",
       "grind": "Du steckst in der Durststrecke. Zäh fühlt sich an wie Stillstand, ist aber Fortschritt. Bleib bei deinem Wochenziel – so kommst du durch.",
       "climb": "Das Zäheste liegt hinter dir. Jetzt spielen beide Hände zusammen, und mit jedem Kapitel klingt es mehr nach Musik.",
-      "summit": "Die letzte Etappe: Tonarten, Begleitung und Ausdruck. Danach bist du bereit für {{goal}}.",
+      "summit": "Die letzte Etappe: Tonarten, Begleitung und Ausdruck. Danach hast du die Grundlagen für {{goal}} – das Stück selbst übst du dann Schritt für Schritt.",
       "done": "Gipfel erreicht! Du kannst jetzt alles, was Klavio dir beibringt. Die Noten von {{goal}} holst du dir selbst – dann übst du es Stück für Stück, mit dem Metronom."
     },
     "dreamSongTo": "deinem Traumlied",
@@ -1033,7 +1033,7 @@
       "week": "Dein Wochenziel hält dich dran – auch an Tagen ohne Lust."
     },
     "lessonsOf": "{{n}}/{{total}}",
-    "rewardSummit": "Danach bist du bereit für {{song}}",
+    "rewardSummit": "Danach hast du die Grundlagen für {{song}}",
     "dreamSongFor": "dein Traumlied"
   },
   "freePlay": {
