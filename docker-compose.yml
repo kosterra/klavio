@@ -30,7 +30,7 @@ services:
 
   # Catches all mails (e-mail login codes) — inbox at http://localhost:8026
   mailpit:
-    image: axllent/mailpit:v1.27
+    image: axllent/mailpit:v1.32
     restart: unless-stopped
     logging: *logging
     security_opt: ['no-new-privileges:true']
