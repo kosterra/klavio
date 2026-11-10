@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Neue Startseite: Klavio auf dem Handy gleich oben, ein erstes Lied zum Ausprobieren, was Klavio kann (zuhören, mitspielen, Notenregen, Traumlied), die zwei Wege für Kinder und Erwachsene, ehrliche Zahlen – und die Anmeldung am Schluss, mit «Anmelden» oben rechts. Auf dem Handy ist sie gut ein Drittel kürzer.',
+        'New start page: Klavio on a phone right at the top, a first song to try, what Klavio does (listening, playing along, note rain, dream song), the two ways for children and adults, honest numbers – and the login at the end, with «Anmelden» at the top right. On phones it is a good third shorter.',
+      ),
+      L(
         'Mehr Weihnachten: Ab dem ersten Advent ändert sich jeden Tag etwas – am 6. kommt der Samichlaus und lässt seinen Sack da, ein Rentier mit roter Nase schaut oben rechts herein, ein Schneemann schmilzt und ein neuer wird gebaut, es gibt Guetzli, einen Engel, den Schlitten, den Stern von Betlehem und an Heiligabend fliegt der Schlitten über den Himmel. Auch Kopfzeile, Logo und Navigation feiern mit: Tannengirlande, Zipfelmütze, Schnee und Glocken.',
         'More Christmas: from the first Sunday of Advent something changes every day – on the 6th Samichlaus comes and leaves his sack, a reindeer with a red nose peeks in at the top right, a snowman melts and a new one is built, there are Christmas biscuits, an angel, the sleigh, the star of Bethlehem, and on Christmas Eve the sleigh flies across the sky. The header, logo and navigation join in too: a fir garland, a Santa cap, snow and bells.',
       ),

@@ -840,7 +840,6 @@
     "headline": "Learn piano – on a real piano, like a game.",
     "lead": "Klavio listens while you play, shows you step by step what comes next and guides you through colourful worlds – from your first key to playing with both hands.",
     "cta": "Get started",
-    "how": "How it works",
     "login": "Log in",
     "badgeAudio": "Audio stays on your device",
     "badgeOpen": "Free software",
@@ -860,39 +859,9 @@
         "text": "You play on your piano, Klavio recognises the notes and helps you along."
       }
     },
-    "featuresTitle": "What Klavio can do",
-    "features": {
-      "listen": {
-        "title": "Listens to you",
-        "text": "Note detection with the microphone, MIDI for digital pianos, or the on-screen keyboard."
-      },
-      "worlds": {
-        "title": "{{count}} worlds",
-        "text": "From Key Valley to Starry Night: a learning path like a board game."
-      },
-      "discover": {
-        "title": "Discover & knowledge",
-        "text": "Short explanations, quizzes and little games before every lesson – collected to look up again."
-      },
-      "review": {
-        "title": "Review",
-        "text": "Lessons you played come back at the right time – so everything sticks."
-      },
-      "medals": {
-        "title": "Medals & stars",
-        "text": "Stars, levels, a daily goal and medals to collect – without any pressure."
-      },
-      "family": {
-        "title": "For the whole family",
-        "text": "Several profiles, a kids and a classic look, a parents' area with a PIN."
-      }
-    },
-    "worldsTitle": "{{count}} worlds are waiting for you",
-    "worldsText": "Every chapter is a world of its own. Worlds you haven't reached yet lie in the fog – until you discover them.",
-    "tryTitle": "Try it right now",
-    "tryText": "Tap or click the keys.",
-    "tryHint": "Do you know a children's song? Why not play it …",
-    "privacyTitle": "Safe and honest",
+    "tryTitle": "Play your first song",
+    "tryText": "The first line of «All my little ducklings» – the next key lights up. That's what a lesson feels like.",
+    "privacyTitle": "Honest and safe",
     "privacy": {
       "audio": "What you play stays on your device – audio is never sent or stored.",
       "ads": "No ads, no tracking.",
@@ -904,10 +873,6 @@
       "piano": {
         "q": "Do I need a digital piano?",
         "a": "No. A real piano is enough – the microphone recognises the notes. You can connect a digital piano via USB MIDI, and there is an on-screen keyboard to try things out."
-      },
-      "who": {
-        "q": "Who is Klavio for?",
-        "a": "For children and adults without prior knowledge. Everyone gets their own profile – children a playful look, adults a calm one if they like."
       },
       "devices": {
         "q": "Which devices does Klavio run on?",
@@ -924,6 +889,10 @@
       "adults": {
         "q": "Is this only for children?",
         "a": "No. Adults choose the calmer «Classic» view and the world «The journey» with its elevation profile and dream song. The lessons are the same, without the kids' stuff."
+      },
+      "host": {
+        "q": "Can I run Klavio myself?",
+        "a": "Yes. Klavio is free software (AGPL-3.0). With a Docker image it runs on your own server – for your family, your class or your music school, with your own e-mails and without data leaving the house."
       }
     },
     "finalTitle": "Ready for your first key?",
@@ -934,26 +903,58 @@
     "eggDucks": "All my little ducklings are swimming on the lake! 🦆",
     "leadShort": "Klavio listens while you play and shows you step by step what comes next – for children and adults.",
     "badgeFree": "Free, no subscription",
-    "lookTitle": "What it looks like",
-    "lookText": "Like the big piano apps – but free, with no subscription and no ads. And what you play stays on your device.",
-    "look": {
-      "path": "The learning path: world by world, with stars and goals",
-      "pathAlt": "Screenshot: the learning path in the Hand Forest, lessons as stones along a road and the fox on the next lesson",
-      "lesson": "A lesson: Klavio waits until you play the right note",
-      "lessonAlt": "Screenshot: the song «Little Hans» in notation, the keyboard below with the next key marked"
-    },
-    "journeyKicker": "For teens and adults",
-    "journeyTitle": "The journey to your dream song",
-    "journeyText": "Learning the piano is not a straight road: first it goes gently downhill, then it gets steep – and at some point comes hell, the hardest part. Klavio tells you before you get there and shows you on an elevation profile where you are.",
-    "journey": {
-      "dream": "Name your dream song: Klavio recognises it and shows which skills it needs.",
-      "hell": "From the alp down through ravine, gorge and mine into hell – and back up to the summit.",
-      "choose": "From an age the operator sets, every profile chooses between the colourful worlds and the journey."
-    },
     "journeyAlt": "Screenshot: elevation profile of the journey – from the alp down to hell at −666 m and up to the dream song",
-    "hostTitle": "For families, schools and music schools: run it yourself",
-    "hostText": "Klavio is free software. With one Docker image it runs on your own server – just for your family, your class or your music school, with your own e-mails and without any data leaving the house.",
-    "hostGuide": "Guide on GitHub"
+    "hostGuide": "Guide on GitHub",
+    "tryButton": "Try it now",
+    "tryStaff": "Notes: the beginning of «All my little ducklings» – C, D, E, F, G, G",
+    "tryCount": "{{n}} of {{total}} notes",
+    "tryDone": "Done – that was your first song!",
+    "tryAgain": "Play again",
+    "heroAlt": "Klavio on a phone: the learning path in the Hand Forest, the lessons as stones along a road and Klavi on the next lesson",
+    "showcaseTitle": "What Klavio does",
+    "showcaseText": "Like the big piano apps – but free, without subscription and without ads.",
+    "show": {
+      "listen": {
+        "kicker": "On the real piano",
+        "title": "Klavi listens to you",
+        "text": "You play on your piano, Klavio recognises every note through the microphone and waits until it's right. A digital piano connects by cable, and for trying out there are the screen keys.",
+        "alt": "Screenshot: a note on the staff, the keyboard below – «Which note is this? Play it!»"
+      },
+      "duet": {
+        "kicker": "Music from the start",
+        "title": "Klavi plays along",
+        "text": "Klavi plays bass and chords to your songs. Even «Hänschen klein» sounds like real music – and in time you go slow, medium or at the original tempo.",
+        "alt": "Screenshot: the song «Hänschen klein» with fingering above the notes, the «Klavi plays along» switch and the next key marked"
+      },
+      "rain": {
+        "kicker": "Reading notes like a game",
+        "title": "Note rain",
+        "text": "Notes fall from the sky – play each one before it lands. The longer you keep going, the faster it rains. Soon you read notes at a glance.",
+        "alt": "Screenshot: the note rain – a note falls on a little staff, the keyboard below"
+      },
+      "dream": {
+        "kicker": "Your goal in sight",
+        "title": "Your dream song",
+        "text": "Name the piece you want to play one day. Klavio shows you the way in four stages – including the tough stretch that comes with it – and works out roughly when you'll reach the top.",
+        "alt": "Screenshot: «Your summit: Für Elise» with the stages Summit push, Climb and Tough stretch below"
+      }
+    },
+    "waysTitle": "For children and for adults",
+    "ways": {
+      "kidsKicker": "For children",
+      "kidsTitle": "{{count}} colourful worlds",
+      "kidsText": "A learning path like a board game: from Key Valley through the Beat Circus to the Concert Garden – with stars, your own figure and a wardrobe.",
+      "adultsKicker": "For teenagers and adults",
+      "adultsTitle": "The journey",
+      "adultsText": "A calm look, well-known pieces instead of nursery songs – Grieg, Dvořák, Mozart – and an elevation profile from the alp up to your dream song."
+    },
+    "stats": {
+      "worlds": "worlds",
+      "lessons": "lessons",
+      "songs": "songs and pieces",
+      "cost": "francs"
+    },
+    "finalText": "One account for the whole family, a profile for every person – and off you go."
   },
   "goal": {
     "kicker": "My dream song",

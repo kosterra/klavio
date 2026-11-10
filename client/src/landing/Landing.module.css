@@ -114,66 +114,200 @@
   font-size: clamp(1.7rem, 4vw, 2.4rem);
 }
 
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--mantine-spacing-lg);
+  margin: var(--mantine-spacing-xl) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
 .step {
-  position: relative;
-  padding: var(--mantine-spacing-xl) var(--mantine-spacing-lg);
-  border-radius: var(--mantine-radius-xl);
-  background: var(--klavio-surface);
-  border: 1px solid var(--mantine-color-default-border);
-  text-align: center;
+  display: flex;
+  gap: var(--mantine-spacing-md);
+  align-items: flex-start;
 }
 
 .step > :global(.mantine-ThemeIcon-root) {
-  margin-inline: auto;
+  flex: none;
 }
 
-.stepNumber {
-  position: absolute;
-  top: -16px;
-  left: 50%;
-  translate: -50% 0;
+@media (max-width: 48em) {
+  .steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--mantine-spacing-md);
+  }
+}
+
+/* ------------------------------------------------- hero phone, phone frames */
+.heroPhone {
   display: flex;
-  align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  font-weight: 900;
-  color: var(--mantine-color-dark-9);
-  background: var(--mantine-color-yellow-4);
-  box-shadow: 0 3px 0 var(--mantine-color-yellow-7);
 }
 
-.feature {
-  height: 100%;
+.heroPhone .phone {
+  width: min(300px, 100%);
+  transform: rotate(3deg);
+}
+
+/* phones: the hero is for the words – the phones come further down */
+@media (max-width: 36em) {
+  .heroPhone {
+    display: none;
+  }
+}
+
+.phone {
+  width: 260px;
+  max-width: 100%;
+  border: 10px solid #1d1e2c;
+  border-radius: 38px;
+  overflow: hidden;
+  background: #1d1e2c;
+  box-shadow:
+    0 0 0 2px rgb(255 255 255 / 25%),
+    0 24px 48px rgb(20 20 60 / 30%);
+}
+
+.phone img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 28px;
+}
+
+/* ------------------------------------------------------------ try it */
+.tryBox {
   padding: var(--mantine-spacing-lg);
   border-radius: var(--mantine-radius-xl);
   background: var(--klavio-surface);
   border: 1px solid var(--mantine-color-default-border);
-  border-top: 6px solid var(--feature);
-  transition: transform 150ms ease;
+  box-shadow: 0 8px 24px rgb(30 40 90 / 8%);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .feature:hover {
-    transform: translateY(-4px) rotate(-0.5deg);
+.tryStaff {
+  max-width: 420px;
+  width: 100%;
+  margin-inline: auto;
+}
+
+/* ---------------------------------------------------- what it does: rows */
+.showcase {
+  display: grid;
+  gap: calc(var(--mantine-spacing-xl) * 1.5);
+  max-width: 920px;
+  margin: calc(var(--mantine-spacing-xl) * 1.5) auto 0;
+}
+
+.row .phone {
+  width: 220px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: calc(var(--mantine-spacing-xl) * 1.5);
+  align-items: center;
+}
+
+/* every second row: the picture on the left */
+.row:nth-child(even) > :last-child {
+  order: -1;
+}
+
+.rowText {
+  max-width: 34em;
+}
+
+.rowTitle {
+  margin-block: 4px var(--mantine-spacing-xs);
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+}
+
+.rowCard {
+  width: min(340px, 100%);
+}
+
+/* phones: a small picture next to the words, so each feature fits on half a screen */
+@media (max-width: 36em) {
+  .showcase {
+    gap: var(--mantine-spacing-xl);
   }
+
+  .row {
+    grid-template-columns: 116px minmax(0, 1fr);
+    gap: var(--mantine-spacing-md);
+    align-items: start;
+  }
+
+  .row > :last-child {
+    order: -1;
+  }
+
+  .row .phone {
+    width: 116px;
+    border-width: 5px;
+    border-radius: 20px;
+  }
+
+  .row .phone img {
+    border-radius: 15px;
+  }
+
+  .row .rowCard {
+    width: 116px;
+  }
+}
+
+/* --------------------------------------------- children and adults */
+.ways {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--mantine-spacing-xl);
+  margin-top: var(--mantine-spacing-xl);
+}
+
+@media (max-width: 48em) {
+  .ways {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.way {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-xs);
+  padding: var(--mantine-spacing-xl);
+  border-radius: var(--mantine-radius-xl);
+  background: var(--klavio-surface);
+  border: 1px solid var(--mantine-color-default-border);
+}
+
+.way .shot {
+  margin-top: auto;
+  padding-top: var(--mantine-spacing-md);
 }
 
 .worlds {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: var(--mantine-spacing-lg);
-  margin-top: var(--mantine-spacing-xl);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--mantine-spacing-xs);
+  margin-top: auto;
+  padding-top: var(--mantine-spacing-md);
+}
+
+@media (max-width: 30em) {
+  .worlds {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .world {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--mantine-spacing-xs);
-  padding: var(--mantine-spacing-md) var(--mantine-spacing-sm);
-  border-radius: var(--mantine-radius-xl);
+  justify-content: center;
+  padding: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-lg);
   background: linear-gradient(
     180deg,
     color-mix(in srgb, var(--chapter-color) 22%, var(--klavio-surface)),
@@ -185,23 +319,66 @@
 
 .world svg {
   width: 100%;
-  max-width: 176px;
+  max-width: 140px;
   height: auto;
 }
 
+/* --------------------------------------------------- trust: numbers + promises */
 .privacy {
-  display: flex;
-  gap: var(--mantine-spacing-xl);
-  align-items: flex-start;
   padding: var(--mantine-spacing-xl);
   border-radius: var(--mantine-radius-xl);
   border: 2px solid color-mix(in srgb, var(--mantine-color-teal-6) 45%, transparent);
   background: color-mix(in srgb, var(--mantine-color-teal-5) 9%, var(--klavio-surface));
 }
 
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--mantine-spacing-md);
+  margin: var(--mantine-spacing-lg) 0 0;
+}
+
+.stats > div {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  padding: var(--mantine-spacing-sm);
+  border-radius: var(--mantine-radius-lg);
+  background: var(--klavio-surface);
+  text-align: center;
+}
+
+.stats dd {
+  margin: 0;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--mantine-color-teal-9);
+}
+
+:global([data-mantine-color-scheme='dark']) .stats dd {
+  color: var(--mantine-color-teal-3);
+}
+
+.stats dt {
+  font-weight: 700;
+}
+
 @media (max-width: 36em) {
-  .privacy {
-    flex-direction: column;
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.privacy .checks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--mantine-spacing-xl);
+}
+
+@media (max-width: 48em) {
+  .privacy .checks {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -243,6 +420,33 @@
 
 .final .sectionTitle {
   color: #fff;
+}
+
+.finalGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--mantine-spacing-xl);
+  align-items: center;
+}
+
+@media (max-width: 62em) {
+  .finalGrid {
+    grid-template-columns: minmax(0, 1fr);
+    text-align: center;
+  }
+
+  .finalGrid :global(.mantine-Group-root) {
+    justify-content: center;
+  }
+}
+
+.finalText {
+  color: #fff;
+}
+
+/* the login card jumps into view from «Anmelden» – leave room above it */
+.final :global(#login) {
+  scroll-margin-top: var(--mantine-spacing-xl);
 }
 
 /* --------------------------------------------------------- easter eggs */
@@ -347,6 +551,25 @@
   margin-top: calc(var(--mantine-spacing-xl) * -0.5);
 }
 
+/* the buttons keep their labels; on a narrow phone the row wraps instead */
+.cornerTools {
+  flex-wrap: wrap;
+}
+
+.cornerTools > * {
+  flex-shrink: 0;
+}
+
+@media (max-width: 36em) {
+  .cornerTools :global(.mantine-Button-root) {
+    padding-inline: 10px;
+  }
+
+  .cornerTools {
+    gap: 6px;
+  }
+}
+
 .themeSwitch,
 .cornerButton {
   color: var(--mantine-color-indigo-8);
@@ -395,27 +618,4 @@
 
 :global([data-mantine-color-scheme='dark']) .kicker {
   color: var(--mantine-color-grape-3);
-}
-
-.journey {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--mantine-spacing-xl);
-  align-items: center;
-}
-
-@media (min-width: 62em) {
-  .journey {
-    grid-template-columns: 1fr 1.2fr;
-  }
-}
-
-.code {
-  margin: var(--mantine-spacing-md) 0 0;
-  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
-  border-radius: var(--mantine-radius-md);
-  background: var(--mantine-color-dark-8);
-  color: #e9ecef;
-  font-size: var(--mantine-font-size-sm);
-  overflow-x: auto;
 }
