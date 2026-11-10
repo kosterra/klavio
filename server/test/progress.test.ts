@@ -165,6 +165,12 @@ describe('lesson progress', () => {
     expect((await complete(jar, 'no-such-lesson')).statusCode).toBe(404);
     expect((await complete(jar, first!.id, { mistakes: -1 })).statusCode).toBe(400);
     expect((await complete(jar, first!.id, { durationSec: 99999 })).statusCode).toBe(400);
+    // days that don't exist are rejected – and the lesson keeps working afterwards
+    for (const localDate of ['2026-11-00', '2026-02-30', '2026-13-01']) {
+      expect((await complete(jar, first!.id, { localDate })).statusCode).toBe(400);
+    }
+    expect((await complete(jar, first!.id)).statusCode).toBe(200);
+    expect((await call(jar, 'GET', '/api/progress?date=2026-13-45')).statusCode).toBe(400);
   });
 
   it('is scoped to the profile and removed with it', async () => {

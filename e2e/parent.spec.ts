@@ -1,5 +1,13 @@
 import { expect, test, type Page } from '@playwright/test';
-import { addVirtualAuthenticator, signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
+import {
+  addVirtualAuthenticator,
+  latestCodeFor,
+  loginWithEmail,
+  logout,
+  signUpWithEmail,
+  uniqueEmail,
+  skipSetup,
+} from './helpers';
 import { audit } from './audit';
 
 /** Types into a Mantine PinInput (first box focused → digits move on by themselves). */
@@ -9,8 +17,9 @@ async function typePin(page: Page, scope: ReturnType<Page['locator']>, pin: stri
 }
 
 test('account name and parent PIN protect the parent area', async ({ page }) => {
-  test.setTimeout(90_000);
-  await signUpWithEmail(page, uniqueEmail('parent'), 'Familie Muster');
+  test.setTimeout(120_000);
+  const email = uniqueEmail('parent');
+  const signUpCode = await signUpWithEmail(page, email, 'Familie Muster');
   await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
   await page.getByRole('dialog').getByLabel('Name').fill('Lina');
   await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
@@ -81,6 +90,21 @@ test('account name and parent PIN protect the parent area', async ({ page }) => 
   );
   await expect(page.getByRole('button', { name: 'Profil löschen' })).toHaveCount(0);
   await audit(page);
+
+  // --- logging out and in again does not open the parent area …
+  await logout(page);
+  await loginWithEmail(page, email, signUpCode);
+  await page.goto('/account');
+  await expect(page.getByText('Gib die Eltern-PIN ein.')).toBeVisible();
+
+  // --- … «PIN vergessen?» does: a code to the account's address removes the PIN
+  const loginCode = await latestCodeFor(email);
+  await page.getByTestId('pin-forgot').click();
+  await expect(page.getByTestId('pin-reset')).toContainText(email);
+  await audit(page);
+  await typePin(page, page.getByTestId('pin-reset'), await latestCodeFor(email, loginCode));
+  await expect(page.getByRole('heading', { name: 'Passkeys' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'PIN festlegen' })).toBeVisible();
 });
 
 test('the input setup belongs to the parent area; a passkey can open it instead of the PIN', async ({

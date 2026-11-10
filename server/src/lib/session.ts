@@ -31,7 +31,10 @@ export async function createSession(
   await Session.create({
     tokenHash: sha256(token),
     userId,
-    parentUnlockedUntil: new Date(Date.now() + PARENT_UNLOCK_MS),
+    // a new session never opens the parent area by itself: with a PIN set it
+    // asks for it (logging out and in again must not get round it); without a
+    // PIN the area is open anyway
+    parentUnlockedUntil: null,
     expiresAt: new Date(Date.now() + maxAge * 1000),
   });
   reply.setCookie(SESSION_COOKIE, token, { ...cookieBase(config), maxAge });

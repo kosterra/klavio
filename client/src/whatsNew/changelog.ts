@@ -23,6 +23,14 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Sicherheit: Nach einer neuen Anmeldung bleibt der Elternbereich gesperrt, wenn eine PIN eingerichtet ist. Wer die PIN vergessen hat, bekommt mit «PIN vergessen?» einen Code an die E-Mail-Adresse des Kontos. Falsche PINs und falsche E-Mail-Codes sperren nach einigen Versuchen für eine Weile – unabhängig davon, von wo sie kommen.',
+        'Security: after a new login the parent area stays locked when a PIN is set. If you forgot the PIN, «PIN vergessen?» sends a code to the account’s e-mail address. Wrong PINs and wrong e-mail codes lock for a while after a few tries – wherever they come from.',
+      ),
+      L(
+        'Korrektur: Ein ungültiges Datum kann eine Lektion nicht mehr unbrauchbar machen.',
+        'Fix: an invalid date can no longer make a lesson unusable.',
+      ),
+      L(
         'Neue Startseite: Klavio auf dem Handy gleich oben, ein erstes Lied zum Ausprobieren, was Klavio kann (zuhören, mitspielen, Notenregen, Traumlied), die zwei Wege für Kinder und Erwachsene, ehrliche Zahlen – und die Anmeldung am Schluss, mit «Anmelden» oben rechts. Auf dem Handy ist sie gut ein Drittel kürzer.',
         'New start page: Klavio on a phone right at the top, a first song to try, what Klavio does (listening, playing along, note rain, dream song), the two ways for children and adults, honest numbers – and the login at the end, with «Anmelden» at the top right. On phones it is a good third shorter.',
       ),

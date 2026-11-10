@@ -123,3 +123,6 @@ export const adminSettingsSchema = z.object({
   searchIndexing: z.boolean().optional(),
   inactiveDeleteMonths: z.number().int().min(0).max(120).optional(),
 });
+
+/** «PIN vergessen?»: the code sent to the account's address. */
+export const pinResetSchema = z.object({ code: emailCodeSchema });

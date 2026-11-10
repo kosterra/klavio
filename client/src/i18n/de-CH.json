@@ -735,7 +735,7 @@
     "pin": "Eltern-PIN",
     "enterPin": "Gib die Eltern-PIN ein.",
     "open": "Öffnen",
-    "forgot": "PIN vergessen? Melde dich ab und mit Passkey oder E-Mail-Code wieder an – danach kannst du unter «Konto» eine neue festlegen.",
+    "forgot": "PIN vergessen?",
     "explain": "Mit einer Eltern-PIN (4 Ziffern) schützt du Konto, Verwaltung und das Anlegen von Profilen vor Kinderhänden. Lernen und die Mikrofon-Einrichtung gehen ohne PIN.",
     "isSet": "Die Eltern-PIN ist eingerichtet. Der Elternbereich schliesst sich, sobald ein Profil gewählt wird, und spätestens nach 15 Minuten.",
     "set": "PIN festlegen",
@@ -749,7 +749,10 @@
     "orPin": "oder mit der PIN:",
     "passkeySetting": "Elternbereich auch mit Passkey öffnen",
     "passkeySettingHint": "Statt der PIN genügt dann Fingerabdruck, Gesicht oder die Geräte-PIN eines Passkeys dieses Kontos. Nur einschalten, wenn die Kinder dieses Gerät nicht selbst entsperren können.",
-    "passkeySettingNeedsPasskey": "Richte dafür zuerst oben einen Passkey ein."
+    "passkeySettingNeedsPasskey": "Richte dafür zuerst oben einen Passkey ein.",
+    "resetSent": "Wir haben einen Code an {{email}} geschickt. Gib ihn hier ein – die PIN wird dann entfernt und der Elternbereich öffnet sich.",
+    "resetCode": "Code aus der E-Mail",
+    "resetHint": "Danach kannst du unter «Konto» eine neue PIN festlegen."
   },
   "profileSettings": {
     "title": "Mein Profil",

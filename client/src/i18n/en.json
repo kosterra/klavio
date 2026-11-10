@@ -735,7 +735,7 @@
     "pin": "Parent PIN",
     "enterPin": "Enter the parent PIN.",
     "open": "Open",
-    "forgot": "Forgot the PIN? Sign out and sign in again with a passkey or e-mail code – then you can set a new one under “Account”.",
+    "forgot": "Forgot the PIN?",
     "explain": "A parent PIN (4 digits) protects the account, administration and creating profiles from little hands. Learning and the microphone setup work without the PIN.",
     "isSet": "The parent PIN is set. The parent area closes as soon as a profile is chosen, and after 15 minutes at the latest.",
     "set": "Set PIN",
@@ -749,7 +749,10 @@
     "orPin": "or with the PIN:",
     "passkeySetting": "Also open the parent area with a passkey",
     "passkeySettingHint": "Instead of the PIN, a fingerprint, face or device PIN of one of this account's passkeys is enough. Only switch this on if the children can't unlock this device themselves.",
-    "passkeySettingNeedsPasskey": "Set up a passkey above first."
+    "passkeySettingNeedsPasskey": "Set up a passkey above first.",
+    "resetSent": "We sent a code to {{email}}. Enter it here – the PIN is then removed and the parent area opens.",
+    "resetCode": "Code from the e-mail",
+    "resetHint": "Afterwards you can set a new PIN under «Konto»."
   },
   "profileSettings": {
     "title": "My profile",

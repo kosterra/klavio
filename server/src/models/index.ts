@@ -175,8 +175,8 @@ export const AuthChallenge = model('AuthChallenge', authChallengeSchema);
 // ---------------------------------------------------------------------------
 const emailCodeSchema = new Schema({
   email: { type: String, required: true, index: true },
-  purpose: { type: String, enum: ['login', 'verify-email'], required: true },
-  /** verify-email: the account the address will be attached to. */
+  purpose: { type: String, enum: ['login', 'verify-email', 'pin-reset'], required: true },
+  /** verify-email: the account the address will be attached to; pin-reset: the account. */
   userId: { type: Schema.Types.ObjectId, default: null },
   codeHash: { type: String, required: true },
   attempts: { type: Number, default: 0 },
@@ -184,6 +184,19 @@ const emailCodeSchema = new Schema({
 });
 emailCodeSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 export const EmailCode = model('EmailCode', emailCodeSchema);
+
+// ---------------------------------------------------------------------------
+// Failed attempts (login codes per address, parent PIN per account) – kept in
+// the database so a restart or a second instance doesn't reset them
+// ---------------------------------------------------------------------------
+const authThrottleSchema = new Schema({
+  _id: { type: String, required: true }, // e.g. "code:anna@example.ch", "pin:<userId>"
+  failures: { type: Number, default: 0 },
+  lastFailureAt: { type: Date, required: true },
+  expiresAt: { type: Date, required: true },
+});
+authThrottleSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+export const AuthThrottle = model('AuthThrottle', authThrottleSchema);
 
 // ---------------------------------------------------------------------------
 // Global settings (singleton document, editable by admins)

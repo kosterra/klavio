@@ -165,6 +165,47 @@ describe('sign-up via e-mail code', () => {
     expect(res.json()).toEqual({ error: 'EMAIL_CODE_INVALID' });
   });
 
+  it('counts parallel guesses atomically – never more than 5 per code', async () => {
+    const jar = new CookieJar();
+    await call(jar, 'POST', '/api/auth/email/request', { email: 'p@y.ch' });
+    const code = lastCode();
+    const wrong = (i: number) => String((Number(code) + 1 + i) % 1_000_000).padStart(6, '0');
+    await Promise.all(
+      Array.from({ length: 12 }, (_, i) =>
+        call(new CookieJar(), 'POST', '/api/auth/email/verify', {
+          email: 'p@y.ch',
+          code: wrong(i),
+        }),
+      ),
+    );
+    const { EmailCode } = await import('../src/models/index.js');
+    expect((await EmailCode.findOne({ email: 'p@y.ch' }).lean())!.attempts).toBe(5);
+    // the right code no longer works – and 12 failures have locked the address
+    expect(
+      (await call(jar, 'POST', '/api/auth/email/verify', { email: 'p@y.ch', code })).json(),
+    ).toEqual({ error: 'RATE_LIMITED' });
+  });
+
+  it('locks an address after 10 wrong codes, whatever the IP (also for the right code)', async () => {
+    const jar = new CookieJar();
+    const wrongFor = (c: string) => (c === '000000' ? '111111' : '000000');
+    for (let round = 0; round < 2; round++) {
+      await call(jar, 'POST', '/api/auth/email/request', { email: 'q@y.ch' });
+      const c = lastCode();
+      for (let i = 0; i < 5; i++) {
+        await call(jar, 'POST', '/api/auth/email/verify', { email: 'q@y.ch', code: wrongFor(c) });
+      }
+    }
+    await call(jar, 'POST', '/api/auth/email/request', { email: 'q@y.ch' });
+    const res = await call(jar, 'POST', '/api/auth/email/verify', {
+      email: 'q@y.ch',
+      code: lastCode(),
+      displayName: 'Q',
+    });
+    expect(res.statusCode).toBe(429);
+    expect(res.json()).toEqual({ error: 'RATE_LIMITED' });
+  });
+
   it('throttles silently after 3 active codes', async () => {
     const jar = new CookieJar();
     for (let i = 0; i < 4; i++) {
