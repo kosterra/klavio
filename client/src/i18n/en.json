@@ -669,6 +669,22 @@
       "over": "Three notes have landed. Again?",
       "done": "All caught – great reading!",
       "note": "Falling note"
+    },
+    "parts": {
+      "label": "Part {{n}} of {{total}}",
+      "find-key": "Find the key",
+      "play-along": "Play along",
+      "read-note": "Read notes",
+      "note-rain": "Note rain",
+      "song": "Get to know",
+      "song-timed": "In time",
+      "chords": "Chords",
+      "echo": "By ear",
+      "dynamics": "Loud and soft",
+      "pedal": "Pedal",
+      "rhythm": "Rhythm",
+      "piece": "Both hands",
+      "improvise": "Make it up"
     }
   },
   "badges": {

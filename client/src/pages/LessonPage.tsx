@@ -63,6 +63,7 @@ import { ImproviseExercise } from '../lesson/ImproviseExercise';
 import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
 import { readPlayOn, writePlayOn } from '../lesson/playOn';
+import { LessonParts } from '../lesson/LessonParts';
 import { CoachTip } from '../lesson/CoachTip';
 import { HandOnKeys } from '../lesson/HandOnKeys';
 import { useNoteEvents } from '../input/noteBus';
@@ -434,7 +435,7 @@ function LessonRun({
                     >
                       <span>
                         {t('lesson.start')}
-                        <Text component="span" display="block" fz="sm" fw={500} opacity={0.9}>
+                        <Text component="span" display="block" fz="sm" fw={500}>
                           {t(playOn === 'piano' ? 'lesson.startPiano' : 'lesson.startScreen')}
                         </Text>
                       </span>
@@ -462,6 +463,8 @@ function LessonRun({
           )}
 
           {/* --------------------------------------------------------- play */}
+          {/* a lesson in several parts: where the learner is */}
+          {phase === 'play' && <LessonParts exercises={lesson.exercises} at={exerciseIndex} />}
           {/* what is new here, for the whole first exercise (no jump while playing) */}
           {phase === 'play' && exerciseIndex === 0 && LESSON_COACH[lesson.id] && (
             <CoachTip text={loc(LESSON_COACH[lesson.id]!)} kids={kids} />

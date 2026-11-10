@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Abwechslung in den Lektionen: Viele Lektionen haben jetzt zwei Teile – zum Beispiel erst Noten lesen, dann ein kurzer Notenregen, oder erst Tasten finden, dann nachspielen. Oben siehst du, in welchem Teil du bist.',
+        'Variety in the lessons: many lessons now have two parts – for example first reading notes, then a short note rain, or first finding keys, then playing along. At the top you see which part you are in.',
+      ),
+      L(
         'Notenregen ohne Ende: Unter «Spielen» regnet es Noten, bis drei gelandet sind – im Violinschlüssel, im Bassschlüssel oder in beiden, mit wenigen oder vielen Tönen. Es wird immer schneller, und dein Rekord wartet darauf, geschlagen zu werden.',
         'Endless note rain: under «Spielen» notes rain down until three have landed – in treble clef, bass clef or both, with few or many notes. It keeps getting faster, and your record is waiting to be beaten.',
       ),

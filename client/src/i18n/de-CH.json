@@ -669,6 +669,22 @@
       "over": "Drei Noten sind gelandet. Nochmals?",
       "done": "Alle gefangen – super gelesen!",
       "note": "Fallende Note"
+    },
+    "parts": {
+      "label": "Teil {{n}} von {{total}}",
+      "find-key": "Taste finden",
+      "play-along": "Nachspielen",
+      "read-note": "Noten lesen",
+      "note-rain": "Notenregen",
+      "song": "Kennenlernen",
+      "song-timed": "Im Takt",
+      "chords": "Akkorde",
+      "echo": "Nach Gehör",
+      "dynamics": "Laut und leise",
+      "pedal": "Pedal",
+      "rhythm": "Rhythmus",
+      "piece": "Beide Hände",
+      "improvise": "Erfinden"
     }
   },
   "badges": {

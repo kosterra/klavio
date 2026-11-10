@@ -81,7 +81,10 @@ export const CURRICULUM: Chapter[] = [
         xp: 10,
         keyboard: C3_C5,
         keyLabels: 'none',
-        exercises: [{ type: 'find-key', notes: pcs('C D E'), rounds: 6, anyOctave: true }],
+        exercises: [
+          { type: 'find-key', notes: pcs('C D E'), rounds: 6, anyOctave: true },
+          playIn(RH_C4, [seq('C4 D4 E4'), seq('E4 D4 C4'), seq('C4 D4 E4 D4 C4')]),
+        ],
       },
       {
         id: 'keys-cde',
@@ -103,6 +106,7 @@ export const CURRICULUM: Chapter[] = [
             seq('D4 C4 E4'),
             seq('C4 D4 E4 D4 C4'),
           ]),
+          { type: 'find-key', notes: pcs('C D E'), rounds: 4, anyOctave: true },
         ],
       },
       {
@@ -137,7 +141,10 @@ export const CURRICULUM: Chapter[] = [
         xp: 10,
         keyboard: C3_C5,
         keyLabels: 'none',
-        exercises: [{ type: 'find-key', notes: pcs('C D E F G'), rounds: 8, anyOctave: true }],
+        exercises: [
+          { type: 'find-key', notes: pcs('C D E F G'), rounds: 8, anyOctave: true },
+          playIn(RH_C4, [seq('E4 F4 G4'), seq('G4 F4 E4'), seq('C4 E4 G4 F4')]),
+        ],
       },
       {
         id: 'keys-five',
@@ -159,6 +166,7 @@ export const CURRICULUM: Chapter[] = [
             seq('E4 F4 G4 F4 E4'),
             seq('C4 D4 E4 F4 G4 F4 E4 D4 C4'),
           ]),
+          { type: 'find-key', notes: pcs('C D E F G'), rounds: 5, anyOctave: true },
         ],
       },
       {
@@ -201,7 +209,10 @@ export const CURRICULUM: Chapter[] = [
         xp: 10,
         keyboard: C3_C5,
         keyLabels: 'none',
-        exercises: [{ type: 'find-key', notes: pcs('G A H'), rounds: 6, anyOctave: true }],
+        exercises: [
+          { type: 'find-key', notes: pcs('G A H'), rounds: 6, anyOctave: true },
+          { type: 'play-along', sequences: [seq('G4 A4 H4 C5'), seq('C5 H4 A4 G4')] },
+        ],
       },
       {
         id: 'hand-white-keys',
@@ -215,7 +226,10 @@ export const CURRICULUM: Chapter[] = [
         xp: 15,
         keyboard: C3_C5,
         keyLabels: 'none',
-        exercises: [{ type: 'find-key', notes: pcs('C D E F G A H'), rounds: 10, anyOctave: true }],
+        exercises: [
+          { type: 'find-key', notes: pcs('C D E F G A H'), rounds: 10, anyOctave: true },
+          { type: 'play-along', sequences: [seq('F4 G4 A4 H4 C5'), seq('C5 A4 F4 D4 C4')] },
+        ],
       },
       {
         id: 'hand-scale',
@@ -239,6 +253,7 @@ export const CURRICULUM: Chapter[] = [
               [5, 4, 3, 2, 1, 3, 2, 1],
             ],
           },
+          { type: 'find-key', notes: pcs('C D E F G A H'), rounds: 6, anyOctave: true },
         ],
       },
       {
@@ -322,7 +337,10 @@ CURRICULUM.push({
       xp: 15,
       keyboard: C4_C5,
       keyLabels: 'all',
-      exercises: [{ type: 'read-note', clef: 'treble', notes: seq('C4 D4 E4'), rounds: 6 }],
+      exercises: [
+        { type: 'read-note', clef: 'treble', notes: seq('C4 D4 E4'), rounds: 6 },
+        { type: 'note-rain', clef: 'treble', notes: seq('C4 D4 E4'), goal: 6, fall: 9 },
+      ],
     },
     {
       id: 'read-f-g',
@@ -336,7 +354,10 @@ CURRICULUM.push({
       xp: 15,
       keyboard: C4_C5,
       keyLabels: 'c',
-      exercises: [{ type: 'read-note', clef: 'treble', notes: seq('C4 D4 E4 F4 G4'), rounds: 8 }],
+      exercises: [
+        { type: 'read-note', clef: 'treble', notes: seq('C4 D4 E4 F4 G4'), rounds: 8 },
+        { type: 'note-rain', clef: 'treble', notes: seq('C4 D4 E4 F4 G4'), goal: 8, fall: 8.5 },
+      ],
     },
     {
       id: 'read-a-h-c',
@@ -352,6 +373,13 @@ CURRICULUM.push({
       keyLabels: 'c',
       exercises: [
         { type: 'read-note', clef: 'treble', notes: seq('C4 D4 E4 F4 G4 A4 H4 C5'), rounds: 10 },
+        {
+          type: 'note-rain',
+          clef: 'treble',
+          notes: seq('C4 D4 E4 F4 G4 A4 H4 C5'),
+          goal: 8,
+          fall: 8,
+        },
       ],
     },
     {
@@ -640,6 +668,7 @@ CURRICULUM.push({
           seq('G3 E3 C3'),
           seq('C3 D3 E3 D3 C3'),
         ]),
+        { type: 'find-key', notes: pcs('C D E F G'), rounds: 5, anyOctave: true },
       ],
     },
     {
@@ -654,7 +683,10 @@ CURRICULUM.push({
       xp: 15,
       keyboard: C3_C4,
       keyLabels: 'c',
-      exercises: [{ type: 'read-note', clef: 'bass', notes: seq('C3 D3 E3 F3 G3'), rounds: 8 }],
+      exercises: [
+        { type: 'read-note', clef: 'bass', notes: seq('C3 D3 E3 F3 G3'), rounds: 8 },
+        { type: 'note-rain', clef: 'bass', notes: seq('C3 D3 E3 F3 G3'), goal: 6, fall: 9 },
+      ],
     },
     {
       id: 'bass-low',
@@ -670,6 +702,13 @@ CURRICULUM.push({
       keyLabels: 'c',
       exercises: [
         { type: 'read-note', clef: 'bass', notes: seq('G2 A2 H2 C3 D3 E3 F3 G3'), rounds: 10 },
+        {
+          type: 'note-rain',
+          clef: 'bass',
+          notes: seq('G2 A2 H2 C3 D3 E3 F3 G3'),
+          goal: 8,
+          fall: 8.5,
+        },
       ],
     },
     {
@@ -779,6 +818,13 @@ CURRICULUM.push({
           notes: seq('C3 D3 E3 F3 G3 C4 D4 E4 F4 G4'),
           rounds: 10,
         },
+        {
+          type: 'note-rain',
+          clef: 'both',
+          notes: seq('C3 D3 E3 F3 G3 C4 D4 E4 F4 G4'),
+          goal: 8,
+          fall: 9,
+        },
       ],
     },
     {
@@ -856,7 +902,13 @@ CURRICULUM.push({
       xp: 15,
       keyboard: C3_C5,
       keyLabels: 'none',
-      exercises: [{ type: 'find-key', notes: pcs('C# D# F# G# A#'), rounds: 8, anyOctave: true }],
+      exercises: [
+        { type: 'find-key', notes: pcs('C# D# F# G# A#'), rounds: 8, anyOctave: true },
+        {
+          type: 'play-along',
+          sequences: [seq('C4 C#4 D4 D#4 E4'), seq('F4 F#4 G4 G#4 A4 A#4 H4')],
+        },
+      ],
     },
     {
       id: 'black-sharps',
@@ -877,6 +929,7 @@ CURRICULUM.push({
           notes: seq('C#4 D#4 F#4 G#4 A#4 D4 F4 G4'),
           rounds: 10,
         },
+        { type: 'play-along', sequences: [seq('C4 D4 F#4 G4'), seq('G4 F#4 E4 D#4 E4')] },
       ],
     },
     {
@@ -1082,6 +1135,11 @@ CURRICULUM.push({
           rounds: 10,
           keySignature: 'G',
         },
+        {
+          type: 'play-along',
+          sequences: [seq('G4 A4 H4 C5 D5 E5 F#5 G5')],
+          fingers: [[1, 2, 3, 1, 2, 3, 4, 5]],
+        },
       ],
     },
     {
@@ -1147,6 +1205,12 @@ CURRICULUM.push({
           notes: seq('F4 G4 A4 Bb4 C5 D5 Bb4 H4'),
           rounds: 10,
           keySignature: 'F',
+        },
+        {
+          type: 'play-along',
+          spelling: 'flat',
+          sequences: [seq('F4 G4 A4 Bb4 C5 D5 E5 F5')],
+          fingers: [[1, 2, 3, 4, 1, 2, 3, 4]],
         },
       ],
     },
