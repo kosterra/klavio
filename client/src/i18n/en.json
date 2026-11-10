@@ -498,7 +498,10 @@
       "ridge": "Summit Ridge",
       "hut": "Mountain hut",
       "pass": "Mountain pass",
-      "glacier": "Glacier"
+      "glacier": "Glacier",
+      "circus": "Beat Circus",
+      "desert": "Scale Desert",
+      "garden": "Concert Garden"
     },
     "stages": {
       "1": "Level 1 · First steps",

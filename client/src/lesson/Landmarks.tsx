@@ -357,6 +357,137 @@ const KIDS_LANDMARKS: Record<KidsWorldId, ReactNode> = {
       <rect x="66" y="70" width="4" height="26" rx="2" fill={GLOSS} />
     </>
   ),
+  // Takt-Zirkus: a striped big top with a pennant, the beat on its drum
+  circus: (
+    <>
+      <Ground />
+      <path d="M26 122 L38 64 H142 L154 122 Z" fill={LIGHT} {...line} />
+      {[0, 1, 2, 3].map((i) => (
+        <path
+          key={i}
+          d={`M${50 + i * 26} 64 L${44 + i * 30} 122 H${58 + i * 30} L${62 + i * 26} 64 Z`}
+          fill={C}
+        />
+      ))}
+      <path d="M26 122 L38 64 H142 L154 122 Z" fill="none" {...line} />
+      <path d="M30 66 Q90 4 150 66 Z" fill={DARK} {...line} />
+      <path
+        d="M50 52 Q90 14 130 52"
+        stroke="var(--mantine-color-yellow-4)"
+        strokeWidth="5"
+        fill="none"
+      />
+      <path d="M90 22 V6" stroke={INK} strokeWidth="3" />
+      <path
+        d="M90 6 L110 11 L90 17 Z"
+        fill="var(--mantine-color-red-6)"
+        {...line}
+        strokeWidth={2}
+      />
+      <path d="M74 122 V96 Q90 80 106 96 V122 Z" fill="#fff" {...line} />
+      <ellipse
+        cx="90"
+        cy="112"
+        rx="11"
+        ry="5"
+        fill="var(--mantine-color-red-6)"
+        {...line}
+        strokeWidth={2}
+      />
+      <path
+        d="M40 70 L48 70 L44 110"
+        stroke={GLOSS}
+        strokeWidth="5"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <Note x={150} y={22} s={1.1} />
+    </>
+  ),
+  // Tonleiter-Wüste: a pyramid of steps – a scale in stone – under the sun
+  desert: (
+    <>
+      <path
+        d="M4 126 Q50 108 96 120 T176 118 V128 H4 Z"
+        fill="var(--mantine-color-yellow-2)"
+        {...line}
+      />
+      <circle cx="146" cy="28" r="16" fill="var(--mantine-color-yellow-4)" {...line} />
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <rect
+          key={i}
+          x={30 + i * 10}
+          y={110 - i * 14}
+          width={120 - i * 20}
+          height="14"
+          fill={i % 2 ? LIGHT : C}
+          {...line}
+          strokeWidth={2.5}
+        />
+      ))}
+      <rect x="82" y="96" width="16" height="14" fill={DARK} {...line} strokeWidth={2} />
+      <path d="M156 120 Q154 96 160 80" stroke={INK} strokeWidth="4" fill="none" />
+      <path
+        d="M160 80 q-16 -6 -24 4 M160 80 q14 -10 22 0 M160 80 q-6 -14 -18 -14 M160 80 q8 -14 18 -10"
+        stroke="var(--mantine-color-green-7)"
+        strokeWidth="5"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <rect x="36" y="100" width="4" height="8" rx="2" fill={GLOSS} />
+      <Note x={20} y={40} />
+    </>
+  ),
+  // Konzert-Garten: a music pavilion among hedges and flowers
+  garden: (
+    <>
+      <Ground />
+      <path d="M40 118 H140 V124 H40 Z" fill={DARK} {...line} strokeWidth={2.5} />
+      <rect x="46" y="104" width="88" height="14" rx="2" fill={LIGHT} {...line} />
+      {[52, 76, 104, 128].map((x) => (
+        <rect
+          key={x}
+          x={x - 3}
+          y="56"
+          width="6"
+          height="48"
+          fill="#fff"
+          {...line}
+          strokeWidth={2}
+        />
+      ))}
+      <path d="M36 58 H144 L132 46 H48 Z" fill={C} {...line} />
+      <path d="M48 46 Q90 2 132 46 Z" fill={LIGHT} {...line} />
+      <path d="M90 14 V4" stroke={INK} strokeWidth="3" />
+      <circle cx="90" cy="4" r="4" fill="var(--mantine-color-yellow-4)" {...line} strokeWidth={2} />
+      <path
+        d="M60 46 Q70 26 84 18"
+        stroke={GLOSS}
+        strokeWidth="5"
+        fill="none"
+        strokeLinecap="round"
+      />
+      {[
+        [16, 116, 'pink'],
+        [26, 120, 'yellow'],
+        [154, 118, 'red'],
+        [166, 114, 'grape'],
+      ].map(([x, y, c]) => (
+        <g key={`${x}`}>
+          <path d={`M${x} ${y} v8`} stroke="var(--mantine-color-green-7)" strokeWidth="2.5" />
+          <circle
+            cx={x}
+            cy={y}
+            r="5"
+            fill={`var(--mantine-color-${c}-4)`}
+            {...line}
+            strokeWidth={2}
+          />
+        </g>
+      ))}
+      <Note x={96} y={72} s={0.9} />
+    </>
+  ),
 };
 
 const LANDMARKS: Record<WorldId, ReactNode> = { ...KIDS_LANDMARKS, ...JOURNEY_LANDMARKS };

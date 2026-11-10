@@ -498,7 +498,10 @@
       "ridge": "Gipfelgrat",
       "hut": "Berghütte",
       "pass": "Passhöhe",
-      "glacier": "Gletscher"
+      "glacier": "Gletscher",
+      "circus": "Takt-Zirkus",
+      "desert": "Tonleiter-Wüste",
+      "garden": "Konzert-Garten"
     },
     "stages": {
       "1": "Stufe 1 · Erste Schritte",

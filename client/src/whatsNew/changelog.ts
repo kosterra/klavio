@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Drei neue Welten: Jedes Kapitel hat jetzt seine eigene – neu sind der Takt-Zirkus, die Tonleiter-Wüste und der Konzert-Garten.',
+        'Three new worlds: every chapter now has its own – new are the Beat Circus, the Scale Desert and the Concert Garden.',
+      ),
+      L(
         'Korrektur: Auf grösseren Handys überlappen die Kapitel-Überschriften im Lernpfad nicht mehr mit den Bildern der Welten, und die Stufen passen nebeneinander. In der Verwaltung nutzen die Zahlenfelder wieder die ganze Breite für ihre Erklärung.',
         'Fix: on larger phones the chapter headings on the learning path no longer overlap the world pictures, and the stages fit side by side. In the administration the number fields use the full width for their explanation again.',
       ),
