@@ -53,7 +53,7 @@ adults. Everything below follows from that. When in doubt: bigger, calmer, clear
 
 | | Kids | Classic |
 |---|---|---|
-| Look | warm background with doodles, colourful worlds, comic stage | calm neutral background (`--klavio-bg-classic`), fewer decorations |
+| Look | warm background with doodles, colourful worlds, comic stage | calm background (`--klavio-bg-classic`) with the colour fields at half strength and faint doodles (`--klavio-doodles-calm`), fewer decorations |
 | Mascot | the profile's figure everywhere, speech bubbles | figure only for feedback, text beside it |
 | Text | short sentences, one idea each, read aloud («Klavi liest vor») | complete but concise |
 | Hints | next key always marked | marked after a mistake |
