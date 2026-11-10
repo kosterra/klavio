@@ -80,6 +80,8 @@ export interface SongExercise {
   showNames: boolean;
   /** an upbeat: the first bar is only this many beats long (the last one makes up the rest) */
   pickup?: number;
+  /** a key signature at the start of the staff (G major: F♯) */
+  keySignature?: KeySignature;
   bars: SongNote[][];
 }
 

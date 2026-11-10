@@ -161,6 +161,27 @@ export const CURRICULUM: Chapter[] = [
           ]),
         ],
       },
+      {
+        id: 'song-buns',
+        kind: 'song',
+        bonus: true,
+        title: { 'de-CH': 'Hot Cross Buns', en: 'Hot Cross Buns' },
+        intro: {
+          'de-CH':
+            'Dein allererstes Lied – nur mit C, D und E. So riefen Bäcker in London früher ihre Brötchen aus. Klavi spielt dir die Begleitung dazu.',
+          en: 'Your very first song – only C, D and E. This is how bakers in London used to call out their buns. Klavi plays the accompaniment.',
+        },
+        xp: 15,
+        keyboard: C4_C5,
+        keyLabels: 'all',
+        exercises: [
+          song('E4/q D4/q C4/h | E4/q D4/q C4/h | C4/q C4/q D4/q D4/q | E4/q D4/q C4/h', {
+            showNames: true,
+            tempo: 92,
+            position: RH_C4,
+          }),
+        ],
+      },
     ],
   },
   {
@@ -354,6 +375,26 @@ CURRICULUM.push({
           goal: 20,
           fall: 7,
         },
+      ],
+    },
+    {
+      id: 'song-lune',
+      kind: 'song',
+      bonus: true,
+      title: { 'de-CH': 'Au clair de la lune', en: 'Au clair de la lune' },
+      intro: {
+        'de-CH':
+          'Ein französisches Volkslied, über 200 Jahre alt: «Im Mondschein». Nur C, D und E – und diesmal liest du die Noten selbst.',
+        en: 'A French folk song, more than 200 years old: “By the light of the moon”. Only C, D and E – and this time you read the notes yourself.',
+      },
+      xp: 20,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'C4/q C4/q C4/q D4/q | E4/h D4/h | C4/q E4/q D4/q D4/q | C4/w | C4/q C4/q C4/q D4/q | E4/h D4/h | C4/q E4/q D4/q D4/q | C4/w',
+          { tempo: 96, position: RH_C4 },
+        ),
       ],
     },
   ],
@@ -1044,6 +1085,26 @@ CURRICULUM.push({
       ],
     },
     {
+      id: 'keysig-minuet',
+      kind: 'song',
+      bonus: true,
+      title: { 'de-CH': 'Menuett in G', en: 'Minuet in G' },
+      intro: {
+        'de-CH':
+          'Ein Tanz aus dem Notenbüchlein für Anna Magdalena Bach – lange hielt man ihn für ein Stück von Bach, geschrieben hat ihn Christian Petzold. Im Dreivierteltakt, in G-Dur: Jedes F ist ein Fis.',
+        en: 'A dance from the Notebook for Anna Magdalena Bach – long thought to be by Bach, it was written by Christian Petzold. In three-four time, in G major: every F is an F sharp.',
+      },
+      xp: 30,
+      keyboard: { from: 60, to: 79 },
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'D5/q G4/8 A4/8 H4/8 C5/8 | D5/q G4/q G4/q | E5/q C5/8 D5/8 E5/8 F#5/8 | G5/q G4/q G4/q | C5/q D5/8 C5/8 H4/8 A4/8 | H4/q C5/8 H4/8 A4/8 G4/8 | F#4/q G4/8 A4/8 H4/8 G4/8 | A4/hd',
+          { time: '3/4', tempo: 88, keySignature: 'G' },
+        ),
+      ],
+    },
+    {
       id: 'keysig-f-scale',
       kind: 'play',
       title: { 'de-CH': 'Die F-Dur-Tonleiter', en: 'The F major scale' },
@@ -1138,6 +1199,30 @@ CURRICULUM.push({
         piece(
           'G4/q E4/q E4/h | F4/q D4/q D4/h | C4/q D4/q E4/q F4/q | G4/q G4/q G4/h | G4/q E4/q E4/h | F4/q D4/q D4/h | C4/q E4/q G4/q G4/q | C4/w',
           'C3/h G3/h | G3/h D3/h | C3/h G3/h | C3/h G3/h | C3/h G3/h | G3/h D3/h | C3/h G3/h | C3/w',
+          { tempo: 84 },
+        ),
+      ],
+    },
+    {
+      id: 'accomp-finale',
+      kind: 'song',
+      bonus: true,
+      title: {
+        'de-CH': 'Abschlusskonzert: Freude mit Wechselbass',
+        en: 'Final concert: Ode to Joy with alternating bass',
+      },
+      intro: {
+        'de-CH':
+          'Dein Abschlussstück: Beethovens «Freude» ganz, mit dem Mittelteil – rechts die Melodie, links der Wechselbass. Spiel es jemandem vor!',
+        en: 'Your final piece: Beethoven’s “Ode to Joy” in full, with the middle part – the melody on the right, the alternating bass on the left. Play it for someone!',
+      },
+      xp: 40,
+      keyboard: C3_C5,
+      keyLabels: 'c',
+      exercises: [
+        piece(
+          'E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | E4/qd D4/8 D4/h | E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | D4/qd C4/8 C4/h | D4/q D4/q E4/q C4/q | D4/q E4/8 F4/8 E4/q C4/q | D4/q E4/8 F4/8 E4/q D4/q | C4/q D4/q G3/h | E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | D4/qd C4/8 C4/h',
+          'C3/h G3/h | G3/h D3/h | C3/h G3/h | G3/h D3/h | C3/h G3/h | G3/h D3/h | C3/h G3/h | G3/h C3/h | G3/h D3/h | C3/h G3/h | G3/h D3/h | C3/w | C3/h G3/h | G3/h D3/h | C3/h G3/h | G3/h C3/h',
           { tempo: 84 },
         ),
       ],

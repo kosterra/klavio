@@ -603,7 +603,13 @@
       "hits_one": "{{count}} von {{total}} Tönen im Takt",
       "hits_other": "{{count}} von {{total}} Tönen im Takt",
       "tip": "Tipp: Zähl leise mit – «eins, zwei, drei, vier». Lieber ruhig und gleichmässig als schnell.",
-      "tempo": "Tempo {{tempo}}"
+      "tempo": "Tempo {{tempo}}",
+      "levels": {
+        "slow": "Langsam",
+        "medium": "Mittel",
+        "original": "Originaltempo"
+      },
+      "levelsLabel": "Tempo"
     },
     "chords": {
       "task": "Spiel den Akkord {{name}}",

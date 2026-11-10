@@ -211,6 +211,7 @@ export function SongExercise({
       <div style={{ width: '100%' }} data-testid="song-staff">
         <Staff
           clef={exercise.clef}
+          keySignature={exercise.keySignature}
           time={line === 0 ? exercise.time : undefined}
           bars={staffBars}
           height={kids ? 200 : 170}

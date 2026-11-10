@@ -153,6 +153,7 @@ export function song(
     tempo: opts.tempo ?? 96,
     showNames: opts.showNames ?? false,
     ...(pickup ? { pickup } : {}),
+    ...(opts.keySignature ? { keySignature: opts.keySignature } : {}),
     bars,
   };
 }

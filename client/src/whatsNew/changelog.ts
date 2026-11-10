@@ -23,6 +23,14 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Mehr Musik auf dem Weg: «Hot Cross Buns» schon im ersten Kapitel, «Au clair de la lune» zum Notenlesen, das «Menuett in G» bei den Tonarten und zum Schluss ein Abschlusskonzert – Beethovens «Freude» ganz, mit Wechselbass. Alles als Bonus, niemand wird aufgehalten.',
+        'More music along the way: “Hot Cross Buns” already in the first chapter, “Au clair de la lune” for reading notes, the “Minuet in G” with the keys and at the end a final concert – Beethoven’s “Ode to Joy” in full, with alternating bass. All as bonus lessons, nobody is held up.',
+      ),
+      L(
+        'Tempostufen «Im Takt»: Langsam, Mittel oder Originaltempo – wie bei einer Klavierlehrerin zuerst langsam, dann schneller.',
+        'Tempo levels “In time”: slow, medium or original tempo – like with a piano teacher, slowly first, then faster.',
+      ),
+      L(
         'Stücke für Erwachsene: Auf der Reise spielst du statt Kinderliedern bekannte Stücke mit den gleichen Tönen – Griegs «Morgenstimmung», Dvořáks «Going Home», Mozarts «Ah, vous dirai-je, Maman» und Beethovens «Freude» in der linken Hand. Fortschritt und Sterne bleiben, wie sie sind.',
         'Pieces for grown-ups: on the journey you play well-known pieces with the same notes instead of children’s songs – Grieg’s “Morning Mood”, Dvořák’s “Going Home”, Mozart’s “Ah, vous dirai-je, Maman” and Beethoven’s “Ode to Joy” in the left hand. Progress and stars stay as they are.',
       ),

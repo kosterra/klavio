@@ -603,7 +603,13 @@
       "hits_one": "{{count}} of {{total}} notes in time",
       "hits_other": "{{count}} of {{total}} notes in time",
       "tip": "Tip: count quietly – «one, two, three, four». Steady beats fast.",
-      "tempo": "Tempo {{tempo}}"
+      "tempo": "Tempo {{tempo}}",
+      "levels": {
+        "slow": "Slow",
+        "medium": "Medium",
+        "original": "Original tempo"
+      },
+      "levelsLabel": "Tempo"
     },
     "chords": {
       "task": "Play the chord {{name}}",

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Box, Button, Group, Stack, Text } from '@mantine/core';
+import { Box, Button, Group, SegmentedControl, Stack, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconMetronome, IconRefresh } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
@@ -37,6 +37,9 @@ function timeline(bars: Spec['bars']) {
   return out;
 }
 
+const TEMPO_LEVELS = { slow: 0.6, medium: 0.8, original: 1 } as const;
+type TempoLevel = keyof typeof TEMPO_LEVELS;
+
 /** A run with this share of notes in time goes on by itself. */
 const GOOD = 0.9;
 
@@ -58,8 +61,9 @@ export function TimedSongExercise({
   const { t } = useTranslation();
   const wide = useMediaQuery('(min-width: 900px)', true);
   const barsPerLine = wide ? 4 : 2;
-  // a little slower than «Anhören»: in time is new
-  const tempo = Math.round(exercise.tempo * (kids ? 0.8 : 0.9));
+  // the tempo ladder, like a teacher would: slow first, then faster, then as written
+  const [level, setLevel] = useState<TempoLevel>('medium');
+  const tempo = Math.round(exercise.tempo * TEMPO_LEVELS[level]);
   const beatMs = 60000 / tempo;
   const beatsPerBar = barBeats(exercise.time);
   const tolerance = kids ? 220 : 160;
@@ -258,12 +262,25 @@ export function TimedSongExercise({
         </Group>
       )}
 
-      {(phase === 'ready' || phase === 'result') && (
-        <DuetSwitch on={duet} onChange={setDuet} mic={inputMode === 'microphone'} />
+      {(phase === 'ready' || (phase === 'result' && !good)) && (
+        <Group gap="md" justify="center">
+          <SegmentedControl
+            value={level}
+            onChange={(v) => setLevel(v as TempoLevel)}
+            data={(Object.keys(TEMPO_LEVELS) as TempoLevel[]).map((k) => ({
+              value: k,
+              label: t(`lesson.timed.levels.${k}`),
+            }))}
+            aria-label={t('lesson.timed.levelsLabel')}
+            data-testid="tempo-level"
+          />
+          <DuetSwitch on={duet} onChange={setDuet} mic={inputMode === 'microphone'} />
+        </Group>
       )}
       <div style={{ width: '100%' }}>
         <Staff
           clef={exercise.clef}
+          keySignature={exercise.keySignature}
           time={line === 0 ? exercise.time : undefined}
           bars={staffBars}
           height={kids ? 200 : 170}
