@@ -590,8 +590,8 @@
     "micOff": "Mikrofon aus – spiel auf der Bildschirm-Klaviatur.",
     "why": "Warum?",
     "heard": "Ich höre: {{note}}",
-    "startPiano": "Los geht’s – auf meinem Klavier",
-    "startScreen": "Los geht’s – auf dem Bildschirm",
+    "startPiano": "auf meinem Klavier",
+    "startScreen": "auf dem Bildschirm",
     "switchToPiano": "Lieber auf dem Klavier spielen",
     "playPianoHint": "Auf dem Klavier höre ich dir über das Mikrofon zu – der Ton bleibt auf deinem Gerät.",
     "waitingForNote": "Ich höre zu – spiel los!",
@@ -1183,6 +1183,12 @@
       "micSetup": "Mikrofon einrichten",
       "go": "Zum Lernpfad"
     }
+  },
+  "playOn": {
+    "title": "Wo spielst du?",
+    "hint": "Das bietet dir der Start jeder Lektion zuerst an – auf diesem Gerät. Wechseln kannst du dort jederzeit.",
+    "piano": "Auf meinem Klavier",
+    "screen": "Auf dem Bildschirm"
   },
   "weeklyGoal": {
     "title": "Mein Wochenziel",

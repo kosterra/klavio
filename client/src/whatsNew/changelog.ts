@@ -20,6 +20,19 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: UPCOMING,
+    changes: [
+      L(
+        'Wo spielst du? In «Mein Profil» stellst du ein, ob die Lektionen zuerst das Klavier oder den Bildschirm anbieten – für jedes Profil auf diesem Gerät.',
+        'Where do you play? In «Mein Profil» you choose whether lessons offer the piano or the screen first – for each profile on this device.',
+      ),
+      L(
+        'Korrektur: Der Startknopf der Lektion schneidet auf schmalen Bildschirmen den Text nicht mehr ab.',
+        'Fix: the lesson start button no longer cuts off its text on narrow screens.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.1',
     changes: [
       L(

@@ -183,11 +183,11 @@ function LessonRun({
   const [theoryAt, setTheoryAt] = useState(0);
   const theoryShare = discoverFirst && steps.length ? THEORY_SHARE : 0;
   // how the learner played last time on this device: shown first
-  const [playOn] = useState(readPlayOn);
+  const [playOn] = useState(() => readPlayOn(activeProfile?.id));
   const startLesson = (choice: 'piano' | 'screen' = 'piano') => {
     // the real piano: the microphone starts with this tap (iOS needs a gesture)
     if (choice === 'piano') input.startPreferred();
-    writePlayOn(choice);
+    writePlayOn(choice, activeProfile?.id);
     startedAt.current = performance.now();
     setPhase('play');
   };
@@ -423,11 +423,21 @@ function LessonRun({
                     <Button
                       size="xl"
                       fullWidth
+                      h="auto"
+                      mih={60}
+                      py="xs"
+                      // «Los geht's!» big, where to play small below – fits narrow cards
+                      styles={{ label: { whiteSpace: 'normal', lineHeight: 1.2 } }}
                       leftSection={playOn === 'piano' ? <IconMicrophone /> : <IconDeviceDesktop />}
                       onClick={() => startLesson(playOn)}
                       data-testid={playOn === 'piano' ? 'lesson-start' : 'lesson-start-screen'}
                     >
-                      {t(playOn === 'piano' ? 'lesson.startPiano' : 'lesson.startScreen')}
+                      <span>
+                        {t('lesson.start')}
+                        <Text component="span" display="block" fz="sm" fw={500} opacity={0.9}>
+                          {t(playOn === 'piano' ? 'lesson.startPiano' : 'lesson.startScreen')}
+                        </Text>
+                      </span>
                     </Button>
                     {playOn === 'piano' && (
                       <Text size="sm" c="dimmed" ta="center">

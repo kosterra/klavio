@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { CURRICULUM } from '@klavio/shared';
 import { audit } from './audit';
-import { signUpWithEmail, uniqueEmail } from './helpers';
+import { signUpWithEmail, skipTheory, uniqueEmail } from './helpers';
 
 test('a new profile starts with a few questions: instrument, goal, dream song, week and level', async ({
   page,
@@ -20,7 +20,13 @@ test('a new profile starts with a few questions: instrument, goal, dream song, w
   await audit(page);
   await page.getByTestId('setup-instrument-none').click();
   // the lesson start offers the screen keys first on this device
-  expect(await page.evaluate(() => localStorage.getItem('klavio-play-on'))).toBe('screen');
+  expect(
+    await page.evaluate(() =>
+      Object.keys(localStorage)
+        .filter((k) => k.startsWith('klavio-play-on:'))
+        .map((k) => localStorage.getItem(k)),
+    ),
+  ).toEqual(['screen']);
 
   // --- why
   await expect(page.getByRole('heading', { name: 'Was möchtest du am liebsten?' })).toBeVisible();
@@ -72,4 +78,14 @@ test('a new profile starts with a few questions: instrument, goal, dream song, w
   ).toBeChecked();
   await page.goto('/');
   await expect(page.getByText('0 von 2 Tagen diese Woche')).toBeVisible();
+
+  // --- and where the learner plays: «no piano» in the questions, the piano from now on
+  await page.goto('/profile');
+  const playOn = page.getByTestId('play-on');
+  await expect(playOn.getByRole('radio', { name: 'Auf dem Bildschirm' })).toBeChecked();
+  await playOn.getByText('Auf meinem Klavier').click();
+  await expect(playOn.getByRole('radio', { name: 'Auf meinem Klavier' })).toBeChecked();
+  await page.goto(`/lesson/${firstOfBoth.id}`);
+  await skipTheory(page);
+  await expect(page.getByTestId('lesson-start')).toContainText('auf meinem Klavier');
 });

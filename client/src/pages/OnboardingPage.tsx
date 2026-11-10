@@ -194,7 +194,7 @@ export function OnboardingPage() {
 
   const pickInstrument = (value: Instrument) => {
     setInstrument(value);
-    writePlayOn(value === 'none' ? 'screen' : 'piano');
+    writePlayOn(value === 'none' ? 'screen' : 'piano', activeProfile?.id);
     next();
   };
   const pickGoal = (song: CatalogSong) =>

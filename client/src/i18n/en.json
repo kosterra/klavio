@@ -590,8 +590,8 @@
     "micOff": "Microphone off – play on the screen keyboard.",
     "why": "Why?",
     "heard": "I hear: {{note}}",
-    "startPiano": "Let’s go – on my piano",
-    "startScreen": "Let’s go – on the screen",
+    "startPiano": "on my piano",
+    "startScreen": "on the screen",
     "switchToPiano": "Rather play on the piano",
     "playPianoHint": "On the piano I listen through the microphone – the sound stays on your device.",
     "waitingForNote": "I’m listening – go ahead!",
@@ -1183,6 +1183,12 @@
       "micSetup": "Set up the microphone",
       "go": "To the learning path"
     }
+  },
+  "playOn": {
+    "title": "Where do you play?",
+    "hint": "What every lesson start offers you first – on this device. You can switch there at any time.",
+    "piano": "On my piano",
+    "screen": "On the screen"
   },
   "weeklyGoal": {
     "title": "My weekly goal",
