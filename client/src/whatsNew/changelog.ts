@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Für Admins: «Festzeit ausprobieren» unter «Verwaltung» zeigt Advent, Weihnachten und Neujahr an einem Tag deiner Wahl – nur auf deinem Gerät.',
+        'For admins: «Festzeit ausprobieren» under «Verwaltung» shows Advent, Christmas and New Year on a day of your choice – on your device only.',
+      ),
+      L(
         'Freies Spielen auf dem Klavier: Mit «Auf meinem Klavier spielen» hört Klavio über das Mikrofon zu, ein Digitalpiano ist einfach da. Jeder Ton leuchtet auf der Klaviatur auf, springt mit seinem Namen hervor und steht im Notensystem – dazu deine letzten Töne als kleine Spur.',
         'Free play on the piano: with «Play on my piano» Klavio listens through the microphone, a digital piano just works. Every note lights up on the keyboard, pops up with its name and appears on the staff – with your last notes as a little trail.',
       ),

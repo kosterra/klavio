@@ -312,6 +312,25 @@
       "never": "Accounts stay until they are deleted by their owners.",
       "howItWorks": "The warning's text is below, with the e-mail templates.",
       "saved": "Setting saved."
+    },
+    "season": {
+      "title": "Try out the festive season",
+      "hint": "Shows Advent, Christmas and New Year on a day of your choice – on this device and only for you. Everyone else sees today.",
+      "off": "Off (today)",
+      "day": "Or a particular day",
+      "look": "To the start page",
+      "active": "On this device the festive season uses: {{day}}.",
+      "inactive": "Off – the festive season follows today’s date.",
+      "presets": {
+        "advent1": "1st Sunday of Advent",
+        "advent2": "2nd Sunday of Advent",
+        "advent3": "3rd Sunday of Advent",
+        "advent4": "4th Sunday of Advent",
+        "christmasEve": "Christmas Eve",
+        "between": "28 December",
+        "newYearsEve": "New Year’s Eve",
+        "newYear": "New Year’s Day"
+      }
     }
   },
   "errors": {

@@ -312,6 +312,25 @@
       "never": "Konten bleiben, bis man sie selbst löscht.",
       "howItWorks": "Den Text der Warnung findest du unten bei den E-Mail-Vorlagen.",
       "saved": "Einstellung gespeichert."
+    },
+    "season": {
+      "title": "Festzeit ausprobieren",
+      "hint": "Zeigt Advent, Weihnachten und Neujahr an einem Tag deiner Wahl – nur auf diesem Gerät und nur für dich. Alle anderen sehen den heutigen Tag.",
+      "off": "Aus (heute)",
+      "day": "Oder ein bestimmter Tag",
+      "look": "Zur Startseite",
+      "active": "Auf diesem Gerät gilt für die Festzeit: {{day}}.",
+      "inactive": "Aus – die Festzeit richtet sich nach dem heutigen Tag.",
+      "presets": {
+        "advent1": "1. Advent",
+        "advent2": "2. Advent",
+        "advent3": "3. Advent",
+        "advent4": "4. Advent",
+        "christmasEve": "Heiligabend",
+        "between": "28. Dezember",
+        "newYearsEve": "Silvester",
+        "newYear": "Neujahr"
+      }
     }
   },
   "errors": {

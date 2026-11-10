@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { signUpWithEmail, skipSetup, uniqueEmail } from './helpers';
+import { grantAdmin, signUpWithEmail, skipSetup, uniqueEmail } from './helpers';
 import { audit } from './audit';
 
 test('Advent brings a piece a day, then Christmas, then New Year', async ({ page }) => {
@@ -38,5 +38,45 @@ test('Advent brings a piece a day, then Christmas, then New Year', async ({ page
   await page.clock.setFixedTime(new Date('2027-01-02T10:00:00'));
   await page.goto('/');
   await expect(hero).toHaveText('Hallo Mia!');
+  await expect(decor).toHaveCount(0);
+});
+
+test('admins can try the festive season out on their device', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.clock.setFixedTime(new Date('2026-11-10T10:00:00'));
+  const email = uniqueEmail('season-admin');
+  await signUpWithEmail(page, email, 'Admin');
+  grantAdmin(email);
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Ada');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1980');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
+  const decor = page.getByTestId('season-decor');
+  await expect(page.getByRole('heading', { name: 'Hallo Ada!' })).toBeVisible();
+  await expect(decor).toHaveCount(0);
+
+  // pick Christmas Eve under «Verwaltung» …
+  await page.goto('/admin');
+  const card = page.getByTestId('season-preview');
+  await card.getByText('Heiligabend').click();
+  await expect(card.getByTestId('season-preview-state')).toContainText('24. Dezember 2026');
+  await audit(page);
+  // … and the start page celebrates
+  await card.getByRole('link', { name: 'Zur Startseite' }).click();
+  await expect(decor).toHaveAttribute('data-season', 'christmas');
+  await expect(page.getByRole('heading', { name: 'Frohe Weihnachten, Ada!' })).toBeVisible();
+
+  // a particular day: New Year's Eve
+  await page.goto('/admin');
+  await card.getByTestId('season-preview-day').fill('2026-12-31');
+  await page.goto('/');
+  await expect(decor).toHaveAttribute('data-season', 'newyear');
+
+  // off again: today
+  await page.goto('/admin');
+  await card.getByText('Aus (heute)').click();
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Hallo Ada!' })).toBeVisible();
   await expect(decor).toHaveCount(0);
 });
