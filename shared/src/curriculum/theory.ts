@@ -1336,6 +1336,80 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     },
   ],
 
+  'both-together': [
+    {
+      type: 'explain',
+      text: L(
+        'Jetzt drücken beide Hände zugleich: links das tiefe C mit dem kleinen Finger, rechts das mittlere C mit dem Daumen. Es klingt wie ein Ton – nur voller.',
+        'Now both hands press at the same time: on the left the low C with the little finger, on the right middle C with the thumb. It sounds like one note – only fuller.',
+      ),
+      picture: {
+        kind: 'keyboard',
+        from: 48,
+        to: 72,
+        labels: 'c',
+        fingering: [
+          [48, 5],
+          [60, 1],
+        ],
+      },
+    },
+    {
+      type: 'tap-keys',
+      text: L(
+        'Finde die beiden C, die du gleich zusammen spielst!',
+        'Find the two Cs you will soon play together!',
+      ),
+      keyboard: { from: 48, to: 72 },
+      labels: 'none',
+      targets: [[48], [60]],
+      need: 'all',
+      hint: L(
+        'Das tiefe C links und das mittlere C in der Mitte – beide links von zwei schwarzen Tasten.',
+        'The low C on the left and middle C in the middle – both left of two black keys.',
+      ),
+    },
+  ],
+
+  'both-mirror': [
+    {
+      type: 'explain',
+      text: L(
+        'Im Spiegelbild beginnen beide Daumen: links auf dem G, rechts auf dem C. Dann gehen die Hände auseinander – links hinunter, rechts hinauf – immer mit dem gleichen Finger.',
+        'In the mirror image both thumbs start: on the left on G, on the right on C. Then the hands move apart – left down, right up – always with the same finger.',
+      ),
+      picture: {
+        kind: 'keyboard',
+        from: 48,
+        to: 72,
+        labels: 'c',
+        fingering: [
+          [55, 1],
+          [53, 2],
+          [52, 3],
+          [60, 1],
+          [62, 2],
+          [64, 3],
+        ],
+      },
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Die rechte Hand geht hinauf. Wohin geht die linke im Spiegelbild?',
+        'The right hand goes up. Where does the left go in the mirror image?',
+      ),
+      answers: [
+        { text: L('Hinunter', 'Down'), correct: true },
+        { text: L('Auch hinauf', 'Up as well') },
+      ],
+      hint: L(
+        'Im Spiegel bewegt sich alles in die Gegenrichtung.',
+        'In a mirror everything moves the opposite way.',
+      ),
+    },
+  ],
+
   'both-grand': [
     {
       type: 'explain',

@@ -74,4 +74,5 @@ test('note reading: the staff shows a note, playing it is checked exactly', asyn
   // one miss per read note → 12 / 18 correct → 1 star, still finished
   await expect(page.getByRole('heading', { name: 'Geschafft!' })).toBeVisible();
   await expect(page.getByRole('img', { name: '1 von 3 Sternen' })).toBeVisible();
+  await expect(summary).toBeVisible();
 });

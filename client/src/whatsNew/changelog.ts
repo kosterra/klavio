@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Mehr Schritte mit beiden Händen: «Beide zugleich» (der gleiche Ton links und rechts), «Spiegelbild» (die Hände gehen auseinander und wieder zusammen) und «Halten und spielen» (links ein langer Ton, rechts die Melodie) – vor dem ersten Lied mit Begleitung.',
+        'More steps with both hands: «Beide zugleich» (the same note left and right), «Spiegelbild» (the hands move apart and back together) and «Halten und spielen» (a long note on the left, the melody on the right) – before the first song with accompaniment.',
+      ),
+      L(
         'Abwechslung in den Lektionen: Viele Lektionen haben jetzt zwei Teile – zum Beispiel erst Noten lesen, dann ein kurzer Notenregen, oder erst Tasten finden, dann nachspielen. Oben siehst du, in welchem Teil du bist.',
         'Variety in the lessons: many lessons now have two parts – for example first reading notes, then a short note rain, or first finding keys, then playing along. At the top you see which part you are in.',
       ),

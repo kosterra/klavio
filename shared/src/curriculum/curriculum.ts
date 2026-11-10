@@ -800,6 +800,46 @@ CURRICULUM.push({
       ],
     },
     {
+      id: 'both-together',
+      kind: 'play',
+      title: { 'de-CH': 'Beide zugleich', en: 'Both at once' },
+      intro: {
+        'de-CH':
+          'Jetzt spielen beide Hände gleichzeitig – den gleichen Ton, links tief und rechts in der Mitte. Wie ein Echo, das genau mitkommt.',
+        en: 'Now both hands play at the same time – the same note, low on the left and in the middle on the right. Like an echo that keeps right up.',
+      },
+      xp: 20,
+      keyboard: C3_C5,
+      keyLabels: 'c',
+      exercises: [
+        piece(
+          'C4/h D4/h | E4/h D4/h | C4/h E4/h | D4/h C4/h | E4/h F4/h | G4/w | G4/h F4/h | E4/h D4/h | C4/w',
+          'C3/h D3/h | E3/h D3/h | C3/h E3/h | D3/h C3/h | E3/h F3/h | G3/w | G3/h F3/h | E3/h D3/h | C3/w',
+          { tempo: 66, showNames: true },
+        ),
+      ],
+    },
+    {
+      id: 'both-mirror',
+      kind: 'play',
+      title: { 'de-CH': 'Spiegelbild', en: 'Mirror image' },
+      intro: {
+        'de-CH':
+          'Beide Daumen fangen an, dann gehen die Hände auseinander und wieder zusammen – wie im Spiegel. Beide Hände nehmen immer den gleichen Finger.',
+        en: 'Both thumbs start, then the hands move apart and back together – like in a mirror. Both hands always use the same finger.',
+      },
+      xp: 20,
+      keyboard: C3_C5,
+      keyLabels: 'c',
+      exercises: [
+        piece(
+          'C4/h D4/h | E4/h F4/h | G4/w | G4/h F4/h | E4/h D4/h | C4/w | C4/q D4/q E4/h | E4/q D4/q C4/h',
+          'G3/h F3/h | E3/h D3/h | C3/w | C3/h D3/h | E3/h F3/h | G3/w | G3/q F3/q E3/h | E3/q F3/q G3/h',
+          { tempo: 66, showNames: true },
+        ),
+      ],
+    },
+    {
       id: 'both-grand',
       kind: 'read',
       title: { 'de-CH': 'Das grosse Notensystem', en: 'The grand staff' },
@@ -825,6 +865,26 @@ CURRICULUM.push({
           goal: 8,
           fall: 9,
         },
+      ],
+    },
+    {
+      id: 'both-hold',
+      kind: 'play',
+      title: { 'de-CH': 'Halten und spielen', en: 'Hold and play' },
+      intro: {
+        'de-CH':
+          'Die linke Hand spielt einen langen Ton und hält ihn, die rechte spielt dazu weiter. Lass den tiefen Ton klingen, bis der nächste kommt.',
+        en: 'The left hand plays a long note and holds it while the right hand keeps playing. Let the low note ring until the next one.',
+      },
+      xp: 20,
+      keyboard: C3_C5,
+      keyLabels: 'c',
+      exercises: [
+        piece(
+          'C4/h E4/h | D4/h F4/h | E4/h G4/h | C4/w | C4/q D4/q E4/q C4/q | E4/q F4/q G4/h | G4/q F4/q E4/q D4/q | C4/w',
+          'C3/w | G3/w | C3/w | C3/w | C3/w | C3/w | G3/w | C3/w',
+          { tempo: 72, showNames: true },
+        ),
       ],
     },
     {

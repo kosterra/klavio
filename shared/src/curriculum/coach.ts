@@ -44,6 +44,18 @@ export const LESSON_COACH: Record<string, Localized> = {
     'Immer abwechselnd: zuerst die eine Hand, dann die andere. Lass beide Hände auf ihren Tasten liegen.',
     'Always taking turns: first one hand, then the other. Keep both hands on their keys.',
   ),
+  'both-together': L(
+    'Schau auf beide Noten eines Schritts: oben die rechte, unten die linke Hand. Drück beide Tasten im selben Moment.',
+    'Look at both notes of a step: the right hand on top, the left below. Press both keys at the same moment.',
+  ),
+  'both-mirror': L(
+    'Gleicher Finger in beiden Händen: Daumen mit Daumen, Zeigefinger mit Zeigefinger. Die Hände bewegen sich wie im Spiegel.',
+    'Same finger in both hands: thumb with thumb, index finger with index finger. The hands move as in a mirror.',
+  ),
+  'both-hold': L(
+    'Die ganze Note links dauert vier Schläge. Halte die Taste unten, während die rechte Hand weiterspielt.',
+    'The whole note on the left lasts four beats. Keep the key down while the right hand plays on.',
+  ),
   'black-keys': L(
     'Die schwarzen Tasten kommen in Gruppen von zwei und drei. Such zuerst die richtige Gruppe.',
     'The black keys come in groups of two and three. Find the right group first.',
