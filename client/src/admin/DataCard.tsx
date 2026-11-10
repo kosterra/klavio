@@ -64,7 +64,7 @@ function DataForm({
               allowDecimal={false}
               allowNegative={false}
               suffix={` ${t('admin.data.months')}`}
-              maw={260}
+              styles={{ wrapper: { maxWidth: 260 } }}
               size="md"
               disabled={!settings}
               error={months !== '' && !valid ? t('admin.data.invalid') : undefined}

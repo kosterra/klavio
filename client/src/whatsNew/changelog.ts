@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Korrektur: Auf grösseren Handys überlappen die Kapitel-Überschriften im Lernpfad nicht mehr mit den Bildern der Welten, und die Stufen passen nebeneinander. In der Verwaltung nutzen die Zahlenfelder wieder die ganze Breite für ihre Erklärung.',
+        'Fix: on larger phones the chapter headings on the learning path no longer overlap the world pictures, and the stages fit side by side. In the administration the number fields use the full width for their explanation again.',
+      ),
+      L(
         'Classic hat wieder Farbe: Der Hintergrund zeigt die Farbflächen und Noten wie bei Kids – nur leiser.',
         'Classic has colour again: the background shows the colour fields and notes like Kids – only quieter.',
       ),
