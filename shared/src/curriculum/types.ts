@@ -38,6 +38,21 @@ export interface ReadNoteExercise {
   spelling?: Spelling;
 }
 
+/**
+ * «Notenregen»: notes on little staves fall from the sky; play each one
+ * before it lands. It gets faster the longer one keeps it up – reading
+ * becomes quick. Three notes may land, the fourth ends the round.
+ */
+export interface NoteRainExercise {
+  type: 'note-rain';
+  clef: 'treble' | 'bass';
+  notes: number[];
+  /** notes to catch for the round */
+  goal: number;
+  /** seconds a note needs to fall at the start */
+  fall: number;
+}
+
 /** Note values (VexFlow notation): whole, half, quarter, eighth; "d" = dotted. */
 export type NoteValue = 'w' | 'h' | 'hd' | 'q' | 'qd' | '8';
 
@@ -174,6 +189,7 @@ export type Exercise =
   | FindKeyExercise
   | PlayAlongExercise
   | ReadNoteExercise
+  | NoteRainExercise
   | SongExercise
   | TimedSongExercise
   | ChordsExercise

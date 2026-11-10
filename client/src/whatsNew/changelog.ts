@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Notenregen: Noten fallen vom Himmel, und du spielst jede, bevor sie landet. Je länger du durchhältst, desto schneller regnet es. Als Bonus-Lektion im Violinschlüssel (Kapitel 3) und im Bassschlüssel (Kapitel 6).',
+        'Note rain: notes fall from the sky and you play each one before it lands. The longer you keep going, the faster it rains. As a bonus lesson in the treble clef (chapter 3) and the bass clef (chapter 6).',
+      ),
+      L(
         'Klavi spielt mit: Zu deinen Liedern spielt Klavi Bass und Akkorde – beim Anhören, im Takt und Schritt für Schritt, sobald du einen neuen Akkord erreichst. So klingt schon «Hänschen klein» nach richtiger Musik. Mit dem Mikrofon am besten mit Kopfhörern; ein Schalter stellt es ab.',
         'Klavi plays along: with your songs Klavi plays bass and chords – when listening, in time and step by step whenever you reach a new chord. So even «Hänschen klein» sounds like real music. With the microphone best with headphones; a switch turns it off.',
       ),

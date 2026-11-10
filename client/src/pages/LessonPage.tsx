@@ -69,6 +69,7 @@ import { useNoteEvents } from '../input/noteBus';
 import { useLocalized } from '../lesson/useLocalized';
 import { loadProgress, useProgress } from '../lesson/useProgress';
 import { TheorySteps } from '../lesson/theory/TheorySteps';
+import { NoteRainExercise } from '../lesson/NoteRainExercise';
 import { GoalMilestone } from '../goal/GoalMilestone';
 import { WorldDone } from '../lesson/WorldDone';
 import { Scenery } from '../lesson/WorldScenery';
@@ -457,6 +458,8 @@ function LessonRun({
           {phase === 'play' &&
             (exercise.type === 'find-key' ? (
               <FindKeyExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'note-rain' ? (
+              <NoteRainExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'read-note' ? (
               <ReadNoteExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'song' ? (

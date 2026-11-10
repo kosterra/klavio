@@ -634,6 +634,16 @@
       "again": "Nochmals hören",
       "unknown": "unbekannter Ton",
       "wrong": "Das war {{note}} – hör nochmals zu."
+    },
+    "rain": {
+      "task": "Spiel jede Note, bevor sie landet!",
+      "start": "Los, lass es regnen",
+      "caught": "{{n}} von {{total}} gefangen",
+      "lives_one": "Noch {{count}} Leben",
+      "lives_other": "Noch {{count}} Leben",
+      "over": "Drei Noten sind gelandet. Nochmals?",
+      "done": "Alle gefangen – super gelesen!",
+      "note": "Fallende Note"
     }
   },
   "badges": {

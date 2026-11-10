@@ -1,0 +1,89 @@
+/* the sky the notes fall from, with the ground they must not reach */
+.field {
+  --card: clamp(130px, 30%, 180px);
+
+  position: relative;
+  width: min(100%, 640px);
+  overflow: hidden;
+  border-radius: var(--mantine-radius-lg);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--mantine-color-indigo-4) 22%, var(--klavio-surface)) 0%,
+    color-mix(in srgb, var(--mantine-color-cyan-3) 14%, var(--klavio-surface)) 100%
+  );
+  border: 1px solid var(--mantine-color-default-border);
+}
+
+.ground {
+  position: absolute;
+  inset: auto 0 0;
+  height: 12px;
+  background: color-mix(in srgb, var(--mantine-color-green-6) 60%, var(--klavio-surface));
+  border-top: 2px solid var(--klavio-comic-line);
+}
+
+.drop {
+  position: absolute;
+  top: 0;
+  width: var(--card);
+  padding: 0 4px;
+  border-radius: var(--mantine-radius-md);
+  background: var(--klavio-surface);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+  will-change: transform;
+}
+
+/* Kids: a raindrop with a little cloud tail */
+.field[data-kids] .drop {
+  border: 3px solid var(--mantine-color-cyan-5);
+  border-radius: 28px 28px 28px 28px;
+}
+
+.drop[data-end='caught'] {
+  animation: pop 380ms ease-out forwards;
+  border-color: var(--mantine-color-teal-6);
+  box-shadow: 0 0 0 3px var(--mantine-color-teal-6);
+}
+
+.drop[data-end='landed'] {
+  animation: splash 380ms ease-out forwards;
+  box-shadow: 0 0 0 3px var(--mantine-color-red-6);
+}
+
+@keyframes pop {
+  to {
+    opacity: 0;
+    scale: 1.25;
+  }
+}
+
+@keyframes splash {
+  to {
+    opacity: 0;
+    scale: 1.1 0.6;
+  }
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--klavio-surface) 40%, transparent);
+}
+
+.heart {
+  color: var(--mantine-color-red-7);
+  fill: currentcolor;
+}
+
+.heartLost {
+  color: var(--mantine-color-gray-6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drop[data-end] {
+    animation: none;
+    opacity: 0;
+  }
+}

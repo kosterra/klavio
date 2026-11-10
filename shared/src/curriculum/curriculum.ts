@@ -319,6 +319,29 @@ CURRICULUM.push({
         { type: 'read-note', clef: 'treble', notes: seq('C4 D4 E4 F4 G4 A4 H4 C5'), rounds: 10 },
       ],
     },
+    {
+      id: 'rain-treble',
+      kind: 'read',
+      bonus: true,
+      title: { 'de-CH': 'Notenregen', en: 'Note rain' },
+      intro: {
+        'de-CH':
+          'Noten fallen vom Himmel! Spiel jede, bevor sie landet. Je länger du durchhältst, desto schneller regnet es – so liest du Noten bald auf einen Blick.',
+        en: 'Notes are falling from the sky! Play each one before it lands. The longer you keep going, the faster it rains – soon you read notes at a glance.',
+      },
+      xp: 20,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        {
+          type: 'note-rain',
+          clef: 'treble',
+          notes: seq('C4 D4 E4 F4 G4 A4 H4 C5'),
+          goal: 20,
+          fall: 7,
+        },
+      ],
+    },
   ],
 });
 
@@ -561,6 +584,29 @@ CURRICULUM.push({
       keyLabels: 'c',
       exercises: [
         { type: 'read-note', clef: 'bass', notes: seq('G2 A2 H2 C3 D3 E3 F3 G3'), rounds: 10 },
+      ],
+    },
+    {
+      id: 'rain-bass',
+      kind: 'read',
+      bonus: true,
+      title: { 'de-CH': 'Notenregen im Bass', en: 'Note rain in the bass' },
+      intro: {
+        'de-CH':
+          'Jetzt regnet es im Bassschlüssel. Fang jede Note, bevor sie landet – mit der linken Hand.',
+        en: 'Now it rains in the bass clef. Catch every note before it lands – with your left hand.',
+      },
+      xp: 20,
+      keyboard: G2_C4,
+      keyLabels: 'c',
+      exercises: [
+        {
+          type: 'note-rain',
+          clef: 'bass',
+          notes: seq('G2 A2 H2 C3 D3 E3 F3 G3'),
+          goal: 20,
+          fall: 7,
+        },
       ],
     },
     {
@@ -1164,7 +1210,9 @@ export function lessonTargetCount(lesson: Lesson): number {
                       ? e.notes.length
                       : e.type === 'improvise'
                         ? 1
-                        : e.rounds),
+                        : e.type === 'note-rain'
+                          ? e.goal
+                          : e.rounds),
     0,
   );
 }

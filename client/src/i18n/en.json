@@ -634,6 +634,16 @@
       "again": "Listen again",
       "unknown": "unknown note",
       "wrong": "That was {{note}} – listen again."
+    },
+    "rain": {
+      "task": "Play every note before it lands!",
+      "start": "Go, let it rain",
+      "caught": "{{n}} of {{total}} caught",
+      "lives_one": "{{count}} life left",
+      "lives_other": "{{count}} lives left",
+      "over": "Three notes have landed. Again?",
+      "done": "All caught – great reading!",
+      "note": "Falling note"
     }
   },
   "badges": {
