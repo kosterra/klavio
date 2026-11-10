@@ -21,14 +21,16 @@ jobs:
   # without them. A merge into main brings commits develop has checked already (main's
   # branch protection requires their results), so only a manual rebuild runs them again
   checks:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     uses: ./.github/workflows/checks.yml
 
   build_and_release:
     runs-on: ubuntu-24.04
     needs: checks
+    # only main is released – a manual run on another branch builds and signs nothing
+    # (the signature check in docs/betrieb.md accepts this workflow on main only);
     # also when the checks were skipped (a merge), never when they failed
-    if: ${{ !cancelled() && (needs.checks.result == 'success' || needs.checks.result == 'skipped') }}
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && (needs.checks.result == 'success' || needs.checks.result == 'skipped') }}
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -81,9 +83,11 @@ jobs:
           # the version of this build is out: «Was ist neu» shows it as released
           build-args: |
             APP_RELEASED=true
-          # always fetch the base image fresh so a rebuild picks up the newest
-          # Alpine security packages (apk upgrade) rather than a cached layer
+          # the base image is pinned by digest, so its layer never changes: the
+          # production stage is built without cache, so `apk upgrade` really
+          # fetches the newest Alpine security packages on every (re)build
           pull: true
+          no-cache-filters: production
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

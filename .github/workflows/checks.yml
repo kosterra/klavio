@@ -25,7 +25,9 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
+      # no install scripts of dependencies: nothing needs them (esbuild ships its binary as
+      # a platform package, the test MongoDB is fetched by the tests themselves)
+      - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run format:check
@@ -46,7 +48,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - run: npm ci --no-audit --no-fund
+      - run: npm ci --ignore-scripts --no-audit --no-fund
 
       # Chromium for Playwright, cached per Playwright version
       - name: Playwright version

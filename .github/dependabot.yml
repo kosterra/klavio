@@ -1,8 +1,9 @@
 # Dependabot keeps the Actions' commit pins and the npm packages current: age over
 # newness (a cooldown of two weeks lets a fresh release prove itself), minor and patch
 # updates grouped into one pull request, no major bumps on their own (handled by hand).
-# Pull requests go to develop, where the checks run. The Docker base image is pinned by
-# digest in the Dockerfile and bumped by hand for a High/Critical in Node or Alpine.
+# Pull requests go to develop, where the checks run. The Docker images are covered too:
+# the Node base image in the Dockerfile (pinned by digest) and the images of
+# docker-compose.yml (MongoDB, Caddy, Mailpit).
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -38,3 +39,26 @@ updates:
         update-types: ['version-update:semver-major']
     commit-message:
       prefix: 'Deps:'
+
+  # the Node base image (Dockerfile) and the images of docker-compose.yml
+  - package-ecosystem: docker
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 14
+    commit-message:
+      prefix: 'Docker:'
+
+  - package-ecosystem: docker-compose
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 14
+    commit-message:
+      prefix: 'Docker:'

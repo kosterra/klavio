@@ -14,7 +14,8 @@ COPY package.json package-lock.json ./
 COPY shared/package.json shared/
 COPY server/package.json server/
 COPY client/package.json client/
-RUN npm ci --no-audit --no-fund
+# no install scripts of dependencies (none is needed for the build)
+RUN npm ci --ignore-scripts --no-audit --no-fund
 
 # ----------------------------------------------------------------------- build
 FROM deps AS build
@@ -41,7 +42,7 @@ COPY package.json package-lock.json ./
 COPY shared/package.json shared/
 COPY server/package.json server/
 COPY client/package.json client/
-RUN npm ci --omit=dev --workspace server --include-workspace-root=false --no-audit --no-fund \
+RUN npm ci --ignore-scripts --omit=dev --workspace server --include-workspace-root=false --no-audit --no-fund \
     && npm cache clean --force
 COPY --from=build /app/server/dist server/dist
 COPY --from=build /app/client/dist public
