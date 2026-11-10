@@ -3,14 +3,24 @@ import { Button, Stack, Text, VisuallyHidden } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconPlayerPlay, IconPlayerStop } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { beatsOf, isHeldNote, midiToPitchName, type SongExercise as Spec } from '@klavio/shared';
+import {
+  accompaniment,
+  beatsOf,
+  blockChords,
+  isHeldNote,
+  midiToPitchName,
+  type SongExercise as Spec,
+} from '@klavio/shared';
 import { inputHub, useNoteEvents } from '../input/noteBus';
 import { playMelody, type Playback } from '../audio/synth';
+import { playAccompaniment, strikeChord, type Accompaniment } from '../audio/accompany';
 import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { Staff, type StaffNote } from '../notation/Staff';
 import { FEEDBACK_MS, type ExerciseProps } from './exercises';
 import { useNoteLang } from './useLocalized';
+import { useDuet } from './duet';
+import { DuetSwitch } from './DuetSwitch';
 
 /**
  * "Lied spielen" in "wait for me" mode: the song is shown bar by bar and only
@@ -35,6 +45,26 @@ export function SongExercise({
     () => exercise.bars.flatMap((bar, b) => bar.map((n) => ({ ...n, bar: b }))),
     [exercise],
   );
+  // «Klavi spielt mit»: a chord when the learner reaches it
+  const [duet, setDuet] = useDuet(inputMode);
+  const chordAt = useMemo(() => {
+    const offsets: number[] = [];
+    exercise.bars.forEach((bar) => {
+      let t = 0;
+      for (const n of bar) {
+        offsets.push(t);
+        t += beatsOf(n.value);
+      }
+    });
+    const map = new Map<number, number[]>();
+    for (const c of blockChords(exercise)) {
+      const i = notes.findIndex((n, k) => n.bar === c.bar && offsets[k]! >= c.at - 1e-9);
+      if (i >= 0) map.set(i, c.midis);
+    }
+    return map;
+  }, [exercise, notes]);
+  const chord = useRef<Accompaniment | null>(null);
+  const backing = useRef<Accompaniment | null>(null);
   const [pos, setPos] = useState(0);
   const [wrong, setWrong] = useState<number | null>(null);
   const [missedHere, setMissedHere] = useState(false);
@@ -47,6 +77,8 @@ export function SongExercise({
     () => () => {
       clearTimeout(timer.current);
       playback.current?.stop();
+      backing.current?.stop();
+      chord.current?.stop();
       inputHub.muteMicrophoneUntil(0);
     },
     [],
@@ -55,6 +87,11 @@ export function SongExercise({
   useNoteEvents((e) => {
     if (e.type !== 'note-on' || finished || playingIndex !== null) return;
     if (e.midi === notes[pos]!.midi) {
+      const harmony = duet ? chordAt.get(pos) : undefined;
+      if (harmony) {
+        chord.current?.stop();
+        chord.current = strikeChord(harmony);
+      }
       onCorrect();
       setWrong(null);
       setMissedHere(false);
@@ -75,16 +112,23 @@ export function SongExercise({
   const listen = () => {
     if (playback.current) {
       playback.current.stop();
+      backing.current?.stop();
       return;
     }
+    chord.current?.stop();
     const melody = notes.map((n) => ({ midi: n.midi, beats: beatsOf(n.value) }));
     const ms = (melody.reduce((s, n) => s + n.beats, 0) * 60000) / exercise.tempo;
     // the microphone would hear the app's own playback as notes
     inputHub.muteMicrophoneUntil(performance.now() + ms + 800);
     const p = playMelody(melody, exercise.tempo, setPlayingIndex);
     playback.current = p;
+    backing.current = duet
+      ? playAccompaniment(accompaniment(exercise), 60000 / exercise.tempo, performance.now())
+      : null;
     void p.done.then(() => {
       playback.current = null;
+      backing.current?.stop();
+      backing.current = null;
       setPlayingIndex(null);
       inputHub.muteMicrophoneUntil(performance.now() + 500);
     });
@@ -156,6 +200,14 @@ export function SongExercise({
         </Button>
       </BuddySays>
 
+      <DuetSwitch
+        on={duet}
+        onChange={(on) => {
+          setDuet(on);
+          if (!on) chord.current?.stop();
+        }}
+        mic={inputMode === 'microphone'}
+      />
       <div style={{ width: '100%' }} data-testid="song-staff">
         <Staff
           clef={exercise.clef}

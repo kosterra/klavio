@@ -57,6 +57,8 @@ test('song mode waits for every note; "listen" plays the song first', async ({ p
   await startLesson(page);
   const staff = page.getByRole('img', { name: /Noten des Lieds, Zeile 1 von 3/ });
   await expect(staff.locator('svg')).toBeVisible();
+  // «Klavi spielt mit»: bass and chords to the melody, switchable
+  await expect(page.getByTestId('duet')).toBeVisible();
   await audit(page);
   await shot(page, 'song-entchen');
 

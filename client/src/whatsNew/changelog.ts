@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Klavi spielt mit: Zu deinen Liedern spielt Klavi Bass und Akkorde – beim Anhören, im Takt und Schritt für Schritt, sobald du einen neuen Akkord erreichst. So klingt schon «Hänschen klein» nach richtiger Musik. Mit dem Mikrofon am besten mit Kopfhörern; ein Schalter stellt es ab.',
+        'Klavi plays along: with your songs Klavi plays bass and chords – when listening, in time and step by step whenever you reach a new chord. So even «Hänschen klein» sounds like real music. With the microphone best with headphones; a switch turns it off.',
+      ),
+      L(
         'Deine Reise in vier Etappen: Oben wartet dein Traumlied als Gipfel, darunter Aufbruch, Durststrecke, Aufstieg und Gipfelsturm. Jede Etappe sagt, was du danach spielst, die Durststrecke kündigt sich ehrlich an – mit dem, was dir hilft – und mit deinem Wochenziel rechnet Klavio aus, wann du ungefähr oben bist.',
         'Your journey in four stages: your dream song waits as the summit on top, below it setting out, the hard stretch, the climb and the summit push. Each stage says what you’ll play afterwards, the hard stretch is announced honestly – with what helps – and with your weekly goal Klavio works out roughly when you’ll reach the top.',
       ),

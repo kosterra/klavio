@@ -4,6 +4,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { IconMetronome, IconRefresh } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import {
+  accompaniment,
   barBeats,
   beatsOf,
   isHeldNote,
@@ -12,11 +13,14 @@ import {
 } from '@klavio/shared';
 import { useNoteEvents } from '../input/noteBus';
 import { runMetronome, type MetronomeRun } from '../audio/metronome';
+import { playAccompaniment, type Accompaniment } from '../audio/accompany';
 import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { Staff, type StaffNote } from '../notation/Staff';
 import type { ExerciseProps } from './exercises';
 import { INPUT_DELAY_MS, scoreMelody, type MelodyScore } from './rhythmScore';
+import { useDuet } from './duet';
+import { DuetSwitch } from './DuetSwitch';
 
 type Phase = 'ready' | 'countin' | 'play' | 'result';
 
@@ -77,6 +81,10 @@ export function TimedSongExercise({
   /** when the first note is due (performance.now ms) — exposed for automated tests */
   const [firstAt, setFirstAt] = useState<number | null>(null);
   const run = useRef<MetronomeRun | null>(null);
+  // «Klavi spielt mit»: bass and chords in time
+  const [duet, setDuet] = useDuet(inputMode);
+  const events = useMemo(() => accompaniment(exercise), [exercise]);
+  const backing = useRef<Accompaniment | null>(null);
   const played = useRef<{ ms: number; midi: number }[]>([]);
   const window = useRef<{ from: number; to: number } | null>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -88,6 +96,8 @@ export function TimedSongExercise({
     cancelAnimationFrame(raf.current);
     run.current?.stop();
     run.current = null;
+    backing.current?.stop();
+    backing.current = null;
   };
   useEffect(() => () => clearAll(), []);
 
@@ -107,6 +117,7 @@ export function TimedSongExercise({
     run.current = m;
     const first = m.beatTimes[beatsPerBar]!;
     setFirstAt(first);
+    if (duet) backing.current = playAccompaniment(events, beatMs, first - pickup * beatMs);
     const expected = playedIdx.map((i) => ({
       ms: first + (notes[i]!.at - pickup) * beatMs,
       midi: notes[i]!.midi,
@@ -247,6 +258,9 @@ export function TimedSongExercise({
         </Group>
       )}
 
+      {(phase === 'ready' || phase === 'result') && (
+        <DuetSwitch on={duet} onChange={setDuet} mic={inputMode === 'microphone'} />
+      )}
       <div style={{ width: '100%' }}>
         <Staff
           clef={exercise.clef}

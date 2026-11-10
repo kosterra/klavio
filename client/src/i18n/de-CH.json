@@ -1187,5 +1187,9 @@
     "intro_other": "{{count}} Lieder sind offen – spiel sie, so oft du willst.",
     "new": "Neu – noch nicht gespielt",
     "locked": "Kommt in Kapitel {{n}}"
+  },
+  "duet": {
+    "label": "Klavi spielt mit",
+    "micHint": "Am besten mit Kopfhörern – sonst hört das Mikrofon Klavi mit."
   }
 }

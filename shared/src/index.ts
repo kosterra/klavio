@@ -9,6 +9,7 @@ export * from './curriculum/theory.ts';
 export * from './curriculum/review.ts';
 export * from './curriculum/skills.ts';
 export * from './curriculum/coach.ts';
+export * from './curriculum/harmony.ts';
 export * from './curriculum/songCatalog.ts';
 export * from './curriculum/rewards.ts';
 export * from './schemas/progress.ts';
