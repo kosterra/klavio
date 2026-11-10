@@ -1,6 +1,7 @@
 import { IconBulb, IconMap2, IconPiano, IconPlaylist, IconUserCircle } from '@tabler/icons-react';
 import { NavLink } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { NavSnow } from '../season/SeasonChrome';
 import classes from './BottomNav.module.css';
 
 const ITEMS = [
@@ -16,6 +17,7 @@ export function BottomNav() {
   const { t } = useTranslation();
   return (
     <nav className={classes.nav} aria-label={t('nav.main')} data-testid="bottom-nav">
+      <NavSnow place="bottom" />
       {ITEMS.map(({ to, icon: Icon, label, end }) => (
         <NavLink key={to} to={to} end={end} className={classes.item}>
           <Icon size={26} aria-hidden />

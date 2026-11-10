@@ -30,6 +30,10 @@
   width: 116px;
 }
 
+.wreathAside {
+  right: 110px;
+}
+
 .flame {
   transform-box: fill-box;
   transform-origin: 50% 100%;
@@ -117,6 +121,96 @@
   }
 }
 
+/* the visitors of the day: each has its own place on the ground or in the sky */
+.samichlaus,
+.snowman,
+.sack,
+.sled,
+.cookies,
+.angel,
+.flight,
+.bethlehem {
+  position: absolute;
+}
+
+.samichlaus {
+  right: 160px;
+  bottom: 18px;
+  width: 84px;
+}
+
+.snowman {
+  right: 270px;
+  bottom: 20px;
+  width: 62px;
+}
+
+.sack {
+  right: 350px;
+  bottom: 20px;
+  width: 66px;
+}
+
+.sled {
+  right: 350px;
+  bottom: 18px;
+  width: 96px;
+}
+
+.cookies {
+  right: 460px;
+  bottom: 22px;
+  width: 70px;
+}
+
+.angel {
+  top: 26px;
+  left: 52%;
+  width: 72px;
+}
+
+.bethlehem {
+  top: 16px;
+  left: 44%;
+  width: 150px;
+}
+
+.flight {
+  top: 30px;
+  left: 0;
+  width: 210px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .angel {
+    animation: hover 3.4s ease-in-out infinite;
+  }
+
+  .flight {
+    animation: fly 14s linear infinite;
+  }
+
+  .bethlehem {
+    animation: twinkle 3s ease-in-out infinite;
+  }
+}
+
+@keyframes hover {
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes fly {
+  from {
+    transform: translateX(-240px);
+  }
+
+  to {
+    transform: translateX(110vw);
+  }
+}
+
 /* phones: the small pieces, the tree stays for bigger screens */
 @media (max-width: 36em) {
   .wreath {
@@ -126,8 +220,34 @@
     width: 64px;
   }
 
-  .tree {
+  .tree,
+  .sack,
+  .sled,
+  .cookies {
     display: none;
+  }
+
+  /* one visitor next to the wreath */
+  .samichlaus,
+  .snowman {
+    right: 78px;
+    bottom: 4px;
+    width: 46px;
+  }
+
+  .angel,
+  .bethlehem {
+    left: auto;
+    right: 12px;
+    top: 8px;
+  }
+
+  .angel {
+    width: 50px;
+  }
+
+  .bethlehem {
+    width: 100px;
   }
 }
 
@@ -136,6 +256,10 @@
   .flame,
   .star {
     animation: none;
+  }
+
+  .flight {
+    left: 30%;
   }
 
   .burst {

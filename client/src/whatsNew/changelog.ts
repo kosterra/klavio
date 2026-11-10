@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Mehr Weihnachten: Ab dem ersten Advent ändert sich jeden Tag etwas – am 6. kommt der Samichlaus und lässt seinen Sack da, ein Rentier mit roter Nase schaut oben rechts herein, ein Schneemann schmilzt und ein neuer wird gebaut, es gibt Guetzli, einen Engel, den Schlitten, den Stern von Betlehem und an Heiligabend fliegt der Schlitten über den Himmel. Auch Kopfzeile, Logo und Navigation feiern mit: Tannengirlande, Zipfelmütze, Schnee und Glocken.',
+        'More Christmas: from the first Sunday of Advent something changes every day – on the 6th Samichlaus comes and leaves his sack, a reindeer with a red nose peeks in at the top right, a snowman melts and a new one is built, there are Christmas biscuits, an angel, the sleigh, the star of Bethlehem, and on Christmas Eve the sleigh flies across the sky. The header, logo and navigation join in too: a fir garland, a Santa cap, snow and bells.',
+      ),
+      L(
         'Drei neue Welten: Jedes Kapitel hat jetzt seine eigene – neu sind der Takt-Zirkus, die Tonleiter-Wüste und der Konzert-Garten.',
         'Three new worlds: every chapter now has its own – new are the Beat Circus, the Scale Desert and the Concert Garden.',
       ),

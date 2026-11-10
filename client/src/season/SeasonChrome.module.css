@@ -1,0 +1,125 @@
+/* decoration only: never catches a tap */
+.garland,
+.logoCap,
+.reindeer,
+.snowBottom,
+.snowSide,
+.bells {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* hangs just below the header's coloured stripe */
+.garland {
+  left: 0;
+  right: 0;
+  bottom: -16px;
+  width: 100%;
+  height: 20px;
+}
+
+/* sits on the logo's top left corner */
+.logoCap {
+  top: -12px;
+  left: -8px;
+  width: 34px;
+  transform: rotate(-14deg);
+}
+
+/* peeks in at the top right, under the header – and ducks away again now and then */
+.reindeer {
+  position: fixed;
+  z-index: 150;
+  top: calc(var(--app-shell-header-height, 60px) + 4px);
+  right: -22px;
+  width: 96px;
+  transform: rotate(-28deg);
+  transform-origin: 100% 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reindeer {
+    animation: peek 9s ease-in-out infinite;
+  }
+
+  .nose {
+    animation: shine 1.4s ease-in-out infinite alternate;
+  }
+
+  .bellLeft,
+  .bellRight {
+    transform-box: fill-box;
+    transform-origin: 50% 0;
+    animation: ring 2.6s ease-in-out infinite;
+  }
+
+  .bellRight {
+    animation-delay: 0.2s;
+  }
+}
+
+@keyframes peek {
+  0%,
+  62%,
+  100% {
+    transform: translateX(0) rotate(-28deg);
+  }
+
+  72%,
+  86% {
+    transform: translateX(90px) rotate(-28deg);
+  }
+}
+
+@keyframes shine {
+  to {
+    filter: drop-shadow(0 0 6px var(--mantine-color-red-4));
+  }
+}
+
+@keyframes ring {
+  0%,
+  70%,
+  100% {
+    transform: rotate(0);
+  }
+
+  78% {
+    transform: rotate(14deg);
+  }
+
+  88% {
+    transform: rotate(-12deg);
+  }
+}
+
+/* snow lying on top of the bottom bar … */
+.snowBottom {
+  left: 0;
+  right: 0;
+  top: -9px;
+  width: 100%;
+  height: 12px;
+}
+
+/* … and on the top edge of the side menu */
+.snowSide {
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 12px;
+}
+
+.bells {
+  top: 10px;
+  right: 10px;
+  width: 44px;
+}
+
+@media (max-width: 36em) {
+  .reindeer {
+    width: 64px;
+    right: -16px;
+  }
+}
