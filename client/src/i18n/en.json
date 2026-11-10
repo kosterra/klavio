@@ -1103,7 +1103,10 @@
       "musicbox": "Music box",
       "marimba": "Marimba",
       "organ": "Organ"
-    }
+    },
+    "lower": "One octave lower",
+    "higher": "One octave higher",
+    "showKeys": "Show the screen keys"
   },
   "family": {
     "title": "Family and progress",

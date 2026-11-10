@@ -1,18 +1,19 @@
-import { useState } from 'react';
 import { Card, SegmentedControl, Stack, Text, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useSession } from '../auth/session';
-import { readPlayOn, writePlayOn, type PlayOn } from '../lesson/playOn';
+import { usePlayOn, type PlayOn } from '../lesson/playOn';
+import { useErrorText } from '../auth/useErrorText';
 import { notify } from './notify';
 
 /**
  * «Wo spielst du?»: on the real piano or on the screen keys – what the lesson
- * start offers first. Kept on this device, for this profile.
+ * start and free play offer first. Kept with the profile.
  */
 export function PlayOnSetting() {
   const { t } = useTranslation();
   const { activeProfile } = useSession();
-  const [value, setValue] = useState<PlayOn>(() => readPlayOn(activeProfile?.id));
+  const errorText = useErrorText();
+  const [value, setPlayOn] = usePlayOn();
   if (!activeProfile) return null;
 
   return (
@@ -31,9 +32,10 @@ export function PlayOnSetting() {
           size="lg"
           value={value}
           onChange={(v) => {
-            setValue(v as PlayOn);
-            writePlayOn(v as PlayOn, activeProfile.id);
-            notify(t('profileSettings.saved'));
+            setPlayOn(v as PlayOn).then(
+              () => notify(t('profileSettings.saved')),
+              (err: unknown) => notify(errorText(err), 'red'),
+            );
           }}
           data={[
             { value: 'piano', label: t('playOn.piano') },

@@ -16,6 +16,10 @@ test('free play, metronome, wardrobe, family overview, placement and data export
 
   // free play: the note played shows up big
   await page.goto('/play');
+  // the real piano first (the default): no screen keys, the microphone button leads
+  await expect(page.getByTestId('real-piano-mic')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'E4', exact: true })).toHaveCount(0);
+  await page.getByTestId('free-show-keys').click();
   await page.getByRole('button', { name: 'E4', exact: true }).click();
   await expect(page.getByTestId('free-note')).toHaveText('E');
   // … where it sits in the notes, and the last notes as a trail
@@ -23,8 +27,6 @@ test('free play, metronome, wardrobe, family overview, placement and data export
   await page.getByRole('button', { name: 'G4', exact: true }).click();
   await expect(page.getByTestId('free-note')).toHaveText('G');
   await expect(page.getByRole('list', { name: 'Deine letzten Töne' })).toHaveText('EG');
-  // the real piano: an acoustic one through the microphone
-  await expect(page.getByTestId('real-piano-mic')).toBeVisible();
   await page.getByText('Spieluhr').click();
   await audit(page);
 

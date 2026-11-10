@@ -15,6 +15,7 @@ import {
   type ProfileOverviewDto,
   type GoalSong,
   type Motive,
+  type PlayOn,
   type Outfit,
   type WorldSet,
 } from '@klavio/shared';
@@ -61,6 +62,7 @@ export function profileToDto(p: ProfileDoc): ProfileDto {
     setupDone: p.setupDone ?? true,
     motive: (p.motive as Motive | null | undefined) ?? null,
     weeklyGoalDays: p.weeklyGoalDays ?? null,
+    playOn: (p.playOn as PlayOn | null | undefined) ?? null,
     goalSong: p.goalSong?.title
       ? {
           title: p.goalSong.title,
@@ -152,7 +154,15 @@ const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
       // Learners may pick their own figure, set their goal song, answer the
       // start-up questions and save their microphone calibration; name,
       // display mode and daily goal are parent area.
-      const learnerKeys = ['avatar', 'goalSong', 'outfit', 'setupDone', 'motive', 'weeklyGoalDays'];
+      const learnerKeys = [
+        'avatar',
+        'goalSong',
+        'outfit',
+        'setupDone',
+        'motive',
+        'weeklyGoalDays',
+        'playOn',
+      ];
       const parentOnly = Object.keys(rest).filter((k) => !learnerKeys.includes(k));
       if (parentOnly.length > 0) await app.requireParent(req, reply);
       const update: Record<string, unknown> = {};

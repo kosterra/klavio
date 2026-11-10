@@ -130,8 +130,17 @@ describe('parent PIN', () => {
       setupDone: true,
       motive: 'fun',
       weeklyGoalDays: 4,
+      playOn: 'screen',
     });
-    expect(done.json()).toMatchObject({ setupDone: true, motive: 'fun', weeklyGoalDays: 4 });
+    expect(done.json()).toMatchObject({
+      setupDone: true,
+      motive: 'fun',
+      weeklyGoalDays: 4,
+      playOn: 'screen',
+    });
+    // where to play is the learner's own choice, also with the parent area locked
+    const piano = await call(jar, 'PATCH', `/api/profiles/${kid.id}`, { playOn: 'piano' });
+    expect(piano.json().playOn).toBe('piano');
 
     // afterwards placement is parent area again
     expect(

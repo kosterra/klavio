@@ -12,7 +12,13 @@ export function PlayTabs() {
     { to: '/play/rain', label: t('rainGame.title'), icon: <IconCloudRain size={18} /> },
   ];
   return (
-    <Group gap="xs" component="nav" aria-label={t('nav.play')} data-testid="play-tabs">
+    <Group
+      gap="xs"
+      wrap="nowrap"
+      component="nav"
+      aria-label={t('nav.play')}
+      data-testid="play-tabs"
+    >
       {tabs.map((tab) => {
         const here = pathname === tab.to;
         return (
@@ -21,6 +27,7 @@ export function PlayTabs() {
             component={Link}
             to={tab.to}
             radius="xl"
+            size="sm"
             variant={here ? 'filled' : 'default'}
             leftSection={tab.icon}
             aria-current={here ? 'page' : undefined}

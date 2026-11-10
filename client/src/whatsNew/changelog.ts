@@ -20,6 +20,19 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: UPCOMING,
+    changes: [
+      L(
+        'Wo spielst du? gilt jetzt auf allen Geräten: Die Wahl gehört zum Profil, nicht mehr zum Gerät.',
+        'Where do you play? now applies on every device: the choice belongs to the profile, no longer to the device.',
+      ),
+      L(
+        'Freies Spielen: Wer auf dem Klavier spielt, sieht keine Bildschirm-Tasten mehr – ein Tipp holt sie bei Bedarf. Auf dem Handy passt die Klaviatur jetzt ohne seitliches Wischen auf den Bildschirm; mit den Pfeilen wechselst du die Oktave, und bei Tönen vom Klavier wandert sie von selbst mit.',
+        'Free play: if you play on the piano you no longer see the screen keys – one tap brings them when needed. On phones the keyboard now fits the screen without swiping sideways; the arrows change the octave, and with notes from the piano it follows by itself.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.2',
     changes: [
       L(

@@ -19,14 +19,6 @@ test('a new profile starts with a few questions: instrument, goal, dream song, w
   await expect(page.getByRole('heading', { name: 'Worauf spielst du?' })).toBeVisible();
   await audit(page);
   await page.getByTestId('setup-instrument-none').click();
-  // the lesson start offers the screen keys first on this device
-  expect(
-    await page.evaluate(() =>
-      Object.keys(localStorage)
-        .filter((k) => k.startsWith('klavio-play-on:'))
-        .map((k) => localStorage.getItem(k)),
-    ),
-  ).toEqual(['screen']);
 
   // --- why
   await expect(page.getByRole('heading', { name: 'Was möchtest du am liebsten?' })).toBeVisible();

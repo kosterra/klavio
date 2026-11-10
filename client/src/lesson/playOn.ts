@@ -1,30 +1,42 @@
-/**
- * Where the learner plays on this device: on the real piano (microphone or
- * digital piano) or on the screen keys. The lesson start offers this one
- * first; the start-up questions and «Mein Profil» set it, and so does the
- * choice at a lesson start. Kept per profile (a family shares one tablet:
- * one child at the piano, the other on the screen).
- */
-export const PLAY_ON_KEY = 'klavio-play-on';
-export type PlayOn = 'piano' | 'screen';
+import { useCallback } from 'react';
+import type { PlayOn } from '@klavio/shared';
+import { endpoints } from '../api/endpoints';
+import { useSession } from '../auth/session';
 
-const keyFor = (profileId?: string | null) =>
-  profileId ? `${PLAY_ON_KEY}:${profileId}` : PLAY_ON_KEY;
+export type { PlayOn };
 
-export function readPlayOn(profileId?: string | null): PlayOn {
+/** Before the choice lived with the profile: what this device remembered. */
+const LEGACY_KEY = 'klavio-play-on';
+
+function legacy(profileId: string | undefined): PlayOn | null {
   try {
-    // the profile's own choice; before it had one, the device's
-    const v = localStorage.getItem(keyFor(profileId)) ?? localStorage.getItem(PLAY_ON_KEY);
-    return v === 'screen' ? 'screen' : 'piano';
+    const v =
+      (profileId && localStorage.getItem(`${LEGACY_KEY}:${profileId}`)) ||
+      localStorage.getItem(LEGACY_KEY);
+    return v === 'screen' || v === 'piano' ? v : null;
   } catch {
-    return 'piano';
+    return null;
   }
 }
 
-export function writePlayOn(value: PlayOn, profileId?: string | null): void {
-  try {
-    localStorage.setItem(keyFor(profileId), value);
-  } catch {
-    // not remembered – fine
-  }
+/**
+ * Where the learner plays: on the real piano (microphone or digital piano)
+ * or on the screen keys – what lessons and free play offer first. Kept with
+ * the profile (on every device); set by the start-up questions, «Mein
+ * Profil» and the choice at a lesson start.
+ */
+export function usePlayOn(): [PlayOn, (value: PlayOn) => Promise<void>] {
+  const { activeProfile, refresh } = useSession();
+  const value = activeProfile?.playOn ?? legacy(activeProfile?.id) ?? 'piano';
+  const id = activeProfile?.id;
+  const current = activeProfile?.playOn ?? null;
+  const set = useCallback(
+    async (next: PlayOn) => {
+      if (!id || next === current) return;
+      await endpoints.updateProfile(id, { playOn: next });
+      await refresh();
+    },
+    [id, current, refresh],
+  );
+  return [value, set];
 }

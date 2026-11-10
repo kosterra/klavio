@@ -90,6 +90,8 @@ const profileSchema = new Schema(
     motive: { type: String, default: null },
     /** planned practice days per week */
     weeklyGoalDays: { type: Number, default: null },
+    /** where the learner plays first: the real piano or the screen keys */
+    playOn: { type: String, enum: ['piano', 'screen', null], default: null },
     calibration: {
       a4Hz: { type: Number, default: 440 },
       noiseFloorDb: { type: Number, default: null },

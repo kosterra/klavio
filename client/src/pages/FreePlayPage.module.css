@@ -17,6 +17,16 @@
   background: var(--mantine-color-body);
 }
 
+@media (max-width: 36em) {
+  .show {
+    padding-block: 4px;
+  }
+
+  .note {
+    min-height: 64px;
+  }
+}
+
 .left {
   display: grid;
   gap: var(--mantine-spacing-xs);

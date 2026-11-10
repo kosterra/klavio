@@ -1103,7 +1103,10 @@
       "musicbox": "Spieluhr",
       "marimba": "Marimba",
       "organ": "Orgel"
-    }
+    },
+    "lower": "Eine Oktave tiefer",
+    "higher": "Eine Oktave höher",
+    "showKeys": "Bildschirm-Tasten zeigen"
   },
   "family": {
     "title": "Familie und Fortschritt",

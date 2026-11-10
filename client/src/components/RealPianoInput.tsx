@@ -11,9 +11,10 @@ import classes from './RealPianoInput.module.css';
 /**
  * The real piano outside the lessons: a digital piano (MIDI) is simply
  * there, an acoustic one is heard through the microphone after a tap. The
- * microphone stops when the page is left.
+ * microphone stops when the page is left. `prominent`: the real piano is the
+ * learner's way to play – the button is the main thing to tap.
  */
-export function RealPianoInput() {
+export function RealPianoInput({ prominent = false }: { prominent?: boolean }) {
   const { t } = useTranslation();
   const { activeProfile } = useSession();
   const midi = useMidi();
@@ -54,8 +55,8 @@ export function RealPianoInput() {
         ) : (
           microphoneSupported() && (
             <Button
-              size="md"
-              variant="light"
+              size={prominent ? 'lg' : 'md'}
+              variant={prominent ? 'filled' : 'light'}
               leftSection={<IconMicrophone />}
               loading={mic.status === 'starting'}
               onClick={() => void mic.start()}

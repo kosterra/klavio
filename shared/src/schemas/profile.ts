@@ -74,6 +74,10 @@ export const MOTIVES = ['read', 'songs', 'relax', 'fun', 'child'] as const;
 export const motiveSchema = z.enum(MOTIVES);
 export type Motive = z.infer<typeof motiveSchema>;
 
+/** Where the learner plays: on the real piano (microphone or MIDI) or on the screen keys. */
+export const playOnSchema = z.enum(['piano', 'screen']);
+export type PlayOn = z.infer<typeof playOnSchema>;
+
 /** Days per week a learner plans to practise (2, 4 or 6 in the start-up flow). */
 export const weeklyGoalSchema = z.number().int().min(1).max(7);
 
@@ -120,6 +124,7 @@ export const profileUpdateSchema = z
     setupDone: z.literal(true),
     motive: motiveSchema.nullable(),
     weeklyGoalDays: weeklyGoalSchema.nullable(),
+    playOn: playOnSchema.nullable(),
   })
   .partial();
 
@@ -154,6 +159,8 @@ export interface ProfileDto {
   motive: Motive | null;
   /** planned practice days per week; null = no weekly goal */
   weeklyGoalDays: number | null;
+  /** what lessons and free play offer first; null = not chosen yet */
+  playOn: PlayOn | null;
 }
 
 export const MAX_PROFILES_PER_ACCOUNT = 8;

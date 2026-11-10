@@ -946,6 +946,20 @@
                         "type": "null"
                       }
                     ]
+                  },
+                  "playOn": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "piano",
+                          "screen"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   }
                 }
               }
