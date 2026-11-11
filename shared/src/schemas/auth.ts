@@ -107,6 +107,8 @@ export interface PublicConfigResponse extends OperatorInfo {
   registrationOpen: boolean;
   /** from this age a profile can choose between the kids' worlds and the journey */
   journeyMinAge: number;
+  /** practice reminders: the server's public push key (null: reminders are off on this instance) */
+  pushPublicKey: string | null;
 }
 
 export interface AdminSettingsDto extends OperatorInfo {

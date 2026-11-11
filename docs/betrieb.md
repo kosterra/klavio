@@ -237,6 +237,21 @@ mit [age](https://age-encryption.org) an einen öffentlichen Schlüssel, 30 Tage
 Die Sicherung zusätzlich an einen zweiten Ort kopieren und ab und zu das Wiederherstellen mit einer
 Testinstanz ausprobieren (`age -d -i schluessel.txt … | docker compose exec -T mongo mongorestore …`).
 
+## Erinnerungen ans Üben (Web Push)
+
+Lernende können sich auf ihrem Gerät ans Üben erinnern lassen («Mein Profil» → «Erinnerung»).
+Dafür braucht die Instanz ein Schlüsselpaar (VAPID), einmal erzeugt und in `.env` eingetragen:
+
+```bash
+docker compose run --rm --no-deps app node -e "const c=require('crypto').createECDH('prime256v1');c.generateKeys();console.log('VAPID_PUBLIC_KEY='+c.getPublicKey('base64url')+'\nVAPID_PRIVATE_KEY='+c.getPrivateKey('base64url'))"
+# in der Entwicklung: npm run vapid -w @klavio/server
+```
+
+Den privaten Schlüssel geheim halten. Ohne die beiden Werte ist die Funktion ausgeschaltet; ein
+neues Schlüsselpaar beendet alle bisher eingerichteten Erinnerungen. Der Server schickt nur an die
+Push-Dienste der Browser (Google, Mozilla, Apple, Microsoft) – nirgendwohin sonst. Auf iPhone und
+iPad gehen Erinnerungen nur, wenn Klavio auf dem Home-Bildschirm installiert ist.
+
 ## Aktualisieren
 
 ```bash

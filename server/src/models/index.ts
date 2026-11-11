@@ -218,6 +218,29 @@ lessonReceiptSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 export const LessonReceipt = model('LessonReceipt', lessonReceiptSchema);
 
 // ---------------------------------------------------------------------------
+// Practice reminder: one browser (its push subscription) reminds one profile
+// at a time of day on chosen weekdays – only if it has not practised yet.
+// ---------------------------------------------------------------------------
+const pushReminderSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    profileId: { type: Schema.Types.ObjectId, ref: 'Profile', required: true, index: true },
+    /** the browser's push address (at its maker's push service) and keys */
+    endpoint: { type: String, required: true, unique: true },
+    p256dh: { type: String, required: true },
+    auth: { type: String, required: true },
+    /** local time «HH:MM», weekdays 1 (Monday) … 7, the device's time zone */
+    time: { type: String, required: true },
+    days: { type: [Number], default: [1, 2, 3, 4, 5, 6, 7] },
+    tz: { type: String, required: true },
+    /** the learner's local day last handled (sent or not needed) */
+    lastDate: { type: String, default: null },
+  },
+  { timestamps: true },
+);
+export const PushReminder = model('PushReminder', pushReminderSchema);
+
+// ---------------------------------------------------------------------------
 // Global settings (singleton document, editable by admins)
 // ---------------------------------------------------------------------------
 const appSettingsSchema = new Schema(

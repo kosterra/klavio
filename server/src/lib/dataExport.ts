@@ -5,6 +5,7 @@ import {
   DailyActivity,
   LessonProgress,
   LessonReceipt,
+  PushReminder,
   Passkey,
   Profile,
   Session,
@@ -18,11 +19,12 @@ import { profileToDto } from '../routes/profiles.js';
  * the passkeys' keys are useless outside Klavio and only say «set».
  */
 export async function exportAccount(userId: Types.ObjectId) {
-  const [user, passkeys, profiles, sessions] = await Promise.all([
+  const [user, passkeys, profiles, sessions, reminders] = await Promise.all([
     User.findById(userId).lean(),
     Passkey.find({ userId }).sort({ createdAt: 1 }).lean(),
     Profile.find({ userId }).sort({ createdAt: 1 }).lean(),
     Session.find({ userId }).sort({ expiresAt: 1 }).lean(),
+    PushReminder.find({ userId }).sort({ createdAt: 1 }).lean(),
   ]);
   if (!user) return null;
   // failed attempts kept against this account (PIN) and its address (codes)
@@ -62,6 +64,16 @@ export async function exportAccount(userId: Types.ObjectId) {
     sessions: sessions.map((x) => ({
       expiresAt: x.expiresAt,
       profileSelected: !!x.activeProfileId,
+    })),
+    // practice reminders per browser (the push address and keys stay out: they are the browser's)
+    reminders: reminders.map((r) => ({
+      profile: profiles.find((p) => p._id.equals(r.profileId))?.name ?? null,
+      time: r.time,
+      days: r.days,
+      timeZone: r.tz,
+      pushService: new URL(r.endpoint).hostname,
+      lastDay: r.lastDate,
+      createdAt: r.createdAt,
     })),
     failedAttempts: throttles.map((x) => ({
       kind: x._id.startsWith('pin:') ? 'parent PIN' : 'e-mail code',

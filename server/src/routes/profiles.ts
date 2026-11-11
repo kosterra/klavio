@@ -25,6 +25,7 @@ import { getSettings } from '../lib/settings.js';
 import {
   DailyActivity,
   LessonReceipt,
+  PushReminder,
   LessonProgress,
   Profile,
   Session,
@@ -236,6 +237,7 @@ const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
         LessonProgress.deleteMany({ profileId: req.params.id }),
         DailyActivity.deleteMany({ profileId: req.params.id }),
         LessonReceipt.deleteMany({ profileId: req.params.id }),
+        PushReminder.deleteMany({ profileId: req.params.id }),
       ]);
       await Session.updateMany({ activeProfileId: req.params.id }, { activeProfileId: null });
       return reply.code(204).send();

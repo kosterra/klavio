@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Erinnerung ans Üben: In «Mein Profil» kannst du dich auf diesem Gerät zur gewählten Zeit erinnern lassen – nur an Tagen, an denen du noch nicht gespielt hast. Auf iPhone und iPad geht das, wenn Klavio auf dem Home-Bildschirm installiert ist.',
+        'Practice reminder: in «My profile» you can have this device remind you at a chosen time – only on days you have not played yet. On iPhone and iPad this works when Klavio is installed on the home screen.',
+      ),
+      L(
         'Wochenbericht für Eltern: Wer will, bekommt jeden Montag eine E-Mail mit der Klavier-Woche jedes Profils – Minuten, Übungstage, gespielte Lektionen und was als Nächstes kommt. Einschalten und abbestellen unter «Konto».',
         'Weekly report for parents: if you like, you get an e-mail every Monday with each profile’s piano week – minutes, practice days, lessons played and what comes next. Switch it on and off under «Account».',
       ),

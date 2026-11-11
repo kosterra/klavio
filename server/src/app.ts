@@ -11,6 +11,8 @@ import {
 import type { AppConfig } from './config.js';
 import authPlugin from './plugins/auth.js';
 import { scheduleWeeklyReports } from './lib/weeklyReport.js';
+import { scheduleReminders } from './lib/reminders.js';
+import reminderRoutes from './routes/reminders.js';
 import { registerWeb } from './plugins/web.js';
 import { HttpError } from './lib/errors.js';
 import { createMailer, type Mailer } from './lib/mailer.js';
@@ -123,9 +125,11 @@ export async function buildApp({
   if (jobs) {
     const stop = scheduleRetention(config, resolvedMailer, app.log);
     const stopReports = scheduleWeeklyReports(config, resolvedMailer, app.log);
+    const stopReminders = scheduleReminders(config, app.log);
     app.addHook('onClose', async () => {
       stop();
       stopReports();
+      stopReminders();
     });
   }
 
@@ -144,6 +148,7 @@ export async function buildApp({
       await api.register(accountRoutes, { prefix: '/account', config, mailer: resolvedMailer });
       await api.register(profileRoutes, { prefix: '/profiles', config });
       await api.register(progressRoutes, { prefix: '/progress' });
+      await api.register(reminderRoutes, { prefix: '/reminders', config });
       await api.register(adminRoutes, { prefix: '/admin', config, mailer: resolvedMailer });
     },
     { prefix: '/api' },

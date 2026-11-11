@@ -1,5 +1,7 @@
 import type {
   LessonCompleteInput,
+  ReminderDto,
+  ReminderInput,
   LessonResultDto,
   ProgressDto,
   AdminSettingsDto,
@@ -62,6 +64,10 @@ export const endpoints = {
   updateAccount: (displayName: string) =>
     api<{ displayName: string }>('PATCH', '/account', { displayName }),
   setWeeklyReport: (weeklyReport: boolean) => api('PATCH', '/account', { weeklyReport }),
+  reminderStatus: (endpoint: string) =>
+    api<ReminderDto | null>('POST', '/reminders/status', { endpoint }),
+  setReminder: (input: ReminderInput) => api<ReminderDto>('PUT', '/reminders', input),
+  reminderOff: (endpoint: string) => api('POST', '/reminders/off', { endpoint }),
   deleteAccount: () => api('DELETE', '/account'),
   logoutOtherDevices: () => api<{ loggedOut: number }>('POST', '/account/sessions/logout-others'),
   setParentPin: (pin: string) => api('PUT', '/account/pin', { pin }),

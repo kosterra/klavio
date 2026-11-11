@@ -38,6 +38,7 @@ import classes from './ProfileSettingsPage.module.css';
 import { GoalSongEditor } from '../goal/GoalSongEditor';
 import { WeeklyGoalSetting } from '../components/WeeklyGoalSetting';
 import { PlayOnSetting } from '../components/PlayOnSetting';
+import { ReminderSetting } from '../components/ReminderSetting';
 import { useAutoRead, useCanSpeak } from '../components/useReadAloud';
 
 /**
@@ -193,6 +194,8 @@ export function ProfileSettingsPage() {
       <WeeklyGoalSetting />
 
       <PlayOnSetting />
+
+      <ReminderSetting />
 
       <Wardrobe />
 

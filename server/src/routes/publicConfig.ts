@@ -10,7 +10,12 @@ const publicConfigRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (
   app.get('/config', async (): Promise<PublicConfigResponse> => {
     const settings = await getSettings(config);
     const { searchIndexing: _i, inactiveDeleteMonths: _m, ...shown } = settings;
-    return { appName: APP_CONFIG.name, ...shown };
+    return {
+      appName: APP_CONFIG.name,
+      ...shown,
+      pushPublicKey:
+        config.VAPID_PUBLIC_KEY && config.VAPID_PRIVATE_KEY ? config.VAPID_PUBLIC_KEY : null,
+    };
   });
 
   app.get('/health', async () => ({ ok: true }));

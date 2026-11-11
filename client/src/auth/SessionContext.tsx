@@ -153,6 +153,17 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   );
 
   const logout = useCallback(async () => {
+    // a practice reminder on this device stops with the logout
+    try {
+      const reg = await navigator.serviceWorker?.getRegistration();
+      const sub = await reg?.pushManager?.getSubscription();
+      if (sub) {
+        await endpoints.reminderOff(sub.endpoint).catch(() => undefined);
+        await sub.unsubscribe();
+      }
+    } catch {
+      // no service worker or no push: nothing to stop
+    }
     await endpoints.logout().catch(() => undefined);
     // a deliberate logout also forgets the account's unsent results and its
     // profiles' settings on this device (an expired session keeps them to sync later)

@@ -48,7 +48,8 @@
         "3": "Profile: Name oder Spitzname, Geburtsjahr, Figur und Kleidungsstück, Darstellung und Welt, Tagesziel und Wochenziel, ob du auf dem Klavier oder dem Bildschirm spielst, Mikrofon-Einstellung, die Antworten aus den Startfragen (z. B. warum du spielst), XP, Level, Tage in Folge, Abzeichen und – falls gewählt – der Titel deines Traumlieds.",
         "4": "Lernfortschritt: Sterne, Wiederholungen und das Datum je Lektion sowie die Übungszeit pro Tag. Für jedes übertragene Ergebnis drei Wochen lang eine Quittung (Kennung und Antwort des Servers), damit ein doppelt gesendetes Ergebnis nur einmal zählt.",
         "5": "Server-Protokoll: Zeitpunkt, aufgerufene Adresse und Antwort – ohne IP-Adresse. In der mitgelieferten Einrichtung wird es laufend überschrieben (höchstens drei Dateien à 10 MB).",
-        "6": "Fehlversuche bei E-Mail-Codes und Eltern-PIN: wie viele und wann zuletzt – damit niemand raten kann. Nach einem Tag ohne weiteren Fehlversuch wird das vergessen."
+        "6": "Fehlversuche bei E-Mail-Codes und Eltern-PIN: wie viele und wann zuletzt – damit niemand raten kann. Nach einem Tag ohne weiteren Fehlversuch wird das vergessen.",
+        "7": "Erinnerungen ans Üben (nur wenn du sie einschaltest): Uhrzeit, Wochentage, Zeitzone und die Push-Adresse deines Browsers. Die Erinnerung geht verschlüsselt über den Push-Dienst des Browser-Herstellers (z. B. Google, Apple, Mozilla) – der kann sie nicht lesen, sieht aber, dass eine Mitteilung kommt. Beim Ausschalten, Abmelden oder Löschen des Profils wird alles gelöscht."
       }
     },
     "device": {
@@ -61,7 +62,8 @@
       "items": {
         "1": "Der E-Mail-Anbieter dieser Instanz verschickt deine Codes und sieht dabei deine Adresse und den Code.",
         "2": "Wer den Server betreibt (Hosting), hat technisch Zugriff auf die Daten.",
-        "3": "Sonst niemand: keine Werbe-, Analyse- oder Fehlerberichtsdienste."
+        "3": "Nur wenn du Erinnerungen einschaltest: der Push-Dienst deines Browser-Herstellers leitet sie verschlüsselt weiter.",
+        "4": "Sonst niemand: keine Werbe-, Analyse- oder Fehlerberichtsdienste."
       }
     },
     "retention": {
@@ -1403,5 +1405,18 @@
     "play_other": "Anhören ({{count}} Töne, {{seconds}} s)",
     "stopPlaying": "Anhören stoppen",
     "delete": "Löschen"
+  },
+  "reminder": {
+    "title": "Erinnerung",
+    "hint": "Dieses Gerät erinnert dich zur gewählten Zeit ans Üben – nur an Tagen, an denen du noch nicht gespielt hast.",
+    "switch": "{{name}} auf diesem Gerät erinnern",
+    "time": "Uhrzeit",
+    "days": "An diesen Tagen",
+    "update": "Änderung speichern",
+    "saved": "Erinnerung um {{time}} eingerichtet.",
+    "off": "Erinnerung ausgeschaltet.",
+    "denied": "Mitteilungen sind für Klavio nicht erlaubt. Du kannst sie in den Einstellungen des Browsers erlauben.",
+    "unsupported": "Dieser Browser kann keine Erinnerungen zeigen. Auf dem iPhone oder iPad geht es, wenn Klavio auf dem Home-Bildschirm installiert ist.",
+    "forOther": "Dieses Gerät erinnert gerade ein anderes Profil. Einschalten erinnert stattdessen dich."
   }
 }
