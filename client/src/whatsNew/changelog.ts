@@ -20,6 +20,23 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: UPCOMING,
+    changes: [
+      L(
+        'Korrektur: Ist der Server kurz nicht erreichbar, wirst du nicht mehr abgemeldet – Klavio lernt weiter mit dem, was auf dem Gerät ist, und überträgt Ergebnisse, sobald der Server wieder da ist. Eine Lektion wird erst nach den vorher gespielten gespeichert, ein doppelt gesendetes Ergebnis zählt nur einmal, und ein Profilwechsel ohne Internet gilt auch auf dem Server.',
+        'Fix: when the server is briefly unreachable you are no longer signed out – Klavio keeps going with what is on the device and sends results once the server is back. A lesson is saved only after the ones played before it, a result sent twice counts once, and switching profile without internet also reaches the server.',
+      ),
+      L(
+        'Korrektur: Lädt der Fortschritt nicht, zeigt Klavi das jetzt mit «Nochmals versuchen» an – statt endlos zu laden. Wurde das Profil auf einem anderen Gerät gelöscht, geht es zur Profilwahl.',
+        'Fix: if the progress does not load, Klavi now says so with «Try again» – instead of loading forever. If the profile was deleted on another device, you get to the profile picker.',
+      ),
+      L(
+        'Angemeldet bleiben: Wer Klavio benutzt, bleibt angemeldet – neu anmelden erst nach 60 Tagen ohne Benutzung. Läuft die Anmeldung doch einmal während einer Lektion ab, bleibt das Ergebnis auf dem Gerät und wird nach der Anmeldung übertragen.',
+        'Staying signed in: whoever uses Klavio stays signed in – signing in again only after 60 days without use. If the sign-in still runs out during a lesson, the result stays on the device and is sent after signing in.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.3',
     changes: [
       L(

@@ -1,8 +1,9 @@
 import fp from 'fastify-plugin';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import type { Types } from 'mongoose';
-import { User, type UserDoc } from '../models/index.js';
-import { findSession, SESSION_COOKIE } from '../lib/session.js';
+import { Session, User, type UserDoc } from '../models/index.js';
+import type { AppConfig } from '../config.js';
+import { cookieBase, findSession, SESSION_COOKIE } from '../lib/session.js';
 import { HttpError, forbidden, unauthorized } from '../lib/errors.js';
 
 declare module 'fastify' {
@@ -25,14 +26,26 @@ declare module 'fastify' {
   }
 }
 
-export default fp(async (app) => {
+/** A session in use is renewed (at most once a day): who practises keeps logged in. */
+const RENEW_AFTER_MS = 24 * 60 * 60 * 1000;
+
+export default fp<{ config: AppConfig }>(async (app, { config }) => {
   app.decorateRequest('auth', null);
 
-  app.addHook('onRequest', async (req) => {
-    const session = await findSession(req.cookies[SESSION_COOKIE]);
+  app.addHook('onRequest', async (req, reply) => {
+    const token = req.cookies[SESSION_COOKIE];
+    const session = await findSession(token);
     if (!session) return;
     const user = await User.findById(session.userId).lean<UserDoc>();
     if (!user) return;
+    const ttlMs = config.SESSION_TTL_DAYS * 24 * 60 * 60 * 1000;
+    if (session.expiresAt.getTime() - Date.now() < ttlMs - RENEW_AFTER_MS) {
+      await Session.updateOne(
+        { _id: session._id },
+        { $set: { expiresAt: new Date(Date.now() + ttlMs) } },
+      );
+      reply.setCookie(SESSION_COOKIE, token!, { ...cookieBase(config), maxAge: ttlMs / 1000 });
+    }
     // remember use (at most twice a day) – long-unused accounts may be deleted after a warning
     const last = user.lastActiveAt?.getTime() ?? 0;
     if (Date.now() - last > 12 * 60 * 60 * 1000 || user.inactiveWarnedAt) {

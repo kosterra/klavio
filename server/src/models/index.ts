@@ -199,6 +199,22 @@ authThrottleSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 export const AuthThrottle = model('AuthThrottle', authThrottleSchema);
 
 // ---------------------------------------------------------------------------
+// Lesson receipt: a result the device sent (its own id) – sent again because
+// the answer got lost, it is not counted twice. Kept a little longer than the
+// device keeps unsent results.
+// ---------------------------------------------------------------------------
+const lessonReceiptSchema = new Schema({
+  /** the result's id, chosen on the device */
+  _id: { type: String },
+  profileId: { type: Schema.Types.ObjectId, ref: 'Profile', required: true, index: true },
+  /** the answer given the first time (null while it is being saved) */
+  result: { type: Schema.Types.Mixed, default: null },
+  expiresAt: { type: Date, required: true },
+});
+lessonReceiptSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+export const LessonReceipt = model('LessonReceipt', lessonReceiptSchema);
+
+// ---------------------------------------------------------------------------
 // Global settings (singleton document, editable by admins)
 // ---------------------------------------------------------------------------
 const appSettingsSchema = new Schema(

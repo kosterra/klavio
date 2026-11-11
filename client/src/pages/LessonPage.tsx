@@ -29,6 +29,7 @@ import {
   localIsoDate,
   nextStreak,
   starsFor,
+  scoringTarget,
   newlyReachedGoalSkills,
   recapFor,
   theoryFor,
@@ -40,9 +41,9 @@ import {
   LESSON_COACH,
   lessonHandShape,
 } from '@klavio/shared';
-import { ApiError } from '../api/client';
 import { enqueueResult } from '../offline/queue';
-import { endpoints } from '../api/endpoints';
+import { flushQueue } from '../offline/sync';
+import { notify } from '../components/notify';
 import { useSession } from '../auth/session';
 import { useErrorText } from '../auth/useErrorText';
 import { useMicErrorText } from '../audio/micErrorText';
@@ -64,6 +65,7 @@ import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
 import { usePlayOn } from '../lesson/playOn';
 import { LessonParts } from '../lesson/LessonParts';
+import { ProgressPending } from '../components/ProgressPending';
 import { CoachTip } from '../lesson/CoachTip';
 import { HandOnKeys } from '../lesson/HandOnKeys';
 import { useNoteEvents } from '../input/noteBus';
@@ -81,7 +83,7 @@ import stage from '../lesson/LessonStage.module.css';
 
 /** «Auf meinem Klavier» or «Auf dem Bildschirm», remembered on this device. */
 
-type ShownResult = LessonResultDto & { pending?: boolean };
+type ShownResult = LessonResultDto & { pending?: boolean; loginNeeded?: boolean };
 
 /**
  * What the server would answer, computed on the device with the same rules —
@@ -93,7 +95,7 @@ function localResult(
   profile: ProfileDto,
   before: ProgressDto,
 ): ShownResult {
-  const stars = starsFor(lessonTargetCount(lesson), body.mistakes);
+  const stars = starsFor(scoringTarget(lesson.id), body.mistakes);
   const previousBest = before.lessons[lesson.id]?.bestStars ?? 0;
   const { wasDue, bonusXp } = applyCompletion(before.lessons[lesson.id], stars, body.localDate);
   const replayedToday = before.lessons[lesson.id]?.lastDate === body.localDate;
@@ -132,12 +134,13 @@ export function LessonPage() {
 
 function LessonGate({ lessonId }: { lessonId: string }) {
   const lesson = findLesson(lessonId);
-  const { completed, progress } = useProgress();
+  const { completed, progress, error, reload } = useProgress();
   const [attempt, setAttempt] = useState(0);
   const forMe = useLessonFor();
 
   if (!lesson) return <Navigate to="/" replace />;
-  if (!progress) return null; // short wait for the unlock check
+  // short wait for the unlock check
+  if (!progress) return <ProgressPending fullPage error={error} onRetry={() => void reload()} />;
   if (!isLessonUnlocked(lesson.id, completed)) return <Navigate to="/" replace />;
   return (
     <LessonRun
@@ -233,29 +236,50 @@ function LessonRun({
       ),
       localDate: localIsoDate(),
     };
+    if (!me || !activeProfile) {
+      setSaving(false);
+      return;
+    }
+    // Into the queue first: sent after any results still waiting from before
+    // (a lesson only counts after the ones played earlier), and kept on the
+    // device if it cannot be sent now.
+    const entry = enqueueResult({
+      ...body,
+      userId: me.user.id,
+      profileId: activeProfile.id,
+      lessonId: lesson.id,
+    });
     try {
-      setResult(await endpoints.completeLesson(lesson.id, body));
-      await refresh(); // XP, level and streak on the dashboard
-    } catch (err) {
-      if (err instanceof ApiError && err.code === 'NETWORK' && me && activeProfile) {
-        // Offline: keep the result on the device and show it right away.
-        const before = await loadProgress(activeProfile.id);
-        enqueueResult({
-          ...body,
-          userId: me.user.id,
-          profileId: activeProfile.id,
-          lessonId: lesson.id,
-        });
-        const local = localResult(lesson, body, activeProfile, before);
-        applyLocalResult(activeProfile.id, {
-          xp: local.xp,
-          level: local.level,
-          streak: local.streak,
-        });
-        setResult(local);
-      } else {
-        setSaveError(errorText(err));
+      const out = await flushQueue(me.user.id);
+      const saved = out.saved[entry.id];
+      if (saved) {
+        if (out.synced > 1) notify(t('offline.synced', { count: out.synced - 1 }));
+        setResult(saved);
+        await refresh(); // XP, level and streak on the dashboard
+        return;
       }
+      const refused = out.refused[entry.id];
+      if (refused) {
+        setSaveError(errorText(refused));
+        return;
+      }
+      // Still waiting (offline, server away, logged out): shown right away.
+      const before = await loadProgress(activeProfile.id, entry.id).catch(() => null);
+      if (!before) {
+        setSaveError(t('common.error'));
+        return;
+      }
+      const local = localResult(lesson, body, activeProfile, before);
+      applyLocalResult(activeProfile.id, {
+        xp: local.xp,
+        level: local.level,
+        streak: local.streak,
+      });
+      const loginNeeded = out.stoppedBy?.status === 401;
+      setResult({ ...local, loginNeeded });
+      // offline or the server away: the app notices when it is back and sends it
+      // (logged out: the result waits for the login – the summary stays visible)
+      if (!loginNeeded) void refresh();
     } finally {
       setSaving(false);
     }

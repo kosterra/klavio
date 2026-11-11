@@ -3,6 +3,7 @@ import {
   DailyActivity,
   EmailCode,
   LessonProgress,
+  LessonReceipt,
   Passkey,
   Profile,
   Session,
@@ -15,6 +16,7 @@ export async function deleteAccount(userId: Types.ObjectId) {
   await Promise.all([
     LessonProgress.deleteMany({ profileId: { $in: profileIds } }),
     DailyActivity.deleteMany({ profileId: { $in: profileIds } }),
+    LessonReceipt.deleteMany({ profileId: { $in: profileIds } }),
     Profile.deleteMany({ userId }),
     Passkey.deleteMany({ userId }),
     EmailCode.deleteMany({ userId }),

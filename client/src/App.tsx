@@ -115,7 +115,7 @@ function Offline() {
       <Stack align="center">
         <Mascot mood="think" />
         <Text ta="center">{t('common.error')}</Text>
-        <Button onClick={() => void refresh()}>{t('common.continue')}</Button>
+        <Button onClick={() => void refresh()}>{t('common.retry')}</Button>
       </Stack>
     </Center>
   );

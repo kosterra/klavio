@@ -1,4 +1,4 @@
-import { Card, Center, Group, Loader, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import { Card, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { IconLock, IconMusic, IconPlayerPlay } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,7 @@ import { CURRICULUM, isLessonUnlocked } from '@klavio/shared';
 import { usePageTitle } from '../components/usePageTitle';
 import { useLocalized } from '../lesson/useLocalized';
 import { useProgress } from '../lesson/useProgress';
+import { ProgressPending } from '../components/ProgressPending';
 import classes from './SongsPage.module.css';
 import { useLessonFor } from '../lesson/useLessonFor';
 
@@ -18,15 +19,9 @@ export function SongsPage() {
   usePageTitle(t('songs.title'));
   const loc = useLocalized();
   const forMe = useLessonFor();
-  const { progress, completed } = useProgress();
+  const { progress, completed, error, reload } = useProgress();
 
-  if (!progress) {
-    return (
-      <Center py="xl">
-        <Loader aria-label={t('common.loading')} />
-      </Center>
-    );
-  }
+  if (!progress) return <ProgressPending error={error} onRetry={() => void reload()} />;
 
   const chapters = CURRICULUM.map((chapter, ci) => ({
     chapter,

@@ -15,7 +15,7 @@ import { Buddy } from '../components/Buddy';
 import { NewBadges } from './Badges';
 
 interface Props {
-  result: (LessonResultDto & { pending?: boolean }) | null;
+  result: (LessonResultDto & { pending?: boolean; loginNeeded?: boolean }) | null;
   saving: boolean;
   error: string | null;
   dailyGoalMinutes: number;
@@ -88,7 +88,7 @@ export function LessonSummary({
                 w="100%"
                 data-testid="pending"
               >
-                {t('offline.pendingResult')}
+                {t(result.loginNeeded ? 'offline.pendingLogin' : 'offline.pendingResult')}
               </Alert>
             )}
             <NewBadges ids={result.newBadges} />

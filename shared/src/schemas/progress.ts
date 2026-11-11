@@ -16,10 +16,27 @@ export const lessonCompleteSchema = z.object({
   durationSec: z.number().int().min(1).max(3600),
   /** The learner's local date (streaks follow their day). */
   localDate: isoDateSchema,
+  /**
+   * The profile that played (one of the account's). Without it the session's
+   * active profile counts – results synced later carry their own.
+   */
+  profileId: z
+    .string()
+    .regex(/^[0-9a-f]{24}$/)
+    .optional(),
+  /** Chosen on the device: the same result sent twice is saved once. */
+  resultId: z.string().uuid().optional(),
 });
 export type LessonCompleteInput = z.infer<typeof lessonCompleteSchema>;
 
-export const progressQuerySchema = z.object({ date: isoDateSchema });
+export const progressQuerySchema = z.object({
+  date: isoDateSchema,
+  /** one of the account's profiles; default: the session's active profile */
+  profileId: z
+    .string()
+    .regex(/^[0-9a-f]{24}$/)
+    .optional(),
+});
 
 export interface LessonProgressDto {
   bestStars: number;

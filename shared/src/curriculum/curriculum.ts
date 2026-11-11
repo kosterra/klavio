@@ -1510,6 +1510,19 @@ export function lessonFor(lesson: Lesson, world: 'kids' | 'journey'): Lesson {
   return world === 'journey' && lesson.adult ? { ...lesson, ...lesson.adult } : lesson;
 }
 
+/**
+ * What the stars are counted against: a lesson with a grown-ups' piece has two
+ * versions of about the same length – the longer counts (server and device alike).
+ */
+export function scoringTarget(lessonId: string): number {
+  const lesson = LESSONS.find((l) => l.id === lessonId);
+  if (!lesson) return 0;
+  return Math.max(
+    lessonTargetCount(lesson),
+    lesson.adult ? lessonTargetCount(lessonFor(lesson, 'journey')) : 0,
+  );
+}
+
 /** A lesson is open once the previous one (in learning order) has been completed. */
 export function isLessonUnlocked(lessonId: string, completed: ReadonlySet<string>): boolean {
   const i = LESSONS.findIndex((l) => l.id === lessonId);

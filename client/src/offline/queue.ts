@@ -2,7 +2,7 @@ import {
   addDays,
   weekOf,
   findLesson,
-  lessonTargetCount,
+  scoringTarget,
   starsFor,
   type LessonCompleteInput,
   type ProgressDto,
@@ -27,7 +27,9 @@ export function writeQueue(items: QueuedResult[]): void {
   writeJson(KEYS.queue, items);
 }
 
-export function enqueueResult(item: Omit<QueuedResult, 'id' | 'queuedAt'>): QueuedResult {
+export function enqueueResult(
+  item: Omit<QueuedResult, 'id' | 'queuedAt' | 'resultId'>,
+): QueuedResult {
   const entry = { ...item, id: crypto.randomUUID(), queuedAt: Date.now() };
   writeQueue([...readQueue(), entry]);
   return entry;
@@ -51,7 +53,7 @@ export function withQueuedResults(
     if (q.profileId !== profileId) continue;
     const lesson = findLesson(q.lessonId);
     if (!lesson) continue;
-    const stars = starsFor(lessonTargetCount(lesson), q.mistakes);
+    const stars = starsFor(scoringTarget(lesson.id), q.mistakes);
     lessons[q.lessonId] = applyCompletion(lessons[q.lessonId], stars, q.localDate).next;
     if (q.localDate === progress.today.date) seconds += q.durationSec;
     if (q.localDate >= monday && q.localDate <= progress.today.date) weekDays.add(q.localDate);

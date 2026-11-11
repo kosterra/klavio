@@ -122,7 +122,7 @@ export async function buildApp({
     app.addHook('onClose', async () => stop());
   }
 
-  await app.register(authPlugin);
+  await app.register(authPlugin, { config });
   if (beforeRoutes) await beforeRoutes(app);
   await app.register(
     async (api) => {

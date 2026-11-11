@@ -46,4 +46,6 @@ export const KEYS = {
   queue: 'klavio.queue.v1',
   installDismissed: 'klavio.installHint.dismissed',
   installSnoozedUntil: 'klavio.installHint.snoozedUntil',
+  /** a profile chosen offline, not yet told to the server */
+  pendingSelect: 'klavio.pendingSelect',
 } as const;

@@ -96,7 +96,11 @@ export const endpoints = {
   placement: (chapterId: string) => api('POST', '/progress/placement', { chapterId }),
   selectProfile: (profileId: string) => api('POST', '/profiles/select', { profileId }),
 
-  progress: (date: string) => api<ProgressDto>('GET', `/progress?date=${encodeURIComponent(date)}`),
+  progress: (date: string, profileId?: string) =>
+    api<ProgressDto>(
+      'GET',
+      `/progress?date=${encodeURIComponent(date)}${profileId ? `&profileId=${encodeURIComponent(profileId)}` : ''}`,
+    ),
   completeLesson: (lessonId: string, body: LessonCompleteInput) =>
     api<LessonResultDto>('POST', `/progress/lessons/${lessonId}`, body),
 

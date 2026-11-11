@@ -4,6 +4,7 @@ import {
   AuthThrottle,
   DailyActivity,
   LessonProgress,
+  LessonReceipt,
   Passkey,
   Profile,
   Session,
@@ -29,12 +30,15 @@ export async function exportAccount(userId: Types.ObjectId) {
     _id: { $in: [`pin:${userId.toString()}`, `code:${user.email}`] },
   }).lean();
   const ids = profiles.map((p) => p._id);
-  const [progress, days] = await Promise.all([
+  const [progress, days, receipts] = await Promise.all([
     LessonProgress.find({ profileId: { $in: ids } })
       .sort({ lessonId: 1 })
       .lean(),
     DailyActivity.find({ profileId: { $in: ids } })
       .sort({ date: 1 })
+      .lean(),
+    LessonReceipt.find({ profileId: { $in: ids } })
+      .sort({ expiresAt: 1 })
       .lean(),
   ]);
   return {
@@ -89,6 +93,10 @@ export async function exportAccount(userId: Types.ObjectId) {
         practiceDays: days
           .filter((d) => d.profileId.equals(p._id))
           .map((d) => ({ date: d.date, seconds: d.seconds, xp: d.xp })),
+        // results received (so one sent twice counts once), with the answer given
+        resultReceipts: receipts
+          .filter((r) => r.profileId.equals(p._id))
+          .map((r) => ({ id: r._id, answer: r.result, expiresAt: r.expiresAt })),
       };
     }),
   };

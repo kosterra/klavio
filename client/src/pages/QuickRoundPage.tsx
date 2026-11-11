@@ -8,6 +8,7 @@ import { useSession } from '../auth/session';
 import { Buddy } from '../components/Buddy';
 import { TheorySteps } from '../lesson/theory/TheorySteps';
 import { useProgress } from '../lesson/useProgress';
+import { ProgressPending } from '../components/ProgressPending';
 import { useWorldMode } from '../lesson/useWorldMode';
 
 /** Questions per quick round. */
@@ -37,7 +38,7 @@ export function QuickRoundPage() {
   usePageTitle(t('review.quick'));
   const navigate = useNavigate();
   const { activeProfile } = useSession();
-  const { progress, completed } = useProgress();
+  const { progress, completed, error, reload } = useProgress();
   const kids = activeProfile?.uiMode !== 'classic';
   const world = useWorldMode();
   const [steps, setSteps] = useState<TheoryStep[] | null>(null);
@@ -54,6 +55,7 @@ export function QuickRoundPage() {
         <Group>
           <CloseButton size="xl" aria-label={t('review.close')} onClick={() => navigate('/')} />
         </Group>
+        {!progress && <ProgressPending error={error} onRetry={() => void reload()} />}
         {steps && steps.length === 0 && (
           <Card withBorder radius="xl" padding="xl" maw={640} mx="auto" w="100%">
             <Stack align="center">
