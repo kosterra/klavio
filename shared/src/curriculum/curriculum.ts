@@ -1523,10 +1523,15 @@ export function scoringTarget(lessonId: string): number {
   );
 }
 
-/** A lesson is open once the previous one (in learning order) has been completed. */
+/**
+ * A lesson is open once the previous one (in learning order) has been
+ * completed – and one already completed stays open, even when a new lesson is
+ * added before it later.
+ */
 export function isLessonUnlocked(lessonId: string, completed: ReadonlySet<string>): boolean {
   const i = LESSONS.findIndex((l) => l.id === lessonId);
   if (i < 0) return false;
+  if (completed.has(lessonId)) return true;
   // the closest lesson before it that is not a bonus lesson has to be done
   for (let j = i - 1; j >= 0; j--) {
     if (!LESSONS[j]!.bonus) return completed.has(LESSONS[j]!.id);

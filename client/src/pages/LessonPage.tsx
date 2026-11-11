@@ -13,7 +13,7 @@ import {
   VisuallyHidden,
 } from '@mantine/core';
 import { IconDeviceDesktop, IconMicrophone, IconPiano } from '@tabler/icons-react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router';
+import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-router';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../components/usePageTitle';
@@ -66,6 +66,7 @@ import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
 import { usePlayOn } from '../lesson/playOn';
 import { LessonParts } from '../lesson/LessonParts';
 import { ProgressPending } from '../components/ProgressPending';
+import { ConfirmModal } from '../components/ConfirmModal';
 import { CoachTip } from '../lesson/CoachTip';
 import { HandOnKeys } from '../lesson/HandOnKeys';
 import { useNoteEvents } from '../input/noteBus';
@@ -218,6 +219,10 @@ function LessonRun({
   const [result, setResult] = useState<ShownResult | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  // the X during the lesson asks first – a tap by mistake must not lose the run
+  const [quitAsk, setQuitAsk] = useState(false);
+  const [missed, setMissed] = useState(false);
+  const started = phase === 'play' && (correct > 0 || missed || exerciseIndex > 0);
   const total = lessonTargetCount(lesson);
   const chapter = chapterOf(lesson.id);
   const handShape = lessonHandShape(lesson);
@@ -310,6 +315,7 @@ function LessonRun({
     },
     onMistake: () => {
       mistakes.current++;
+      setMissed(true);
       if (input.mode === 'screen') navigator.vibrate?.([30, 40, 30]);
     },
     onDone: finishExercise,
@@ -332,7 +338,11 @@ function LessonRun({
         <Stack gap="md" className={phase === 'play' ? undefined : stage.storyStack}>
           {/* ------------------------------------------------------ top bar */}
           <Group justify="space-between" wrap="nowrap" gap="sm" className={stage.hud}>
-            <CloseButton size="xl" aria-label={t('lesson.close')} onClick={() => navigate('/')} />
+            <CloseButton
+              size="xl"
+              aria-label={t('lesson.close')}
+              onClick={() => (started ? setQuitAsk(true) : navigate('/'))}
+            />
             <Progress
               value={
                 phase === 'result'
@@ -472,7 +482,9 @@ function LessonRun({
                       <Text size="sm" c="dimmed" ta="center">
                         {t('lesson.playPianoHint')}{' '}
                         {activeProfile?.calibration.noiseFloorDb == null && (
-                          <Link to="/mic-setup">{t('mic.setup')}</Link>
+                          <Link to="/mic-setup" state={{ from: `/lesson/${lesson.id}` }}>
+                            {t('mic.setup')}
+                          </Link>
                         )}
                       </Text>
                     )}
@@ -560,6 +572,17 @@ function LessonRun({
           )}
         </Stack>
       </Box>
+      <ConfirmModal
+        opened={quitAsk}
+        title={t('lesson.quit.title')}
+        stay={t('lesson.quit.stay')}
+        go={t('lesson.quit.go')}
+        onStay={() => setQuitAsk(false)}
+        onGo={() => navigate('/')}
+        testId="lesson-quit"
+      >
+        {t('lesson.quit.text')}
+      </ConfirmModal>
     </div>
   );
 }
@@ -575,6 +598,7 @@ function InputInfo({
 }) {
   const { t } = useTranslation();
   const { activeProfile } = useSession();
+  const location = useLocation();
   if (mode === 'midi') {
     return (
       <Alert color="teal" variant="light" icon={<IconPiano />} w="100%">
@@ -588,7 +612,10 @@ function InputInfo({
         {t('lesson.inputMic')}{' '}
         {activeProfile?.calibration.noiseFloorDb == null && (
           <Text span>
-            {t('lesson.inputMicSetup')} <Link to="/mic-setup">{t('mic.setup')}</Link>
+            {t('lesson.inputMicSetup')}{' '}
+            <Link to="/mic-setup" state={{ from: location.pathname }}>
+              {t('mic.setup')}
+            </Link>
           </Text>
         )}
       </Alert>

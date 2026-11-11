@@ -205,6 +205,14 @@
     "account": "Account",
     "admin": "Administration",
     "logout": "Sign out",
+    "logoutAsk": {
+      "title": "Sign out?",
+      "text": "Signing in again needs a code by e-mail or a passkey – best ask your parents.",
+      "pending": "{{count}} result has not been sent yet. Signing out loses it – better wait until you are online again.",
+      "pending_other": "{{count}} results have not been sent yet. Signing out loses them – better wait until you are online again.",
+      "stay": "Stay signed in",
+      "go": "Sign out"
+    },
     "menu": "Menu",
     "input": "Input",
     "profile": "My profile",
@@ -535,6 +543,13 @@
   },
   "lesson": {
     "close": "End lesson",
+    "quit": {
+      "title": "Stop now?",
+      "text": "If you stop now, this lesson doesn't count yet.",
+      "quickText": "You can start the quick round again any time.",
+      "stay": "Keep playing",
+      "go": "Stop"
+    },
     "progress": "Lesson progress",
     "start": "Let’s go!",
     "inputMidi": "Your digital piano ({{device}}) is connected. Tap «Let’s go» – or just play a key and we start.",
@@ -742,6 +757,7 @@
   "parent": {
     "title": "Parent area",
     "pin": "Parent PIN",
+    "gateHint": "This is for your parents. You can just go back and keep learning.",
     "enterPin": "Enter the parent PIN.",
     "open": "Open",
     "forgot": "Forgot the PIN?",
@@ -979,6 +995,7 @@
       "later": "comes in a later world"
     },
     "next": "Next: {{skill}}",
+    "later": "You learn it in «{{lesson}}» – first the learning path goes on.",
     "ready": "You can do everything «{{title}}» needs. Time for your dream song!",
     "waiting": "The next skills come in new worlds – keep going!",
     "promptText": "Is there a dream song you'd like to play one day?",

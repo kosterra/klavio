@@ -97,8 +97,10 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
       const profileId = await profileOf(req);
       // parent area – or the start-up questions of a new profile without progress
       const profile = await Profile.findById(profileId, { setupDone: 1 }).lean();
+      // (lessons placed by an earlier try of the same questions don't count as played)
       const starting =
-        profile?.setupDone === false && !(await LessonProgress.exists({ profileId }));
+        profile?.setupDone === false &&
+        !(await LessonProgress.exists({ profileId, placed: { $ne: true } }));
       if (!starting) await app.requireParent(req, reply);
       const ci = CURRICULUM.findIndex((c) => c.id === req.body.chapterId);
       if (ci < 0) throw new HttpError(400, 'UNKNOWN_CHAPTER');
@@ -207,7 +209,10 @@ async function saveResult(
   // a lesson with a grown-ups' piece: both versions are about as long – the longer counts
   const stars = starsFor(scoringTarget(lesson.id), mistakes);
   const previous = await LessonProgress.findOne({ profileId, lessonId: lesson.id }).lean();
-  const previousBest = previous?.bestStars ?? 0;
+  // skipped at the start («I can already do this»), never played: the first
+  // real run counts as the first – XP, celebration, badges
+  const placedOnly = !!previous?.placed && !previous.completions;
+  const previousBest = placedOnly ? 0 : (previous?.bestStars ?? 0);
   // repetition: due reviews move the lesson on in the schedule and give a bonus
   const { next, wasDue, bonusXp } = applyCompletion(
     previous ? toDto(previous) : undefined,
@@ -226,12 +231,13 @@ async function saveResult(
         lastCompletedAt: new Date(),
         lastLocalDate: next.lastDate,
         reviewBox: next.box,
+        placed: false,
       },
     },
     { upsert: true },
   );
   // two submits at the same moment: only the one that created the entry is the first
-  const firstCompletion = saved.upsertedCount === 1;
+  const firstCompletion = saved.upsertedCount === 1 || placedOnly;
   if (!previous && !firstCompletion) xpGained = xpFor(lesson.xp, stars, stars, true);
   const today = await DailyActivity.findOneAndUpdate(
     { profileId, date: localDate },
@@ -260,8 +266,9 @@ async function saveResult(
   profile.set('streak', streak);
 
   // Badges: computed from the updated progress; once earned, kept for good.
+  // lessons only skipped at the start earn no badges (no «Chapter done» for a skipped chapter)
   const all = await LessonProgress.find(
-    { profileId },
+    { profileId, placed: { $ne: true } },
     { lessonId: 1, bestStars: 1, reviews: 1, reviewBox: 1 },
   ).lean();
   const owned = new Set((profile.badges ?? []).map((b) => b.id!));

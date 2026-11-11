@@ -126,6 +126,10 @@ describe('parent PIN', () => {
     expect(
       (await call(jar, 'POST', '/api/progress/placement', { chapterId: 'songs' })).json().placed,
     ).toBeGreaterThan(0);
+    // the answer got lost and the questions are sent again: still allowed (nothing played yet)
+    expect(
+      (await call(jar, 'POST', '/api/progress/placement', { chapterId: 'songs' })).statusCode,
+    ).toBe(200);
     const done = await call(jar, 'PATCH', `/api/profiles/${kid.id}`, {
       setupDone: true,
       motive: 'fun',

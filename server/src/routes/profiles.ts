@@ -111,7 +111,8 @@ const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
           lessonsDone: coreDone,
           nextLessonId:
             coreDone >= CORE_IDS.size ? null : nextLesson(new Set(mine.map((l) => l.lessonId))).id,
-          stars: mine.reduce((n, l) => n + l.bestStars, 0),
+          // stars only for lessons played (not for ones skipped at the start)
+          stars: mine.filter((l) => !l.placed).reduce((n, l) => n + l.bestStars, 0),
           weeks: weeks.map((week) => ({
             week,
             minutes: Math.round(

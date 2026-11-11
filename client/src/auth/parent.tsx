@@ -11,7 +11,7 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { IconFingerprint, IconLock } from '@tabler/icons-react';
+import { IconArrowLeft, IconFingerprint, IconLock } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { endpoints } from '../api/endpoints';
@@ -192,8 +192,15 @@ function PinReset({ onUnlocked }: { onUnlocked?: () => void }) {
 /** Shows the PIN prompt instead of `children` while the parent area is locked. */
 export function ParentGate({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const unlocked = useParentUnlocked();
   if (unlocked) return <>{children}</>;
+  // a child who got here is never stuck: back to where they were
+  const back = () => {
+    const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0;
+    if (idx > 0) navigate(-1);
+    else navigate('/');
+  };
   return (
     <Center py="xl">
       <Card withBorder radius="xl" padding="xl" maw={440} w="100%">
@@ -203,6 +210,17 @@ export function ParentGate({ children }: { children: ReactNode }) {
             {t('parent.title')}
           </Title>
           <ParentPinForm />
+          <Text size="sm" c="dimmed" ta="center">
+            {t('parent.gateHint')}
+          </Text>
+          <Button
+            variant="subtle"
+            leftSection={<IconArrowLeft size={18} />}
+            onClick={back}
+            data-testid="parent-gate-back"
+          >
+            {t('common.back')}
+          </Button>
         </Stack>
       </Card>
     </Center>

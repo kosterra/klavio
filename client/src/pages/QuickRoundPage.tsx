@@ -8,6 +8,7 @@ import { useSession } from '../auth/session';
 import { Buddy } from '../components/Buddy';
 import { TheorySteps } from '../lesson/theory/TheorySteps';
 import { useProgress } from '../lesson/useProgress';
+import { ConfirmModal } from '../components/ConfirmModal';
 import { ProgressPending } from '../components/ProgressPending';
 import { useWorldMode } from '../lesson/useWorldMode';
 
@@ -43,6 +44,8 @@ export function QuickRoundPage() {
   const world = useWorldMode();
   const [steps, setSteps] = useState<TheoryStep[] | null>(null);
   const [done, setDone] = useState(false);
+  const [quitAsk, setQuitAsk] = useState(false);
+  const running = !!steps && steps.length > 0 && !done;
 
   if (progress && steps === null) {
     // pick once, as soon as the progress is known
@@ -53,7 +56,11 @@ export function QuickRoundPage() {
     <Box mih="100dvh" p="md" maw={1100} mx="auto">
       <Stack gap="md">
         <Group>
-          <CloseButton size="xl" aria-label={t('review.close')} onClick={() => navigate('/')} />
+          <CloseButton
+            size="xl"
+            aria-label={t('review.close')}
+            onClick={() => (running ? setQuitAsk(true) : navigate('/'))}
+          />
         </Group>
         {!progress && <ProgressPending error={error} onRetry={() => void reload()} />}
         {steps && steps.length === 0 && (
@@ -102,6 +109,17 @@ export function QuickRoundPage() {
           </Card>
         )}
       </Stack>
+      <ConfirmModal
+        opened={quitAsk}
+        title={t('lesson.quit.title')}
+        stay={t('lesson.quit.stay')}
+        go={t('lesson.quit.go')}
+        onStay={() => setQuitAsk(false)}
+        onGo={() => navigate('/')}
+        testId="quick-quit"
+      >
+        {t('lesson.quit.quickText')}
+      </ConfirmModal>
     </Box>
   );
 }

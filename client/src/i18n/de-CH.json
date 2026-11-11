@@ -205,6 +205,14 @@
     "account": "Konto",
     "admin": "Verwaltung",
     "logout": "Abmelden",
+    "logoutAsk": {
+      "title": "Abmelden?",
+      "text": "Zum Anmelden braucht es danach einen Code per E-Mail oder einen Passkey – frag am besten deine Eltern.",
+      "pending": "{{count}} Ergebnis ist noch nicht übertragen. Beim Abmelden geht es verloren – warte besser, bis du wieder online bist.",
+      "pending_other": "{{count}} Ergebnisse sind noch nicht übertragen. Beim Abmelden gehen sie verloren – warte besser, bis du wieder online bist.",
+      "stay": "Angemeldet bleiben",
+      "go": "Abmelden"
+    },
     "menu": "Menü",
     "input": "Eingabe",
     "profile": "Mein Profil",
@@ -535,6 +543,13 @@
   },
   "lesson": {
     "close": "Lektion beenden",
+    "quit": {
+      "title": "Wirklich aufhören?",
+      "text": "Wenn du jetzt aufhörst, zählt diese Lektion noch nicht.",
+      "quickText": "Du kannst die schnelle Runde jederzeit wieder starten.",
+      "stay": "Weiterspielen",
+      "go": "Aufhören"
+    },
     "progress": "Fortschritt der Lektion",
     "start": "Los geht’s!",
     "inputMidi": "Dein Digitalpiano ({{device}}) ist verbunden. Tippe auf «Los geht’s» – oder spiel einfach eine Taste, dann geht es los.",
@@ -743,6 +758,7 @@
     "title": "Elternbereich",
     "pin": "Eltern-PIN",
     "enterPin": "Gib die Eltern-PIN ein.",
+    "gateHint": "Das ist für deine Eltern. Du kannst einfach zurückgehen und weiterlernen.",
     "open": "Öffnen",
     "forgot": "PIN vergessen?",
     "explain": "Mit einer Eltern-PIN (4 Ziffern) schützt du Konto, Verwaltung und das Anlegen von Profilen vor Kinderhänden. Lernen und die Mikrofon-Einrichtung gehen ohne PIN.",
@@ -979,6 +995,7 @@
       "later": "kommt in einer späteren Welt"
     },
     "next": "Als Nächstes: {{skill}}",
+    "later": "Das lernst du in «{{lesson}}» – zuerst geht es im Lernpfad weiter.",
     "ready": "Du kannst alles, was «{{title}}» braucht. Zeit für dein Traumlied!",
     "waiting": "Die nächsten Fähigkeiten kommen in neuen Welten – bleib dran!",
     "promptText": "Hast du ein Traumlied, das du eines Tages spielen möchtest?",

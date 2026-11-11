@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import {
   ActionIcon,
+  Alert,
   AppShell,
   Burger,
   Badge,
@@ -34,13 +35,26 @@ import { APP_CONFIG } from '@klavio/shared';
 import { useSession } from '../auth/session';
 import { ProfileAvatar } from './ProfileAvatar';
 import { PrivacyBadge } from './PrivacyNote';
+import { ConfirmModal } from './ConfirmModal';
+import { readQueue } from '../offline/queue';
+import { flushQueue } from '../offline/sync';
 
 /** Side navigation open or closed (wider screens), remembered on the device. */
 const SIDEBAR_KEY = 'klavio-sidebar';
 
 export function AppLayout() {
   const { t, i18n } = useTranslation();
-  const { activeProfile, logout, offline } = useSession();
+  const { activeProfile, logout, offline, me } = useSession();
+  // signing out asks first – and warns about results still waiting to be sent
+  const [logoutAsk, setLogoutAsk] = useState(false);
+  const [unsent, setUnsent] = useState(0);
+  const askLogout = () => {
+    const userId = me?.user.id;
+    const count = () => readQueue().filter((q) => q.userId === userId).length;
+    setUnsent(count());
+    setLogoutAsk(true);
+    if (userId && !offline && count() > 0) void flushQueue(userId).then(() => setUnsent(count()));
+  };
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const navigate = useNavigate();
   // the side navigation: an overlay on phones; beside the page on wider screens,
@@ -206,10 +220,7 @@ export function AppLayout() {
                 <Menu.Item
                   color="var(--klavio-danger)"
                   leftSection={<IconLogout size={18} />}
-                  onClick={async () => {
-                    await logout();
-                    navigate('/welcome');
-                  }}
+                  onClick={askLogout}
                 >
                   {t('nav.logout')}
                 </Menu.Item>
@@ -229,6 +240,27 @@ export function AppLayout() {
         <SiteFooter variant="compact" />
       </AppShell.Main>
       {activeProfile && <BottomNav />}
+      <ConfirmModal
+        opened={logoutAsk}
+        title={t('nav.logoutAsk.title')}
+        stay={t('nav.logoutAsk.stay')}
+        go={t('nav.logoutAsk.go')}
+        onStay={() => setLogoutAsk(false)}
+        onGo={async () => {
+          setLogoutAsk(false);
+          await logout();
+          navigate('/welcome');
+        }}
+        danger
+        testId="logout-confirm"
+      >
+        <Text>{t('nav.logoutAsk.text')}</Text>
+        {unsent > 0 && (
+          <Alert color="orange" data-testid="logout-unsent">
+            {t('nav.logoutAsk.pending', { count: unsent })}
+          </Alert>
+        )}
+      </ConfirmModal>
     </AppShell>
   );
 }

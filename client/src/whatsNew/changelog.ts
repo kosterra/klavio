@@ -23,6 +23,22 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Mikrofon einrichten geht jetzt ohne Eltern-PIN – wie versprochen – und führt danach zurück, wo du warst, zum Beispiel in die Lektion. Steht doch einmal die PIN-Abfrage im Weg, bringt dich «Zurück» weiter.',
+        'Setting up the microphone now works without the parent PIN – as promised – and takes you back where you were afterwards, for example into the lesson. If the PIN prompt is ever in the way, «Back» gets you on.',
+      ),
+      L(
+        'Nicht aus Versehen aufhören: Das X während einer Lektion oder der schnellen Runde fragt jetzt «Wirklich aufhören?», und «Abmelden» fragt auch – mit einer Warnung, wenn noch Ergebnisse auf die Übertragung warten.',
+        'No stopping by mistake: the X during a lesson or the quick round now asks «Stop now?», and «Sign out» asks too – with a warning when results are still waiting to be sent.',
+      ),
+      L(
+        'Korrektur: Die Traumlied-Karte führt nur noch zu Lektionen, die schon offen sind; liegt die passende noch weiter vorne, steht dabei, wann sie kommt.',
+        'Fix: the dream song card only leads to lessons that are already open; if the right one is further ahead, it says when it comes.',
+      ),
+      L(
+        'Korrektur: Wer beim Start Kapitel übersprungen hat, bekommt beim ersten richtigen Spielen einer übersprungenen Lektion die vollen XP, und Abzeichen gibt es nur für wirklich gespielte Kapitel. Fertige Lektionen bleiben offen, auch wenn später eine neue Lektion davor dazukommt.',
+        'Fix: whoever skipped chapters at the start gets the full XP when really playing a skipped lesson for the first time, and badges only come for chapters really played. Finished lessons stay open, even when a new lesson is added before them later.',
+      ),
+      L(
         'Korrektur: Ist der Server kurz nicht erreichbar, wirst du nicht mehr abgemeldet – Klavio lernt weiter mit dem, was auf dem Gerät ist, und überträgt Ergebnisse, sobald der Server wieder da ist. Eine Lektion wird erst nach den vorher gespielten gespeichert, ein doppelt gesendetes Ergebnis zählt nur einmal, und ein Profilwechsel ohne Internet gilt auch auf dem Server.',
         'Fix: when the server is briefly unreachable you are no longer signed out – Klavio keeps going with what is on the device and sends results once the server is back. A lesson is saved only after the ones played before it, a result sent twice counts once, and switching profile without internet also reaches the server.',
       ),

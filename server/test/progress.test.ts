@@ -292,3 +292,19 @@ describe('sessions in use', () => {
     expect(s!.expiresAt.getTime()).toBeGreaterThan(Date.now() + 59 * 864e5);
   });
 });
+
+describe('lessons skipped at the start', () => {
+  it('count as played only once really played: first completion, full XP, no badges for skipped chapters', async () => {
+    const { jar } = await learner();
+    expect(
+      (await call(jar, 'POST', '/api/progress/placement', { chapterId: 'read' })).statusCode,
+    ).toBe(200);
+    const res = (await complete(jar, first!.id)).json();
+    expect(res.firstCompletion).toBe(true);
+    expect(res.xpGained).toBe(first!.xp + 15);
+    expect(res.newBadges).toContain('first-lesson');
+    expect(res.newBadges.filter((b: string) => b.startsWith('chapter-'))).toEqual([]);
+    // played again: an ordinary replay
+    expect((await complete(jar, first!.id)).json().firstCompletion).toBe(false);
+  });
+});

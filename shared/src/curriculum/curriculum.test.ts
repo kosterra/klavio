@@ -87,6 +87,9 @@ describe('curriculum data', () => {
     expect(isLessonUnlocked(second, new Set())).toBe(false);
     expect(isLessonUnlocked(second, new Set([first]))).toBe(true);
     expect(isLessonUnlocked('nope', new Set())).toBe(false);
+    // completed before a lesson was added in front of it: stays open
+    const third = LESSONS.find((l, i) => i > 1 && !LESSONS[i - 1]!.bonus)!.id;
+    expect(isLessonUnlocked(third, new Set([first, third]))).toBe(true);
     expect(nextLesson(new Set([first])).id).toBe(second);
     expect(nextLesson(new Set(LESSONS.map((l) => l.id))).id).toBe(LESSONS.at(-1)!.id);
   });

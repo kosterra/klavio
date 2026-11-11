@@ -184,7 +184,7 @@ export function InputPage() {
               <Button variant="subtle" component={Link} to="/mic-test">
                 {t('mic.title')}
               </Button>
-              <Button variant="subtle" component={Link} to="/mic-setup">
+              <Button variant="subtle" component={Link} to="/mic-setup" state={{ from: '/input' }}>
                 {t('mic.setup')}
               </Button>
             </Group>

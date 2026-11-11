@@ -196,22 +196,9 @@ export function App() {
                   </Route>
                   <Route element={<RequireProfile />}>
                     <Route path="/" element={<DashboardPage />} />
-                    <Route
-                      path="/mic-test"
-                      element={
-                        <ParentGate>
-                          <MicTestPage />
-                        </ParentGate>
-                      }
-                    />
-                    <Route
-                      path="/mic-setup"
-                      element={
-                        <ParentGate>
-                          <MicSetupPage />
-                        </ParentGate>
-                      }
-                    />
+                    {/* learning and the microphone setup need no PIN */}
+                    <Route path="/mic-test" element={<MicTestPage />} />
+                    <Route path="/mic-setup" element={<MicSetupPage />} />
                     <Route
                       path="/input"
                       element={

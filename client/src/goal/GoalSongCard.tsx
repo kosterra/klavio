@@ -7,6 +7,8 @@ import {
   SKILL_NAMES,
   findLesson,
   goalProgress,
+  isLessonUnlocked,
+  nextLesson as nextOnPath,
   lessonsForSkill,
   type GoalSong,
 } from '@klavio/shared';
@@ -35,7 +37,11 @@ export function GoalSongCard({
   const forMe = useLessonFor();
   const worldSet = useWorldMode();
   const p = goalProgress(goal.skills, completed);
-  const nextLesson = p.next ? findLesson(p.next.lessonId) : undefined;
+  const target = p.next ? findLesson(p.next.lessonId) : undefined;
+  // the lesson that teaches the next skill may still be locked: then the
+  // button leads to the next lesson on the path, the target is named as «later»
+  const open = target ? isLessonUnlocked(target.id, completed) : false;
+  const nextLesson = target && !open ? nextOnPath(completed) : target;
   return (
     <section className={classes.card} aria-labelledby="goal-title" data-testid="goal-card">
       <Group gap="sm" wrap="nowrap" align="flex-start">
@@ -117,6 +123,11 @@ export function GoalSongCard({
         <Group justify="space-between" gap="sm" mt="sm" wrap="wrap">
           <Text size="sm" fw={700}>
             {t('goal.next', { skill: loc(SKILL_NAMES[p.next.skill]) })}
+            {!open && target && (
+              <Text span size="sm" fw={400} display="block" data-testid="goal-later">
+                {t('goal.later', { lesson: loc(forMe(target).title) })}
+              </Text>
+            )}
           </Text>
           <Button
             component={Link}

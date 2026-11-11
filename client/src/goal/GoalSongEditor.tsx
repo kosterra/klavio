@@ -106,7 +106,7 @@ export function GoalSongEditor({
               );
             }}
           />
-          <Text size="sm" aria-live="polite" data-testid="goal-recognized" mt={-8}>
+          <Text size="sm" component="div" aria-live="polite" data-testid="goal-recognized" mt={-8}>
             {title.trim().length >= 3 &&
               (guess?.song && guess.fuzzy ? (
                 <Group gap={6} align="baseline">
