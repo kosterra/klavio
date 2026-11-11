@@ -45,7 +45,7 @@
       "items": {
         "1": "Account: a name (e.g. «The Smiths»), your e-mail address, the language for e-mails, whether you are an admin, when the account was last used (and whether a warning before deletion was sent) and – if set – an encrypted parent PIN.",
         "2": "Passkeys: only the public key and details like the name of the password manager. Fingerprint, face and private keys stay on your device.",
-        "3": "Profiles: name or nickname, year of birth, figure and outfit, view and world, daily and weekly goal, whether you play on the piano or the screen, microphone setting, the answers to the start-up questions (e.g. why you play), XP, level, streak, badges and – if chosen – the title of your dream song.",
+        "3": "Profiles: name or nickname, year of birth, figure and outfit, view and world, daily and weekly goal, whether you play on the piano or the screen, microphone setting, the answers to the start-up questions (e.g. why you play), XP, level, days in a row, badges and – if chosen – the title of your dream song.",
         "4": "Learning progress: stars, reviews and the date per lesson and the practice time per day. For every result sent, a receipt for three weeks (its id and the server's answer), so a result sent twice counts once.",
         "5": "Server log: time, address called and answer – without IP addresses. In the bundled setup it is overwritten continuously (at most three files of 10 MB).",
         "6": "Failed attempts at e-mail codes and the parent PIN: how many and when the last one was – so nobody can guess. Forgotten after a day without another failed attempt."
@@ -214,7 +214,7 @@
       "go": "Sign out"
     },
     "menu": "Menu",
-    "input": "Input",
+    "input": "Microphone and MIDI",
     "profile": "My profile",
     "colorScheme": "Colour scheme",
     "scheme": {
@@ -225,11 +225,12 @@
     "knowledge": "Knowledge",
     "language": "Language",
     "main": "Main navigation",
-    "learn": "Learn",
+    "learn": "Learning path",
     "play": "Play",
     "toggle": "Show or hide the navigation",
     "learnGroup": "Learn",
-    "parentGroup": "For parents",
+    "playGroup": "Play",
+    "parentGroup": "Parent area",
     "adminGroup": "Administration",
     "songs": "Songs"
   },
@@ -265,7 +266,7 @@
     "exportButton": "Download data",
     "devices": "Other devices",
     "devicesHint": "Lost or sold a device? Log your account out everywhere else – only this device stays logged in.",
-    "devicesButton": "Log out on all other devices",
+    "devicesButton": "Log out other devices",
     "devicesDone_one": "{{count}} other device logged out.",
     "devicesDone_other": "{{count}} other devices logged out."
   },
@@ -443,7 +444,7 @@
     "saved": "Microphone set up."
   },
   "input": {
-    "title": "How do you play?",
+    "title": "Microphone and MIDI",
     "intro": "Klavio listens through the microphone or reads your digital piano via MIDI. The on-screen keyboard always works.",
     "activeNow": "Active: {{source}}",
     "priority": "If a MIDI device is connected, it takes priority. The microphone is then ignored, because it would hear the digital piano a second time.",
@@ -716,6 +717,7 @@
   "badges": {
     "title": "Badges",
     "count": "{{earned}} of {{total}}",
+    "all": "See all badges",
     "new": "New badge!",
     "new_other": "{{count}} new badges!",
     "earnedOn": "earned on {{date}}"
@@ -964,7 +966,7 @@
         "kicker": "Your goal in sight",
         "title": "Your dream song",
         "text": "Name the piece you want to play one day. Klavio shows you the way in four stages – including the tough stretch that comes with it – and works out roughly when you'll reach the top.",
-        "alt": "Screenshot: «Your summit: Für Elise» with the stages Summit push, Climb and Tough stretch below"
+        "alt": "Screenshot on a phone: «My dream song: Für Elise», 7 % done, next the right hand with the lesson «The C major scale»"
       }
     },
     "waysTitle": "For children and for adults",
@@ -985,6 +987,8 @@
     "finalText": "One account for the whole family, a profile for every person – and off you go."
   },
   "goal": {
+    "skillsShow": "See all {{total}} skills",
+    "skillsHide": "Hide the skills",
     "kicker": "My dream song",
     "percent": "{{percent}} % of the way to your dream song",
     "skillsReached": "{{reached}} of {{total}} skills done",
@@ -1167,6 +1171,8 @@
     "weekMinutes_other": "Week from {{week}}: {{count}} minutes"
   },
   "metronome": {
+    "slower": "Slower",
+    "faster": "Faster",
     "title": "Metronome",
     "open": "Open the metronome",
     "intro": "For practising at your own tempo – also pieces outside Klavio. Start slowly, then get faster step by step.",

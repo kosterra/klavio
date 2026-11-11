@@ -31,7 +31,7 @@ test('free play, metronome, wardrobe, family overview, placement and data export
   await audit(page);
 
   // metronome: tap tempo and start/stop
-  await page.goto('/metronome');
+  await page.goto('/play/metronome');
   await page.getByRole('button', { name: 'Tempo tippen' }).click();
   await page.waitForTimeout(500);
   await page.getByRole('button', { name: 'Tempo tippen' }).click();

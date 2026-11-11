@@ -20,6 +20,9 @@ const shared: MantineThemeOverride = {
     PinInput: { defaultProps: { size: 'lg' } },
     ActionIcon: { defaultProps: { size: 'xl' } },
     Switch: { defaultProps: { size: 'lg' } },
+    // the X of dialogs and drawers: big enough for a finger (≥ 36 px)
+    Modal: { styles: { close: { '--cb-size': '2.25rem', '--cb-icon-size': '1.25rem' } } },
+    Drawer: { styles: { close: { '--cb-size': '2.25rem', '--cb-icon-size': '1.25rem' } } },
   },
 };
 

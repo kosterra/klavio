@@ -115,7 +115,7 @@ export function DashboardPage() {
       </Card>
       <PathLegend />
 
-      <BadgeShelf earned={activeProfile.badges} />
+      <BadgeShelf earned={activeProfile.badges} compact />
 
       <PrivacyNote />
     </Stack>

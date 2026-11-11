@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import {
   ActionIcon,
@@ -24,7 +24,7 @@ import {
   IconUserCircle,
   IconUsers,
 } from '@tabler/icons-react';
-import { Link, Outlet, useNavigate } from 'react-router';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router';
 import { SiteFooter } from './SiteFooter';
 import { SideNav } from './SideNav';
 import { BottomNav } from './BottomNav';
@@ -57,6 +57,17 @@ export function AppLayout() {
   };
   const { colorScheme, setColorScheme } = useMantineColorScheme();
   const navigate = useNavigate();
+  // a link to a part of a page («/profile#badges»): there, once it is drawn
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (!hash) return;
+    const timer = window.setTimeout(() => {
+      document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView({
+        block: 'start',
+      });
+    }, 50);
+    return () => window.clearTimeout(timer);
+  }, [pathname, hash]);
   // the side navigation: an overlay on phones; beside the page on wider screens,
   // open by default only where there is room (desktop), remembered on the device
   const [mobileOpen, { toggle: toggleMobile, close: closeMobile }] = useDisclosure(false);

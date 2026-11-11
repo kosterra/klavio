@@ -45,7 +45,7 @@
       "items": {
         "1": "Konto: ein Name (z. B. «Familie Muster»), deine E-Mail-Adresse, die Sprache für E-Mails, ob du Admin bist, wann das Konto zuletzt benutzt wurde (und ob eine Warnung vor dem Löschen verschickt wurde) und – falls gesetzt – eine verschlüsselte Eltern-PIN.",
         "2": "Passkeys: nur der öffentliche Schlüssel und Angaben wie der Name des Passwort-Managers. Fingerabdruck, Gesicht und private Schlüssel bleiben auf deinem Gerät.",
-        "3": "Profile: Name oder Spitzname, Geburtsjahr, Figur und Kleidungsstück, Darstellung und Welt, Tagesziel und Wochenziel, ob du auf dem Klavier oder dem Bildschirm spielst, Mikrofon-Einstellung, die Antworten aus den Startfragen (z. B. warum du spielst), XP, Level, Streak, Abzeichen und – falls gewählt – der Titel deines Traumlieds.",
+        "3": "Profile: Name oder Spitzname, Geburtsjahr, Figur und Kleidungsstück, Darstellung und Welt, Tagesziel und Wochenziel, ob du auf dem Klavier oder dem Bildschirm spielst, Mikrofon-Einstellung, die Antworten aus den Startfragen (z. B. warum du spielst), XP, Level, Tage in Folge, Abzeichen und – falls gewählt – der Titel deines Traumlieds.",
         "4": "Lernfortschritt: Sterne, Wiederholungen und das Datum je Lektion sowie die Übungszeit pro Tag. Für jedes übertragene Ergebnis drei Wochen lang eine Quittung (Kennung und Antwort des Servers), damit ein doppelt gesendetes Ergebnis nur einmal zählt.",
         "5": "Server-Protokoll: Zeitpunkt, aufgerufene Adresse und Antwort – ohne IP-Adresse. In der mitgelieferten Einrichtung wird es laufend überschrieben (höchstens drei Dateien à 10 MB).",
         "6": "Fehlversuche bei E-Mail-Codes und Eltern-PIN: wie viele und wann zuletzt – damit niemand raten kann. Nach einem Tag ohne weiteren Fehlversuch wird das vergessen."
@@ -214,7 +214,7 @@
       "go": "Abmelden"
     },
     "menu": "Menü",
-    "input": "Eingabe",
+    "input": "Mikrofon und MIDI",
     "profile": "Mein Profil",
     "colorScheme": "Farbschema",
     "scheme": {
@@ -225,11 +225,12 @@
     "knowledge": "Wissen",
     "language": "Sprache",
     "main": "Hauptnavigation",
-    "learn": "Lernen",
+    "learn": "Lernpfad",
     "play": "Spielen",
     "toggle": "Navigation ein- oder ausblenden",
     "learnGroup": "Lernen",
-    "parentGroup": "Für Eltern",
+    "playGroup": "Spielen",
+    "parentGroup": "Elternbereich",
     "adminGroup": "Verwaltung",
     "songs": "Lieder"
   },
@@ -265,7 +266,7 @@
     "exportButton": "Daten herunterladen",
     "devices": "Andere Geräte",
     "devicesHint": "Ein Gerät verloren oder verkauft? Hier meldest du dein Konto überall sonst ab – nur dieses Gerät bleibt angemeldet.",
-    "devicesButton": "Auf allen anderen Geräten abmelden",
+    "devicesButton": "Andere Geräte abmelden",
     "devicesDone_one": "{{count}} anderes Gerät abgemeldet.",
     "devicesDone_other": "{{count}} andere Geräte abgemeldet."
   },
@@ -443,7 +444,7 @@
     "saved": "Mikrofon eingerichtet."
   },
   "input": {
-    "title": "Wie spielst du?",
+    "title": "Mikrofon und MIDI",
     "intro": "Klavio hört dir über das Mikrofon zu oder liest dein Digitalpiano per MIDI. Die Klaviatur auf dem Bildschirm geht immer.",
     "activeNow": "Aktiv: {{source}}",
     "priority": "Ist ein MIDI-Gerät verbunden, hat es Vorrang. Das Mikrofon wird dann ignoriert, weil es das Digitalpiano sonst doppelt hören würde.",
@@ -716,6 +717,7 @@
   "badges": {
     "title": "Abzeichen",
     "count": "{{earned}} von {{total}}",
+    "all": "Alle Abzeichen ansehen",
     "new": "Neues Abzeichen!",
     "new_other": "{{count}} neue Abzeichen!",
     "earnedOn": "erhalten am {{date}}"
@@ -964,7 +966,7 @@
         "kicker": "Dein Ziel im Blick",
         "title": "Dein Traumlied",
         "text": "Nenne das Stück, das du einmal spielen möchtest. Klavio zeigt dir den Weg in vier Etappen – auch die zähe Strecke, die dazugehört – und rechnet aus, wann du ungefähr oben bist.",
-        "alt": "Bildschirmfoto: «Dein Gipfel: Für Elise» und darunter die Etappen Gipfelsturm, Aufstieg und Durststrecke"
+        "alt": "Bildschirmfoto auf dem Handy: «Mein Traumlied: Für Elise», 7 % geschafft, als Nächstes die rechte Hand mit der Lektion «Die C-Dur-Tonleiter»"
       }
     },
     "waysTitle": "Für Kinder und für Erwachsene",
@@ -985,6 +987,8 @@
     "finalText": "Ein Konto für die ganze Familie, ein Profil für jede Person – und los geht's."
   },
   "goal": {
+    "skillsShow": "Alle {{total}} Fähigkeiten ansehen",
+    "skillsHide": "Fähigkeiten ausblenden",
     "kicker": "Mein Traumlied",
     "percent": "{{percent}} % des Weges zum Traumlied",
     "skillsReached": "{{reached}} von {{total}} Fähigkeiten geschafft",
@@ -1167,6 +1171,8 @@
     "weekMinutes_other": "Woche ab {{week}}: {{count}} Minuten"
   },
   "metronome": {
+    "slower": "Langsamer",
+    "faster": "Schneller",
     "title": "Metronom",
     "open": "Zum Metronom",
     "intro": "Zum Üben im eigenen Tempo – auch für Stücke ausserhalb von Klavio. Langsam anfangen, dann Schritt für Schritt schneller.",

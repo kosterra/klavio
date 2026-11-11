@@ -16,6 +16,7 @@ import { IconLock, IconTrash, IconVolume } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { MyProgress } from '../family/MyProgress';
+import { BadgeShelf } from '../lesson/Badges';
 import { Wardrobe } from '../components/Wardrobe';
 import { PlacementCard } from '../components/PlacementCard';
 import { usePageTitle } from '../components/usePageTitle';
@@ -186,6 +187,8 @@ export function ProfileSettingsPage() {
       </Card>
 
       <MyProgress />
+
+      <BadgeShelf earned={activeProfile.badges} />
 
       <WeeklyGoalSetting />
 

@@ -42,8 +42,8 @@ test('MIDI, on-screen keyboard and computer keys share one input; MIDI beats the
   await skipSetup(page);
 
   await page.getByTestId('nav-toggle').click();
-  await page.getByTestId('side-nav').getByRole('link', { name: 'Eingabe' }).click();
-  await expect(page.getByRole('heading', { name: 'Wie spielst du?' })).toBeVisible();
+  await page.getByTestId('side-nav').getByRole('link', { name: 'Mikrofon und MIDI' }).click();
+  await expect(page.getByRole('heading', { name: 'Mikrofon und MIDI' })).toBeVisible();
   await expect(page.getByText('Aktiv: Bildschirm')).toBeVisible();
   await audit(page);
 

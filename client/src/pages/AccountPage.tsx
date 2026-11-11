@@ -313,6 +313,11 @@ export function AccountPage() {
             variant="light"
             size="md"
             leftSection={<IconDevicesX size={18} />}
+            // a long label wraps on a narrow phone instead of being cut off
+            maw="100%"
+            h="auto"
+            mih={42}
+            styles={{ label: { whiteSpace: 'normal', textAlign: 'left' } }}
             onClick={async () => {
               try {
                 const { loggedOut } = await endpoints.logoutOtherDevices();

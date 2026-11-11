@@ -155,9 +155,9 @@ test('the input setup belongs to the parent area; a passkey can open it instead 
   await page.getByRole('button', { name: 'Tim' }).click();
   await page.goto('/input');
   await expect(page.getByText('Gib die Eltern-PIN ein.')).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Wie spielst du?' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Mikrofon und MIDI' })).toHaveCount(0);
 
   // a parent opens it with the passkey
   await page.getByRole('button', { name: 'Mit Passkey öffnen' }).click();
-  await expect(page.getByRole('heading', { name: 'Wie spielst du?' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Mikrofon und MIDI' })).toBeVisible();
 });

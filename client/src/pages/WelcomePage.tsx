@@ -41,7 +41,7 @@ const SHOWCASE = [
   { key: 'listen', shot: 'phone-reading' },
   { key: 'duet', shot: 'phone-duet' },
   { key: 'rain', shot: 'phone-rain' },
-  { key: 'dream', shot: 'dream' },
+  { key: 'dream', shot: 'phone-dream' },
 ] as const;
 
 /** A few of the children's worlds – the rest are discovered on the way. */
@@ -262,20 +262,7 @@ export function WelcomePage() {
                   </Title>
                   <Text fz={{ base: 'md', sm: 'lg' }}>{t(`landing.show.${s.key}.text`)}</Text>
                 </div>
-                {s.shot === 'dream' ? (
-                  <figure className={`${classes.shot} ${classes.rowCard}`}>
-                    <img
-                      src="/screens/dream.webp"
-                      alt={t(`landing.show.${s.key}.alt`)}
-                      width={640}
-                      height={655}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </figure>
-                ) : (
-                  <Phone shot={s.shot} alt={t(`landing.show.${s.key}.alt`)} />
-                )}
+                <Phone shot={s.shot} alt={t(`landing.show.${s.key}.alt`)} />
               </article>
             ))}
           </div>

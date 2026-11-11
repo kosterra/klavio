@@ -132,9 +132,15 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await expect(page.getByTestId('path-keys-f-g')).toHaveAttribute('aria-current', 'step');
   await expect(page.getByRole('link', { name: 'Weiter: F und G' })).toBeVisible();
   await expect(page.getByTestId('xp-total')).toHaveText('100 XP');
-  await expect(page.getByTestId('badge-first-lesson')).toHaveAttribute('data-earned', 'true');
-  await expect(page.getByTestId('badge-perfect')).toHaveAttribute('data-earned', 'true');
-  await expect(page.getByTestId('badge-first-song')).toHaveAttribute('data-earned', 'false');
+  // the start page shows the latest medals, «Mein Profil» all of them
+  const latest = page.getByTestId('badges-latest');
+  await expect(latest.getByTestId('badge-first-lesson')).toHaveAttribute('data-earned', 'true');
+  await expect(latest.getByTestId('badge-perfect')).toHaveAttribute('data-earned', 'true');
+  await page.getByRole('link', { name: 'Alle Abzeichen ansehen' }).click();
+  const all = page.getByTestId('badges-all');
+  await expect(all.getByTestId('badge-first-lesson')).toHaveAttribute('data-earned', 'true');
+  await expect(all.getByTestId('badge-first-song')).toHaveAttribute('data-earned', 'false');
+  await page.goto('/');
   if (process.env.E2E_SCREENSHOTS) {
     await page.screenshot({ path: `${process.env.E2E_SCREENSHOTS}/path.png`, fullPage: true });
   }

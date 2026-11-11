@@ -23,6 +23,18 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Handy: Die Startseite ist kürzer – sie zeigt die neusten Abzeichen, alle findest du in «Mein Profil». Die Traumlied-Karte zeigt den nächsten Schritt zuerst und die Fähigkeiten auf Wunsch. Knöpfe und Auswahlen werden nicht mehr abgeschnitten, und das X von Fenstern ist grösser.',
+        'Phone: the start page is shorter – it shows the latest badges, all of them are in «My profile». The dream song card shows the next step first and the skills on request. Buttons and choices are no longer cut off, and the X of dialogs is bigger.',
+      ),
+      L(
+        'Metronom: jetzt als dritter Reiter unter «Spielen», mit Start gleich unter dem Tempo und Knöpfen für 5 Schläge langsamer oder schneller.',
+        'Metronome: now the third tab under «Play», with Start right under the tempo and buttons for 5 beats slower or faster.',
+      ),
+      L(
+        'Gleiche Namen überall: «Lernpfad», «Elternbereich» und «Mikrofon und MIDI» heissen im Menü und auf der Seite gleich; die Seitenleiste ordnet Lernen und Spielen getrennt.',
+        'The same names everywhere: «Learning path», «Parent area» and «Microphone and MIDI» are called the same in the menu and on the page; the side bar groups learning and playing separately.',
+      ),
+      L(
         'Mikrofon einrichten geht jetzt ohne Eltern-PIN – wie versprochen – und führt danach zurück, wo du warst, zum Beispiel in die Lektion. Steht doch einmal die PIN-Abfrage im Weg, bringt dich «Zurück» weiter.',
         'Setting up the microphone now works without the parent PIN – as promised – and takes you back where you were afterwards, for example into the lesson. If the PIN prompt is ever in the way, «Back» gets you on.',
       ),

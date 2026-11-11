@@ -212,7 +212,8 @@ export function App() {
                     <Route path="/songs" element={<SongsPage />} />
                     <Route path="/play" element={<FreePlayPage />} />
                     <Route path="/play/rain" element={<RainGamePage />} />
-                    <Route path="/metronome" element={<MetronomePage />} />
+                    <Route path="/play/metronome" element={<MetronomePage />} />
+                    <Route path="/metronome" element={<Navigate to="/play/metronome" replace />} />
                   </Route>
                 </Route>
               </Route>
