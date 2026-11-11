@@ -241,6 +241,22 @@ const pushReminderSchema = new Schema(
 export const PushReminder = model('PushReminder', pushReminderSchema);
 
 // ---------------------------------------------------------------------------
+// Own piece: a song or piece the family imported (MusicXML), for everyone of the account
+// ---------------------------------------------------------------------------
+const ownPieceSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    title: { type: String, required: true },
+    composer: { type: String, default: null },
+    /** the notes (checked against the schema on the way in) */
+    exercise: { type: Schema.Types.Mixed, required: true },
+    keyboard: { from: Number, to: Number },
+  },
+  { timestamps: true },
+);
+export const OwnPiece = model('OwnPiece', ownPieceSchema);
+
+// ---------------------------------------------------------------------------
 // Global settings (singleton document, editable by admins)
 // ---------------------------------------------------------------------------
 const appSettingsSchema = new Schema(

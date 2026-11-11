@@ -6,6 +6,7 @@ import { CURRICULUM, isLessonUnlocked } from '@klavio/shared';
 import { usePageTitle } from '../components/usePageTitle';
 import { useLocalized } from '../lesson/useLocalized';
 import { useProgress } from '../lesson/useProgress';
+import { OwnPieces } from '../own/OwnPieces';
 import { ProgressPending } from '../components/ProgressPending';
 import classes from './SongsPage.module.css';
 import { useLessonFor } from '../lesson/useLessonFor';
@@ -38,6 +39,7 @@ export function SongsPage() {
           {t('songs.intro', { count: open.length })}
         </Text>
       </div>
+      <OwnPieces />
       {chapters.map(({ chapter, n, songs }) => (
         <section key={chapter.id} aria-labelledby={`songs-${chapter.id}`}>
           <Title order={2} size="h4" mb="xs" id={`songs-${chapter.id}`}>

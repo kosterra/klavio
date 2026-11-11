@@ -646,7 +646,7 @@ function InputInfo({
  * «Ich höre: E» – shows each recognised note for a moment, so one always
  * knows the app heard the piano. Before the first note: that it listens.
  */
-function HeardNote({ mode }: { mode: LessonInputMode }) {
+export function HeardNote({ mode }: { mode: LessonInputMode }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
   const [heard, setHeard] = useState<{ midi: number; n: number } | null>(null);
@@ -678,7 +678,7 @@ function HeardNote({ mode }: { mode: LessonInputMode }) {
 }
 
 /** During the lesson: which input is listening, and switching mic ↔ screen. */
-function InputSwitch({ input }: { input: ReturnType<typeof useLessonInput> }) {
+export function InputSwitch({ input }: { input: ReturnType<typeof useLessonInput> }) {
   const { t } = useTranslation();
   if (input.mode === 'midi') {
     return (

@@ -39,6 +39,12 @@ const MicSetupPage = lazy(() =>
   import('./pages/MicSetupPage').then((m) => ({ default: m.MicSetupPage })),
 );
 const InputPage = lazy(() => import('./pages/InputPage').then((m) => ({ default: m.InputPage })));
+const OwnPiecePage = lazy(() =>
+  import('./own/OwnPiecePage').then((m) => ({ default: m.OwnPiecePage })),
+);
+const OwnSheetPage = lazy(() =>
+  import('./own/OwnPiecePage').then((m) => ({ default: m.OwnSheetPage })),
+);
 const SongSheetPage = lazy(() =>
   import('./print/SongSheetPage').then((m) => ({ default: m.SongSheetPage })),
 );
@@ -169,6 +175,9 @@ export function App() {
                   <Route path="/lesson/:lessonId" element={<LessonPage />} />
                   {/* a song to print: a page of its own, without the app around it */}
                   <Route path="/songs/:lessonId/print" element={<SongSheetPage />} />
+                  {/* own pieces (imported MusicXML): to practise and to print */}
+                  <Route path="/own/:pieceId" element={<OwnPiecePage />} />
+                  <Route path="/own/:pieceId/print" element={<OwnSheetPage />} />
                   <Route path="/quick" element={<QuickRoundPage />} />
                   <Route path="/start" element={<OnboardingPage />} />
                 </Route>

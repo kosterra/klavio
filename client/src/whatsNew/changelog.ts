@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Eigene Stücke: Unter «Lieder» kannst du deine eigenen Noten als MusicXML-Datei importieren (aus MuseScore, Finale, Sibelius oder Dorico) – zum Üben wie ein Lied, mit Anhören und einer Hand allein, und zum Drucken im Klavio-Look.',
+        'Own pieces: under «Songs» you can import your own notes as a MusicXML file (from MuseScore, Finale, Sibelius or Dorico) – to practise like a song, with listening and one hand alone, and to print in Klavio’s look.',
+      ),
+      L(
         'Erinnerung ans Üben: In «Mein Profil» kannst du dich auf diesem Gerät zur gewählten Zeit erinnern lassen – nur an Tagen, an denen du noch nicht gespielt hast. Auf iPhone und iPad geht das, wenn Klavio auf dem Home-Bildschirm installiert ist.',
         'Practice reminder: in «My profile» you can have this device remind you at a chosen time – only on days you have not played yet. On iPhone and iPad this works when Klavio is installed on the home screen.',
       ),

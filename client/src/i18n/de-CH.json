@@ -49,7 +49,8 @@
         "4": "Lernfortschritt: Sterne, Wiederholungen und das Datum je Lektion sowie die Übungszeit pro Tag. Für jedes übertragene Ergebnis drei Wochen lang eine Quittung (Kennung und Antwort des Servers), damit ein doppelt gesendetes Ergebnis nur einmal zählt.",
         "5": "Server-Protokoll: Zeitpunkt, aufgerufene Adresse und Antwort – ohne IP-Adresse. In der mitgelieferten Einrichtung wird es laufend überschrieben (höchstens drei Dateien à 10 MB).",
         "6": "Fehlversuche bei E-Mail-Codes und Eltern-PIN: wie viele und wann zuletzt – damit niemand raten kann. Nach einem Tag ohne weiteren Fehlversuch wird das vergessen.",
-        "7": "Erinnerungen ans Üben (nur wenn du sie einschaltest): Uhrzeit, Wochentage, Zeitzone und die Push-Adresse deines Browsers. Die Erinnerung geht verschlüsselt über den Push-Dienst des Browser-Herstellers (z. B. Google, Apple, Mozilla) – der kann sie nicht lesen, sieht aber, dass eine Mitteilung kommt. Beim Ausschalten, Abmelden oder Löschen des Profils wird alles gelöscht."
+        "7": "Erinnerungen ans Üben (nur wenn du sie einschaltest): Uhrzeit, Wochentage, Zeitzone und die Push-Adresse deines Browsers. Die Erinnerung geht verschlüsselt über den Push-Dienst des Browser-Herstellers (z. B. Google, Apple, Mozilla) – der kann sie nicht lesen, sieht aber, dass eine Mitteilung kommt. Beim Ausschalten, Abmelden oder Löschen des Profils wird alles gelöscht.",
+        "8": "Eigene Stücke (nur wenn du welche importierst): Titel, Komponist und die Noten – die Datei selbst wird auf deinem Gerät gelesen und nicht hochgeladen."
       }
     },
     "device": {
@@ -1418,5 +1419,39 @@
     "denied": "Mitteilungen sind für Klavio nicht erlaubt. Du kannst sie in den Einstellungen des Browsers erlauben.",
     "unsupported": "Dieser Browser kann keine Erinnerungen zeigen. Auf dem iPhone oder iPad geht es, wenn Klavio auf dem Home-Bildschirm installiert ist.",
     "forOther": "Dieses Gerät erinnert gerade ein anderes Profil. Einschalten erinnert stattdessen dich."
+  },
+  "own": {
+    "title": "Eigene Stücke",
+    "intro": "Bring deine eigenen Noten mit: eine MusicXML-Datei aus MuseScore, Finale, Sibelius oder Dorico. Klavio liest sie auf deinem Gerät; gespeichert werden nur die Noten, für alle Profile deines Kontos.",
+    "import": "Stück importieren",
+    "how": "Dateien .musicxml, .xml oder .mxl. Klavio nimmt die Hauptstimme (bei zwei Systemen beide Hände) – Ganze bis Achtel, punktierte Halbe und Viertel.",
+    "full": "Höchstens {{count}} eigene Stücke – lösche zuerst eines.",
+    "previewSong_one": "Lied mit einer Notenzeile · {{count}} Takt · {{time}}-Takt",
+    "previewSong_other": "Lied mit einer Notenzeile · {{count}} Takte · {{time}}-Takt",
+    "previewPiece_one": "Stück für beide Hände · {{count}} Takt · {{time}}-Takt",
+    "previewPiece_other": "Stück für beide Hände · {{count}} Takte · {{time}}-Takt",
+    "save": "Speichern",
+    "saved": "«{{title}}» ist bei deinen Stücken.",
+    "remove": "«{{title}}» löschen",
+    "removeTitle": "«{{title}}» löschen?",
+    "kindSong": "Eigenes Lied",
+    "kindPiece": "Eigenes Stück für beide Hände",
+    "close": "Stück beenden",
+    "practiceOnly": "Ein eigenes Stück zum Üben – mit Anhören und Üben einer Hand, aber ohne Sterne und XP.",
+    "start": "Los geht's!",
+    "done": "Geschafft – super!",
+    "again": "Nochmals spielen",
+    "back": "Zu den Liedern",
+    "chip": "Eigenes Stück",
+    "yours": "Eigene Noten",
+    "errors": {
+      "NOT_MUSICXML": "Das ist keine MusicXML-Datei. Exportiere das Stück im Notenprogramm als MusicXML (.musicxml oder .mxl).",
+      "NO_NOTES": "In der Datei sind keine Noten.",
+      "TOO_LONG": "Das Stück ist zu lang – höchstens 64 Takte.",
+      "DURATION": "Takt {{bar}} hat Notenwerte, die Klavio noch nicht kann (z. B. Sechzehntel oder punktierte Achtel).",
+      "TUPLET": "Takt {{bar}} hat Triolen – die kann Klavio noch nicht.",
+      "RANGE": "Die Noten liegen ausserhalb der Klaviatur.",
+      "TOO_BIG": "Die Datei ist zu gross (höchstens 5 MB)."
+    }
   }
 }

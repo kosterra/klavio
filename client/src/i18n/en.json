@@ -49,7 +49,8 @@
         "4": "Learning progress: stars, reviews and the date per lesson and the practice time per day. For every result sent, a receipt for three weeks (its id and the server's answer), so a result sent twice counts once.",
         "5": "Server log: time, address called and answer – without IP addresses. In the bundled setup it is overwritten continuously (at most three files of 10 MB).",
         "6": "Failed attempts at e-mail codes and the parent PIN: how many and when the last one was – so nobody can guess. Forgotten after a day without another failed attempt.",
-        "7": "Practice reminders (only if you switch them on): time, weekdays, time zone and your browser's push address. The reminder travels encrypted through the push service of the browser maker (e.g. Google, Apple, Mozilla) – it cannot read it, but sees that a notification comes. Switching off, signing out or deleting the profile deletes all of it."
+        "7": "Practice reminders (only if you switch them on): time, weekdays, time zone and your browser's push address. The reminder travels encrypted through the push service of the browser maker (e.g. Google, Apple, Mozilla) – it cannot read it, but sees that a notification comes. Switching off, signing out or deleting the profile deletes all of it.",
+        "8": "Own pieces (only if you import some): title, composer and the notes – the file itself is read on your device and not uploaded."
       }
     },
     "device": {
@@ -1418,5 +1419,39 @@
     "denied": "Notifications are not allowed for Klavio. You can allow them in the browser settings.",
     "unsupported": "This browser cannot show reminders. On an iPhone or iPad it works when Klavio is installed on the home screen.",
     "forOther": "This device currently reminds another profile. Switching on reminds you instead."
+  },
+  "own": {
+    "title": "Own pieces",
+    "intro": "Bring your own notes: a MusicXML file from MuseScore, Finale, Sibelius or Dorico. Klavio reads it on your device; only the notes are stored, for all profiles of your account.",
+    "import": "Import a piece",
+    "how": "Files .musicxml, .xml or .mxl. Klavio takes the main voice (with two staves both hands) – whole to eighth notes, dotted halves and quarters.",
+    "full": "At most {{count}} own pieces – delete one first.",
+    "previewSong_one": "Song on one staff · {{count}} bar · {{time}} time",
+    "previewSong_other": "Song on one staff · {{count}} bars · {{time}} time",
+    "previewPiece_one": "Piece for both hands · {{count}} bar · {{time}} time",
+    "previewPiece_other": "Piece for both hands · {{count}} bars · {{time}} time",
+    "save": "Save",
+    "saved": "«{{title}}» is with your pieces.",
+    "remove": "Delete «{{title}}»",
+    "removeTitle": "Delete «{{title}}»?",
+    "kindSong": "Own song",
+    "kindPiece": "Own piece for both hands",
+    "close": "Stop the piece",
+    "practiceOnly": "An own piece to practise – with listening and one-hand practice, but without stars and XP.",
+    "start": "Let's go!",
+    "done": "Done – great!",
+    "again": "Play again",
+    "back": "Back to the songs",
+    "chip": "Own piece",
+    "yours": "Own notes",
+    "errors": {
+      "NOT_MUSICXML": "This is not a MusicXML file. Export the piece from your notation program as MusicXML (.musicxml or .mxl).",
+      "NO_NOTES": "There are no notes in the file.",
+      "TOO_LONG": "The piece is too long – at most 64 bars.",
+      "DURATION": "Bar {{bar}} has note values Klavio cannot do yet (e.g. sixteenths or dotted eighths).",
+      "TUPLET": "Bar {{bar}} has triplets – Klavio cannot do them yet.",
+      "RANGE": "The notes are outside the keyboard.",
+      "TOO_BIG": "The file is too big (at most 5 MB)."
+    }
   }
 }

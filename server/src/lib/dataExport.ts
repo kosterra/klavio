@@ -5,6 +5,7 @@ import {
   DailyActivity,
   LessonProgress,
   LessonReceipt,
+  OwnPiece,
   PushReminder,
   Passkey,
   Profile,
@@ -19,12 +20,13 @@ import { profileToDto } from '../routes/profiles.js';
  * the passkeys' keys are useless outside Klavio and only say «set».
  */
 export async function exportAccount(userId: Types.ObjectId) {
-  const [user, passkeys, profiles, sessions, reminders] = await Promise.all([
+  const [user, passkeys, profiles, sessions, reminders, pieces] = await Promise.all([
     User.findById(userId).lean(),
     Passkey.find({ userId }).sort({ createdAt: 1 }).lean(),
     Profile.find({ userId }).sort({ createdAt: 1 }).lean(),
     Session.find({ userId }).sort({ expiresAt: 1 }).lean(),
     PushReminder.find({ userId }).sort({ createdAt: 1 }).lean(),
+    OwnPiece.find({ userId }).sort({ createdAt: 1 }).lean(),
   ]);
   if (!user) return null;
   // failed attempts kept against this account (PIN) and its address (codes)
@@ -74,6 +76,13 @@ export async function exportAccount(userId: Types.ObjectId) {
       pushService: new URL(r.endpoint).hostname,
       lastDay: r.lastDate,
       createdAt: r.createdAt,
+    })),
+    // imported songs and pieces, with their notes
+    ownPieces: pieces.map((p) => ({
+      title: p.title,
+      composer: p.composer ?? null,
+      notes: p.exercise,
+      createdAt: p.createdAt,
     })),
     failedAttempts: throttles.map((x) => ({
       kind: x._id.startsWith('pin:') ? 'parent PIN' : 'e-mail code',

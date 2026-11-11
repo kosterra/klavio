@@ -60,28 +60,63 @@ function lines<T>(bars: T[], per: number): T[][] {
  */
 export function SongSheetPage() {
   const { lessonId = '' } = useParams();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const loc = useLocalized();
   const forMe = useLessonFor();
   const worldSet = useWorldMode();
-  const { activeProfile } = useSession();
   const { completed, progress } = useProgress();
   const base = findLesson(lessonId);
   const lesson = base ? forMe(base) : undefined;
   usePageTitle(lesson ? t('sheet.pageTitle', { title: loc(lesson.title) }) : t('sheet.title'));
   const exercise = lesson ? printable(lesson.exercises) : undefined;
-  const [names, setNames] = useState(() => !!exercise?.showNames);
-  const [fingers, setFingers] = useState(true);
-  const narrow = useMediaQuery('(max-width: 36em)') ?? false;
-  const per = narrow ? BARS_PER_LINE_NARROW : BARS_PER_LINE;
 
   if (!base || !lesson || !exercise) return <Navigate to="/songs" replace />;
   if (progress && !isLessonUnlocked(base.id, completed)) return <Navigate to="/songs" replace />;
 
-  const lang = i18n.language.startsWith('de') ? 'de' : 'en';
-  const kids = activeProfile?.uiMode !== 'classic';
   const ci = CURRICULUM.findIndex((c) => c.lessons.some((l) => l.id === base.id));
   const world = ci >= 0 ? worldOf(CURRICULUM[ci]!.id, ci, worldSet) : null;
+  return (
+    <SheetView
+      title={loc(lesson.title)}
+      exercise={exercise}
+      chip={
+        world
+          ? {
+              text: t('sheet.where', { n: ci + 1, world: t(`path.worlds.${world.id}`) }),
+              color: chapterColor(world, ci),
+            }
+          : null
+      }
+      note={t('sheet.publicDomain')}
+    />
+  );
+}
+
+/** The sheet itself – for a song of the course or an own piece. */
+export function SheetView({
+  title,
+  exercise,
+  chip,
+  note,
+  backTo = '/songs',
+}: {
+  title: string;
+  exercise: Printable;
+  /** top right: where it comes from (the world of a song), in its colour */
+  chip: { text: string; color: string } | null;
+  /** bottom right: e.g. «Melodie gemeinfrei» or the composer */
+  note: string;
+  /** where «back» leads */
+  backTo?: string;
+}) {
+  const { t, i18n } = useTranslation();
+  const { activeProfile } = useSession();
+  const [names, setNames] = useState(() => !!exercise.showNames);
+  const [fingers, setFingers] = useState(true);
+  const narrow = useMediaQuery('(max-width: 36em)') ?? false;
+  const per = narrow ? BARS_PER_LINE_NARROW : BARS_PER_LINE;
+  const lang = i18n.language.startsWith('de') ? 'de' : 'en';
+  const kids = activeProfile?.uiMode !== 'classic';
   const name = (midi: number) => (names ? midiToPitchName(midi, lang) : undefined);
   const days = Array.from({ length: 7 }, (_, i) =>
     new Intl.DateTimeFormat(i18n.language, { weekday: 'short' }).format(
@@ -150,7 +185,7 @@ export function SongSheetPage() {
       <Group className={classes.tools} justify="space-between" wrap="wrap" gap="sm">
         <Button
           component={Link}
-          to="/songs"
+          to={backTo}
           variant="subtle"
           leftSection={<IconArrowLeft size={18} />}
         >
@@ -182,25 +217,18 @@ export function SongSheetPage() {
       </Group>
 
       {/* --------------------------------------------- the sheet */}
-      <article className={classes.sheet} data-testid="sheet" aria-label={loc(lesson.title)}>
+      <article className={classes.sheet} data-testid="sheet" aria-label={title}>
         <header className={classes.head}>
           <div className={classes.brand}>
             <img src="/logo.svg" alt="" width={34} height={34} />
             <span className={classes.wordmark}>Klavio</span>
           </div>
-          {world && (
+          {chip && (
             <span
               className={classes.world}
-              style={
-                {
-                  '--world': `var(--mantine-color-${chapterColor(world, ci)}-9)`,
-                } as React.CSSProperties
-              }
+              style={{ '--world': `var(--mantine-color-${chip.color}-9)` } as React.CSSProperties}
             >
-              {t('sheet.where', {
-                n: ci + 1,
-                world: t(`path.worlds.${world.id}`),
-              })}
+              {chip.text}
             </span>
           )}
         </header>
@@ -208,7 +236,7 @@ export function SongSheetPage() {
 
         <div className={classes.titleRow}>
           <div>
-            <h1 className={classes.title}>{loc(lesson.title)}</h1>
+            <h1 className={classes.title}>{title}</h1>
             <p className={classes.meta}>
               {t('sheet.meta', { tempo: exercise.tempo, time: exercise.time })}
             </p>
@@ -261,7 +289,7 @@ export function SongSheetPage() {
             })}
           </Text>
           <Text component="span" size="xs">
-            {t('sheet.publicDomain')}
+            {note}
           </Text>
         </footer>
       </article>

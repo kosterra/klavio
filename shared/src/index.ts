@@ -4,6 +4,8 @@ export * from './schemas/profile.ts';
 export * from './music/notes.ts';
 export * from './music/noteEvent.ts';
 export * from './music/fingering.ts';
+export * from './import/musicxml.ts';
+export * from './schemas/pieces.ts';
 export * from './curriculum/types.ts';
 export * from './curriculum/curriculum.ts';
 export * from './curriculum/theory.ts';

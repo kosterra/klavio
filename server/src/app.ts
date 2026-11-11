@@ -13,6 +13,7 @@ import authPlugin from './plugins/auth.js';
 import { scheduleWeeklyReports } from './lib/weeklyReport.js';
 import { scheduleReminders } from './lib/reminders.js';
 import reminderRoutes from './routes/reminders.js';
+import pieceRoutes from './routes/pieces.js';
 import { registerWeb } from './plugins/web.js';
 import { HttpError } from './lib/errors.js';
 import { createMailer, type Mailer } from './lib/mailer.js';
@@ -149,6 +150,7 @@ export async function buildApp({
       await api.register(profileRoutes, { prefix: '/profiles', config });
       await api.register(progressRoutes, { prefix: '/progress' });
       await api.register(reminderRoutes, { prefix: '/reminders', config });
+      await api.register(pieceRoutes, { prefix: '/pieces' });
       await api.register(adminRoutes, { prefix: '/admin', config, mailer: resolvedMailer });
     },
     { prefix: '/api' },

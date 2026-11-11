@@ -1325,6 +1325,333 @@
         }
       }
     },
+    "/api/pieces/": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "post": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 120
+                  },
+                  "composer": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 120
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "exercise": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "song"
+                            ]
+                          },
+                          "clef": {
+                            "type": "string",
+                            "enum": [
+                              "treble",
+                              "bass"
+                            ]
+                          },
+                          "time": {
+                            "type": "string",
+                            "pattern": "^(?:[1-9]|1[0-2])\\/(?:2|4|8)$"
+                          },
+                          "tempo": {
+                            "type": "integer",
+                            "minimum": 30,
+                            "maximum": 220
+                          },
+                          "showNames": {
+                            "type": "boolean"
+                          },
+                          "pickup": {
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "maximum": 8
+                          },
+                          "keySignature": {
+                            "type": "string",
+                            "enum": [
+                              "C",
+                              "G",
+                              "F"
+                            ]
+                          },
+                          "bars": {
+                            "minItems": 1,
+                            "maxItems": 64,
+                            "type": "array",
+                            "items": {
+                              "minItems": 1,
+                              "maxItems": 32,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "midi": {
+                                    "type": "integer",
+                                    "minimum": 21,
+                                    "maximum": 108
+                                  },
+                                  "value": {
+                                    "type": "string",
+                                    "enum": [
+                                      "8",
+                                      "w",
+                                      "h",
+                                      "hd",
+                                      "q",
+                                      "qd"
+                                    ]
+                                  },
+                                  "finger": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 5
+                                  },
+                                  "tie": {
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "midi",
+                                  "value"
+                                ]
+                              }
+                            }
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "clef",
+                          "time",
+                          "tempo",
+                          "showNames",
+                          "bars"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "piece"
+                            ]
+                          },
+                          "time": {
+                            "type": "string",
+                            "pattern": "^(?:[1-9]|1[0-2])\\/(?:2|4|8)$"
+                          },
+                          "tempo": {
+                            "type": "integer",
+                            "minimum": 30,
+                            "maximum": 220
+                          },
+                          "showNames": {
+                            "type": "boolean"
+                          },
+                          "bars": {
+                            "minItems": 1,
+                            "maxItems": 64,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "rh": {
+                                  "maxItems": 32,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "midi": {
+                                        "anyOf": [
+                                          {
+                                            "type": "integer",
+                                            "minimum": 21,
+                                            "maximum": 108
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "value": {
+                                        "type": "string",
+                                        "enum": [
+                                          "8",
+                                          "w",
+                                          "h",
+                                          "hd",
+                                          "q",
+                                          "qd",
+                                          "qr",
+                                          "hr",
+                                          "wr"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "midi",
+                                      "value"
+                                    ]
+                                  }
+                                },
+                                "lh": {
+                                  "maxItems": 32,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "midi": {
+                                        "anyOf": [
+                                          {
+                                            "type": "integer",
+                                            "minimum": 21,
+                                            "maximum": 108
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "value": {
+                                        "type": "string",
+                                        "enum": [
+                                          "8",
+                                          "w",
+                                          "h",
+                                          "hd",
+                                          "q",
+                                          "qd",
+                                          "qr",
+                                          "hr",
+                                          "wr"
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "midi",
+                                      "value"
+                                    ]
+                                  }
+                                }
+                              },
+                              "required": [
+                                "rh",
+                                "lh"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "time",
+                          "tempo",
+                          "showNames",
+                          "bars"
+                        ]
+                      }
+                    ]
+                  },
+                  "keyboard": {
+                    "type": "object",
+                    "properties": {
+                      "from": {
+                        "type": "integer",
+                        "minimum": 21,
+                        "maximum": 108
+                      },
+                      "to": {
+                        "type": "integer",
+                        "minimum": 21,
+                        "maximum": 108
+                      }
+                    },
+                    "required": [
+                      "from",
+                      "to"
+                    ]
+                  }
+                },
+                "required": [
+                  "title",
+                  "composer",
+                  "exercise",
+                  "keyboard"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/pieces/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{24}$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      },
+      "delete": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{24}$"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
     "/api/admin/settings": {
       "get": {
         "responses": {
