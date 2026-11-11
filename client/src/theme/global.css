@@ -212,3 +212,12 @@ html[data-ui-mode='classic'] [data-tile] {
     padding-block: 0;
   }
 }
+
+/* printing (song sheets): paper white, no background pictures */
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    background-image: none !important;
+  }
+}

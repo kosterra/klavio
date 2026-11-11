@@ -23,6 +23,14 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Noten drucken: Jedes offene Lied gibt es jetzt als Notenblatt im Klavio-Look – mit Welt, Tempo, Notennamen und Fingersätzen nach Wahl, einem Übungstipp von Klavi und einer Woche zum Abhaken. Zum Üben am Klavier zu Hause oder für die Klavierstunde.',
+        'Printing sheet music: every open song is now a sheet in Klavio’s look – with its world, tempo, note names and fingering as you like, a practice tip from Klavi and a week to tick off. For practising at the piano at home or for the piano lesson.',
+      ),
+      L(
+        'Das Traumlied auf der Startseite lässt sich zuklappen: Dann siehst du nur noch Titel und Fortschritt. Klavio merkt sich, ob es offen ist.',
+        'The dream song on the start page can be folded: then you only see its title and progress. Klavio remembers whether it is open.',
+      ),
+      L(
         'Für Eltern: Die Seite «Familie und Fortschritt» zeigt jetzt, wann jedes Kind zuletzt geübt hat, die Tage in Folge, die nächste Lektion mit Namen und welche Lektionen sich nochmals lohnen (bisher ein Stern).',
         'For parents: the «Family and progress» page now shows when each child last practised, the days in a row, the next lesson by name and which lessons are worth another go (one star so far).',
       ),

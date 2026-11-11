@@ -1005,7 +1005,7 @@
       "later": "comes in a later world"
     },
     "next": "Next: {{skill}}",
-    "later": "You learn it in «{{lesson}}» – first the learning path goes on.",
+    "later": "later",
     "ready": "You can do everything «{{title}}» needs. Time for your dream song!",
     "waiting": "The next skills come in new worlds – keep going!",
     "promptText": "Is there a dream song you'd like to play one day?",
@@ -1025,7 +1025,6 @@
     },
     "needs": "What does the song need?",
     "needsHint": "A suggestion for this song – adjust it as you like. Basics like reading notes are always included.",
-    "later": "later",
     "copyright": "Klavio only stores the title – no notes. You get the sheet music of your dream song yourself later, for example as an “easy piano” edition.",
     "save": "Save dream song",
     "remove": "Remove dream song",
@@ -1055,7 +1054,9 @@
       "skills_one": "Needs {{count}} skill",
       "skills_other": "Needs {{count}} skills"
     },
-    "skillsStart": "{{total}} skills to your dream song – you’ll learn the first one in your next lesson."
+    "skillsStart": "{{total}} skills to your dream song – you’ll learn the first one in your next lesson.",
+    "unfold": "Show more about the dream song",
+    "fold": "Fold the dream song"
   },
   "speech": {
     "read": "Read aloud",
@@ -1351,5 +1352,27 @@
     "over_other": "You caught {{count}} notes. Again?",
     "record_one": "New record: {{count}} note!",
     "record_other": "New record: {{count}} notes!"
+  },
+  "sheet": {
+    "title": "Print sheet music",
+    "pageTitle": "Sheet: {{title}}",
+    "printSong": "Print the notes of «{{title}}»",
+    "back": "Back to the songs",
+    "names": "Note names",
+    "fingers": "Fingering",
+    "print": "Print",
+    "lineLabel": "Line {{n}} of the notes",
+    "where": "Chapter {{n}} · {{world}}",
+    "meta": "Tempo {{tempo}} · {{time}} time",
+    "for": "for {{name}}",
+    "tipTitle": "Practise with Klavi",
+    "tips": {
+      "hands": "First read the notes and point to the keys.",
+      "slow": "Play slowly – right is better than fast.",
+      "faster": "Three times without a mistake? Then a little faster!"
+    },
+    "week": "Practised this week",
+    "footer": "Klavio – learning the piano · printed on {{date}}",
+    "publicDomain": "Melody in the public domain"
   }
 }

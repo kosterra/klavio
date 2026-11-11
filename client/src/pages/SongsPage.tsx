@@ -1,5 +1,5 @@
-import { Card, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core';
-import { IconLock, IconMusic, IconPlayerPlay } from '@tabler/icons-react';
+import { ActionIcon, Card, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import { IconLock, IconMusic, IconPlayerPlay, IconPrinter } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { CURRICULUM, isLessonUnlocked } from '@klavio/shared';
@@ -77,18 +77,33 @@ export function SongsPage() {
                 </Group>
               );
               return unlocked ? (
-                <Card
-                  key={lesson.id}
-                  component={Link}
-                  to={`/lesson/${lesson.id}`}
-                  withBorder
-                  radius="lg"
-                  padding="sm"
-                  className={classes.song}
-                  data-testid={`song-${lesson.id}`}
-                >
-                  {body}
-                </Card>
+                <Group key={lesson.id} gap="xs" wrap="nowrap" align="stretch">
+                  <Card
+                    component={Link}
+                    to={`/lesson/${lesson.id}`}
+                    withBorder
+                    radius="lg"
+                    padding="sm"
+                    className={classes.song}
+                    style={{ flex: 1, minWidth: 0 }}
+                    data-testid={`song-${lesson.id}`}
+                  >
+                    {body}
+                  </Card>
+                  {/* the notes on paper, for the piano at home or the teacher */}
+                  <ActionIcon
+                    component={Link}
+                    to={`/songs/${lesson.id}/print`}
+                    variant="default"
+                    radius="lg"
+                    size="auto"
+                    w={52}
+                    aria-label={t('sheet.printSong', { title: loc(forMe(lesson).title) })}
+                    data-testid={`print-${lesson.id}`}
+                  >
+                    <IconPrinter size={22} />
+                  </ActionIcon>
+                </Group>
               ) : (
                 <Card
                   key={lesson.id}

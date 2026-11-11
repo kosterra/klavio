@@ -39,6 +39,9 @@ const MicSetupPage = lazy(() =>
   import('./pages/MicSetupPage').then((m) => ({ default: m.MicSetupPage })),
 );
 const InputPage = lazy(() => import('./pages/InputPage').then((m) => ({ default: m.InputPage })));
+const SongSheetPage = lazy(() =>
+  import('./print/SongSheetPage').then((m) => ({ default: m.SongSheetPage })),
+);
 const ProfileSettingsPage = lazy(() =>
   import('./pages/ProfileSettingsPage').then((m) => ({ default: m.ProfileSettingsPage })),
 );
@@ -164,6 +167,8 @@ export function App() {
                 <Route path="/profiles" element={<ProfilesPage />} />
                 <Route element={<RequireProfile />}>
                   <Route path="/lesson/:lessonId" element={<LessonPage />} />
+                  {/* a song to print: a page of its own, without the app around it */}
+                  <Route path="/songs/:lessonId/print" element={<SongSheetPage />} />
                   <Route path="/quick" element={<QuickRoundPage />} />
                   <Route path="/start" element={<OnboardingPage />} />
                 </Route>

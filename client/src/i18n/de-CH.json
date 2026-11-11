@@ -1005,7 +1005,7 @@
       "later": "kommt in einer späteren Welt"
     },
     "next": "Als Nächstes: {{skill}}",
-    "later": "Das lernst du in «{{lesson}}» – zuerst geht es im Lernpfad weiter.",
+    "later": "später",
     "ready": "Du kannst alles, was «{{title}}» braucht. Zeit für dein Traumlied!",
     "waiting": "Die nächsten Fähigkeiten kommen in neuen Welten – bleib dran!",
     "promptText": "Hast du ein Traumlied, das du eines Tages spielen möchtest?",
@@ -1025,7 +1025,6 @@
     },
     "needs": "Was braucht das Lied?",
     "needsHint": "Vorschlag passend zum Lied – du kannst anpassen. Grundlagen wie Noten lesen sind immer dabei.",
-    "later": "später",
     "copyright": "Klavio speichert nur den Titel – keine Noten. Die Noten deines Traumlieds besorgst du dir später selbst, zum Beispiel als «Easy Piano»-Ausgabe.",
     "save": "Traumlied speichern",
     "remove": "Traumlied entfernen",
@@ -1055,7 +1054,9 @@
       "skills_one": "Braucht {{count}} Fähigkeit",
       "skills_other": "Braucht {{count}} Fähigkeiten"
     },
-    "skillsStart": "{{total}} Fähigkeiten bis zu deinem Traumlied – die erste lernst du gleich in der nächsten Lektion."
+    "skillsStart": "{{total}} Fähigkeiten bis zu deinem Traumlied – die erste lernst du gleich in der nächsten Lektion.",
+    "unfold": "Mehr zum Traumlied zeigen",
+    "fold": "Traumlied zuklappen"
   },
   "speech": {
     "read": "Vorlesen",
@@ -1351,5 +1352,27 @@
     "over_other": "{{count}} Noten gefangen. Nochmals?",
     "record_one": "Neuer Rekord: {{count}} Note!",
     "record_other": "Neuer Rekord: {{count}} Noten!"
+  },
+  "sheet": {
+    "title": "Noten drucken",
+    "pageTitle": "Noten: {{title}}",
+    "printSong": "Noten von «{{title}}» drucken",
+    "back": "Zu den Liedern",
+    "names": "Notennamen",
+    "fingers": "Fingersätze",
+    "print": "Drucken",
+    "lineLabel": "Notenzeile {{n}}",
+    "where": "Kapitel {{n}} · {{world}}",
+    "meta": "Tempo {{tempo}} · {{time}}-Takt",
+    "for": "für {{name}}",
+    "tipTitle": "So übst du mit Klavi",
+    "tips": {
+      "hands": "Lies zuerst die Noten und zeig die Tasten.",
+      "slow": "Spiel langsam – lieber richtig als schnell.",
+      "faster": "Klappt es dreimal ohne Fehler? Dann etwas schneller!"
+    },
+    "week": "Diese Woche geübt",
+    "footer": "Klavio – Klavier lernen · gedruckt am {{date}}",
+    "publicDomain": "Melodie gemeinfrei"
   }
 }

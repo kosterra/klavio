@@ -1,0 +1,252 @@
+/* A song sheet: an A4 page in Klavio's look – on the screen as a paper preview,
+   on paper exactly the page (the buttons stay on the screen). Always light:
+   it is paper, also in the dark colour scheme. */
+
+.page {
+  min-height: 100dvh;
+  padding: var(--mantine-spacing-md);
+  background: var(--klavio-bg, #f1f3f5);
+  color-scheme: light;
+}
+
+.tools {
+  max-width: 210mm;
+  margin: 0 auto var(--mantine-spacing-md);
+}
+
+.sheet {
+  --ink: #212529;
+  --muted: #495057;
+  --brand: var(--mantine-color-indigo-7);
+
+  position: relative;
+  box-sizing: border-box;
+  max-width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  padding: 14mm 14mm 12mm;
+  display: flex;
+  flex-direction: column;
+  gap: 6mm;
+  color: var(--ink);
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 18%);
+  font-family: 'Nunito Variable', system-ui, sans-serif;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wordmark {
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: 0.01em;
+  color: var(--brand);
+}
+
+.world {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 13px;
+  color: #fff;
+  background: var(--world);
+}
+
+/* the five world colours, as under the app's header */
+.stripe {
+  height: 6px;
+  margin-top: -3mm;
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--mantine-color-indigo-5) 0 20%,
+    var(--mantine-color-teal-5) 20% 40%,
+    var(--mantine-color-grape-5) 40% 60%,
+    var(--mantine-color-orange-5) 60% 80%,
+    var(--mantine-color-cyan-5) 80% 100%
+  );
+}
+
+.titleRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 900;
+}
+
+.meta {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.forWhom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--muted);
+  text-align: center;
+}
+
+.music {
+  display: flex;
+  flex-direction: column;
+  gap: 2mm;
+  flex: 1;
+}
+
+.line {
+  break-inside: avoid;
+}
+
+.bottom {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 5mm;
+  break-inside: avoid;
+}
+
+.tip,
+.week {
+  padding: 4mm;
+  border-radius: 14px;
+  border: 2px solid var(--mantine-color-indigo-2);
+  background: var(--mantine-color-indigo-0);
+}
+
+.tip {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.week {
+  border-color: var(--mantine-color-orange-3);
+  background: var(--mantine-color-orange-0);
+}
+
+.tipIcon {
+  flex-shrink: 0;
+}
+
+.tipTitle {
+  margin: 0 0 4px;
+  font-weight: 900;
+}
+
+.tipList {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.days {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.days li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--mantine-color-orange-5);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--mantine-color-orange-5);
+  font-size: 16px;
+}
+
+.page:not([data-kids]) .box {
+  border-radius: 4px;
+}
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  border-top: 1px solid #dee2e6;
+  padding-top: 3mm;
+}
+
+/* a phone: the preview fits the screen */
+@media (max-width: 36em) {
+  .sheet {
+    min-height: 0;
+    padding: 6mm 5mm;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  .tools {
+    display: none !important;
+  }
+
+  .page {
+    padding: 0;
+    background: none;
+  }
+
+  .sheet {
+    max-width: none;
+    width: 210mm;
+    min-height: 297mm;
+    border-radius: 0;
+    box-shadow: none;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
