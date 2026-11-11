@@ -20,7 +20,7 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
-    version: UPCOMING,
+    version: '2026.11.4',
     changes: [
       L(
         'Korrektur: Der Schliessen-Knopf oben in der Lektion ragt beim Darüberfahren nicht mehr aus der Leiste.',
