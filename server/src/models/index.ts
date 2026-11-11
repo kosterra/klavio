@@ -15,6 +15,9 @@ const userSchema = new Schema(
     parentPinHash: { type: String, default: null },
     /** the parent area may also be opened with one of the account's passkeys */
     parentPasskeyUnlock: { type: Boolean, default: false },
+    /** weekly report by e-mail (opt-in) and the week (its Monday) last sent */
+    weeklyReport: { type: Boolean, default: false },
+    weeklyReportWeek: { type: String, default: null },
     locale: { type: String, default: 'de-CH' },
     /** last day the account was used (for deleting long-inactive accounts, if admins set it) */
     lastActiveAt: { type: Date, default: null },

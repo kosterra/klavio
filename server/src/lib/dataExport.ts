@@ -51,6 +51,8 @@ export async function exportAccount(userId: Types.ObjectId) {
       locale: user.locale,
       parentPin: user.parentPinHash ? 'set' : 'not set',
       parentPasskeyUnlock: user.parentPasskeyUnlock,
+      weeklyReport: user.weeklyReport ?? false,
+      weeklyReportLastWeek: user.weeklyReportWeek ?? null,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       lastActiveAt: user.lastActiveAt,

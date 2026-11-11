@@ -43,7 +43,7 @@
       "title": "Was auf dem Server gespeichert wird",
       "text": "Damit du auf mehreren Geräten weiterlernen kannst, liegt auf dem Server:",
       "items": {
-        "1": "Konto: ein Name (z. B. «Familie Muster»), deine E-Mail-Adresse, die Sprache für E-Mails, ob du Admin bist, wann das Konto zuletzt benutzt wurde (und ob eine Warnung vor dem Löschen verschickt wurde) und – falls gesetzt – eine verschlüsselte Eltern-PIN.",
+        "1": "Konto: ein Name (z. B. «Familie Muster»), deine E-Mail-Adresse, die Sprache für E-Mails, ob du Admin bist, wann das Konto zuletzt benutzt wurde (und ob eine Warnung vor dem Löschen verschickt wurde) und – falls gesetzt – eine verschlüsselte Eltern-PIN und ob du den Wochenbericht per E-Mail willst.",
         "2": "Passkeys: nur der öffentliche Schlüssel und Angaben wie der Name des Passwort-Managers. Fingerabdruck, Gesicht und private Schlüssel bleiben auf deinem Gerät.",
         "3": "Profile: Name oder Spitzname, Geburtsjahr, Figur und Kleidungsstück, Darstellung und Welt, Tagesziel und Wochenziel, ob du auf dem Klavier oder dem Bildschirm spielst, Mikrofon-Einstellung, die Antworten aus den Startfragen (z. B. warum du spielst), XP, Level, Tage in Folge, Abzeichen und – falls gewählt – der Titel deines Traumlieds.",
         "4": "Lernfortschritt: Sterne, Wiederholungen und das Datum je Lektion sowie die Übungszeit pro Tag. Für jedes übertragene Ergebnis drei Wochen lang eine Quittung (Kennung und Antwort des Servers), damit ein doppelt gesendetes Ergebnis nur einmal zählt.",
@@ -270,7 +270,11 @@
     "devicesHint": "Ein Gerät verloren oder verkauft? Hier meldest du dein Konto überall sonst ab – nur dieses Gerät bleibt angemeldet.",
     "devicesButton": "Andere Geräte abmelden",
     "devicesDone_one": "{{count}} anderes Gerät abgemeldet.",
-    "devicesDone_other": "{{count}} andere Geräte abgemeldet."
+    "devicesDone_other": "{{count}} andere Geräte abgemeldet.",
+    "report": "Wochenbericht",
+    "reportHint": "Jeden Montag eine E-Mail an deine Adresse: wie viel jedes Profil in der Woche geübt hat, welche Lektionen gespielt wurden und was als Nächstes kommt. Abbestellen geht jederzeit hier.",
+    "reportSwitch": "Wochenbericht per E-Mail",
+    "reportSaved": "Gespeichert."
   },
   "admin": {
     "title": "Verwaltung",
@@ -309,7 +313,9 @@
       "saved": "E-Mail-Vorlage gespeichert.",
       "saveFirst": "Speichere zuerst, dann kannst du eine Test-E-Mail schicken.",
       "reset": "Standardtexte wiederherstellen",
-      "inactiveWarning": "Warnung vor dem Löschen"
+      "inactiveWarning": "Warnung vor dem Löschen",
+      "pinReset": "Eltern-PIN zurücksetzen",
+      "weeklyReport": "Wochenbericht"
     },
     "worlds": {
       "title": "Welten",

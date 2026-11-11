@@ -7,10 +7,16 @@ import { APP_CONFIG } from '../config/app.ts';
  * edit the words around it. The same renderer runs on the server (sending)
  * and in the admin page (preview), so what one sees is what goes out.
  */
-export const MAIL_TEMPLATE_IDS = ['login-code', 'verify-email', 'inactive-warning'] as const;
+export const MAIL_TEMPLATE_IDS = [
+  'login-code',
+  'verify-email',
+  'pin-reset',
+  'inactive-warning',
+  'weekly-report',
+] as const;
 
 /** Mails that carry a sign-in code (the others have a button instead). */
-export const CODE_MAILS: readonly MailTemplateId[] = ['login-code', 'verify-email'];
+export const CODE_MAILS: readonly MailTemplateId[] = ['login-code', 'verify-email', 'pin-reset'];
 export type MailTemplateId = (typeof MAIL_TEMPLATE_IDS)[number];
 
 export const MAIL_LANGS = ['de', 'en'] as const;
@@ -23,7 +29,7 @@ export function mailLangOf(locale: string | undefined | null): MailLang {
 }
 
 /** Placeholders admins can use in every field. */
-export const MAIL_PLACEHOLDERS = ['code', 'app', 'minutes', 'months', 'date'] as const;
+export const MAIL_PLACEHOLDERS = ['code', 'app', 'minutes', 'months', 'date', 'week'] as const;
 
 export const mailTextSchema = z.object({
   subject: z.string().trim().min(1).max(160),
@@ -76,6 +82,24 @@ export const DEFAULT_MAIL_TEMPLATES: Record<MailTemplateId, MailTemplateTexts> =
         'The code is valid for {{minutes}} minutes. If you did not want to change your address, ignore this e-mail – nothing changes.',
     },
   },
+  'pin-reset': {
+    de: {
+      subject: '{{code}} – Eltern-PIN zurücksetzen',
+      heading: 'Eltern-PIN vergessen?',
+      intro:
+        'Hallo!\n\nMit diesem Code entfernst du die Eltern-PIN deines {{app}}-Kontos. Danach kannst du eine neue festlegen:',
+      outro:
+        'Der Code ist {{minutes}} Minuten gültig. Wenn du das nicht warst, ignoriere diese E-Mail – die PIN bleibt, wie sie ist.',
+    },
+    en: {
+      subject: '{{code}} – reset the parent PIN',
+      heading: 'Forgot the parent PIN?',
+      intro:
+        'Hello!\n\nUse this code to remove the parent PIN of your {{app}} account. Afterwards you can set a new one:',
+      outro:
+        'The code is valid for {{minutes}} minutes. If this was not you, ignore this e-mail – the PIN stays as it is.',
+    },
+  },
   'inactive-warning': {
     de: {
       subject: 'Dein {{app}}-Konto wird bald gelöscht',
@@ -94,6 +118,22 @@ export const DEFAULT_MAIL_TEMPLATES: Record<MailTemplateId, MailTemplateTexts> =
         'Want to keep your account? Just sign in once before then – and everything stays as it is.',
     },
   },
+  'weekly-report': {
+    de: {
+      subject: 'Die Klavier-Woche bei {{app}} ({{week}})',
+      heading: 'So war die Klavier-Woche',
+      intro: 'Hallo!\n\nHier ist, was in der Woche vom {{week}} geübt wurde:',
+      outro:
+        'Kleine Schritte zählen: Ein paar Minuten an mehreren Tagen bringen mehr als eine lange Stunde.\n\nDiesen Wochenbericht kannst du in {{app}} unter «Konto» jederzeit abbestellen.',
+    },
+    en: {
+      subject: 'The piano week at {{app}} ({{week}})',
+      heading: 'This was the piano week',
+      intro: 'Hello!\n\nHere is what was practised in the week of {{week}}:',
+      outro:
+        'Small steps count: a few minutes on several days do more than one long hour.\n\nYou can stop this weekly report at any time in {{app}} under «Account».',
+    },
+  },
 };
 
 export interface MailVars {
@@ -103,6 +143,9 @@ export interface MailVars {
   /** inactivity warning: months without sign-in and the date of deletion */
   months?: number;
   date?: string;
+  /** weekly report: the week («2. November») and a block per profile */
+  week?: string;
+  report?: { name: string; lines: string[] }[];
   /** the public address of the instance, shown in the footer */
   origin?: string;
   /**
@@ -134,6 +177,7 @@ function fill(template: string, vars: MailVars): string {
     minutes: String(vars.minutes ?? 10),
     months: String(vars.months ?? ''),
     date: vars.date ?? '',
+    week: vars.week ?? '',
   };
   return template.replace(/\{\{\s*(\w+)\s*\}\}/g, (match, key: string) => values[key] ?? match);
 }
@@ -210,6 +254,20 @@ ${
 ${paragraphs(intro, p)}
 </td></tr>
 ${
+  vars.report?.length
+    ? `<tr><td style="padding:0 28px 10px">${vars.report
+        .map(
+          (
+            r,
+          ) => `<div style="margin:0 0 12px;padding:14px 16px;border-radius:14px;background:#edf2ff;border-left:5px solid ${INDIGO}">
+<p style="margin:0 0 6px;font-family:${FONT};font-size:18px;font-weight:800;color:${INK}">${escapeHtml(r.name)}</p>
+${r.lines.map((l) => `<p style="margin:0 0 3px;font-family:${FONT};font-size:15px;line-height:1.45;color:${INK}">${escapeHtml(l)}</p>`).join('')}
+</div>`,
+        )
+        .join('')}</td></tr>`
+    : ''
+}
+${
   vars.code
     ? `<tr><td align="center" style="padding:6px 28px 22px">
 <div style="display:inline-block;padding:14px 14px 14px 22px;border-radius:16px;background:#edf2ff;border:2px dashed ${INDIGO};font-family:'SF Mono',Menlo,Consolas,monospace;font-size:34px;font-weight:800;letter-spacing:8px;white-space:nowrap;color:${INDIGO_DARK}">${escapeHtml(vars.code)}</div>
@@ -248,6 +306,7 @@ ${bodyHtml}
     '',
     intro,
     '',
+    ...(vars.report ?? []).flatMap((r) => [r.name, ...r.lines.map((l) => `  ${l}`), '']),
     vars.code ? `    ${vars.code}` : vars.origin ? `${OPEN[lang]}: ${vars.origin}` : '',
     '',
     outro,

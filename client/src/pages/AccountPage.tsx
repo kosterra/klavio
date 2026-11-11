@@ -10,6 +10,7 @@ import {
   Modal,
   PinInput,
   Stack,
+  Switch,
   Text,
   TextInput,
   Title,
@@ -301,6 +302,30 @@ export function AccountPage() {
       </Card>
 
       <ParentPinSettings />
+
+      {/* --------------------------------------------------- weekly report */}
+      <Card withBorder radius="lg" padding="lg" data-testid="weekly-report">
+        <Stack gap="sm">
+          <Title order={2} size="h3">
+            {t('account.report')}
+          </Title>
+          <Text size="sm">{t('account.reportHint')}</Text>
+          <Switch
+            checked={!!me?.user.weeklyReport}
+            disabled={!me?.user.email}
+            label={t('account.reportSwitch')}
+            onChange={async (e) => {
+              try {
+                await endpoints.setWeeklyReport(e.currentTarget.checked);
+                await refresh();
+                notify(t('account.reportSaved'));
+              } catch (err) {
+                notify(errorText(err), 'red');
+              }
+            }}
+          />
+        </Stack>
+      </Card>
 
       {/* --------------------------------------------------- other devices */}
       <Card withBorder radius="lg" padding="lg">

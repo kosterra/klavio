@@ -60,6 +60,7 @@ const authRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, { c
         email: user.email ?? null,
         role: user.role as MeResponse['user']['role'],
         passkeyCount,
+        weeklyReport: !!user.weeklyReport,
         parentPin: {
           set: !!user.parentPinHash,
           passkeyEnabled: !!user.parentPasskeyUnlock,

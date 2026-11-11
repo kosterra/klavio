@@ -654,11 +654,11 @@
                     "minLength": 1,
                     "maxLength": 40,
                     "pattern": "^[^\\p{C}]+$"
+                  },
+                  "weeklyReport": {
+                    "type": "boolean"
                   }
-                },
-                "required": [
-                  "displayName"
-                ]
+                }
               }
             }
           }
@@ -1344,7 +1344,9 @@
               "enum": [
                 "login-code",
                 "verify-email",
-                "inactive-warning"
+                "pin-reset",
+                "inactive-warning",
+                "weekly-report"
               ]
             },
             "in": "path",
@@ -1366,7 +1368,9 @@
               "enum": [
                 "login-code",
                 "verify-email",
-                "inactive-warning"
+                "pin-reset",
+                "inactive-warning",
+                "weekly-report"
               ]
             },
             "in": "path",
@@ -1412,7 +1416,9 @@
               "enum": [
                 "login-code",
                 "verify-email",
-                "inactive-warning"
+                "pin-reset",
+                "inactive-warning",
+                "weekly-report"
               ]
             },
             "in": "path",

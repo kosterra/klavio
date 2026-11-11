@@ -10,6 +10,7 @@ import {
 } from 'fastify-type-provider-zod';
 import type { AppConfig } from './config.js';
 import authPlugin from './plugins/auth.js';
+import { scheduleWeeklyReports } from './lib/weeklyReport.js';
 import { registerWeb } from './plugins/web.js';
 import { HttpError } from './lib/errors.js';
 import { createMailer, type Mailer } from './lib/mailer.js';
@@ -121,7 +122,11 @@ export async function buildApp({
   const resolvedMailer = mailer ?? createMailer(config, (m) => app.log.info(m));
   if (jobs) {
     const stop = scheduleRetention(config, resolvedMailer, app.log);
-    app.addHook('onClose', async () => stop());
+    const stopReports = scheduleWeeklyReports(config, resolvedMailer, app.log);
+    app.addHook('onClose', async () => {
+      stop();
+      stopReports();
+    });
   }
 
   await app.register(authPlugin, { config });

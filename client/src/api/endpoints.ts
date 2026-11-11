@@ -61,6 +61,7 @@ export const endpoints = {
     api<{ email: string }>('POST', '/account/email/verify', { code }),
   updateAccount: (displayName: string) =>
     api<{ displayName: string }>('PATCH', '/account', { displayName }),
+  setWeeklyReport: (weeklyReport: boolean) => api('PATCH', '/account', { weeklyReport }),
   deleteAccount: () => api('DELETE', '/account'),
   logoutOtherDevices: () => api<{ loggedOut: number }>('POST', '/account/sessions/logout-others'),
   setParentPin: (pin: string) => api('PUT', '/account/pin', { pin }),

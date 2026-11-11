@@ -48,7 +48,13 @@ export const passkeyRenameSchema = z.object({ name: z.string().trim().min(1).max
 
 export const accountEmailVerifySchema = z.object({ code: emailCodeSchema });
 
-export const accountUpdateSchema = z.object({ displayName: displayNameSchema });
+export const accountUpdateSchema = z
+  .object({
+    displayName: displayNameSchema.optional(),
+    /** a weekly e-mail to the account's address with every profile's week */
+    weeklyReport: z.boolean().optional(),
+  })
+  .refine((v) => v.displayName !== undefined || v.weeklyReport !== undefined, 'Nothing to change');
 
 /** Parent PIN: 4–6 digits, protects the parent area from children (not an account password). */
 export const parentPinSchema = z.object({ pin: z.string().regex(/^\d{4,6}$/) });
@@ -64,6 +70,8 @@ export interface MeResponse {
     email: string | null;
     role: UserRole;
     passkeyCount: number;
+    /** the weekly e-mail with every profile's week is switched on */
+    weeklyReport: boolean;
     /** Parent PIN set, and until when this session has the parent area unlocked. */
     parentPin: {
       set: boolean;

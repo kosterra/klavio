@@ -65,7 +65,9 @@ describe('admin: mail texts', () => {
     expect(list.json().map((t: { id: string }) => t.id)).toEqual([
       'login-code',
       'verify-email',
+      'pin-reset',
       'inactive-warning',
+      'weekly-report',
     ]);
     expect(list.json()[0].customized).toBe(false);
 

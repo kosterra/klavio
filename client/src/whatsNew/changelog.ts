@@ -23,6 +23,14 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Wochenbericht für Eltern: Wer will, bekommt jeden Montag eine E-Mail mit der Klavier-Woche jedes Profils – Minuten, Übungstage, gespielte Lektionen und was als Nächstes kommt. Einschalten und abbestellen unter «Konto».',
+        'Weekly report for parents: if you like, you get an e-mail every Monday with each profile’s piano week – minutes, practice days, lessons played and what comes next. Switch it on and off under «Account».',
+      ),
+      L(
+        'Die E-Mail für «PIN vergessen?» sagt jetzt, wofür der Code ist, statt «zum Anmelden».',
+        'The e-mail for «Forgot the PIN?» now says what the code is for, instead of «to sign in».',
+      ),
+      L(
         'Fingersätze: Lieder, bei denen die Hand wandern muss (zum Beispiel «Alle meine Entchen» oder «Bruder Jakob»), zeigen jetzt die Fingernummer genau dort, wo die Hand weiterrückt – in der Lektion und auf dem gedruckten Notenblatt.',
         'Fingering: songs where the hand has to move (for example «Alle meine Entchen» or «Frère Jacques») now show the finger number exactly where the hand moves on – in the lesson and on the printed sheet.',
       ),
