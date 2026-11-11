@@ -1422,9 +1422,9 @@
   },
   "own": {
     "title": "Own pieces",
-    "intro": "Bring your own notes: a MusicXML file from MuseScore, Finale, Sibelius or Dorico. Klavio reads it on your device; only the notes are stored, for all profiles of your account.",
+    "intro": "Bring your own notes: a MusicXML or MIDI file from MuseScore, Finale, Sibelius or Dorico. Klavio reads it on your device; only the notes are stored, for all profiles of your account.",
     "import": "Import a piece",
-    "how": "Files .musicxml, .xml or .mxl. Klavio takes the main voice (with two staves both hands) – whole to eighth notes, dotted halves and quarters.",
+    "how": "Files .musicxml, .xml, .mxl or MIDI (.mid). Klavio takes the main voice (with two staves both hands) – whole to eighth notes, dotted halves and quarters.",
     "full": "At most {{count}} own pieces – delete one first.",
     "previewSong_one": "Song on one staff · {{count}} bar · {{time}} time",
     "previewSong_other": "Song on one staff · {{count}} bars · {{time}} time",
@@ -1451,7 +1451,14 @@
       "DURATION": "Bar {{bar}} has note values Klavio cannot do yet (e.g. sixteenths or dotted eighths).",
       "TUPLET": "Bar {{bar}} has triplets – Klavio cannot do them yet.",
       "RANGE": "The notes are outside the keyboard.",
-      "TOO_BIG": "The file is too big (at most 5 MB)."
+      "TOO_BIG": "The file is too big (at most 5 MB).",
+      "NOT_MIDI": "Klavio cannot read this MIDI file."
     }
+  },
+  "classics": {
+    "title": "Classics to practise",
+    "intro": "Little pieces by great composers, simplified for Klavio: to practise with listening and one hand alone, and to print – without stars.",
+    "credit": "Notes: {{by}}, {{license}}",
+    "license": "Licence"
   }
 }

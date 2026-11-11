@@ -220,4 +220,9 @@ html[data-ui-mode='classic'] [data-tile] {
     background: #fff !important;
     background-image: none !important;
   }
+
+  /* messages that just popped up do not belong on paper */
+  .mantine-Notifications-root {
+    display: none !important;
+  }
 }

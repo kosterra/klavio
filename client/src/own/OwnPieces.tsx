@@ -22,8 +22,10 @@ import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import {
   MAX_OWN_PIECES,
+  MidiImportError,
   MusicXmlImportError,
   importMusicXml,
+  midiToMusicXml,
   type ImportedPiece,
   type OwnPieceDto,
 } from '@klavio/shared';
@@ -61,12 +63,21 @@ export function OwnPieces() {
       return;
     }
     try {
-      setDraft(importMusicXml(await musicXmlText(file)));
+      // a MIDI file goes through MusicXML (named after the file)
+      const midi = /\.midi?$/i.test(file.name);
+      const xml = midi
+        ? midiToMusicXml(new Uint8Array(await file.arrayBuffer()), {
+            title: file.name.replace(/\.midi?$/i, '').replace(/[-_]+/g, ' '),
+          })
+        : await musicXmlText(file);
+      setDraft(importMusicXml(xml));
     } catch (err) {
       setProblem(
         err instanceof MusicXmlImportError
           ? t(`own.errors.${err.code}`, { bar: err.bar })
-          : t('own.errors.NOT_MUSICXML'),
+          : err instanceof MidiImportError
+            ? t('own.errors.NOT_MIDI')
+            : t('own.errors.NOT_MUSICXML'),
       );
     }
   };
@@ -192,7 +203,7 @@ export function OwnPieces() {
           </Alert>
         )}
 
-        <FileButton onChange={(f) => void read(f)} accept=".musicxml,.xml,.mxl">
+        <FileButton onChange={(f) => void read(f)} accept=".musicxml,.xml,.mxl,.mid,.midi">
           {(props) => (
             <Button
               {...props}

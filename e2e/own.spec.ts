@@ -55,4 +55,16 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
   await own.getByRole('button', { name: '«Mein erstes Lied» löschen' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Löschen' }).click();
   await expect(own.getByRole('link', { name: /Mein erstes Lied/ })).toHaveCount(0);
+
+  // classics: a piece by Schumann, with its source and licence
+  await page.goto('/songs');
+  await page.getByTestId('classic-schumann-melodie').click();
+  await expect(page.getByTestId('classic-source')).toContainText('Mutopia Project');
+  await expect(page.getByTestId('classic-source')).toContainText('CC BY-SA');
+  await page.getByTestId('own-start').click();
+  await expect(page.getByTestId('piece-practice')).toBeVisible();
+  await audit(page);
+  await page.goto('/classics/schumann-melodie/print');
+  await expect(page.getByTestId('sheet')).toContainText('Robert Schumann');
+  await expect(page.getByTestId('sheet')).toContainText('CC BY-SA 2.5');
 });

@@ -1422,9 +1422,9 @@
   },
   "own": {
     "title": "Eigene Stücke",
-    "intro": "Bring deine eigenen Noten mit: eine MusicXML-Datei aus MuseScore, Finale, Sibelius oder Dorico. Klavio liest sie auf deinem Gerät; gespeichert werden nur die Noten, für alle Profile deines Kontos.",
+    "intro": "Bring deine eigenen Noten mit: eine MusicXML- oder MIDI-Datei aus MuseScore, Finale, Sibelius oder Dorico. Klavio liest sie auf deinem Gerät; gespeichert werden nur die Noten, für alle Profile deines Kontos.",
     "import": "Stück importieren",
-    "how": "Dateien .musicxml, .xml oder .mxl. Klavio nimmt die Hauptstimme (bei zwei Systemen beide Hände) – Ganze bis Achtel, punktierte Halbe und Viertel.",
+    "how": "Dateien .musicxml, .xml, .mxl oder MIDI (.mid). Klavio nimmt die Hauptstimme (bei zwei Systemen beide Hände) – Ganze bis Achtel, punktierte Halbe und Viertel.",
     "full": "Höchstens {{count}} eigene Stücke – lösche zuerst eines.",
     "previewSong_one": "Lied mit einer Notenzeile · {{count}} Takt · {{time}}-Takt",
     "previewSong_other": "Lied mit einer Notenzeile · {{count}} Takte · {{time}}-Takt",
@@ -1451,7 +1451,14 @@
       "DURATION": "Takt {{bar}} hat Notenwerte, die Klavio noch nicht kann (z. B. Sechzehntel oder punktierte Achtel).",
       "TUPLET": "Takt {{bar}} hat Triolen – die kann Klavio noch nicht.",
       "RANGE": "Die Noten liegen ausserhalb der Klaviatur.",
-      "TOO_BIG": "Die Datei ist zu gross (höchstens 5 MB)."
+      "TOO_BIG": "Die Datei ist zu gross (höchstens 5 MB).",
+      "NOT_MIDI": "Diese MIDI-Datei kann Klavio nicht lesen."
     }
+  },
+  "classics": {
+    "title": "Klassik zum Üben",
+    "intro": "Kleine Stücke grosser Komponisten, für Klavio vereinfacht: zum Üben mit Anhören und einer Hand allein, und zum Drucken – ohne Sterne.",
+    "credit": "Noten: {{by}}, {{license}}",
+    "license": "Lizenz"
   }
 }
