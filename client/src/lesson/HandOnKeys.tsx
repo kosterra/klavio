@@ -24,29 +24,57 @@ function whiteMidi(index: number): number {
 
 type Finger = 1 | 2 | 3 | 4 | 5;
 const FINGERS: Finger[] = [1, 2, 3, 4, 5];
-const LONG: Finger[] = [2, 3, 4, 5];
 
-type Pt = { x: number; y: number };
-const add = (a: Pt, ...more: Pt[]): Pt =>
-  more.reduce((p, q) => ({ x: p.x + q.x, y: p.y + q.y }), a);
-const mul = (a: Pt, k: number): Pt => ({ x: a.x * k, y: a.y * k });
-const norm = (a: Pt): Pt => {
-  const l = Math.hypot(a.x, a.y) || 1;
-  return { x: a.x / l, y: a.y / l };
-};
-const P = (p: Pt) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
-const C = (c1: Pt, c2: Pt, p: Pt) => `C ${P(c1)} ${P(c2)} ${P(p)}`;
-
-/* The hand in the proportions of a real one, measured in white keys (40):
- * fingers about 2½ keys long and ¾ of a key wide, the palm 3 keys from the
- * knuckles to the wrist, the wrist ¾ as wide as the knuckle row. */
-/** how far up the key each fingertip reaches (the middle finger furthest) */
-const REACH: Record<Finger, number> = { 1: 14, 2: 36, 3: 44, 4: 38, 5: 26 };
-/** half the width of each finger at its base */
-const HALF: Record<Finger, number> = { 1: 16, 2: 14.5, 3: 15, 4: 14, 5: 12 };
-/** the knuckle row is an arc: the middle knuckle highest, the pinky's lowest */
-const ARC: Record<Finger, number> = { 1: 0, 2: 6, 3: 0, 4: 4, 5: 10 };
-const PALM = 120; // knuckles to wrist
+/*
+ * The hand is a drawing, not a construction: a right hand seen from above,
+ * resting with its five fingers on five neighbouring white keys (thumb on
+ * the left key), drawn in the proportions of a real hand – fingers about
+ * three keys long, the palm running out of the picture at the wrist. Its
+ * coordinates count from the left edge of the thumb's key; for the left hand
+ * the drawing is mirrored. Lessons with another position (black keys) show
+ * only the keys and the finger numbers.
+ */
+const ART_HEIGHT = 340;
+/** one outline: up the ball of the thumb, round the thumb, up and down each finger, down the outer edge */
+const OUTLINE = `M 48 350 C 36 322 26 290 34 258 C 30 236 20 200 8 160 C 2 148 2 132 12 128 C 24 124 34 130 36 142 C 40 160 44 180 44 194 C 44 204 46 208 47 206 C 45 182 44 150 46 124 C 46 112 52 110 60 110 C 68 110 74 112 74 124 C 75 150 75 190 72 212 C 72 222 80 226 86 214 C 85 180 85 145 86 116 C 86 104 92 100 100 100 C 108 100 114 104 114 116 C 115 145 115 185 113 214 C 113 224 120 228 126 216 C 125 186 125 150 126 124 C 126 112 132 108 140 108 C 148 108 154 112 154 124 C 155 150 155 190 153 216 C 153 228 160 232 166 222 C 165 198 165 168 167 142 C 167 128 173 118 180 118 C 187 118 193 128 193 142 C 195 170 198 196 202 224 C 210 250 212 290 204 318 C 200 332 196 342 192 350 Z`;
+/** shade on the far side of every finger and along the outer edge of the hand */
+const SHADES = [
+  'M 34 258 C 30 236 20 200 8 160 L 17 156 C 28 196 36 232 42 254 Z',
+  'M 74 124 C 75 150 75 190 72 212 L 65 212 C 68 190 68 150 67 124 Z',
+  'M 114 116 C 115 145 115 185 113 214 L 106 214 C 108 185 108 145 107 116 Z',
+  'M 154 124 C 155 150 155 190 153 216 L 146 216 C 148 190 148 150 147 124 Z',
+  'M 193 142 C 195 170 198 196 202 224 C 210 250 212 290 204 318 L 194 318 C 202 290 200 250 192 224 C 188 196 186 170 185 142 Z',
+];
+/** knuckles, the middle joints of the fingers, the thumb's joint */
+const LINES = [
+  'M 48 230 Q 58 222 68 230',
+  'M 90 224 Q 100 216 110 224',
+  'M 130 228 Q 140 220 150 228',
+  'M 171 240 Q 180 233 189 240',
+  'M 50 168 Q 60 164 70 168 M 51 174 Q 60 170 69 174',
+  'M 90 158 Q 100 154 110 158 M 91 164 Q 100 160 109 164',
+  'M 130 164 Q 140 160 150 164 M 131 170 Q 140 166 149 170',
+  'M 170 178 Q 180 174 190 178 M 171 184 Q 180 180 189 184',
+  'M 16 180 Q 27 174 38 176 M 18 187 Q 28 181 39 183',
+];
+/** tendons up the back of the hand, and the fold where the thumb meets it */
+const FAINT = [
+  'M 84 330 C 78 300 70 270 60 244',
+  'M 108 332 C 106 300 102 266 100 240',
+  'M 134 332 C 136 300 139 268 140 244',
+  'M 160 330 C 166 300 172 276 178 254',
+  'M 47 206 C 44 232 44 260 52 290',
+];
+/** nails: x, y, width, height, and the thumb's turned a little */
+const NAILS: [number, number, number, number, number][] = [
+  [10, 130, 16, 11, -40],
+  [51, 114, 18, 14, 0],
+  [91, 104, 18, 14, 0],
+  [131, 112, 18, 14, 0],
+  [172, 122, 16, 12, 0],
+];
+/** where the finger numbers sit: on the pad of each finger, below the nail */
+const NUMBER_Y: Record<Finger, number> = { 1: 146, 2: 136, 3: 126, 4: 134, 5: 142 };
 
 /**
  * «So liegt deine Hand»: a drawn hand on the keys, seen from above, with the
@@ -76,150 +104,22 @@ export function HandOnKeys({ shape }: { shape: HandShape }) {
   const blacks = whites.flatMap((m) => (isBlack(m + 1) && m + 1 <= whites.at(-1)! ? [m + 1] : []));
   const used = new Set(Object.values(shape.keys));
 
-  // s: the thumb's side (−1 left for the right hand, +1 right for the left)
-  const s = shape.side === 'right' ? -1 : 1;
-  const tip = (f: Finger): Pt => ({
+  // the drawing fits when the five fingers lie on five neighbouring white keys
+  const drawn = FINGERS.every(
+    (f) => !isBlack(keyOf[f]) && whiteIndex(keyOf[f]) === whiteIndex(keyOf[1]) + (f - 1) * dir,
+  );
+  const height = drawn ? ART_HEIGHT : H + 20;
+  // the drawing starts at the left edge of its leftmost key; the left hand is
+  // mirrored about the middle finger's key
+  const leftKey = x(keyOf[dir === 1 ? 1 : 5]) - W / 2;
+  const transform =
+    dir === 1
+      ? `translate(${leftKey} 0)`
+      : `translate(${2 * x(keyOf[3])} 0) scale(-1 1) translate(${leftKey} 0)`;
+  const number = (f: Finger) => ({
     x: x(keyOf[f]),
-    y: isBlack(keyOf[f]) ? BH - 20 : H - REACH[f],
+    y: drawn ? NUMBER_Y[f] : isBlack(keyOf[f]) ? BH - 20 : H - 24,
   });
-  // the knuckle row lies behind the fingertips; a finger on a black key is
-  // stretched a little, but never beyond a real finger's length
-  const row = LONG.reduce((n, f) => n + tip(f).y, 0) / 4 + 88;
-  const centre = LONG.reduce((n, f) => n + tip(f).x, 0) / 4;
-  const knuckle = (f: Finger): Pt => ({
-    x: centre + (tip(f).x - centre) * 0.86,
-    y: Math.min(Math.max(row + ARC[f], tip(f).y + 62), tip(f).y + 104),
-  });
-  const height = Math.max(...LONG.map((f) => knuckle(f).y)) + PALM + 10;
-  const bottom = height + 12; // the wrist runs out of the picture
-
-  // one finger: its axis u from knuckle to tip, nT the normal towards the thumb
-  const finger = (f: Finger) => {
-    const K = knuckle(f);
-    const T = tip(f);
-    const u = norm({ x: T.x - K.x, y: T.y - K.y });
-    const nT = mul({ x: u.y, y: -u.x }, -s);
-    const h = HALF[f];
-    const cap = add(T, mul(u, -h * 0.15)); // centre of the rounded tip
-    const len = Math.hypot(cap.x - K.x, cap.y - K.y);
-    return {
-      K,
-      u,
-      nT,
-      h,
-      len,
-      cap,
-      baseNear: add(K, mul(nT, h + 2)),
-      baseFar: add(K, mul(nT, -(h + 2))),
-    };
-  };
-  // one side of a finger from its base to the tip: broadest at the base,
-  // a gentle bulge at the middle joint, a little slimmer before the tip
-  const side = (f: Finger, sign: 1 | -1) => {
-    const g = finger(f);
-    const at = (along: number, out: number) => add(g.K, mul(g.u, along), mul(g.nT, sign * out));
-    const joint = at(g.len * 0.5, g.h + 1.5);
-    const end = at(g.len, g.h * 0.95);
-    return {
-      end,
-      path: [
-        C(at(g.len * 0.2, g.h + 2), at(g.len * 0.32, g.h + 2.5), joint),
-        C(at(g.len * 0.66, g.h + 0.5), at(g.len * 0.84, g.h * 0.95), end),
-      ].join(' '),
-    };
-  };
-  // the outline of one finger: up the near side, round the tip, down the far
-  const fingerOutline = (f: Finger) => {
-    const g = finger(f);
-    const near = side(f, 1);
-    const far = side(f, -1);
-    const k = g.h * 1.2;
-    const back = `C ${P(add(far.end, mul(g.u, -g.len * 0.16), mul(g.nT, -(g.h * 0.95))))} ${P(add(far.end, mul(g.u, -g.len * 0.34), mul(g.nT, -(g.h + 0.5))))} ${P(add(g.K, mul(g.u, g.len * 0.5), mul(g.nT, -(g.h + 1.5))))} ${C(add(g.K, mul(g.u, g.len * 0.32), mul(g.nT, -(g.h + 2.5))), add(g.K, mul(g.u, g.len * 0.2), mul(g.nT, -(g.h + 2))), g.baseFar)}`;
-    return [
-      near.path,
-      C(add(near.end, mul(g.u, k)), add(far.end, mul(g.u, k)), far.end),
-      back,
-    ].join(' ');
-  };
-  // the valley between two fingers dips a little into the back of the hand
-  const valley = (a: Finger, b: Finger) => {
-    const ga = finger(a);
-    const gb = finger(b);
-    return C(add(ga.baseFar, mul(ga.u, -7)), add(gb.baseNear, mul(gb.u, -7)), gb.baseNear);
-  };
-
-  // the thumb in two parts: from its root in the ball of the hand up to its
-  // knuckle, then bent inward to its key – as a thumb looks from above
-  const index = finger(2);
-  const pinky = finger(5);
-  const T1 = tip(1);
-  // the thumb's knuckle sits right beside the index finger's base, and the
-  // thumb leans outward from there to its key – shorter than the fingers
-  const M1: Pt = { x: index.baseNear.x + s * 2, y: index.K.y - 2 };
-  const palmWidth = Math.abs(pinky.baseFar.x - index.baseNear.x);
-  const wristHalf = palmWidth * 0.38;
-  const wristMid = (index.baseNear.x + pinky.baseFar.x) / 2 - s * 4;
-  const WL: Pt = { x: wristMid + s * wristHalf, y: bottom };
-  const WR: Pt = { x: wristMid - s * wristHalf, y: bottom };
-  const R1: Pt = { x: WL.x + s * 6, y: bottom - 70 }; // the thumb's root
-  const u0 = norm({ x: M1.x - R1.x, y: M1.y - R1.y });
-  const u1 = norm({ x: T1.x - M1.x, y: T1.y - M1.y });
-  const out0 = mul({ x: u0.y, y: -u0.x }, -s);
-  const out1 = mul({ x: u1.y, y: -u1.x }, -s);
-  const outM = norm(add(out0, out1));
-  const h1 = HALF[1];
-  const cap1 = add(T1, mul(u1, -h1 * 0.15));
-  const len1 = Math.hypot(cap1.x - M1.x, cap1.y - M1.y);
-  const R1o = add(R1, mul(out0, h1 + 1));
-  const M1o = add(M1, mul(outM, h1 + 2));
-  const TO = add(cap1, mul(out1, h1 * 0.85));
-  const TI = add(cap1, mul(out1, -h1 * 0.85));
-  // where the thumb's inner side runs into the web before the index finger
-  const WB = add(index.baseNear, mul(index.u, -3));
-
-  const hand = [
-    `M ${P(WL)}`,
-    // the ball of the thumb rises from the wrist into the thumb's outer side
-    C({ x: WL.x + s * 10, y: WL.y - 60 }, add(R1o, mul(u0, -34), mul(out0, 6)), R1o),
-    C(add(R1o, mul(u0, 30), mul(out0, 4)), add(M1o, mul(u0, -30), mul(out0, 3)), M1o),
-    C(add(M1o, mul(u1, len1 * 0.3), mul(out1, 1)), add(TO, mul(u1, -len1 * 0.3), mul(out1, 1)), TO),
-    C(add(TO, mul(u1, h1 * 1.1)), add(TI, mul(u1, h1 * 1.1)), TI),
-    // down the thumb's inner side into the web before the index finger
-    C(
-      add(TI, mul(u1, -len1 * 0.4), mul(out1, -1)),
-      add(WB, mul(u1, len1 * 0.25), mul(out1, -2)),
-      WB,
-    ),
-    `L ${P(index.baseNear)}`,
-    fingerOutline(2),
-    valley(2, 3),
-    fingerOutline(3),
-    valley(3, 4),
-    fingerOutline(4),
-    valley(4, 5),
-    fingerOutline(5),
-    // the outer edge of the hand: a soft bulge below the pinky, then in to the wrist
-    C(
-      add(pinky.baseFar, mul(pinky.u, -38), mul(pinky.nT, -12)),
-      { x: WR.x - s * 10, y: WR.y - 64 },
-      WR,
-    ),
-    'Z',
-  ].join(' ');
-
-  // creases at the two joints of every finger, knuckle bumps on the back of
-  // the hand, and the thumb's two joints
-  const across = (p: Pt, along: Pt, half: number, dip = 3) =>
-    `M ${P(add(p, mul({ x: along.y, y: -along.x }, half)))} Q ${P(add(p, mul(along, -dip)))} ${P(add(p, mul({ x: along.y, y: -along.x }, -half)))}`;
-  const lines = LONG.flatMap((f) => {
-    const g = finger(f);
-    return [
-      across(add(g.K, mul(g.u, g.len * 0.5)), g.u, g.h - 5),
-      across(add(g.K, mul(g.u, g.len * 0.78)), g.u, g.h - 6, 2),
-      across(add(g.K, mul(g.u, -7)), g.u, 7, -3),
-    ];
-  });
-  lines.push(across(add(M1, mul(u1, len1 * 0.55)), u1, h1 - 6));
 
   const label = t(shape.side === 'right' ? 'hand.right' : 'hand.left', {
     keys: known
@@ -258,13 +158,34 @@ export function HandOnKeys({ shape }: { shape: HandShape }) {
         />
       ))}
 
-      {/* the hand is one shape: thumb, fingers and the back of the hand */}
-      <path d={hand} className={classes.hand} />
-      {lines.map((d, i) => (
-        <path key={i} d={d} className={classes.crease} />
-      ))}
+      {drawn && (
+        <g transform={transform}>
+          <path d={OUTLINE} className={classes.skin} />
+          {SHADES.map((d) => (
+            <path key={d} d={d} className={classes.shade} />
+          ))}
+          {LINES.map((d) => (
+            <path key={d} d={d} className={classes.line} />
+          ))}
+          {FAINT.map((d) => (
+            <path key={d} d={d} className={classes.faint} />
+          ))}
+          {NAILS.map(([nx, ny, w, h, turn]) => (
+            <rect
+              key={nx}
+              x={nx}
+              y={ny}
+              width={w}
+              height={h}
+              rx={h / 2}
+              transform={turn ? `rotate(${turn} ${nx + w / 2} ${ny + h / 2})` : undefined}
+              className={classes.nail}
+            />
+          ))}
+        </g>
+      )}
       {FINGERS.map((f) => {
-        const p = tip(f);
+        const p = number(f);
         return (
           <g key={f} className={shape.keys[f] !== undefined ? classes.number : classes.numberIdle}>
             <circle cx={p.x} cy={p.y} r={12} />
