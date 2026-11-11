@@ -9,6 +9,7 @@ import { useSession } from '../auth/session';
 import { BuddySays } from '../components/BuddySays';
 import { PlayTabs } from '../components/PlayTabs';
 import { RealPianoInput } from '../components/RealPianoInput';
+import { Recorder } from '../components/Recorder';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { usePageTitle } from '../components/usePageTitle';
 import { useNoteEvents } from '../input/noteBus';
@@ -125,6 +126,9 @@ export function FreePlayPage() {
           </Group>
         )}
       </Group>
+
+      {/* record what was played and listen to it (only the notes, only on this device) */}
+      <Recorder timbre={timbre} />
 
       <div className={classes.show}>
         <div className={classes.left}>

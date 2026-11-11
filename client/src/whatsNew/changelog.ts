@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Freies Spielen: «Aufnehmen» merkt sich, was du spielst – bis zu zwei Minuten –, und «Anhören» spielt es dir mit dem gewählten Klang vor. Gespeichert werden nur die Töne, nur auf diesem Gerät und nur bis du die Seite verlässt.',
+        'Free play: «Record» remembers what you play – up to two minutes – and «Listen» plays it back with the chosen sound. Only the notes are kept, only on this device and only until you leave the page.',
+      ),
+      L(
         'Stücke für beide Hände: Übe zuerst eine Hand allein und nur ein paar Takte – die Übungsrunde beginnt immer wieder von vorn und zählt noch nicht für die Sterne. Anhören spielt dann auch nur, was du übst.',
         'Pieces for both hands: practise one hand alone and only a few bars first – the practice round starts over and over and does not count for the stars yet. Listening then plays only what you practise.',
       ),

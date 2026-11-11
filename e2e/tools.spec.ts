@@ -28,6 +28,16 @@ test('free play, metronome, wardrobe, family overview, placement and data export
   await expect(page.getByTestId('free-note')).toHaveText('G');
   await expect(page.getByRole('list', { name: 'Deine letzten Töne' })).toHaveText('EG');
   await page.getByText('Spieluhr').click();
+  // record, then listen to it
+  await page.getByTestId('rec-start').click();
+  await expect(page.getByTestId('rec-live')).toBeVisible();
+  for (const k of ['C4', 'D4', 'E4'])
+    await page.getByRole('button', { name: k, exact: true }).click();
+  await page.getByTestId('rec-stop').click();
+  await expect(page.getByTestId('rec-play')).toContainText('Anhören (3 Töne');
+  await page.getByTestId('rec-play').click();
+  await expect(page.getByTestId('rec-play')).toHaveText('Anhören stoppen');
+  await expect(page.getByTestId('rec-play')).toContainText('Anhören (3 Töne', { timeout: 10_000 });
   await audit(page);
 
   // metronome: tap tempo and start/stop

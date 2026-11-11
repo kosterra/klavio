@@ -1388,5 +1388,14 @@
     "loops_other": "{{count}}× geschafft",
     "roundDone": "Runde geschafft – nochmals!",
     "nothingHere": "In diesen Takten hat diese Hand nichts zu spielen."
+  },
+  "recorder": {
+    "record": "Aufnehmen",
+    "stop": "Stopp ({{seconds}} s)",
+    "recording": "Ich höre zu und merke mir, was du spielst …",
+    "play_one": "Anhören ({{count}} Ton)",
+    "play_other": "Anhören ({{count}} Töne, {{seconds}} s)",
+    "stopPlaying": "Anhören stoppen",
+    "delete": "Löschen"
   }
 }

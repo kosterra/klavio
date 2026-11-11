@@ -1388,5 +1388,14 @@
     "loops_other": "{{count}}× done",
     "roundDone": "Round done – once more!",
     "nothingHere": "This hand has nothing to play in these bars."
+  },
+  "recorder": {
+    "record": "Record",
+    "stop": "Stop ({{seconds}} s)",
+    "recording": "I am listening and remembering what you play …",
+    "play_one": "Listen ({{count}} note)",
+    "play_other": "Listen ({{count}} notes, {{seconds}} s)",
+    "stopPlaying": "Stop listening",
+    "delete": "Delete"
   }
 }
