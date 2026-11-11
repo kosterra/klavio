@@ -29,19 +29,17 @@
   fill: #7a5a00;
 }
 
-.outline {
-  stroke: var(--klavio-hand-line);
-  fill: none;
-}
-
-.skin {
-  stroke: var(--klavio-hand);
-  fill: none;
-}
-
-.palm {
-  stroke: var(--klavio-hand-line);
+.hand {
   fill: var(--klavio-hand);
+  stroke: none;
+}
+
+.handLine {
+  fill: none;
+  stroke: var(--klavio-hand-line);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .crease {
@@ -50,13 +48,6 @@
   stroke-linecap: round;
   fill: none;
   opacity: 0.55;
-}
-
-/* a sleeve where the picture ends */
-.sleeve {
-  fill: var(--mantine-color-indigo-5);
-  stroke: var(--klavio-comic-line);
-  stroke-width: 2;
 }
 
 .number circle {

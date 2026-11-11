@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import { midiToPitchName, type HandShape } from '@klavio/shared';
 import { useNoteLang } from './useLocalized';
@@ -25,6 +26,17 @@ function whiteMidi(index: number): number {
 type Finger = 1 | 2 | 3 | 4 | 5;
 const FINGERS: Finger[] = [1, 2, 3, 4, 5];
 
+type Pt = { x: number; y: number };
+const add = (a: Pt, ...more: Pt[]): Pt =>
+  more.reduce((p, q) => ({ x: p.x + q.x, y: p.y + q.y }), a);
+const mul = (a: Pt, k: number): Pt => ({ x: a.x * k, y: a.y * k });
+const norm = (a: Pt): Pt => {
+  const l = Math.hypot(a.x, a.y) || 1;
+  return { x: a.x / l, y: a.y / l };
+};
+const P = (p: Pt) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
+const C = (c1: Pt, c2: Pt, p: Pt) => `C ${P(c1)} ${P(c2)} ${P(p)}`;
+
 /**
  * «So liegt deine Hand»: a drawn hand on the keys, seen from above, with the
  * finger numbers on the fingertips – the keys the lesson uses are marked.
@@ -32,6 +44,7 @@ const FINGERS: Finger[] = [1, 2, 3, 4, 5];
  */
 export function HandOnKeys({ shape }: { shape: HandShape }) {
   const { t } = useTranslation();
+  const maskId = `hand-${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
   const lang = useNoteLang();
   const dir = shape.side === 'right' ? 1 : -1;
   const known = FINGERS.filter((f) => shape.keys[f] !== undefined);
@@ -49,69 +62,157 @@ export function HandOnKeys({ shape }: { shape: HandShape }) {
   const last = Math.ceil(Math.max(...idx)) + 1;
   const whites = Array.from({ length: last - first + 1 }, (_, i) => whiteMidi(first + i));
   const width = whites.length * W;
-  const height = H + 186;
+  const height = H + 130;
   const x = (midi: number) => (whiteIndex(midi) - first) * W + W / 2;
   const blacks = whites.flatMap((m) => (isBlack(m + 1) && m + 1 <= whites.at(-1)! ? [m + 1] : []));
   const used = new Set(Object.values(shape.keys));
 
-  // fingertips on the keys, the hand comes from below (where the player sits).
-  // Like a real hand: the middle finger reaches furthest, the little finger
-  // and the thumb rest nearer the front edge; the knuckles form an arc.
-  const REACH: Record<Finger, number> = { 1: 22, 2: 32, 3: 38, 4: 34, 5: 24 };
-  const KNUCKLE: Record<Finger, number> = { 1: 0, 2: 50, 3: 45, 4: 50, 5: 60 };
-  const WIDTH: Record<Finger, number> = { 1: 29, 2: 26, 3: 27, 4: 25, 5: 21 };
-  const tip = (f: Finger) => ({
-    x: x(keyOf[f]),
-    y: isBlack(keyOf[f]) ? BH - 22 : H - REACH[f],
-  });
-  const long = [2, 3, 4, 5] as Finger[];
-  const centre = long.reduce((n, f) => n + tip(f).x, 0) / 4;
-  const base = (f: Finger) => ({
-    x: centre + (tip(f).x - centre) * (f === 5 ? 0.74 : 0.84),
-    y: H + KNUCKLE[f],
-  });
+  // The hand as it rests on the keys, seen from above: the fingers are curled,
+  // so they look short and plump, their tips on the front part of the keys;
+  // the knuckles sit just behind the keys; the back of the hand is a wide,
+  // soft shape that narrows towards the wrist, which runs out of the picture;
+  // the thumb lies on its side, pointing inward to its key, and grows out of
+  // the ball of the hand.
   // s: the thumb's side (−1 left for the right hand, +1 right for the left)
   const s = shape.side === 'right' ? -1 : 1;
-  // the palm's edges carry on the outer edges of the index and little finger
-  // (the corners lie under the fingers, so finger and palm join without a step)
-  const thumbTop = { x: base(2).x + s * (WIDTH[2] / 2 - 2), y: base(2).y + 10 };
-  const pinkyTop = { x: base(5).x - s * (WIDTH[5] / 2 - 2), y: base(5).y + 10 };
-  const wristY = H + 168;
-  const wristHalf = Math.abs(pinkyTop.x - thumbTop.x) * 0.36;
-  const wristMid = (thumbTop.x + pinkyTop.x) / 2 - s * 6;
-  const wristThumb = wristMid + s * wristHalf;
-  const wristPinky = wristMid - s * wristHalf;
-  const knuckleTop = Math.min(...long.map((f) => base(f).y)) - 16;
-  const palm = [
-    `M ${thumbTop.x} ${thumbTop.y}`,
-    // the ball of the thumb bulges out, then the palm narrows to the wrist
-    `C ${thumbTop.x + s * 18} ${thumbTop.y + 52} ${wristThumb + s * 10} ${wristY - 46} ${wristThumb} ${wristY}`,
-    `L ${wristPinky} ${wristY}`,
-    `C ${wristPinky - s * 2} ${wristY - 44} ${pinkyTop.x - s * 6} ${pinkyTop.y + 46} ${pinkyTop.x} ${pinkyTop.y}`,
-    `Q ${centre} ${knuckleTop} ${thumbTop.x} ${thumbTop.y}`,
-    'Z',
+  const REACH: Record<Finger, number> = { 1: 24, 2: 30, 3: 34, 4: 30, 5: 22 };
+  const tip = (f: Finger): Pt => ({
+    x: x(keyOf[f]),
+    y: isBlack(keyOf[f]) ? BH - 20 : H - REACH[f],
+  });
+  const long = [2, 3, 4, 5] as Finger[];
+  // half the width of a finger at the tip (the base is a little broader)
+  const HALF: Record<Finger, number> = { 1: 16, 2: 15, 3: 15.5, 4: 15, 5: 13 };
+  // how far behind the fingertips the knuckle row lies
+  const LEN: Record<Finger, number> = { 1: 0, 2: 46, 3: 44, 4: 46, 5: 52 };
+  const y0 = (tip(2).y + tip(3).y + tip(4).y) / 3;
+  const centre = long.reduce((n, f) => n + tip(f).x, 0) / 4;
+  const knuckle = (f: Finger): Pt => ({
+    x: centre + (tip(f).x - centre) * 0.9,
+    y: Math.max(y0 + LEN[f], tip(f).y + 34),
+  });
+  // one finger: its axis u from knuckle to tip, nT the normal towards the thumb
+  const finger = (f: Finger) => {
+    const K = knuckle(f);
+    const T = tip(f);
+    const u = norm({ x: T.x - K.x, y: T.y - K.y });
+    const nT = mul({ x: u.y, y: -u.x }, -s);
+    const h = HALF[f];
+    const cap = add(T, mul(u, -1)); // centre of the rounded tip
+    const len = Math.hypot(cap.x - K.x, cap.y - K.y);
+    return {
+      K,
+      u,
+      nT,
+      h,
+      len,
+      baseNear: add(K, mul(nT, h + 1.5)),
+      baseFar: add(K, mul(nT, -(h + 1.5))),
+      capNear: add(cap, mul(nT, h)),
+      capFar: add(cap, mul(nT, -h)),
+      cap,
+    };
+  };
+  // the outline of one finger from its near base over the tip to its far
+  // base: sides bulging a little at the middle joint, a round tip
+  const fingerOutline = (f: Finger) => {
+    const g = finger(f);
+    const k = g.h * 1.25;
+    return [
+      C(
+        add(g.baseNear, mul(g.u, g.len * 0.35), mul(g.nT, 1.5)),
+        add(g.capNear, mul(g.u, -g.len * 0.3), mul(g.nT, 2.5)),
+        g.capNear,
+      ),
+      C(add(g.capNear, mul(g.u, k)), add(g.capFar, mul(g.u, k)), g.capFar),
+      C(
+        add(g.capFar, mul(g.u, -g.len * 0.3), mul(g.nT, -2.5)),
+        add(g.baseFar, mul(g.u, g.len * 0.35), mul(g.nT, -1.5)),
+        g.baseFar,
+      ),
+    ].join(' ');
+  };
+  // the valley between two fingers
+  const valley = (a: Finger, b: Finger) => {
+    const ga = finger(a);
+    const gb = finger(b);
+    return C(add(ga.baseFar, mul(ga.u, -7)), add(gb.baseNear, mul(gb.u, -7)), gb.baseNear);
+  };
+
+  // the thumb: it points inward to its key at an angle, its root lies in the
+  // ball of the hand beside the index finger
+  const T1 = tip(1);
+  const index = finger(2);
+  const u1 = norm({ x: -s * 0.42, y: -0.91 });
+  const nOut = mul({ x: u1.y, y: -u1.x }, -s);
+  const nIn = mul(nOut, -1);
+  const h1 = HALF[1];
+  const rootX = s * Math.max(s * (T1.x + s * 21), s * (index.baseNear.x + s * 22));
+  const R1: Pt = { x: rootX, y: Math.max(T1.y + 52, index.K.y + 14) };
+  const cap1 = add(T1, mul(u1, -1));
+  const OB = add(R1, mul(nOut, h1)); // where the thumb grows out of the ball
+  const IB = add(R1, mul(nIn, h1)); // where the thumb meets the web
+  const TO = add(cap1, mul(nOut, h1));
+  const TI = add(cap1, mul(nIn, h1));
+  const len1 = Math.hypot(cap1.x - R1.x, cap1.y - R1.y);
+  const thumbEdge = [
+    `M ${P(OB)}`,
+    C(add(OB, mul(u1, len1 * 0.3), mul(nOut, 5)), add(TO, mul(u1, -len1 * 0.35), mul(nOut, 4)), TO),
+    C(add(TO, mul(u1, h1 * 1.25)), add(TI, mul(u1, h1 * 1.25)), TI),
+    C(add(TI, mul(u1, -len1 * 0.35), mul(nIn, 1)), add(IB, mul(u1, len1 * 0.3), mul(nIn, 1)), IB),
   ].join(' ');
-  // a finger: from its knuckle to the tip, gently curved; the thumb grows out
-  // of the ball of the thumb low on the palm and bends towards its key
-  const thumbBase = { x: thumbTop.x - s * 6, y: H + 96 };
-  const fingerPath = (f: Finger) => {
-    const t = tip(f);
-    if (f === 1) {
-      return `M ${thumbBase.x} ${thumbBase.y} Q ${(thumbBase.x + t.x) / 2 + s * 12} ${(thumbBase.y + t.y) / 2 + 8} ${t.x} ${t.y}`;
-    }
-    const b = base(f);
-    return `M ${b.x} ${b.y} Q ${(b.x + t.x) / 2 + (b.x - centre) * 0.05} ${(b.y + t.y) / 2} ${t.x} ${t.y}`;
-  };
-  // a crease across each finger, a little below the middle joint
+  // the thumb's root reaches under the hand, just inside the thumb's edges
+  const P1 = add(IB, mul(u1, -2), mul(nOut, 3));
+  const P2 = add(OB, mul(u1, -2), mul(nIn, 3));
+  const thumbFill = `${thumbEdge} L ${P(P1)} ${C(add(P1, mul(u1, -18)), add(P2, mul(u1, -18)), P2)} Z`;
+
+  const pinky = finger(5);
+  const bottom = height + 12; // the wrist runs out of the picture
+  const palmWidth = Math.abs(pinky.baseFar.x - OB.x);
+  const wristHalf = palmWidth * 0.3;
+  const wristMid = finger(3).K.x + s * 6;
+  const WR: Pt = { x: wristMid - s * wristHalf, y: bottom };
+  const WL: Pt = { x: wristMid + s * wristHalf, y: bottom };
+  // the web between thumb and index finger
+  const web = `M ${P(IB)} ${C(add(IB, mul(u1, -8)), add(index.baseNear, { x: 0, y: 14 }), index.baseNear)}`;
+  // from the index finger around the fingers, down the outer side to the
+  // wrist and up the ball of the thumb
+  const handEdge = [
+    fingerOutline(2),
+    valley(2, 3),
+    fingerOutline(3),
+    valley(3, 4),
+    fingerOutline(4),
+    valley(4, 5),
+    fingerOutline(5),
+    // the outer edge of the hand, slightly bulging, down to the wrist
+    C(
+      add(pinky.baseFar, mul(pinky.u, -40), mul(pinky.nT, -12)),
+      { x: WR.x - s * 16, y: WR.y - 55 },
+      WR,
+    ),
+    `L ${P(WL)}`,
+    // the ball of the thumb, rising into the thumb's outer edge
+    C({ x: WL.x + s * 18, y: WL.y - 52 }, add(OB, mul(u1, -36)), OB),
+  ].join(' ');
+
+  // creases at the middle joints and the knuckle bumps on the back of the hand
   const crease = (f: Finger) => {
-    const t = tip(f);
-    const b = f === 1 ? thumbBase : base(f);
-    const k = f === 1 ? 0.45 : 0.5;
-    const cx = t.x + (b.x - t.x) * k;
-    const cy = t.y + (b.y - t.y) * k;
-    const half = WIDTH[f] / 2 - 6;
-    return `M ${cx - half} ${cy} Q ${cx} ${cy + 3} ${cx + half} ${cy}`;
+    const g = finger(f);
+    const j = add(g.cap, mul(g.u, -g.len * 0.42));
+    const half = g.h - 6;
+    return `M ${P(add(j, mul(g.nT, half)))} Q ${P(add(j, mul(g.u, -3)))} ${P(add(j, mul(g.nT, -half)))}`;
   };
+  const knuckleBump = (f: Finger) => {
+    const g = finger(f);
+    const b = add(g.K, mul(g.u, -9));
+    return `M ${P(add(b, mul(g.nT, 7)))} Q ${P(add(g.K, mul(g.u, -3)))} ${P(add(b, mul(g.nT, -7)))}`;
+  };
+  const thumbCrease = (() => {
+    const j = add(cap1, mul(u1, -22));
+    const half = h1 - 5;
+    return `M ${P(add(j, mul(nOut, half)))} Q ${P(add(j, mul(u1, -3)))} ${P(add(j, mul(nIn, half)))}`;
+  })();
 
   const label = t(shape.side === 'right' ? 'hand.right' : 'hand.left', {
     keys: known
@@ -150,37 +251,27 @@ export function HandOnKeys({ shape }: { shape: HandShape }) {
         />
       ))}
 
-      {/* the hand: outlines first, then the palm, then the skin of the fingers */}
-      {FINGERS.map((f) => (
-        <path
-          key={`line-${f}`}
-          d={fingerPath(f)}
-          strokeLinecap="round"
-          strokeWidth={WIDTH[f] + 6}
-          className={classes.outline}
-        />
+      {/* layers, from below: the back of the hand with its web, the thumb
+          lying on it, the fingers curling over it; each outline is drawn only
+          where it shows, so they join into one continuous line */}
+      <mask id={maskId} maskUnits="userSpaceOnUse" x={0} y={0} width={width} height={height}>
+        <rect x={0} y={0} width={width} height={height} fill="#fff" />
+        {long.map((f) => (
+          <path key={f} d={`M ${P(finger(f).baseNear)} ${fingerOutline(f)} Z`} fill="#000" />
+        ))}
+      </mask>
+      <path d={`${web} ${handEdge} Z`} className={classes.hand} />
+      <path d={web} className={classes.handLine} />
+      <path d={thumbFill} className={classes.hand} />
+      <path d={thumbEdge} className={classes.handLine} mask={`url(#${maskId})`} />
+      <path d={`M ${P(index.baseNear)} ${handEdge}`} className={classes.handLine} />
+      <path d={thumbCrease} className={classes.crease} />
+      {long.map((f) => (
+        <g key={`lines-${f}`}>
+          <path d={crease(f)} className={classes.crease} />
+          <path d={knuckleBump(f)} className={classes.crease} />
+        </g>
       ))}
-      <path d={palm} strokeWidth={3} strokeLinejoin="round" className={classes.palm} />
-      {FINGERS.map((f) => (
-        <path
-          key={`skin-${f}`}
-          d={fingerPath(f)}
-          strokeLinecap="round"
-          strokeWidth={WIDTH[f]}
-          className={classes.skin}
-        />
-      ))}
-      {FINGERS.map((f) => (
-        <path key={`crease-${f}`} d={crease(f)} className={classes.crease} />
-      ))}
-      <rect
-        x={wristMid - wristHalf - 10}
-        y={wristY - 8}
-        width={wristHalf * 2 + 20}
-        height={height - wristY + 10}
-        rx={8}
-        className={classes.sleeve}
-      />
       {FINGERS.map((f) => {
         const p = tip(f);
         return (
