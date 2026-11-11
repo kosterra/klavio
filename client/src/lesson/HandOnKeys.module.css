@@ -29,38 +29,32 @@
   fill: #7a5a00;
 }
 
-/* the hand: skin with one outline, shade on the far sides, lines for the
-   joints and the back of the hand, and the nails */
+/* the hand: its outline colour drawn first and broader, the skin on top */
+.edge,
 .skin {
-  fill: var(--klavio-hand);
-  stroke: var(--klavio-hand-line);
-  stroke-width: 3.5;
+  stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.shade {
+.edge {
   fill: var(--klavio-hand-line);
-  opacity: 0.13;
+  stroke: var(--klavio-hand-line);
 }
 
-.line,
-.faint {
+.skin {
+  fill: var(--klavio-hand);
+  stroke: var(--klavio-hand);
+}
+
+.arrow {
   fill: none;
-  stroke: var(--klavio-hand-line);
-  stroke-width: 2;
+  stroke: var(--mantine-color-indigo-7);
+  stroke-width: 2.5;
   stroke-linecap: round;
-  opacity: 0.6;
 }
 
-.faint {
-  opacity: 0.18;
-}
-
-.nail {
-  fill: #fff;
-  fill-opacity: 0.45;
-  stroke: var(--klavio-hand-line);
-  stroke-width: 1.6;
+.arrowHead {
+  fill: var(--mantine-color-indigo-7);
 }
 
 .number circle {

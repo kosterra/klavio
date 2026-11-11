@@ -26,60 +26,39 @@ type Finger = 1 | 2 | 3 | 4 | 5;
 const FINGERS: Finger[] = [1, 2, 3, 4, 5];
 
 /*
- * The hand is a drawing, not a construction: a right hand seen from above,
- * resting with its five fingers on five neighbouring white keys (thumb on
- * the left key), drawn in the proportions of a real hand – fingers about
- * three keys long, the palm running out of the picture at the wrist. Its
- * coordinates count from the left edge of the thumb's key; for the left hand
- * the drawing is mirrored. Lessons with another position (black keys) show
- * only the keys and the finger numbers.
+ * The hand is a flat silhouette with spread fingers below the keys, as piano
+ * books draw it, and an arrow leads from every fingertip to its key. Each
+ * finger is a thick rounded line from its knuckle to its tip, the palm a
+ * rounded shape bulging at the ball of the thumb; drawn first in the outline
+ * colour a little broader, then in the skin colour, the parts melt into one
+ * silhouette. Its coordinates are those of a right hand; the left hand is
+ * the mirror image.
  */
-const ART_HEIGHT = 340;
-/** one outline: up the ball of the thumb, round the thumb, up and down each finger, down the outer edge */
-const OUTLINE = `M 48 350 C 36 322 26 290 34 258 C 30 236 20 200 8 160 C 2 148 2 132 12 128 C 24 124 34 130 36 142 C 40 160 44 180 44 194 C 44 204 46 208 47 206 C 45 182 44 150 46 124 C 46 112 52 110 60 110 C 68 110 74 112 74 124 C 75 150 75 190 72 212 C 72 222 80 226 86 214 C 85 180 85 145 86 116 C 86 104 92 100 100 100 C 108 100 114 104 114 116 C 115 145 115 185 113 214 C 113 224 120 228 126 216 C 125 186 125 150 126 124 C 126 112 132 108 140 108 C 148 108 154 112 154 124 C 155 150 155 190 153 216 C 153 228 160 232 166 222 C 165 198 165 168 167 142 C 167 128 173 118 180 118 C 187 118 193 128 193 142 C 195 170 198 196 202 224 C 210 250 212 290 204 318 C 200 332 196 342 192 350 Z`;
-/** shade on the far side of every finger and along the outer edge of the hand */
-const SHADES = [
-  'M 34 258 C 30 236 20 200 8 160 L 17 156 C 28 196 36 232 42 254 Z',
-  'M 74 124 C 75 150 75 190 72 212 L 65 212 C 68 190 68 150 67 124 Z',
-  'M 114 116 C 115 145 115 185 113 214 L 106 214 C 108 185 108 145 107 116 Z',
-  'M 154 124 C 155 150 155 190 153 216 L 146 216 C 148 190 148 150 147 124 Z',
-  'M 193 142 C 195 170 198 196 202 224 C 210 250 212 290 204 318 L 194 318 C 202 290 200 250 192 224 C 188 196 186 170 185 142 Z',
-];
-/** knuckles, the middle joints of the fingers, the thumb's joint */
-const LINES = [
-  'M 48 230 Q 58 222 68 230',
-  'M 90 224 Q 100 216 110 224',
-  'M 130 228 Q 140 220 150 228',
-  'M 171 240 Q 180 233 189 240',
-  'M 50 168 Q 60 164 70 168 M 51 174 Q 60 170 69 174',
-  'M 90 158 Q 100 154 110 158 M 91 164 Q 100 160 109 164',
-  'M 130 164 Q 140 160 150 164 M 131 170 Q 140 166 149 170',
-  'M 170 178 Q 180 174 190 178 M 171 184 Q 180 180 189 184',
-  'M 16 180 Q 27 174 38 176 M 18 187 Q 28 181 39 183',
-];
-/** tendons up the back of the hand, and the fold where the thumb meets it */
-const FAINT = [
-  'M 84 330 C 78 300 70 270 60 244',
-  'M 108 332 C 106 300 102 266 100 240',
-  'M 134 332 C 136 300 139 268 140 244',
-  'M 160 330 C 166 300 172 276 178 254',
-  'M 47 206 C 44 232 44 260 52 290',
-];
-/** nails: x, y, width, height, and the thumb's turned a little */
-const NAILS: [number, number, number, number, number][] = [
-  [10, 130, 16, 11, -40],
-  [51, 114, 18, 14, 0],
-  [91, 104, 18, 14, 0],
-  [131, 112, 18, 14, 0],
-  [172, 122, 16, 12, 0],
-];
-/** where the finger numbers sit: on the pad of each finger, below the nail */
-const NUMBER_Y: Record<Finger, number> = { 1: 146, 2: 136, 3: 126, 4: 134, 5: 142 };
+const FINGER_LINES: Record<Finger, string> = {
+  1: 'M 42 160 L -6 108',
+  2: 'M 52 118 L 30 30',
+  3: 'M 78 108 L 74 8',
+  4: 'M 104 110 L 116 18',
+  5: 'M 128 122 L 152 52',
+};
+/** the tips, where the numbers sit */
+const TIPS: Record<Finger, [number, number]> = {
+  1: [-6, 108],
+  2: [30, 30],
+  3: [74, 8],
+  4: [116, 18],
+  5: [152, 52],
+};
+/** the palm, bulging out at the ball of the thumb on its left side */
+const PALM =
+  'M 44 118 C 60 100 120 100 136 118 C 146 150 142 190 132 232 L 60 232 C 40 202 26 160 44 118 Z';
+const SCALE = 0.85;
+const TOP = 172; // where the hand starts below the keys
+const HEIGHT = 375;
 
 /**
- * «So liegt deine Hand»: a drawn hand on the keys, seen from above, with the
- * finger numbers on the fingertips – the keys the lesson uses are marked.
- * Fingers the lesson doesn't use lie on the white keys beside the others.
+ * «So liegt deine Hand»: the keys the lesson uses are marked, and a hand
+ * below them shows with an arrow which finger plays which key.
  */
 export function HandOnKeys({ shape }: { shape: HandShape }) {
   const { t } = useTranslation();
@@ -104,22 +83,27 @@ export function HandOnKeys({ shape }: { shape: HandShape }) {
   const blacks = whites.flatMap((m) => (isBlack(m + 1) && m + 1 <= whites.at(-1)! ? [m + 1] : []));
   const used = new Set(Object.values(shape.keys));
 
-  // the drawing fits when the five fingers lie on five neighbouring white keys
-  const drawn = FINGERS.every(
-    (f) => !isBlack(keyOf[f]) && whiteIndex(keyOf[f]) === whiteIndex(keyOf[1]) + (f - 1) * dir,
-  );
-  const height = drawn ? ART_HEIGHT : H + 20;
-  // the drawing starts at the left edge of its leftmost key; the left hand is
-  // mirrored about the middle finger's key
-  const leftKey = x(keyOf[dir === 1 ? 1 : 5]) - W / 2;
-  const transform =
-    dir === 1
-      ? `translate(${leftKey} 0)`
-      : `translate(${2 * x(keyOf[3])} 0) scale(-1 1) translate(${leftKey} 0)`;
-  const number = (f: Finger) => ({
-    x: x(keyOf[f]),
-    y: drawn ? NUMBER_Y[f] : isBlack(keyOf[f]) ? BH - 20 : H - 24,
+  // the hand sits under the middle finger's key; the left hand is mirrored
+  const mid = x(keyOf[3]);
+  const place = ([lx, ly]: [number, number]) => ({
+    x: mid + dir * (lx - TIPS[3][0]) * SCALE,
+    y: TOP + ly * SCALE,
   });
+  const transform = `translate(${mid - dir * TIPS[3][0] * SCALE} ${TOP}) scale(${dir * SCALE} ${SCALE})`;
+  // an arrow from the fingertip to the foot of its key
+  const arrow = (f: Finger) => {
+    const from = place(TIPS[f]);
+    const to = { x: x(keyOf[f]), y: (isBlack(keyOf[f]) ? BH : H) + 2 };
+    const len = Math.hypot(to.x - from.x, to.y - from.y);
+    const u = { x: (to.x - from.x) / len, y: (to.y - from.y) / len };
+    const start = { x: from.x + u.x * 15, y: from.y + u.y * 15 };
+    const base = { x: to.x - u.x * 13, y: to.y - u.y * 13 };
+    const n = { x: -u.y * 6, y: u.x * 6 };
+    return {
+      line: `M ${start.x} ${start.y} L ${base.x} ${base.y}`,
+      head: `M ${to.x} ${to.y} L ${base.x + n.x} ${base.y + n.y} L ${base.x - n.x} ${base.y - n.y} Z`,
+    };
+  };
 
   const label = t(shape.side === 'right' ? 'hand.right' : 'hand.left', {
     keys: known
@@ -130,7 +114,7 @@ export function HandOnKeys({ shape }: { shape: HandShape }) {
   return (
     <svg
       className={classes.svg}
-      viewBox={`0 0 ${width} ${height}`}
+      viewBox={`0 0 ${width} ${HEIGHT}`}
       role="img"
       aria-label={label}
       data-testid="hand-on-keys"
@@ -158,37 +142,35 @@ export function HandOnKeys({ shape }: { shape: HandShape }) {
         />
       ))}
 
-      {drawn && (
-        <g transform={transform}>
-          <path d={OUTLINE} className={classes.skin} />
-          {SHADES.map((d) => (
-            <path key={d} d={d} className={classes.shade} />
-          ))}
-          {LINES.map((d) => (
-            <path key={d} d={d} className={classes.line} />
-          ))}
-          {FAINT.map((d) => (
-            <path key={d} d={d} className={classes.faint} />
-          ))}
-          {NAILS.map(([nx, ny, w, h, turn]) => (
-            <rect
-              key={nx}
-              x={nx}
-              y={ny}
-              width={w}
-              height={h}
-              rx={h / 2}
-              transform={turn ? `rotate(${turn} ${nx + w / 2} ${ny + h / 2})` : undefined}
-              className={classes.nail}
-            />
+      <g transform={transform}>
+        <g className={classes.edge} strokeWidth={31}>
+          {FINGERS.map((f) => (
+            <path key={f} d={FINGER_LINES[f]} />
           ))}
         </g>
-      )}
+        <path className={classes.edge} strokeWidth={6} d={PALM} />
+        <g className={classes.skin} strokeWidth={25}>
+          {FINGERS.map((f) => (
+            <path key={f} d={FINGER_LINES[f]} />
+          ))}
+        </g>
+        <path className={classes.skin} d={PALM} />
+      </g>
+
+      {known.map((f) => {
+        const a = arrow(f);
+        return (
+          <g key={f}>
+            <path d={a.line} className={classes.arrow} />
+            <path d={a.head} className={classes.arrowHead} />
+          </g>
+        );
+      })}
       {FINGERS.map((f) => {
-        const p = number(f);
+        const p = place(TIPS[f]);
         return (
           <g key={f} className={shape.keys[f] !== undefined ? classes.number : classes.numberIdle}>
-            <circle cx={p.x} cy={p.y} r={12} />
+            <circle cx={p.x} cy={p.y} r={13} />
             <text x={p.x} y={p.y} textAnchor="middle" dominantBaseline="central">
               {f}
             </text>
