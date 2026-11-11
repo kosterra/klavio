@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Erzähl anderen von Klavio: Unter «Konto» können Eltern ein paar Worte für die Startseite schreiben – sie erscheinen nur mit ihrer Zustimmung und nachdem die Betreiberin oder der Betreiber sie gelesen hat, und lassen sich jederzeit zurücknehmen.',
+        'Tell others about Klavio: under «Account» parents can write a few words for the start page – they appear only with their consent and after the operator has read them, and can be taken back at any time.',
+      ),
+      L(
         'Klassik zum Üben: Unter «Lieder» gibt es vier kleine Stücke aus Robert Schumanns «Album für die Jugend» – Melodie, Trällerliedchen, Choral und Stückchen –, vereinfacht für Klavio, zum Üben und Drucken. Eigene Stücke lassen sich jetzt auch als MIDI-Datei importieren.',
         'Classics to practise: under «Songs» there are four little pieces from Robert Schumann’s «Album for the Young» – Melody, Humming Song, Chorale and Little Piece –, simplified for Klavio, to practise and print. Own pieces can now also be imported as a MIDI file.',
       ),

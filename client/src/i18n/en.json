@@ -50,7 +50,8 @@
         "5": "Server log: time, address called and answer – without IP addresses. In the bundled setup it is overwritten continuously (at most three files of 10 MB).",
         "6": "Failed attempts at e-mail codes and the parent PIN: how many and when the last one was – so nobody can guess. Forgotten after a day without another failed attempt.",
         "7": "Practice reminders (only if you switch them on): time, weekdays, time zone and your browser's push address. The reminder travels encrypted through the push service of the browser maker (e.g. Google, Apple, Mozilla) – it cannot read it, but sees that a notification comes. Switching off, signing out or deleting the profile deletes all of it.",
-        "8": "Own pieces (only if you import some): title, composer and the notes – the file itself is read on your device and not uploaded."
+        "8": "Own pieces (only if you import some): title, composer and the notes – the file itself is read on your device and not uploaded.",
+        "9": "Voices for the start page (only if you send some): your text, signature and role, and whether they are approved. You can take them back at any time under «Account»."
       }
     },
     "device": {
@@ -1460,5 +1461,29 @@
     "intro": "Little pieces by great composers, simplified for Klavio: to practise with listening and one hand alone, and to print – without stars.",
     "credit": "Notes: {{by}}, {{license}}",
     "license": "Licence"
+  },
+  "testimonial": {
+    "title": "Tell others about Klavio",
+    "hint": "Does Klavio help your family? A few words from you help other families decide. They appear on the start page only once the operator has read them – and you can take them back at any time.",
+    "text": "Your words",
+    "author": "Signature",
+    "authorHint": "e.g. your first name – no surname needed",
+    "role": "Who you are (optional)",
+    "roleHint": "e.g. «Mother of two» or «Returning player, 52»",
+    "consent": "I agree that these words appear with this signature on Klavio’s public start page.",
+    "send": "Send",
+    "thanks": "Thank you! Your words will be read and then published.",
+    "takeBack": "Take back",
+    "status": {
+      "pending": "Being read",
+      "approved": "Published",
+      "rejected": "Not published"
+    },
+    "adminTitle": "Voices of families",
+    "adminHint": "What families wrote about Klavio – with their consent to publish. Only approved ones appear on the start page.",
+    "none": "No entries yet.",
+    "approve": "Approve",
+    "reject": "Do not show",
+    "publicTitle": "What families say"
   }
 }

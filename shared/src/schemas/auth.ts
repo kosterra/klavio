@@ -136,3 +136,27 @@ export const adminSettingsSchema = z.object({
 
 /** «PIN vergessen?»: the code sent to the account's address. */
 export const pinResetSchema = z.object({ code: emailCodeSchema });
+
+/** «Erzähl anderen von Klavio»: a few words from a family, published only with consent and after review. */
+export const testimonialInputSchema = z.object({
+  text: z.string().trim().min(10).max(400),
+  /** how it is signed, e.g. «Andrea» – no surname needed */
+  author: z.string().trim().min(1).max(60),
+  /** optional, e.g. «Mutter von zwei Kindern» */
+  role: z.string().trim().max(60).optional(),
+  /** must be true: the words may be shown on the public page */
+  consent: z.literal(true),
+});
+export type TestimonialInput = z.infer<typeof testimonialInputSchema>;
+
+export interface PublicTestimonialDto {
+  text: string;
+  author: string;
+  role: string | null;
+}
+
+export interface TestimonialDto extends PublicTestimonialDto {
+  id: string;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+}

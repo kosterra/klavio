@@ -50,7 +50,8 @@
         "5": "Server-Protokoll: Zeitpunkt, aufgerufene Adresse und Antwort – ohne IP-Adresse. In der mitgelieferten Einrichtung wird es laufend überschrieben (höchstens drei Dateien à 10 MB).",
         "6": "Fehlversuche bei E-Mail-Codes und Eltern-PIN: wie viele und wann zuletzt – damit niemand raten kann. Nach einem Tag ohne weiteren Fehlversuch wird das vergessen.",
         "7": "Erinnerungen ans Üben (nur wenn du sie einschaltest): Uhrzeit, Wochentage, Zeitzone und die Push-Adresse deines Browsers. Die Erinnerung geht verschlüsselt über den Push-Dienst des Browser-Herstellers (z. B. Google, Apple, Mozilla) – der kann sie nicht lesen, sieht aber, dass eine Mitteilung kommt. Beim Ausschalten, Abmelden oder Löschen des Profils wird alles gelöscht.",
-        "8": "Eigene Stücke (nur wenn du welche importierst): Titel, Komponist und die Noten – die Datei selbst wird auf deinem Gerät gelesen und nicht hochgeladen."
+        "8": "Eigene Stücke (nur wenn du welche importierst): Titel, Komponist und die Noten – die Datei selbst wird auf deinem Gerät gelesen und nicht hochgeladen.",
+        "9": "Stimmen für die Startseite (nur wenn du welche schickst): dein Text, Unterschrift und Rolle, ob sie freigegeben sind. Zurücknehmen geht jederzeit unter «Konto»."
       }
     },
     "device": {
@@ -1460,5 +1461,29 @@
     "intro": "Kleine Stücke grosser Komponisten, für Klavio vereinfacht: zum Üben mit Anhören und einer Hand allein, und zum Drucken – ohne Sterne.",
     "credit": "Noten: {{by}}, {{license}}",
     "license": "Lizenz"
+  },
+  "testimonial": {
+    "title": "Erzähl anderen von Klavio",
+    "hint": "Hilft Klavio deiner Familie? Ein paar Worte von dir helfen anderen Familien bei der Entscheidung. Sie erscheinen auf der Startseite erst, wenn die Betreiberin oder der Betreiber sie gelesen hat – und du kannst sie jederzeit zurücknehmen.",
+    "text": "Deine Worte",
+    "author": "Unterschrift",
+    "authorHint": "z. B. dein Vorname – ein Nachname ist nicht nötig",
+    "role": "Wer du bist (freiwillig)",
+    "roleHint": "z. B. «Mutter von zwei Kindern» oder «Wiedereinsteiger, 52»",
+    "consent": "Ich bin einverstanden, dass diese Worte mit dieser Unterschrift auf der öffentlichen Startseite von Klavio erscheinen.",
+    "send": "Abschicken",
+    "thanks": "Danke! Deine Worte werden gelesen und dann veröffentlicht.",
+    "takeBack": "Zurücknehmen",
+    "status": {
+      "pending": "Wird gelesen",
+      "approved": "Veröffentlicht",
+      "rejected": "Nicht veröffentlicht"
+    },
+    "adminTitle": "Stimmen von Familien",
+    "adminHint": "Was Familien über Klavio geschrieben haben – mit ihrer Zustimmung zur Veröffentlichung. Auf der Startseite erscheinen nur freigegebene.",
+    "none": "Noch keine Einträge.",
+    "approve": "Freigeben",
+    "reject": "Nicht zeigen",
+    "publicTitle": "Das sagen Familien"
   }
 }

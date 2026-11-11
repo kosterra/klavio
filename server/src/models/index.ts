@@ -257,6 +257,26 @@ const ownPieceSchema = new Schema(
 export const OwnPiece = model('OwnPiece', ownPieceSchema);
 
 // ---------------------------------------------------------------------------
+// Testimonial: a few words from a family, shown publicly once an admin approved them
+// ---------------------------------------------------------------------------
+const testimonialSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    text: { type: String, required: true },
+    author: { type: String, required: true },
+    role: { type: String, default: null },
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending',
+      index: true,
+    },
+  },
+  { timestamps: true },
+);
+export const Testimonial = model('Testimonial', testimonialSchema);
+
+// ---------------------------------------------------------------------------
 // Global settings (singleton document, editable by admins)
 // ---------------------------------------------------------------------------
 const appSettingsSchema = new Schema(

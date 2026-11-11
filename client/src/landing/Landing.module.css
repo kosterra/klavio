@@ -611,3 +611,29 @@
 :global([data-mantine-color-scheme='dark']) .kicker {
   color: var(--mantine-color-grape-3);
 }
+
+/* --------------------------------------------- voices of families */
+.voices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--mantine-spacing-md);
+}
+
+.voice {
+  margin: 0;
+  padding: var(--mantine-spacing-lg);
+  border-radius: 20px;
+  background: var(--klavio-surface);
+  border: 2px solid var(--mantine-color-indigo-2);
+  box-shadow: 0 6px 18px rgb(59 91 219 / 8%);
+}
+
+.voice blockquote {
+  margin: 0 0 var(--mantine-spacing-sm);
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
+
+.voice figcaption {
+  color: var(--mantine-color-dimmed);
+}

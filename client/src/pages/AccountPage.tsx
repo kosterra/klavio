@@ -18,6 +18,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { notify } from '../components/notify';
 import { AboutCard } from '../components/AboutApp';
+import { TestimonialCard } from '../components/TestimonialCard';
 import { ParentPinSettings } from '../auth/parent';
 import {
   IconCloud,
@@ -378,6 +379,8 @@ export function AccountPage() {
           </Button>
         </Stack>
       </Card>
+
+      <TestimonialCard />
 
       <AboutCard />
 
