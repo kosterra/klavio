@@ -1,5 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Box, Button, Group, SegmentedControl, Text, UnstyledButton } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Group,
+  SegmentedControl,
+  Text,
+  UnstyledButton,
+  VisuallyHidden,
+} from '@mantine/core';
 import { useElementSize } from '@mantine/hooks';
 import {
   IconChevronDown,
@@ -276,8 +284,10 @@ export function LearningPath({
   const due = new Set(Object.keys(progress).filter((id) => isReviewDue(progress[id], today)));
   const maxCols = Math.max(3, Math.min(6, Math.floor(width / 150)));
   const narrow = width / maxCols < 140;
+  // the world's landmark next to the heading only where both fit (not on large phones either)
+  const roomy = width >= 640;
   const rowHeight = narrow ? 172 : 156;
-  const header = narrow ? HEADER : HEADER_WIDE;
+  const header = roomy ? HEADER_WIDE : HEADER;
 
   // one map per level ("Stufe"): the level of the lesson to play next is shown first
   const stages = [...new Set(CURRICULUM.map((c) => c.stage))];
@@ -419,10 +429,27 @@ export function LearningPath({
           {stages.length > 1 && (
             <SegmentedControl
               mt="sm"
+              fullWidth
               radius="xl"
               value={String(stage)}
               onChange={(v) => setStage(Number(v) as typeof stage)}
-              data={stages.map((s) => ({ value: String(s), label: t(`path.stages.${s}`) }))}
+              data={stages.map((s) => {
+                const [level, name] = t(`path.stages.${s}`).split(' · ');
+                return {
+                  value: String(s),
+                  label: (
+                    <span className={classes.stageLabel}>
+                      <span className={classes.stageLevel}>{level}</span>
+                      {name && (
+                        <>
+                          <VisuallyHidden> · </VisuallyHidden>
+                          <span className={classes.stageName}>{name}</span>
+                        </>
+                      )}
+                    </span>
+                  ),
+                };
+              })}
               aria-label={t('path.stagesLabel')}
               data-testid="stage-switch"
               className={classes.stageSwitch}
@@ -482,7 +509,7 @@ export function LearningPath({
             aria-labelledby={`chapter-${chapter.id}`}
           >
             <Scenery world={world.id} chapterId={chapter.id} height={height} snowy={snowy} />
-            {!narrow && (
+            {roomy && (
               <Landmark
                 world={world.id}
                 name={t(`path.worlds.${world.id}`)}
@@ -547,7 +574,7 @@ export function LearningPath({
             />
             <UnstyledButton
               className={classes.signpost}
-              style={{ left: markerX + 50, right: narrow ? 0 : 200, top: markerY - 40 }}
+              style={{ left: markerX + 50, right: roomy ? 200 : 0, top: markerY - 40 }}
               aria-expanded={sec.open}
               aria-controls={sec.open ? `chapter-board-${chapter.id}` : undefined}
               onClick={() => toggle(chapter.id)}

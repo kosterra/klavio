@@ -130,8 +130,17 @@ describe('parent PIN', () => {
       setupDone: true,
       motive: 'fun',
       weeklyGoalDays: 4,
+      playOn: 'screen',
     });
-    expect(done.json()).toMatchObject({ setupDone: true, motive: 'fun', weeklyGoalDays: 4 });
+    expect(done.json()).toMatchObject({
+      setupDone: true,
+      motive: 'fun',
+      weeklyGoalDays: 4,
+      playOn: 'screen',
+    });
+    // where to play is the learner's own choice, also with the parent area locked
+    const piano = await call(jar, 'PATCH', `/api/profiles/${kid.id}`, { playOn: 'piano' });
+    expect(piano.json().playOn).toBe('piano');
 
     // afterwards placement is parent area again
     expect(
@@ -141,17 +150,77 @@ describe('parent PIN', () => {
     expect(progress.weekDays).toEqual([]);
   });
 
-  it('a fresh login opens the parent area (PIN forgotten → log in again, set a new one)', async () => {
+  it('a fresh login keeps the parent area locked; a forgotten PIN is reset by e-mail', async () => {
     const { jar, kid } = await family();
     await call(jar, 'PUT', '/api/account/pin', { pin: '2468' });
     await call(jar, 'POST', '/api/profiles/select', { profileId: kid.id });
 
+    // logging out and in again does not get round the PIN
     const again = new CookieJar();
     await call(again, 'POST', '/api/auth/email/request', { email: 'eltern@example.ch' });
-    const code = /(\d{6})/.exec(ctx.outbox.at(-1)!.text)![1];
-    await call(again, 'POST', '/api/auth/email/verify', { email: 'eltern@example.ch', code });
+    const login = /(\d{6})/.exec(ctx.outbox.at(-1)!.text)![1];
+    await call(again, 'POST', '/api/auth/email/verify', {
+      email: 'eltern@example.ch',
+      code: login,
+    });
+    expect((await call(again, 'GET', '/api/passkeys')).json()).toEqual(LOCKED);
+
+    // «PIN vergessen?»: a code to the account's address removes it and opens the area
+    expect((await call(again, 'POST', '/api/account/pin/reset/request')).statusCode).toBe(204);
+    expect(ctx.outbox.at(-1)!.to).toBe('eltern@example.ch');
+    const reset = /(\d{6})/.exec(ctx.outbox.at(-1)!.text)![1];
+    // a login code is no reset code
+    expect(
+      (await call(again, 'POST', '/api/account/pin/reset/verify', { code: login })).statusCode,
+    ).toBe(400);
+    expect(
+      (await call(again, 'POST', '/api/account/pin/reset/verify', { code: reset })).statusCode,
+    ).toBe(204);
+    expect((await call(again, 'GET', '/api/auth/me')).json().user.parentPin.set).toBe(false);
     expect((await call(again, 'GET', '/api/passkeys')).statusCode).toBe(200);
     expect((await call(again, 'PUT', '/api/account/pin', { pin: '13579' })).statusCode).toBe(204);
+  });
+
+  it("a learner changes their own figure, a sibling's only with the parent area", async () => {
+    const { jar, kid } = await family();
+    const sibling = (
+      await call(jar, 'POST', '/api/profiles', { name: 'Ben', birthYear: 2018 })
+    ).json();
+    await call(jar, 'PUT', '/api/account/pin', { pin: '2468' });
+    await call(jar, 'POST', '/api/profiles/select', { profileId: kid.id });
+    expect(
+      (await call(jar, 'PATCH', `/api/profiles/${kid.id}`, { avatar: 'fox' })).statusCode,
+    ).toBe(200);
+    expect(
+      (await call(jar, 'PATCH', `/api/profiles/${sibling.id}`, { avatar: 'fox' })).json(),
+    ).toEqual(LOCKED);
+    // siblings' progress stays visible (family overview)
+    expect((await call(jar, 'GET', '/api/profiles/overview?date=2026-11-10')).statusCode).toBe(200);
+  });
+
+  it('a code request alone does not change the language of the account’s mails', async () => {
+    await family();
+    await call(new CookieJar(), 'POST', '/api/auth/email/request', {
+      email: 'eltern@example.ch',
+      lang: 'en',
+    });
+    const { User } = await import('../src/models/index.js');
+    expect((await User.findOne({ email: 'eltern@example.ch' }).lean())!.locale).not.toBe('en');
+  });
+
+  it('locks the PIN after five wrong tries – also across restarts (kept in the database)', async () => {
+    const { jar, kid } = await family();
+    await call(jar, 'PUT', '/api/account/pin', { pin: '2468' });
+    await call(jar, 'POST', '/api/profiles/select', { profileId: kid.id });
+    for (let i = 0; i < 5; i++) {
+      expect((await call(jar, 'POST', '/api/account/pin/verify', { pin: '1111' })).statusCode).toBe(
+        403,
+      );
+    }
+    // (the quick in-memory limit is off in tests – this is the lock kept in the database)
+    expect((await call(jar, 'POST', '/api/account/pin/verify', { pin: '2468' })).statusCode).toBe(
+      429,
+    );
   });
 
   it('validates the PIN format and can be removed', async () => {

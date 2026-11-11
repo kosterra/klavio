@@ -45,4 +45,5 @@ export const KEYS = {
   progressPrefix: 'klavio.progress.v1.',
   queue: 'klavio.queue.v1',
   installDismissed: 'klavio.installHint.dismissed',
+  installSnoozedUntil: 'klavio.installHint.snoozedUntil',
 } as const;

@@ -62,11 +62,14 @@ export const endpoints = {
   updateAccount: (displayName: string) =>
     api<{ displayName: string }>('PATCH', '/account', { displayName }),
   deleteAccount: () => api('DELETE', '/account'),
+  logoutOtherDevices: () => api<{ loggedOut: number }>('POST', '/account/sessions/logout-others'),
   setParentPin: (pin: string) => api('PUT', '/account/pin', { pin }),
   removeParentPin: () => api('DELETE', '/account/pin'),
   verifyParentPin: (pin: string) =>
     api<{ unlockedUntil: string | null }>('POST', '/account/pin/verify', { pin }),
   lockParentArea: () => api('POST', '/account/pin/lock'),
+  requestPinReset: () => api('POST', '/account/pin/reset/request'),
+  confirmPinReset: (code: string) => api('POST', '/account/pin/reset/verify', { code }),
   setParentPasskey: (enabled: boolean) => api('PUT', '/account/pin/passkey', { enabled }),
   parentPasskeyOptions: () =>
     api<PublicKeyCredentialRequestOptionsJSON>('POST', '/account/pin/passkey/options'),
@@ -86,6 +89,7 @@ export const endpoints = {
       setupDone?: true;
       motive?: ProfileDto['motive'];
       weeklyGoalDays?: ProfileDto['weeklyGoalDays'];
+      playOn?: ProfileDto['playOn'];
     },
   ) => api<ProfileDto>('PATCH', `/profiles/${id}`, body),
   deleteProfile: (id: string) => api('DELETE', `/profiles/${id}`),

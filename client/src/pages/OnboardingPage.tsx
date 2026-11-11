@@ -39,7 +39,6 @@ import { notify } from '../components/notify';
 import { usePageTitle } from '../components/usePageTitle';
 import { GoalSongPicks } from '../goal/GoalSongPicks';
 import { useLocalized } from '../lesson/useLocalized';
-import { writePlayOn } from '../lesson/playOn';
 import { Staff, type StaffNote } from '../notation/Staff';
 import classes from './OnboardingPage.module.css';
 
@@ -176,6 +175,8 @@ export function OnboardingPage() {
       if (answers && startChapter) await endpoints.placement(startChapter);
       await endpoints.updateProfile(activeProfile.id, {
         setupDone: true,
+        // where the lessons start: the screen keys without a piano
+        ...(instrument ? { playOn: instrument === 'none' ? 'screen' : 'piano' } : {}),
         ...(answers
           ? {
               motive,
@@ -194,7 +195,6 @@ export function OnboardingPage() {
 
   const pickInstrument = (value: Instrument) => {
     setInstrument(value);
-    writePlayOn(value === 'none' ? 'screen' : 'piano', activeProfile?.id);
     next();
   };
   const pickGoal = (song: CatalogSong) =>

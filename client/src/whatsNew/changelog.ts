@@ -20,6 +20,63 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: '2026.11.3',
+    changes: [
+      L(
+        'Datenschutz: Die Seite «Datenschutz» nennt jetzt alle gespeicherten Angaben (auch Wochenziel, Startfragen und Fehlversuche), der Daten-Download enthält zusätzlich die angemeldeten Geräte, und beim Abmelden werden auch die Einstellungen der Profile und noch nicht übertragene Ergebnisse vom Gerät gelöscht.',
+        'Privacy: the privacy page now lists everything stored (including the weekly goal, start-up answers and failed attempts), the data download also contains the logged-in devices, and signing out also removes the profiles’ settings and results not sent yet from the device.',
+      ),
+      L(
+        'Konto: «Auf allen anderen Geräten abmelden» – und wer die E-Mail-Adresse ändert, wird überall sonst abgemeldet; die alte Adresse bekommt eine Nachricht.',
+        'Account: «Log out on all other devices» – and changing the e-mail address logs out everywhere else; the old address gets a notice.',
+      ),
+      L(
+        'Fair üben: Dieselbe Lektion bringt beim Wiederholen einmal am Tag die halben Punkte, danach zählen nur noch bessere Sterne. Die Figur eines Geschwisters ändert man nur noch im Elternbereich.',
+        'Fair practice: replaying the same lesson gives half the points once a day, after that only better stars count. A sibling’s figure can only be changed in the parent area.',
+      ),
+      L(
+        'Sicherheit: Nach einer neuen Anmeldung bleibt der Elternbereich gesperrt, wenn eine PIN eingerichtet ist. Wer die PIN vergessen hat, bekommt mit «PIN vergessen?» einen Code an die E-Mail-Adresse des Kontos. Falsche PINs und falsche E-Mail-Codes sperren nach einigen Versuchen für eine Weile – unabhängig davon, von wo sie kommen.',
+        'Security: after a new login the parent area stays locked when a PIN is set. If you forgot the PIN, «PIN vergessen?» sends a code to the account’s e-mail address. Wrong PINs and wrong e-mail codes lock for a while after a few tries – wherever they come from.',
+      ),
+      L(
+        'Korrektur: Ein ungültiges Datum kann eine Lektion nicht mehr unbrauchbar machen.',
+        'Fix: an invalid date can no longer make a lesson unusable.',
+      ),
+      L(
+        'Neue Startseite: Klavio auf dem Handy gleich oben, ein erstes Lied zum Ausprobieren, was Klavio kann (zuhören, mitspielen, Notenregen, Traumlied), die zwei Wege für Kinder und Erwachsene, ehrliche Zahlen – und die Anmeldung am Schluss, mit «Anmelden» oben rechts. Auf dem Handy ist sie gut ein Drittel kürzer.',
+        'New start page: Klavio on a phone right at the top, a first song to try, what Klavio does (listening, playing along, note rain, dream song), the two ways for children and adults, honest numbers – and the login at the end, with «Anmelden» at the top right. On phones it is a good third shorter.',
+      ),
+      L(
+        'Mehr Weihnachten: Ab dem ersten Advent ändert sich jeden Tag etwas – am 6. kommt der Samichlaus und lässt seinen Sack da, ein Rentier mit roter Nase schaut oben rechts herein, ein Schneemann schmilzt und ein neuer wird gebaut, es gibt Guetzli, einen Engel, den Schlitten, den Stern von Betlehem und an Heiligabend fliegt der Schlitten über den Himmel. Auch Kopfzeile, Logo und Navigation feiern mit: Tannengirlande, Zipfelmütze, Schnee und Glocken.',
+        'More Christmas: from the first Sunday of Advent something changes every day – on the 6th Samichlaus comes and leaves his sack, a reindeer with a red nose peeks in at the top right, a snowman melts and a new one is built, there are Christmas biscuits, an angel, the sleigh, the star of Bethlehem, and on Christmas Eve the sleigh flies across the sky. The header, logo and navigation join in too: a fir garland, a Santa cap, snow and bells.',
+      ),
+      L(
+        'Drei neue Welten: Jedes Kapitel hat jetzt seine eigene – neu sind der Takt-Zirkus, die Tonleiter-Wüste und der Konzert-Garten.',
+        'Three new worlds: every chapter now has its own – new are the Beat Circus, the Scale Desert and the Concert Garden.',
+      ),
+      L(
+        'Korrektur: Auf grösseren Handys überlappen die Kapitel-Überschriften im Lernpfad nicht mehr mit den Bildern der Welten, und die Stufen passen nebeneinander. In der Verwaltung nutzen die Zahlenfelder wieder die ganze Breite für ihre Erklärung.',
+        'Fix: on larger phones the chapter headings on the learning path no longer overlap the world pictures, and the stages fit side by side. In the administration the number fields use the full width for their explanation again.',
+      ),
+      L(
+        'Classic hat wieder Farbe: Der Hintergrund zeigt die Farbflächen und Noten wie bei Kids – nur leiser.',
+        'Classic has colour again: the background shows the colour fields and notes like Kids – only quieter.',
+      ),
+      L(
+        'Klavio als App: Auf dem Handy erscheint nach einem Moment ein Hinweis von unten – mit dem Installieren-Knopf des Browsers oder Schritt für Schritt für Safari und das Browser-Menü. «Später» fragt in einer Woche wieder, «Nicht mehr zeigen» nie mehr.',
+        'Klavio as an app: on phones a hint slides up after a moment – with the browser’s install button, or step by step for Safari and the browser menu. «Later» asks again in a week, «Don’t show again» never.',
+      ),
+      L(
+        'Wo spielst du? gilt jetzt auf allen Geräten: Die Wahl gehört zum Profil, nicht mehr zum Gerät.',
+        'Where do you play? now applies on every device: the choice belongs to the profile, no longer to the device.',
+      ),
+      L(
+        'Freies Spielen: Wer auf dem Klavier spielt, sieht keine Bildschirm-Tasten mehr – ein Tipp holt sie bei Bedarf. Auf dem Handy passt die Klaviatur jetzt ohne seitliches Wischen auf den Bildschirm; mit den Pfeilen wechselst du die Oktave, und bei Tönen vom Klavier wandert sie von selbst mit.',
+        'Free play: if you play on the piano you no longer see the screen keys – one tap brings them when needed. On phones the keyboard now fits the screen without swiping sideways; the arrows change the octave, and with notes from the piano it follows by itself.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.2',
     changes: [
       L(

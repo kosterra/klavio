@@ -58,7 +58,7 @@ function WorldsForm({
             allowDecimal={false}
             allowNegative={false}
             suffix={` ${t('admin.worlds.years')}`}
-            maw={260}
+            styles={{ wrapper: { maxWidth: 260 } }}
             size="md"
             disabled={!settings}
             error={age !== '' && !valid ? t('admin.worlds.invalid') : undefined}

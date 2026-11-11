@@ -39,15 +39,29 @@ test('phones get a hint to install Klavio as an app', async ({ browser }) => {
   });
   const page = await context.newPage();
   await page.goto('/welcome');
-  const hint = page.getByTestId('install-hint');
-  await expect(hint).toContainText('Klavio installieren');
+  // a moment after the page: a sheet from the bottom with what the app brings and the steps
+  const hint = page.getByRole('dialog', { name: 'Klavio als App' });
+  await expect(hint).toBeVisible({ timeout: 8000 });
+  await expect(hint).toContainText('Funktioniert auch ohne Internet');
+  await expect(hint.getByRole('list', { name: 'So installierst du Klavio' })).toContainText(
+    'App installieren',
+  );
   await audit(page);
-  await hint.getByRole('button', { name: 'Schliessen' }).click();
+  // «Später»: gone for now, also after a reload
+  await hint.getByTestId('install-later').click();
   await expect(hint).toHaveCount(0);
-  // dismissed for good
   await page.reload();
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  await expect(page.getByTestId('install-hint')).toHaveCount(0);
+  await page.waitForTimeout(3500);
+  await expect(page.getByRole('dialog', { name: 'Klavio als App' })).toHaveCount(0);
+  // a week later it asks again – «Nicht mehr zeigen» ends it for good
+  await page.evaluate(() => localStorage.removeItem('klavio.installHint.snoozedUntil'));
+  await page.reload();
+  await expect(hint).toBeVisible({ timeout: 8000 });
+  await hint.getByTestId('install-never').click();
+  await page.reload();
+  await page.waitForTimeout(3500);
+  await expect(page.getByRole('dialog', { name: 'Klavio als App' })).toHaveCount(0);
   await context.close();
 });
 

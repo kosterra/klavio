@@ -1,3 +1,4 @@
+import { clearFailures, lockedFor, recordFailure, type ThrottlePolicy } from '../lib/throttle.js';
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import type { Types } from 'mongoose';
 import {
@@ -6,6 +7,7 @@ import {
   emailRequestSchema,
   parentPasskeySettingSchema,
   parentPinSchema,
+  pinResetSchema,
   webauthnVerifyRequestSchema,
 } from '@klavio/shared';
 import type { AppConfig } from '../config.js';
@@ -34,6 +36,12 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
   });
 
   // ------------------------------------------------------------- parent PIN
+  /** 5 wrong PINs lock for 15 minutes, every further 5 double it (at most a day). */
+  const PIN_THROTTLE: ThrottlePolicy = {
+    threshold: 5,
+    lockMs: 15 * 60 * 1000,
+    maxLockMs: 24 * 60 * 60 * 1000,
+  };
   const pinHash = (userId: Types.ObjectId, pin: string) =>
     hmac(config.AUTH_SECRET, `parent-pin:${userId.toString()}:${pin}`);
   const unlock = (sessionId: Types.ObjectId, until: Date | null) =>
@@ -69,9 +77,14 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
     async (req) => {
       const { user, sessionId } = req.auth!;
       if (!user.parentPinHash) return { unlockedUntil: null };
+      // besides the quick limit above: a lock that grows and survives restarts
+      const key = `pin:${user._id.toString()}`;
+      if ((await lockedFor(key, PIN_THROTTLE)) > 0) throw new HttpError(429, 'RATE_LIMITED');
       if (!safeEqualHex(user.parentPinHash, pinHash(user._id, req.body.pin))) {
+        await recordFailure(key);
         throw new HttpError(403, 'PIN_WRONG');
       }
+      await clearFailures(key);
       const until = new Date(Date.now() + PARENT_UNLOCK_MS);
       await unlock(sessionId, until);
       return { unlockedUntil: until.toISOString() };
@@ -79,6 +92,53 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
   );
 
   // ------------------------------------------- open the parent area with a passkey
+  // «PIN vergessen?»: a code to the account's e-mail address removes the PIN
+  // and opens the parent area – who reads the parents' mail is a parent
+  app.post(
+    '/pin/reset/request',
+    {
+      config: {
+        parentLockFree: true,
+        rateLimit: { max: 3, timeWindow: '10 minutes', hook: 'preHandler' },
+      },
+    },
+    async (req, reply) => {
+      const { user } = req.auth!;
+      const code = await issueEmailCode(config, {
+        email: user.email,
+        purpose: 'pin-reset',
+        userId: user._id,
+      });
+      if (!code) throw new HttpError(429, 'TOO_MANY_CODES');
+      await mailer.send(
+        await codeMail(config, 'login-code', user.email, code, user.locale === 'en' ? 'en' : 'de'),
+      );
+      return reply.code(204).send();
+    },
+  );
+
+  app.post(
+    '/pin/reset/verify',
+    {
+      schema: { body: pinResetSchema },
+      config: { parentLockFree: true, rateLimit: { max: 10, timeWindow: '10 minutes' } },
+    },
+    async (req, reply) => {
+      const { user, sessionId } = req.auth!;
+      await checkEmailCode(config, {
+        email: user.email,
+        purpose: 'pin-reset',
+        code: req.body.code,
+        consume: true,
+        userId: user._id,
+      });
+      await User.updateOne({ _id: user._id }, { parentPinHash: null });
+      await clearFailures(`pin:${user._id.toString()}`);
+      await unlock(sessionId, new Date(Date.now() + PARENT_UNLOCK_MS));
+      return reply.code(204).send();
+    },
+  );
+
   app.put('/pin/passkey', { schema: { body: parentPasskeySettingSchema } }, async (req, reply) => {
     await User.updateOne({ _id: req.auth!.user._id }, { parentPasskeyUnlock: req.body.enabled });
     return reply.code(204).send();
@@ -203,14 +263,40 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
         consume: true,
         userId,
       });
+      const old = req.auth!.user.email;
       try {
         await User.updateOne({ _id: userId }, { email: pending.email });
       } catch {
         throw new HttpError(409, 'EMAIL_IN_USE');
       }
+      // whoever was logged in elsewhere logs in again; the old address hears of it
+      await Session.deleteMany({ userId, _id: { $ne: req.auth!.sessionId } });
+      const en = req.auth!.user.locale === 'en';
+      void mailer
+        .send({
+          to: old,
+          subject: en
+            ? 'Klavio: your e-mail address was changed'
+            : 'Klavio: Deine E-Mail-Adresse wurde geändert',
+          text: en
+            ? `The e-mail address of your Klavio account was changed to ${pending.email}. If that wasn't you, log in with a passkey or contact the operator of this Klavio.`
+            : `Die E-Mail-Adresse deines Klavio-Kontos wurde auf ${pending.email} geändert. Warst du das nicht, melde dich mit einem Passkey an oder wende dich an die Betreiberin oder den Betreiber dieses Klavio.`,
+        })
+        .catch((err: unknown) => req.log.error(err, 'e-mail change notice failed'));
       return { email: pending.email };
     },
   );
+
+  // ----------------------------------------------------- other devices
+  // «Auf allen anderen Geräten abmelden»: every session but this one ends
+  app.post('/sessions/logout-others', async (req) => {
+    const { user, sessionId } = req.auth!;
+    const { deletedCount } = await Session.deleteMany({
+      userId: user._id,
+      _id: { $ne: sessionId },
+    });
+    return { loggedOut: deletedCount };
+  });
 
   // ------------------------------------------------------------ display name
   app.patch('/', { schema: { body: accountUpdateSchema } }, async (req) => {

@@ -35,7 +35,7 @@ The repository has a ready-to-copy [`docker-compose.yml`](https://github.com/kos
    `docker compose exec app node server/dist/scripts/grantAdmin.js you@example.com`.
    Admins can close the registration, e.g. for an instance only for the own family or school.
 
-**HTTPS is required:** passkeys, the microphone and offline use only work on a secure origin. Without Caddy, put any reverse proxy in front of port 3100 and set `TRUST_PROXY=true`.
+**HTTPS is required:** passkeys, the microphone and offline use only work on a secure origin. Without Caddy, put any reverse proxy in front of port 3100 and set `TRUST_PROXY=1` (the number of proxies in front of the app, or a comma-separated list of their addresses – never more than there really are, or clients could pick their own address for the rate limits).
 
 A minimal service, next to a MongoDB 8 that only it can reach:
 
@@ -51,7 +51,7 @@ services:
       AUTH_SECRET: ${AUTH_SECRET}
       APP_ORIGIN: https://klavio.example.com
       RP_ID: klavio.example.com
-      TRUST_PROXY: 'true'
+      TRUST_PROXY: '1'
       SMTP_HOST: smtp.example.com
       SMTP_USER: ${SMTP_USER}
       SMTP_PASS: ${SMTP_PASS}
@@ -62,24 +62,24 @@ services:
 
 ## Environment variables
 
-| Variable                    | Required       | Default                            | What it is for                                                                                                                  |
-| --------------------------- | -------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `AUTH_SECRET`               | yes            | —                                  | At least 32 characters; protects the e-mail codes and the parent PIN. Changing it makes codes in flight and set PINs invalid    |
-| `MONGO_URL`                 | yes            | `mongodb://localhost:27017/klavio` | Where MongoDB is                                                                                                                |
-| `APP_ORIGIN`                | yes            | `http://localhost:5173`            | The public address the browser sees (`https://klavio.example.com`): passkeys, the origin check and the address in link previews |
-| `RP_ID`                     | yes            | `localhost`                        | The domain passkeys belong to, without scheme and port (`klavio.example.com`)                                                   |
-| `TRUST_PROXY`               | behind a proxy | `false`                            | `true` behind a reverse proxy, so rate limits see the real client address                                                       |
-| `COOKIE_SECURE`             | no             | `true`                             | The login cookie only over HTTPS; `false` only for `http://localhost`                                                           |
-| `SESSION_TTL_DAYS`          | no             | `60`                               | How long a login lasts                                                                                                          |
-| `REGISTRATION_OPEN_DEFAULT` | no             | `true`                             | Whether new accounts may sign up at first; admins switch it in the app later                                                    |
-| `SMTP_HOST`                 | for mail       | —                                  | The mail server. Without it, mails only go to the log (development)                                                             |
-| `SMTP_PORT`                 | no             | `587`                              | `465` together with `SMTP_SECURE=true`                                                                                          |
-| `SMTP_SECURE`               | no             | `false`                            | TLS from the start (port 465)                                                                                                   |
-| `SMTP_REQUIRE_TLS`          | no             | `true`                             | Insist on STARTTLS                                                                                                              |
-| `SMTP_USER`, `SMTP_PASS`    | no             | —                                  | The login at the mail server                                                                                                    |
-| `MAIL_FROM`                 | recommended    | `Klavio <no-reply@localhost>`      | The sender of the codes                                                                                                         |
-| `LOG_LEVEL`                 | no             | `info`                             | `fatal` … `trace`, `silent`. Logs carry no IP addresses                                                                         |
-| `PORT`, `HOST`              | no             | `3100`, `0.0.0.0`                  | Where the server listens inside the container                                                                                   |
+| Variable                    | Required       | Default                            | What it is for                                                                                                                   |
+| --------------------------- | -------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `AUTH_SECRET`               | yes            | —                                  | At least 32 characters; protects the e-mail codes and the parent PIN. Changing it makes codes in flight and set PINs invalid     |
+| `MONGO_URL`                 | yes            | `mongodb://localhost:27017/klavio` | Where MongoDB is                                                                                                                 |
+| `APP_ORIGIN`                | yes            | `http://localhost:5173`            | The public address the browser sees (`https://klavio.example.com`): passkeys, the origin check and the address in link previews  |
+| `RP_ID`                     | yes            | `localhost`                        | The domain passkeys belong to, without scheme and port (`klavio.example.com`)                                                    |
+| `TRUST_PROXY`               | behind a proxy | `false`                            | number of reverse proxies in front (`1` for one), or a list of their addresses / CIDR ranges, so rate limits see the real client |
+| `COOKIE_SECURE`             | no             | `true`                             | The login cookie only over HTTPS; `false` only for `http://localhost`                                                            |
+| `SESSION_TTL_DAYS`          | no             | `60`                               | How long a login lasts                                                                                                           |
+| `REGISTRATION_OPEN_DEFAULT` | no             | `true`                             | Whether new accounts may sign up at first; admins switch it in the app later                                                     |
+| `SMTP_HOST`                 | for mail       | —                                  | The mail server. Without it, mails only go to the log (development)                                                              |
+| `SMTP_PORT`                 | no             | `587`                              | `465` together with `SMTP_SECURE=true`                                                                                           |
+| `SMTP_SECURE`               | no             | `false`                            | TLS from the start (port 465)                                                                                                    |
+| `SMTP_REQUIRE_TLS`          | no             | `true`                             | Insist on STARTTLS                                                                                                               |
+| `SMTP_USER`, `SMTP_PASS`    | no             | —                                  | The login at the mail server                                                                                                     |
+| `MAIL_FROM`                 | recommended    | `Klavio <no-reply@localhost>`      | The sender of the codes                                                                                                          |
+| `LOG_LEVEL`                 | no             | `info`                             | `fatal` … `trace`, `silent`. Logs carry no IP addresses                                                                          |
+| `PORT`, `HOST`              | no             | `3100`, `0.0.0.0`                  | Where the server listens inside the container                                                                                    |
 
 ---
 

@@ -419,6 +419,43 @@
         }
       }
     },
+    "/api/account/pin/reset/request": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/account/pin/reset/verify": {
+      "post": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "pattern": "^\\d{6}$"
+                  }
+                },
+                "required": [
+                  "code"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
     "/api/account/pin/passkey": {
       "put": {
         "requestBody": {
@@ -587,6 +624,15 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/account/sessions/logout-others": {
+      "post": {
         "responses": {
           "200": {
             "description": "Default Response"
@@ -788,13 +834,11 @@
                     "type": "object",
                     "properties": {
                       "a4Hz": {
-                        "default": 440,
                         "type": "number",
                         "minimum": 415,
                         "maximum": 466
                       },
                       "noiseFloorDb": {
-                        "default": null,
                         "anyOf": [
                           {
                             "type": "number",
@@ -807,7 +851,6 @@
                         ]
                       },
                       "inputGain": {
-                        "default": 1,
                         "type": "number",
                         "minimum": 0.1,
                         "maximum": 10
@@ -941,6 +984,20 @@
                         "type": "integer",
                         "minimum": 1,
                         "maximum": 7
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "playOn": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "piano",
+                          "screen"
+                        ]
                       },
                       {
                         "type": "null"

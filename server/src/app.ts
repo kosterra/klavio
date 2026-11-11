@@ -61,8 +61,12 @@ export async function buildApp({
               }),
             },
           },
-    trustProxy: config.TRUST_PROXY,
+    // (the union of the parsed setting confuses the overloads of Fastify())
+    trustProxy: config.TRUST_PROXY as boolean,
     bodyLimit: 64 * 1024,
+    // slow or stalled clients don't hold connections open for ever
+    connectionTimeout: 60_000,
+    requestTimeout: 30_000,
   }).withTypeProvider<ZodTypeProvider>();
 
   app.setValidatorCompiler(validatorCompiler);

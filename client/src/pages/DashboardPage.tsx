@@ -53,6 +53,7 @@ export function DashboardPage() {
   return (
     <Stack gap="lg" maw={1100} mx="auto">
       <InstallHint />
+      <InstallHint variant="popup" />
       {/* both modes: the greeting is a stage in the colours of the current world */}
       <HeroStage
         name={activeProfile.name}

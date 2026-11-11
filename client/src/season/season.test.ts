@@ -15,18 +15,34 @@ describe('the festive season', () => {
     expect(hasPiece(first, 'tree')).toBe(false);
   });
 
-  it('brings one more piece every few days, all of them on Christmas Eve', () => {
-    let before = 0;
-    for (let day = 29; day <= 55; day++) {
-      const date = new Date(2026, 10, day, 12);
-      const s = seasonAt(date);
-      const n = ADVENT_PIECES.filter((p) => hasPiece(s, p)).length;
-      expect(n).toBeGreaterThanOrEqual(before);
-      before = n;
+  it('changes something every day – pieces come, visitors come and go', () => {
+    for (const year of [2025, 2026, 2027, 2028, 2029, 2030]) {
+      const start = firstAdvent(year);
+      let before: string | null = null;
+      for (let t = new Date(start); t <= new Date(year, 11, 26); t.setDate(t.getDate() + 1)) {
+        const s = seasonAt(new Date(t.getFullYear(), t.getMonth(), t.getDate(), 12));
+        const now = ADVENT_PIECES.filter((p) => hasPiece(s, p)).join(',');
+        expect(now, `${t.toDateString()}`).not.toBe(before);
+        before = now;
+      }
     }
+  });
+
+  it('brings Samichlaus on the 6th and the sleigh on Christmas Eve', () => {
+    expect(hasPiece(seasonAt(d('2026-12-06')), 'samichlaus')).toBe(true);
+    expect(hasPiece(seasonAt(d('2026-12-07')), 'samichlaus')).toBe(false);
+    expect(hasPiece(seasonAt(d('2026-12-07')), 'sack')).toBe(true);
+    // the snowman melts and a new one is built
+    expect(hasPiece(seasonAt(d('2026-12-10')), 'snowman')).toBe(true);
+    expect(hasPiece(seasonAt(d('2026-12-12')), 'snowman')).toBe(false);
+    expect(hasPiece(seasonAt(d('2026-12-16')), 'snowman')).toBe(true);
     const eve = seasonAt(d('2026-12-24'));
     expect(eve.phase).toBe('christmas');
-    expect(ADVENT_PIECES.every((p) => hasPiece(eve, p))).toBe(true);
+    expect(
+      ['santa', 'star', 'tree', 'gifts', 'bethlehem'].every((p) => hasPiece(eve, p as never)),
+    ).toBe(true);
+    expect(hasPiece(eve, 'sled')).toBe(false); // it's flying
+    expect(hasPiece(seasonAt(d('2026-12-25')), 'santa')).toBe(false);
     expect(seasonAt(d('2026-12-26')).phase).toBe('christmas');
   });
 

@@ -137,6 +137,64 @@ const KIDS_TILES: Record<KidsWorldId, { width: number; draw: ReactNode }> = {
       </>
     ),
   },
+  // Takt-Zirkus: little tents under bunting
+  circus: {
+    width: 120,
+    draw: (
+      <>
+        <path d="M0 40 V30 Q30 22 60 30 T120 30 V40 Z" fill={HILL} />
+        <path d="M14 34 L26 14 L38 34 Z" fill={HILL2} />
+        <path d="M26 14 V8" stroke={DARK} strokeWidth="1.5" />
+        <path d="M78 34 L88 18 L98 34 Z" fill={LIGHT} opacity="0.6" />
+        <path d="M0 6 Q30 16 60 6 T120 6" stroke={DARK} strokeWidth="1" fill="none" opacity="0.5" />
+        {[10, 30, 50, 70, 90, 110].map((x, k) => (
+          <path
+            key={x}
+            d={`M${x - 4} ${8 + (k % 2)} L${x} ${15} L${x + 4} ${8 + (k % 2)} Z`}
+            fill={k % 2 ? 'var(--mantine-color-yellow-4)' : LIGHT}
+          />
+        ))}
+      </>
+    ),
+  },
+  // Tonleiter-Wüste: dunes and a palm
+  desert: {
+    width: 130,
+    draw: (
+      <>
+        <path d="M0 40 V28 Q32 12 65 26 T130 28 V40 Z" fill={HILL} />
+        <path d="M0 40 V34 Q36 26 70 32 T130 34 V40 Z" fill={HILL2} />
+        <path d="M100 34 Q99 24 102 18" stroke={DARK} strokeWidth="2" fill="none" />
+        <path
+          d="M102 18 q-8 -3 -12 2 M102 18 q7 -5 11 0 M102 18 q-3 -7 -9 -7"
+          stroke={LIGHT}
+          strokeWidth="3"
+          fill="none"
+          strokeLinecap="round"
+        />
+        <path d="M30 26 L38 18 L46 26 Z" fill={HILL2} />
+      </>
+    ),
+  },
+  // Konzert-Garten: hedges with flowers
+  garden: {
+    width: 110,
+    draw: (
+      <>
+        <rect x="0" y="30" width="110" height="10" fill={HILL2} />
+        <rect x="4" y="20" width="40" height="14" rx="7" fill={HILL} />
+        <rect x="60" y="22" width="44" height="12" rx="6" fill={HILL} />
+        {[
+          [14, 22, 'pink'],
+          [32, 20, 'yellow'],
+          [72, 24, 'red'],
+          [94, 23, 'grape'],
+        ].map(([x, y, c]) => (
+          <circle key={`${x}`} cx={x} cy={y} r="2.6" fill={`var(--mantine-color-${c}-4)`} />
+        ))}
+      </>
+    ),
+  },
 };
 
 const TILES: Record<WorldId, { width: number; draw: ReactNode }> = {

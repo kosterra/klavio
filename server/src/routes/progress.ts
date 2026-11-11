@@ -161,9 +161,10 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
         stars,
         localDate,
       );
-      const xpGained = xpFor(lesson.xp, stars, previousBest) + bonusXp;
+      const replayedToday = previous?.lastLocalDate === localDate;
+      let xpGained = xpFor(lesson.xp, stars, previousBest, replayedToday) + bonusXp;
 
-      await LessonProgress.updateOne(
+      const saved = await LessonProgress.updateOne(
         { profileId, lessonId: lesson.id },
         {
           $max: { bestStars: stars },
@@ -176,16 +177,23 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
         },
         { upsert: true },
       );
+      // two submits at the same moment: only the one that created the entry is the first
+      const firstCompletion = saved.upsertedCount === 1;
+      if (!previous && !firstCompletion) xpGained = xpFor(lesson.xp, stars, stars, true);
       const today = await DailyActivity.findOneAndUpdate(
         { profileId, date: localDate },
         { $inc: { seconds: durationSec, xp: xpGained } },
         { upsert: true, returnDocument: 'after', lean: true },
       );
 
-      const profile = await Profile.findById(profileId);
+      // XP added atomically – parallel lessons don't overwrite each other
+      const profile = await Profile.findOneAndUpdate(
+        { _id: profileId },
+        { $inc: { xp: xpGained } },
+        { returnDocument: 'after' },
+      );
       if (!profile) throw notFound();
-      const levelBefore = profile.level;
-      profile.xp += xpGained;
+      const levelBefore = levelForXp(profile.xp - xpGained);
       profile.level = levelForXp(profile.xp);
       const streak = nextStreak(
         {
@@ -215,13 +223,19 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
         },
         owned,
       );
-      for (const id of newBadges) profile.badges.push({ id, earnedAt: new Date() });
-      await profile.save();
+      await Profile.updateOne({ _id: profileId }, { $set: { level: profile.level, streak } });
+      // each badge only once, even when two results arrive together
+      for (const id of newBadges) {
+        await Profile.updateOne(
+          { _id: profileId, 'badges.id': { $ne: id } },
+          { $push: { badges: { id, earnedAt: new Date() } } },
+        );
+      }
 
       return {
         stars,
         bestStars: Math.max(stars, previousBest),
-        firstCompletion: !previous,
+        firstCompletion,
         xpGained,
         xp: profile.xp,
         level: profile.level,

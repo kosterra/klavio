@@ -1,7 +1,14 @@
 import { z } from 'zod';
 import { ISO_DATE } from '../curriculum/rewards.ts';
 
-export const isoDateSchema = z.string().regex(ISO_DATE);
+/** yyyy-mm-dd – and a day that exists (no 2026-11-00 or 2026-02-30). */
+export const isoDateSchema = z
+  .string()
+  .regex(ISO_DATE)
+  .refine((s) => {
+    const d = new Date(`${s}T00:00:00Z`);
+    return !Number.isNaN(d.getTime()) && d.toISOString().startsWith(s);
+  }, 'Invalid date');
 
 /** Sent when a lesson is finished. Stars and XP are computed on the server. */
 export const lessonCompleteSchema = z.object({

@@ -42,16 +42,17 @@
       "title": "Was auf dem Server gespeichert wird",
       "text": "Damit du auf mehreren Geräten weiterlernen kannst, liegt auf dem Server:",
       "items": {
-        "1": "Konto: ein Name (z. B. «Familie Muster»), deine E-Mail-Adresse, ob du Admin bist, und – falls gesetzt – eine verschlüsselte Eltern-PIN.",
+        "1": "Konto: ein Name (z. B. «Familie Muster»), deine E-Mail-Adresse, die Sprache für E-Mails, ob du Admin bist, wann das Konto zuletzt benutzt wurde (und ob eine Warnung vor dem Löschen verschickt wurde) und – falls gesetzt – eine verschlüsselte Eltern-PIN.",
         "2": "Passkeys: nur der öffentliche Schlüssel und Angaben wie der Name des Passwort-Managers. Fingerabdruck, Gesicht und private Schlüssel bleiben auf deinem Gerät.",
-        "3": "Profile: Name oder Spitzname, Geburtsjahr, Figur, Darstellung und Welt, Tagesziel, Mikrofon-Einstellung, XP, Level, Streak, Abzeichen und – falls gewählt – der Titel deines Traumlieds.",
-        "4": "Lernfortschritt: Sterne und Wiederholungen je Lektion sowie die Übungszeit pro Tag.",
-        "5": "Server-Protokoll: Zeitpunkt, aufgerufene Adresse und Antwort – ohne IP-Adresse."
+        "3": "Profile: Name oder Spitzname, Geburtsjahr, Figur und Kleidungsstück, Darstellung und Welt, Tagesziel und Wochenziel, ob du auf dem Klavier oder dem Bildschirm spielst, Mikrofon-Einstellung, die Antworten aus den Startfragen (z. B. warum du spielst), XP, Level, Streak, Abzeichen und – falls gewählt – der Titel deines Traumlieds.",
+        "4": "Lernfortschritt: Sterne, Wiederholungen und das Datum je Lektion sowie die Übungszeit pro Tag.",
+        "5": "Server-Protokoll: Zeitpunkt, aufgerufene Adresse und Antwort – ohne IP-Adresse. In der mitgelieferten Einrichtung wird es laufend überschrieben (höchstens drei Dateien à 10 MB).",
+        "6": "Fehlversuche bei E-Mail-Codes und Eltern-PIN: wie viele und wann zuletzt – damit niemand raten kann. Nach einem Tag ohne weiteren Fehlversuch wird das vergessen."
       }
     },
     "device": {
       "title": "Was auf deinem Gerät gespeichert wird",
-      "text": "Klavio setzt nur zwei Cookies, beide technisch notwendig: eines hält dich angemeldet, eines schützt die Anmeldung mit Passkey. Im Speicher des Browsers liegen dein letzter Stand (damit Klavio auch offline funktioniert), noch nicht übertragene Ergebnisse und Einstellungen wie Sprache und Farbschema. Beim Abmelden wird dein Stand vom Gerät gelöscht."
+      "text": "Klavio setzt nur zwei Cookies, beide technisch notwendig: eines hält dich angemeldet, eines schützt die Anmeldung mit Passkey. Im Speicher des Browsers liegen dein letzter Stand (damit Klavio auch offline funktioniert), noch nicht übertragene Ergebnisse, Einstellungen je Profil (z. B. Vorlesen, Rekord im Notenregen) und allgemeine Einstellungen wie Sprache und Farbschema. Beim Abmelden werden dein Stand, deine noch nicht übertragenen Ergebnisse und die Einstellungen deiner Profile vom Gerät gelöscht; nur allgemeine Einstellungen wie Sprache und Farbschema bleiben."
     },
     "sharing": {
       "title": "Wer Daten bekommt",
@@ -69,7 +70,8 @@
         "2": "Angemeldet bleibst du 60 Tage, danach meldest du dich neu an.",
         "3": "E-Mail-Codes verfallen nach 10 Minuten.",
         "4": "In Sicherungskopien bleiben Daten, bis die Sicherung abläuft – wie lange, legt der Betreiber fest.",
-        "5": "Falls die Betreiberin oder der Betreiber es eingestellt hat: Konten, die lange nicht benutzt wurden, werden nach einer Warnung per E-Mail gelöscht."
+        "5": "Falls die Betreiberin oder der Betreiber es eingestellt hat: Konten, die lange nicht benutzt wurden, werden nach einer Warnung per E-Mail gelöscht.",
+        "6": "Fehlversuche bei Codes und PIN werden nach einem Tag vergessen; Protokolle werden laufend überschrieben."
       },
       "text": "Gelöscht wird so:"
     },
@@ -251,7 +253,12 @@
     "changeEmail": "E-Mail-Adresse ändern",
     "export": "Deine Daten",
     "exportHint": "Lade alles herunter, was Klavio über dein Konto gespeichert hat – Konto, Passkeys, Profile, Fortschritt und Übungstage – als eine Datei (JSON).",
-    "exportButton": "Daten herunterladen"
+    "exportButton": "Daten herunterladen",
+    "devices": "Andere Geräte",
+    "devicesHint": "Ein Gerät verloren oder verkauft? Hier meldest du dein Konto überall sonst ab – nur dieses Gerät bleibt angemeldet.",
+    "devicesButton": "Auf allen anderen Geräten abmelden",
+    "devicesDone_one": "{{count}} anderes Gerät abgemeldet.",
+    "devicesDone_other": "{{count}} andere Geräte abgemeldet."
   },
   "admin": {
     "title": "Verwaltung",
@@ -498,7 +505,10 @@
       "ridge": "Gipfelgrat",
       "hut": "Berghütte",
       "pass": "Passhöhe",
-      "glacier": "Gletscher"
+      "glacier": "Gletscher",
+      "circus": "Takt-Zirkus",
+      "desert": "Tonleiter-Wüste",
+      "garden": "Konzert-Garten"
     },
     "stages": {
       "1": "Stufe 1 · Erste Schritte",
@@ -701,12 +711,21 @@
     "pendingResult": "Du bist gerade offline. Dein Ergebnis ist auf diesem Gerät gespeichert und wird übertragen, sobald du wieder online bist. Abzeichen gibt es dann auch."
   },
   "install": {
-    "title": "Klavio installieren",
-    "text": "Installiere die App: Sie startet dann wie eine richtige App im Vollbild und funktioniert auch ohne Internet.",
-    "ios": "Tippe in Safari auf «Teilen» (Quadrat mit Pfeil) und dann auf «Zum Home-Bildschirm». Dann startet Klavio wie eine richtige App und funktioniert auch ohne Internet.",
-    "button": "App installieren",
-    "android": "Öffne das Menü des Browsers (⋮ oder ☰) und tippe auf «App installieren» oder «Zum Startbildschirm hinzufügen». Dann startet Klavio wie eine richtige App im Vollbild und funktioniert auch ohne Internet.",
-    "how": "So geht's"
+    "title": "Klavio als App",
+    "button": "Jetzt installieren",
+    "how": "So installierst du Klavio",
+    "perks": {
+      "start": "Startet mit einem Tipp vom Home-Bildschirm",
+      "full": "Ganzer Bildschirm – mehr Platz für die Tasten",
+      "offline": "Funktioniert auch ohne Internet"
+    },
+    "ios1": "Tippe in Safari unten auf «Teilen».",
+    "ios2": "Wähle «Zum Home-Bildschirm».",
+    "ios3": "Tippe oben rechts auf «Hinzufügen» – fertig.",
+    "menu1": "Öffne das Menü des Browsers – die drei Punkte oben rechts.",
+    "menu2": "Tippe auf «App installieren» oder «Zum Startbildschirm hinzufügen».",
+    "later": "Später",
+    "never": "Nicht mehr zeigen"
   },
   "update": {
     "title": "Neue Version verfügbar",
@@ -723,7 +742,7 @@
     "pin": "Eltern-PIN",
     "enterPin": "Gib die Eltern-PIN ein.",
     "open": "Öffnen",
-    "forgot": "PIN vergessen? Melde dich ab und mit Passkey oder E-Mail-Code wieder an – danach kannst du unter «Konto» eine neue festlegen.",
+    "forgot": "PIN vergessen?",
     "explain": "Mit einer Eltern-PIN (4 Ziffern) schützt du Konto, Verwaltung und das Anlegen von Profilen vor Kinderhänden. Lernen und die Mikrofon-Einrichtung gehen ohne PIN.",
     "isSet": "Die Eltern-PIN ist eingerichtet. Der Elternbereich schliesst sich, sobald ein Profil gewählt wird, und spätestens nach 15 Minuten.",
     "set": "PIN festlegen",
@@ -737,7 +756,10 @@
     "orPin": "oder mit der PIN:",
     "passkeySetting": "Elternbereich auch mit Passkey öffnen",
     "passkeySettingHint": "Statt der PIN genügt dann Fingerabdruck, Gesicht oder die Geräte-PIN eines Passkeys dieses Kontos. Nur einschalten, wenn die Kinder dieses Gerät nicht selbst entsperren können.",
-    "passkeySettingNeedsPasskey": "Richte dafür zuerst oben einen Passkey ein."
+    "passkeySettingNeedsPasskey": "Richte dafür zuerst oben einen Passkey ein.",
+    "resetSent": "Wir haben einen Code an {{email}} geschickt. Gib ihn hier ein – die PIN wird dann entfernt und der Elternbereich öffnet sich.",
+    "resetCode": "Code aus der E-Mail",
+    "resetHint": "Danach kannst du unter «Konto» eine neue PIN festlegen."
   },
   "profileSettings": {
     "title": "Mein Profil",
@@ -828,7 +850,6 @@
     "headline": "Klavier lernen – am echten Klavier, wie im Spiel.",
     "lead": "Klavio hört dir beim Spielen zu, zeigt dir Schritt für Schritt, was als Nächstes kommt, und führt dich durch bunte Welten – von der ersten Taste bis zum Spiel mit beiden Händen.",
     "cta": "Jetzt loslegen",
-    "how": "So funktioniert’s",
     "login": "Anmelden",
     "badgeAudio": "Audio bleibt auf dem Gerät",
     "badgeOpen": "Freie Software",
@@ -848,39 +869,9 @@
         "text": "Du spielst auf deinem Klavier, Klavio erkennt die Töne und hilft dir weiter."
       }
     },
-    "featuresTitle": "Was Klavio kann",
-    "features": {
-      "listen": {
-        "title": "Hört dir zu",
-        "text": "Tonerkennung über das Mikrofon, MIDI fürs Digitalpiano oder die Bildschirm-Klaviatur."
-      },
-      "worlds": {
-        "title": "{{count}} Welten",
-        "text": "Vom Tasten-Tal bis zur Sternen-Nacht: ein Lernpfad wie ein Spielbrett."
-      },
-      "discover": {
-        "title": "Entdecken & Wissen",
-        "text": "Kurze Erklärungen, Quiz und kleine Spiele vor jeder Lektion – zum Nachschauen gesammelt."
-      },
-      "review": {
-        "title": "Wiederholen",
-        "text": "Gespielte Lektionen kommen zur richtigen Zeit wieder – so bleibt alles im Kopf."
-      },
-      "medals": {
-        "title": "Medaillen & Sterne",
-        "text": "Sterne, Level, Tagesziel und Medaillen zum Sammeln – ganz ohne Druck."
-      },
-      "family": {
-        "title": "Für die ganze Familie",
-        "text": "Mehrere Profile, Kinder- und Classic-Darstellung, Eltern-Bereich mit PIN."
-      }
-    },
-    "worldsTitle": "{{count}} Welten warten auf dich",
-    "worldsText": "Jedes Kapitel ist eine eigene Welt. Noch nicht erreichte Welten liegen im Nebel – bis du sie entdeckst.",
-    "tryTitle": "Probier’s gleich aus",
-    "tryText": "Tippe auf die Tasten oder klicke sie an.",
-    "tryHint": "Kennst du ein Kinderlied? Spiel es doch mal …",
-    "privacyTitle": "Sicher und ehrlich",
+    "tryTitle": "Spiel dein erstes Lied",
+    "tryText": "Die erste Zeile von «Alle meine Entchen» – die nächste Taste leuchtet. So fühlt sich eine Lektion an.",
+    "privacyTitle": "Ehrlich und sicher",
     "privacy": {
       "audio": "Was du spielst, bleibt auf deinem Gerät – Audio wird nie gesendet oder gespeichert.",
       "ads": "Keine Werbung, kein Tracking.",
@@ -892,10 +883,6 @@
       "piano": {
         "q": "Brauche ich ein Digitalpiano?",
         "a": "Nein. Ein echtes Klavier genügt – das Mikrofon erkennt die Töne. Ein Digitalpiano kannst du per USB-MIDI anschliessen, und zum Ausprobieren gibt es die Bildschirm-Klaviatur."
-      },
-      "who": {
-        "q": "Für wen ist Klavio?",
-        "a": "Für Kinder und Erwachsene ohne Vorkenntnisse. Jede Person bekommt ein eigenes Profil – Kinder in einer verspielten, Erwachsene auf Wunsch in einer ruhigen Darstellung."
       },
       "devices": {
         "q": "Auf welchen Geräten läuft Klavio?",
@@ -912,6 +899,10 @@
       "adults": {
         "q": "Ist das nur für Kinder?",
         "a": "Nein. Erwachsene wählen die ruhigere Darstellung «Classic» und die Welt «Die Reise» mit Höhenprofil und Traumlied. Die Lektionen sind dieselben, ohne Kinderkram."
+      },
+      "host": {
+        "q": "Kann ich Klavio selbst betreiben?",
+        "a": "Ja. Klavio ist freie Software (AGPL-3.0). Mit einem Docker-Image läuft es auf deinem eigenen Server – für deine Familie, deine Klasse oder deine Musikschule, mit eigenen E-Mails und ohne dass Daten das Haus verlassen."
       }
     },
     "finalTitle": "Bereit für deine erste Taste?",
@@ -922,26 +913,58 @@
     "eggDucks": "Alle meine Entchen schwimmen auf dem See! 🦆",
     "leadShort": "Klavio hört dir beim Spielen zu und zeigt dir Schritt für Schritt, was als Nächstes kommt – für Kinder und Erwachsene.",
     "badgeFree": "Kostenlos, ohne Abo",
-    "lookTitle": "So sieht's aus",
-    "lookText": "Wie die grossen Klavier-Apps – aber kostenlos, ohne Abo und ohne Werbung. Und was du spielst, bleibt auf deinem Gerät.",
-    "look": {
-      "path": "Der Lernpfad: Welt für Welt, mit Sternen und Zielen",
-      "pathAlt": "Bildschirmfoto: der Lernpfad mit dem Hand-Wald, Lektionen als Steine auf einem Weg und dem Fuchs auf der nächsten Lektion",
-      "lesson": "Eine Lektion: Klavio wartet, bis du den richtigen Ton spielst",
-      "lessonAlt": "Bildschirmfoto: das Lied «Hänschen klein» in Noten, darunter die Klaviatur mit der nächsten Taste markiert"
-    },
-    "journeyKicker": "Für Jugendliche und Erwachsene",
-    "journeyTitle": "Die Reise zu deinem Traumlied",
-    "journeyText": "Klavier lernen ist kein gerader Weg: Zuerst geht es leicht bergab, dann wird es steil – und irgendwann kommt die Hölle, das schwerste Stück. Klavio sagt dir das, bevor es so weit ist, und zeigt dir auf einem Höhenprofil, wo du gerade bist.",
-    "journey": {
-      "dream": "Nenne dein Traumlied: Klavio erkennt es und zeigt, welche Fähigkeiten es braucht.",
-      "hell": "Von der Alp hinunter durch Tobel, Schlucht und Stollen bis in die Hölle – und wieder hinauf zum Gipfel.",
-      "choose": "Ab einem Alter, das die Betreiberin oder der Betreiber festlegt, wählt jedes Profil zwischen den bunten Welten und der Reise."
-    },
     "journeyAlt": "Bildschirmfoto: Höhenprofil der Reise – von der Alp hinunter bis zur Hölle bei −666 m und hinauf zum Traumlied",
-    "hostTitle": "Für Familien, Schulen und Musikschulen: selbst betreiben",
-    "hostText": "Klavio ist freie Software. Mit einem Docker-Image läuft es auf deinem eigenen Server – nur für deine Familie, deine Klasse oder deine Musikschule, mit eigenen E-Mails und ohne dass Daten das Haus verlassen.",
-    "hostGuide": "Anleitung auf GitHub"
+    "hostGuide": "Anleitung auf GitHub",
+    "tryButton": "Gleich ausprobieren",
+    "tryStaff": "Noten: der Anfang von «Alle meine Entchen» – C, D, E, F, G, G",
+    "tryCount": "{{n}} von {{total}} Tönen",
+    "tryDone": "Geschafft – das war dein erstes Lied!",
+    "tryAgain": "Nochmals spielen",
+    "heroAlt": "Klavio auf dem Handy: der Lernpfad im Hand-Wald, die Lektionen als Steine auf einem Weg und Klavi auf der nächsten Lektion",
+    "showcaseTitle": "Was Klavio kann",
+    "showcaseText": "Wie die grossen Klavier-Apps – aber kostenlos, ohne Abo und ohne Werbung.",
+    "show": {
+      "listen": {
+        "kicker": "Am echten Klavier",
+        "title": "Klavi hört dir zu",
+        "text": "Du spielst auf deinem Klavier, Klavio erkennt jeden Ton über das Mikrofon und wartet, bis er stimmt. Ein Digitalpiano geht per Kabel, zum Ausprobieren gibt es die Bildschirm-Tasten.",
+        "alt": "Bildschirmfoto: eine Note im Notensystem, darunter die Klaviatur – «Welche Note ist das? Spiel sie!»"
+      },
+      "duet": {
+        "kicker": "Musik von Anfang an",
+        "title": "Klavi spielt mit",
+        "text": "Zu deinen Liedern spielt Klavi Bass und Akkorde. So klingt schon «Hänschen klein» nach richtiger Musik – und im Takt geht es langsam, mittel oder im Originaltempo.",
+        "alt": "Bildschirmfoto: das Lied «Hänschen klein» mit Fingersatz über den Noten, der Schalter «Klavi spielt mit» und die nächste Taste markiert"
+      },
+      "rain": {
+        "kicker": "Noten lesen wie im Spiel",
+        "title": "Notenregen",
+        "text": "Noten fallen vom Himmel – spiel jede, bevor sie landet. Je länger du durchhältst, desto schneller regnet es. So liest du Noten bald auf einen Blick.",
+        "alt": "Bildschirmfoto: der Notenregen – eine Note fällt auf einer kleinen Notenzeile, darunter die Klaviatur"
+      },
+      "dream": {
+        "kicker": "Dein Ziel im Blick",
+        "title": "Dein Traumlied",
+        "text": "Nenne das Stück, das du einmal spielen möchtest. Klavio zeigt dir den Weg in vier Etappen – auch die zähe Strecke, die dazugehört – und rechnet aus, wann du ungefähr oben bist.",
+        "alt": "Bildschirmfoto: «Dein Gipfel: Für Elise» und darunter die Etappen Gipfelsturm, Aufstieg und Durststrecke"
+      }
+    },
+    "waysTitle": "Für Kinder und für Erwachsene",
+    "ways": {
+      "kidsKicker": "Für Kinder",
+      "kidsTitle": "{{count}} bunte Welten",
+      "kidsText": "Ein Lernpfad wie ein Spielbrett: vom Tasten-Tal über den Takt-Zirkus bis zum Konzert-Garten – mit Sternen, eigener Figur und einem Kleiderschrank.",
+      "adultsKicker": "Für Jugendliche und Erwachsene",
+      "adultsTitle": "Die Reise",
+      "adultsText": "Eine ruhige Darstellung, bekannte Stücke statt Kinderlieder – Grieg, Dvořák, Mozart – und ein Höhenprofil von der Alp bis zu deinem Traumlied."
+    },
+    "stats": {
+      "worlds": "Welten",
+      "lessons": "Lektionen",
+      "songs": "Lieder und Stücke",
+      "cost": "Franken"
+    },
+    "finalText": "Ein Konto für die ganze Familie, ein Profil für jede Person – und los geht's."
   },
   "goal": {
     "kicker": "Mein Traumlied",
@@ -1103,7 +1126,10 @@
       "musicbox": "Spieluhr",
       "marimba": "Marimba",
       "organ": "Orgel"
-    }
+    },
+    "lower": "Eine Oktave tiefer",
+    "higher": "Eine Oktave höher",
+    "showKeys": "Bildschirm-Tasten zeigen"
   },
   "family": {
     "title": "Familie und Fortschritt",

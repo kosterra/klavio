@@ -30,7 +30,22 @@ const envSchema = z.object({
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
   MAIL_FROM: z.string().default('Klavio <no-reply@localhost>'),
-  TRUST_PROXY: bool.default(false),
+  /**
+   * Which proxies may tell the client's address (X-Forwarded-For): 'false',
+   * a number of hops ('1' = one proxy, e.g. the bundled Caddy), or a
+   * comma-separated list of addresses / CIDR ranges. 'true' means one hop –
+   * trusting every hop would let clients pick their own address.
+   */
+  TRUST_PROXY: z
+    .string()
+    .default('false')
+    .transform((v): boolean | number | string[] => {
+      const s = v.trim();
+      if (s === 'false' || s === '0' || s === '') return false;
+      if (s === 'true') return 1;
+      if (/^\d+$/.test(s)) return Number(s);
+      return s.split(',').map((x) => x.trim());
+    }),
   /** The built client (index.html, assets) – set in the Docker image, unset in development (Vite serves it). */
   STATIC_DIR: z.string().optional(),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),

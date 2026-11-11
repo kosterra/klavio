@@ -122,17 +122,31 @@ describe('lesson progress', () => {
     const many = await complete(jar, first!.id, { mistakes: 20 });
     expect(many.json()).toMatchObject({ stars: 1, xpGained: first!.xp + 5 });
     const better = await complete(jar, first!.id, { mistakes: 0 });
-    // replay: half XP + 5 per improved star
+    // replay on the same day: only the improved stars count (5 each)
     expect(better.json()).toMatchObject({
       stars: 3,
       bestStars: 3,
       firstCompletion: false,
-      xpGained: Math.round(first!.xp / 2) + 10,
+      xpGained: 10,
     });
     const worse = await complete(jar, first!.id, { mistakes: 20 });
-    expect(worse.json()).toMatchObject({ stars: 1, bestStars: 3 });
+    expect(worse.json()).toMatchObject({ stars: 1, bestStars: 3, xpGained: 0 });
+    // the next day practising it again earns half the lesson XP once more
+    expect(
+      (await complete(jar, first!.id, { localDate: addDays(today, -1) })).json(),
+    ).toMatchObject({ xpGained: Math.round(first!.xp / 2) });
     const progress = (await call(jar, 'GET', `/api/progress?date=${today}`)).json();
-    expect(progress.lessons[first!.id]).toMatchObject({ bestStars: 3, completions: 3 });
+    expect(progress.lessons[first!.id]).toMatchObject({ bestStars: 3, completions: 4 });
+  });
+
+  it('counts a lesson submitted twice at once only once as first completion', async () => {
+    const { jar } = await learner();
+    const [a, b] = await Promise.all([complete(jar, first!.id), complete(jar, first!.id)]);
+    const firsts = [a.json(), b.json()].filter((r) => r.firstCompletion);
+    expect(firsts).toHaveLength(1);
+    const profile = (await call(jar, 'GET', '/api/profiles')).json()[0];
+    expect(profile.xp).toBe(a.json().xpGained + b.json().xpGained);
+    expect(profile.badges.filter((x: { id: string }) => x.id === 'first-lesson')).toHaveLength(1);
   });
 
   it('levels up and extends the streak on consecutive days', async () => {
@@ -165,6 +179,12 @@ describe('lesson progress', () => {
     expect((await complete(jar, 'no-such-lesson')).statusCode).toBe(404);
     expect((await complete(jar, first!.id, { mistakes: -1 })).statusCode).toBe(400);
     expect((await complete(jar, first!.id, { durationSec: 99999 })).statusCode).toBe(400);
+    // days that don't exist are rejected – and the lesson keeps working afterwards
+    for (const localDate of ['2026-11-00', '2026-02-30', '2026-13-01']) {
+      expect((await complete(jar, first!.id, { localDate })).statusCode).toBe(400);
+    }
+    expect((await complete(jar, first!.id)).statusCode).toBe(200);
+    expect((await call(jar, 'GET', '/api/progress?date=2026-13-45')).statusCode).toBe(400);
   });
 
   it('is scoped to the profile and removed with it', async () => {

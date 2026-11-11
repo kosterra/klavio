@@ -1,43 +1,25 @@
 import { useState } from 'react';
-import {
-  Accordion,
-  Button,
-  Container,
-  Group,
-  SimpleGrid,
-  Text,
-  ThemeIcon,
-  Title,
-} from '@mantine/core';
+import { Accordion, Anchor, Button, Container, Group, Text, ThemeIcon, Title } from '@mantine/core';
 import {
   IconArrowRight,
-  IconBrandDocker,
-  IconBrandGithub,
-  IconGift,
-  IconServer,
-  IconBulb,
   IconCode,
   IconDeviceTablet,
+  IconGift,
   IconHeadphones,
-  IconMap2,
-  IconMedal,
-  IconMicrophone,
+  IconLogin2,
   IconPiano,
-  IconRepeat,
   IconShieldLock,
   IconUserPlus,
-  IconUsers,
 } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../components/usePageTitle';
-import { APP_CONFIG, CURRICULUM } from '@klavio/shared';
+import { APP_CONFIG, CURRICULUM, LESSONS } from '@klavio/shared';
 import { useSession } from '../auth/session';
 import { playMelody } from '../audio/synth';
 import { Landmark } from '../lesson/Landmarks';
 import { WorldPanorama } from '../lesson/WorldPanorama';
-import { CHAPTER_COLORS, chapterVars, worldOf } from '../lesson/worlds';
-import { useLocalized } from '../lesson/useLocalized';
+import { CHAPTER_COLORS, chapterVars, type KidsWorldId } from '../lesson/worlds';
 import { LoginCard } from '../landing/LoginCard';
 import { TryKeyboard } from '../landing/TryKeyboard';
 import { ThemeSwitch } from '../landing/ThemeSwitch';
@@ -48,33 +30,54 @@ import { SiteFooter } from '../components/SiteFooter';
 import { InstallHint } from '../components/InstallHint';
 import classes from '../landing/Landing.module.css';
 
-const FEATURES = [
-  { key: 'listen', icon: IconMicrophone, color: 'indigo' },
-  { key: 'worlds', icon: IconMap2, color: 'teal' },
-  { key: 'discover', icon: IconBulb, color: 'yellow' },
-  { key: 'review', icon: IconRepeat, color: 'lime' },
-  { key: 'medals', icon: IconMedal, color: 'orange' },
-  { key: 'family', icon: IconUsers, color: 'grape' },
-] as const;
-
 const STEPS = [
   { key: 'profile', icon: IconUserPlus },
   { key: 'stand', icon: IconDeviceTablet },
   { key: 'play', icon: IconHeadphones },
 ] as const;
 
+/** What Klavio does, each with a real screenshot from a phone. */
+const SHOWCASE = [
+  { key: 'listen', shot: 'phone-reading' },
+  { key: 'duet', shot: 'phone-duet' },
+  { key: 'rain', shot: 'phone-rain' },
+  { key: 'dream', shot: 'dream' },
+] as const;
+
+/** A few of the children's worlds – the rest are discovered on the way. */
+const KIDS_WORLDS: KidsWorldId[] = ['keys', 'sea', 'circus', 'garden'];
+
+const FAQ = ['cost', 'adults', 'piano', 'devices', 'offline', 'host'] as const;
+
 /** Für Elise, the opening – Klavi's little party piece. */
 const ELISE = [76, 75, 76, 75, 76, 71, 74, 72, 69];
 
+/** A screenshot in a phone frame. */
+function Phone({ shot, alt, eager = false }: { shot: string; alt: string; eager?: boolean }) {
+  return (
+    <div className={classes.phone}>
+      <img
+        src={`/screens/${shot}.webp`}
+        alt={alt}
+        width={600}
+        height={1298}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+    </div>
+  );
+}
+
 /**
- * Public landing page: what Klavio is, how it works, all the worlds and the
- * privacy promise – with the login card in the hero. A few easter eggs hide
- * here: the Konami code, tapping Klavi and a children's song on the keyboard.
+ * Public landing page: what Klavio is, shown on a phone; a mini lesson to try
+ * right away; what it does (listen, play along, note rain, dream song); the
+ * two ways for children and adults; the privacy promise in a few honest
+ * numbers; the questions; and the login at the end. A few easter eggs hide
+ * here: the Konami code and tapping Klavi on the login card.
  */
 export function WelcomePage() {
   const { t } = useTranslation();
   usePageTitle(null, '/welcome');
-  const loc = useLocalized();
   const { config } = useSession();
   const registrationOpen = config?.registrationOpen ?? true;
   const [rain, setRain] = useState(0);
@@ -104,6 +107,14 @@ export function WelcomePage() {
     </Button>
   );
 
+  // honest numbers, straight from the curriculum
+  const stats = [
+    { n: CURRICULUM.length, label: t('landing.stats.worlds') },
+    { n: LESSONS.length, label: t('landing.stats.lessons') },
+    { n: LESSONS.filter((l) => l.kind === 'song').length, label: t('landing.stats.songs') },
+    { n: 0, label: t('landing.stats.cost') },
+  ];
+
   return (
     <div className={classes.page}>
       <NoteRain run={rain} />
@@ -115,6 +126,17 @@ export function WelcomePage() {
       {/* ----------------------------------------------------------- hero */}
       <header className={classes.hero}>
         <div className={classes.cornerTools}>
+          <Button
+            component="a"
+            href="#login"
+            variant="white"
+            size="md"
+            leftSection={<IconLogin2 size={20} />}
+            className={classes.cornerButton}
+            data-testid="hero-login"
+          >
+            {t('landing.login')}
+          </Button>
           <LanguageSwitch />
           <ThemeSwitch />
         </div>
@@ -140,12 +162,12 @@ export function WelcomePage() {
                 {cta}
                 <Button
                   component="a"
-                  href="#how"
+                  href="#try"
                   variant="white"
                   size="xl"
                   className={classes.ghost}
                 >
-                  {t('landing.how')}
+                  {t('landing.tryButton')}
                 </Button>
               </Group>
               <Group gap="lg" mt="lg" className={classes.badges}>
@@ -159,6 +181,235 @@ export function WelcomePage() {
                   <IconCode size={18} aria-hidden /> {t('landing.badgeOpen')}
                 </span>
               </Group>
+            </div>
+            <div className={classes.heroPhone}>
+              <Phone shot="phone-path" alt={t('landing.heroAlt')} eager />
+            </div>
+          </div>
+        </Container>
+        <WorldPanorama />
+      </header>
+
+      {/* --------------------------------------------------- try it, right away */}
+      <section
+        id="try"
+        className={`${classes.section} ${classes.tinted}`}
+        aria-labelledby="try-title"
+      >
+        <Container size="sm">
+          <Title order={2} ta="center" id="try-title" className={classes.sectionTitle}>
+            {t('landing.tryTitle')}
+          </Title>
+          <Text ta="center" mb="md" fz="lg">
+            {t('landing.tryText')}
+          </Text>
+          <TryKeyboard
+            onDucks={() => {
+              setDucks((d) => d + 1);
+              announce(t('landing.eggDucks'));
+            }}
+          />
+        </Container>
+      </section>
+
+      {/* ---------------------------------------------------- how it works */}
+      <section id="how" className={classes.section} aria-labelledby="how-title">
+        <Container size="lg">
+          <Title order={2} ta="center" id="how-title" className={classes.sectionTitle}>
+            {t('landing.howTitle')}
+          </Title>
+          <ol className={classes.steps}>
+            {STEPS.map((s, i) => (
+              <li key={s.key} className={classes.step}>
+                <ThemeIcon size={52} radius="xl" variant="light" aria-hidden>
+                  <s.icon size={28} />
+                </ThemeIcon>
+                <div>
+                  <Title order={3} size="h4">
+                    {i + 1}. {t(`landing.steps.${s.key}.title`)}
+                  </Title>
+                  <Text>{t(`landing.steps.${s.key}.text`)}</Text>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------ what it does */}
+      <section className={`${classes.section} ${classes.tinted}`} aria-labelledby="showcase-title">
+        <Container size="lg">
+          <Title order={2} ta="center" id="showcase-title" className={classes.sectionTitle}>
+            {t('landing.showcaseTitle')}
+          </Title>
+          <Text ta="center" fz="lg" maw={680} mx="auto">
+            {t('landing.showcaseText')}
+          </Text>
+          <div className={classes.showcase}>
+            {SHOWCASE.map((s) => (
+              <article key={s.key} className={classes.row} data-shot={s.shot}>
+                <div className={classes.rowText}>
+                  <Text
+                    fw={800}
+                    tt="uppercase"
+                    fz={{ base: 'xs', sm: 'sm' }}
+                    className={classes.kicker}
+                  >
+                    {t(`landing.show.${s.key}.kicker`)}
+                  </Text>
+                  <Title order={3} className={classes.rowTitle}>
+                    {t(`landing.show.${s.key}.title`)}
+                  </Title>
+                  <Text fz={{ base: 'md', sm: 'lg' }}>{t(`landing.show.${s.key}.text`)}</Text>
+                </div>
+                {s.shot === 'dream' ? (
+                  <figure className={`${classes.shot} ${classes.rowCard}`}>
+                    <img
+                      src="/screens/dream.webp"
+                      alt={t(`landing.show.${s.key}.alt`)}
+                      width={640}
+                      height={655}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </figure>
+                ) : (
+                  <Phone shot={s.shot} alt={t(`landing.show.${s.key}.alt`)} />
+                )}
+              </article>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* ---------------------------------------------- children and adults */}
+      <section className={classes.section} aria-labelledby="ways-title">
+        <Container size="lg">
+          <Title order={2} ta="center" id="ways-title" className={classes.sectionTitle}>
+            {t('landing.waysTitle')}
+          </Title>
+          <div className={classes.ways}>
+            <div className={classes.way}>
+              <Text fw={800} tt="uppercase" size="sm" className={classes.kicker}>
+                {t('landing.ways.kidsKicker')}
+              </Text>
+              <Title order={3} className={classes.rowTitle}>
+                {t('landing.ways.kidsTitle', { count: CURRICULUM.length })}
+              </Title>
+              <Text fz={{ base: 'md', sm: 'lg' }}>{t('landing.ways.kidsText')}</Text>
+              <div className={classes.worlds}>
+                {KIDS_WORLDS.map((w, i) => (
+                  <div
+                    key={w}
+                    className={classes.world}
+                    style={chapterVars(CHAPTER_COLORS[(i * 2) % CHAPTER_COLORS.length]!)}
+                  >
+                    <Landmark
+                      world={w}
+                      name={t(`path.worlds.${w}`)}
+                      style={{ position: 'static' }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className={classes.way}>
+              <Text fw={800} tt="uppercase" size="sm" className={classes.kicker}>
+                {t('landing.ways.adultsKicker')}
+              </Text>
+              <Title order={3} className={classes.rowTitle}>
+                {t('landing.ways.adultsTitle')}
+              </Title>
+              <Text fz={{ base: 'md', sm: 'lg' }}>{t('landing.ways.adultsText')}</Text>
+              <figure className={classes.shot}>
+                <img
+                  src="/screens/journey.webp"
+                  alt={t('landing.journeyAlt')}
+                  width={1100}
+                  height={391}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* ---------------------------------------------------------- trust */}
+      <section className={`${classes.section} ${classes.tinted}`} aria-labelledby="privacy-title">
+        <Container size="lg">
+          <div className={classes.privacy}>
+            <Title order={2} id="privacy-title" className={classes.sectionTitle}>
+              {t('landing.privacyTitle')}
+            </Title>
+            <dl className={classes.stats}>
+              {stats.map((s) => (
+                <div key={s.label}>
+                  <dt>{s.label}</dt>
+                  <dd>{s.n}</dd>
+                </div>
+              ))}
+            </dl>
+            <ul className={classes.checks}>
+              {(['audio', 'ads', 'data', 'open'] as const).map((k) => (
+                <li key={k}>{t(`landing.privacy.${k}`)}</li>
+              ))}
+            </ul>
+          </div>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------------------------- faq */}
+      <section className={classes.section} aria-labelledby="faq-title">
+        <Container size="sm">
+          <Title order={2} ta="center" id="faq-title" className={classes.sectionTitle}>
+            {t('landing.faqTitle')}
+          </Title>
+          <Accordion variant="separated" radius="lg" mt="lg">
+            {FAQ.map((k) => (
+              <Accordion.Item key={k} value={k}>
+                <Accordion.Control>{t(`landing.faq.${k}.q`)}</Accordion.Control>
+                <Accordion.Panel>
+                  {t(`landing.faq.${k}.a`)}
+                  {k === 'host' && (
+                    <Text mt="xs">
+                      <Anchor
+                        href={`${APP_CONFIG.sourceUrl}#readme`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {t('landing.hostGuide')}
+                      </Anchor>
+                      {' · '}
+                      <Anchor
+                        href="https://hub.docker.com/r/kosterra/klavio"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Docker Hub
+                      </Anchor>
+                    </Text>
+                  )}
+                </Accordion.Panel>
+              </Accordion.Item>
+            ))}
+          </Accordion>
+        </Container>
+      </section>
+
+      {/* ------------------------------------------- final cta and the login */}
+      <section className={classes.final} aria-labelledby="final-title">
+        <Container size="lg">
+          <div className={classes.finalGrid}>
+            <div>
+              <Title order={2} id="final-title" className={classes.sectionTitle}>
+                {t('landing.finalTitle')}
+              </Title>
+              <Text fz="lg" mt="sm" className={classes.finalText}>
+                {t('landing.finalText')}
+              </Text>
+              <Group mt="lg">{cta}</Group>
             </div>
             <div className={classes.heroCard}>
               <LoginCard
@@ -175,271 +426,10 @@ export function WelcomePage() {
             </div>
           </div>
         </Container>
-        <WorldPanorama />
-      </header>
-
-      {/* ---------------------------------------------------- how it works */}
-      <section id="how" className={classes.section} aria-labelledby="how-title">
-        <Container size="lg">
-          <Title order={2} ta="center" id="how-title" className={classes.sectionTitle}>
-            {t('landing.howTitle')}
-          </Title>
-          <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="xl" mt="xl">
-            {STEPS.map((s, i) => (
-              <div key={s.key} className={classes.step}>
-                <span className={classes.stepNumber} aria-hidden>
-                  {i + 1}
-                </span>
-                <ThemeIcon size={64} radius="xl" variant="light" aria-hidden>
-                  <s.icon size={34} />
-                </ThemeIcon>
-                <Title order={3} size="h4" mt="sm">
-                  {t(`landing.steps.${s.key}.title`)}
-                </Title>
-                <Text>{t(`landing.steps.${s.key}.text`)}</Text>
-              </div>
-            ))}
-          </SimpleGrid>
-        </Container>
-      </section>
-
-      {/* ------------------------------------------------- what it looks like */}
-      <section className={`${classes.section} ${classes.tinted}`} aria-labelledby="look-title">
-        <Container size="lg">
-          <Title order={2} ta="center" id="look-title" className={classes.sectionTitle}>
-            {t('landing.lookTitle')}
-          </Title>
-          <Text ta="center" fz="lg" maw={680} mx="auto">
-            {t('landing.lookText')}
-          </Text>
-          <SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl" mt="xl">
-            {(['path', 'lesson'] as const).map((shot) => (
-              <figure key={shot} className={classes.shot}>
-                <img
-                  src={`/screens/${shot}.webp`}
-                  alt={t(`landing.look.${shot}Alt`)}
-                  width={1200}
-                  height={shot === 'path' ? 834 : 656}
-                  loading="lazy"
-                  decoding="async"
-                />
-                <figcaption>{t(`landing.look.${shot}`)}</figcaption>
-              </figure>
-            ))}
-          </SimpleGrid>
-        </Container>
-      </section>
-
-      {/* -------------------------------------------------------- features */}
-      <section className={`${classes.section} ${classes.tinted}`} aria-labelledby="features-title">
-        <Container size="lg">
-          <Title order={2} ta="center" id="features-title" className={classes.sectionTitle}>
-            {t('landing.featuresTitle')}
-          </Title>
-          <SimpleGrid cols={{ base: 1, xs: 2, md: 3 }} spacing="lg" mt="xl">
-            {FEATURES.map((f) => (
-              <div
-                key={f.key}
-                className={classes.feature}
-                style={{ '--feature': `var(--mantine-color-${f.color}-6)` } as React.CSSProperties}
-              >
-                <ThemeIcon size={52} radius="xl" color={f.color} aria-hidden>
-                  <f.icon size={28} />
-                </ThemeIcon>
-                <Title order={3} size="h4" mt="sm">
-                  {t(`landing.features.${f.key}.title`, { count: CURRICULUM.length })}
-                </Title>
-                <Text>{t(`landing.features.${f.key}.text`)}</Text>
-              </div>
-            ))}
-          </SimpleGrid>
-        </Container>
-      </section>
-
-      {/* ---------------------------------------------------------- worlds */}
-      <section className={classes.section} aria-labelledby="worlds-title">
-        <Container size="lg">
-          <Title order={2} ta="center" id="worlds-title" className={classes.sectionTitle}>
-            {t('landing.worldsTitle', { count: CURRICULUM.length })}
-          </Title>
-          <Text ta="center" fz="lg" maw={640} mx="auto">
-            {t('landing.worldsText')}
-          </Text>
-          <div className={classes.worlds}>
-            {CURRICULUM.map((c, i) => {
-              const world = worldOf(c.id, i);
-              return (
-                <div
-                  key={c.id}
-                  className={classes.world}
-                  style={chapterVars(CHAPTER_COLORS[i % CHAPTER_COLORS.length]!)}
-                >
-                  <Landmark
-                    world={world.id}
-                    name={t(`path.worlds.${world.id}`)}
-                    style={{ position: 'static' }}
-                  />
-                  <Text fw={800} ta="center">
-                    {t('path.chapter', { n: i + 1 })} · {loc(c.title)}
-                  </Text>
-                </div>
-              );
-            })}
-          </div>
-        </Container>
-      </section>
-
-      {/* ----------------------------------------------- adults: the journey */}
-      <section className={classes.section} aria-labelledby="journey-title">
-        <Container size="lg">
-          <div className={classes.journey}>
-            <div>
-              <Text fw={800} tt="uppercase" size="sm" className={classes.kicker}>
-                {t('landing.journeyKicker')}
-              </Text>
-              <Title order={2} id="journey-title" className={classes.sectionTitle}>
-                {t('landing.journeyTitle')}
-              </Title>
-              <Text fz="lg" mt="sm">
-                {t('landing.journeyText')}
-              </Text>
-              <ul className={classes.checks}>
-                {(['dream', 'hell', 'choose'] as const).map((k) => (
-                  <li key={k}>{t(`landing.journey.${k}`)}</li>
-                ))}
-              </ul>
-            </div>
-            <figure className={classes.shot}>
-              <img
-                src="/screens/journey.webp"
-                alt={t('landing.journeyAlt')}
-                width={1100}
-                height={391}
-                loading="lazy"
-                decoding="async"
-              />
-            </figure>
-          </div>
-        </Container>
-      </section>
-
-      {/* -------------------------------------------------------- try it */}
-      <section className={`${classes.section} ${classes.tinted}`} aria-labelledby="try-title">
-        <Container size="sm">
-          <Title order={2} ta="center" id="try-title" className={classes.sectionTitle}>
-            {t('landing.tryTitle')}
-          </Title>
-          <Text ta="center" mb="md">
-            {t('landing.tryText')}
-          </Text>
-          <TryKeyboard
-            onDucks={() => {
-              setDucks((d) => d + 1);
-              announce(t('landing.eggDucks'));
-            }}
-          />
-        </Container>
-      </section>
-
-      {/* --------------------------------------------------------- privacy */}
-      <section className={classes.section} aria-labelledby="privacy-title">
-        <Container size="lg">
-          <div className={classes.privacy}>
-            <ThemeIcon size={72} radius="xl" color="teal" aria-hidden>
-              <IconShieldLock size={40} />
-            </ThemeIcon>
-            <div>
-              <Title order={2} id="privacy-title" className={classes.sectionTitle}>
-                {t('landing.privacyTitle')}
-              </Title>
-              <ul className={classes.checks}>
-                {(['audio', 'ads', 'data', 'open'] as const).map((k) => (
-                  <li key={k}>{t(`landing.privacy.${k}`)}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* --------------------------------------------------- run it yourself */}
-      <section className={classes.section} aria-labelledby="host-title">
-        <Container size="lg">
-          <div className={classes.privacy}>
-            <ThemeIcon size={72} radius="xl" color="grape" aria-hidden>
-              <IconServer size={40} />
-            </ThemeIcon>
-            <div>
-              <Title order={2} id="host-title" className={classes.sectionTitle}>
-                {t('landing.hostTitle')}
-              </Title>
-              <Text fz="lg" mt="xs">
-                {t('landing.hostText')}
-              </Text>
-              <pre className={classes.code}>
-                <code>docker pull kosterra/klavio</code>
-              </pre>
-              <Group gap="sm" mt="md">
-                <Button
-                  component="a"
-                  href={`${APP_CONFIG.sourceUrl}#readme`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="light"
-                  leftSection={<IconBrandGithub size={20} />}
-                >
-                  {t('landing.hostGuide')}
-                </Button>
-                <Button
-                  component="a"
-                  href="https://hub.docker.com/r/kosterra/klavio"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="subtle"
-                  leftSection={<IconBrandDocker size={20} />}
-                >
-                  Docker Hub
-                </Button>
-              </Group>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* ------------------------------------------------------------- faq */}
-      <section className={`${classes.section} ${classes.tinted}`} aria-labelledby="faq-title">
-        <Container size="sm">
-          <Title order={2} ta="center" id="faq-title" className={classes.sectionTitle}>
-            {t('landing.faqTitle')}
-          </Title>
-          <Accordion variant="separated" radius="lg" mt="lg">
-            {(['cost', 'adults', 'piano', 'who', 'devices', 'offline'] as const).map((k) => (
-              <Accordion.Item key={k} value={k}>
-                <Accordion.Control>{t(`landing.faq.${k}.q`)}</Accordion.Control>
-                <Accordion.Panel>{t(`landing.faq.${k}.a`)}</Accordion.Panel>
-              </Accordion.Item>
-            ))}
-          </Accordion>
-        </Container>
-      </section>
-
-      {/* ------------------------------------------------------ final cta */}
-      <section className={classes.final} aria-labelledby="final-title">
-        <Container size="sm" ta="center">
-          <Title order={2} id="final-title" className={classes.sectionTitle}>
-            {t('landing.finalTitle')}
-          </Title>
-          <Group justify="center" mt="lg">
-            {cta}
-            <Button component="a" href="#login" variant="white" size="xl" className={classes.ghost}>
-              {t('landing.login')}
-            </Button>
-          </Group>
-        </Container>
       </section>
 
       <SiteFooter />
-      <InstallHint variant="banner" />
+      <InstallHint variant="popup" />
     </div>
   );
 }

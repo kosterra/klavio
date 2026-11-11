@@ -10,17 +10,22 @@ test('landing page: sections, login card and easter eggs', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1, name: /Klavier lernen/ })).toBeVisible();
   await expect(page.getByRole('heading', { name: /Willkommen bei Klavio/ })).toBeVisible();
   for (const name of [
+    'Spiel dein erstes Lied',
     'So funktioniert’s',
     'Was Klavio kann',
-    `${CURRICULUM.length} Welten warten auf dich`,
-    "So sieht's aus",
-    'Die Reise zu deinem Traumlied',
-    'Für Familien, Schulen und Musikschulen: selbst betreiben',
-    'Sicher und ehrlich',
+    'Für Kinder und für Erwachsene',
+    'Ehrlich und sicher',
     'Häufige Fragen',
+    'Bereit für deine erste Taste?',
   ]) {
     await expect(page.getByRole('heading', { name, level: 2 })).toBeVisible();
   }
+  await expect(page.getByRole('heading', { name: 'Klavi spielt mit', level: 3 })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: `${CURRICULUM.length} bunte Welten`, level: 3 }),
+  ).toBeVisible();
+  // «Anmelden» at the top leads to the login card at the end
+  await expect(page.getByTestId('hero-login')).toHaveAttribute('href', '#login');
   await expect(page.getByRole('link', { name: 'Jetzt loslegen' }).first()).toHaveAttribute(
     'href',
     '/register',
@@ -54,11 +59,15 @@ test('landing page: sections, login card and easter eggs', async ({ page }) => {
   }
   await expect(status).toContainText('Geheimcode geknackt');
 
-  // «Alle meine Entchen» on the try-out keyboard
+  // the mini lesson: «Alle meine Entchen», the next key lights up; a wrong key just sounds
   const keyboard = page.getByRole('group', { name: 'Klaviatur' });
+  const tryStatus = page.getByTestId('try-status');
+  await keyboard.getByRole('button', { name: 'A4', exact: true }).click();
+  await expect(tryStatus).toHaveText('0 von 6 Tönen');
   for (const n of ['C4', 'D4', 'E4', 'F4', 'G4', 'G4']) {
     await keyboard.getByRole('button', { name: n, exact: true }).click();
   }
+  await expect(tryStatus).toHaveText('Geschafft – das war dein erstes Lied!');
   await expect(status).toContainText('Alle meine Entchen');
 
   // tapping Klavi five times

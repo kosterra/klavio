@@ -1,6 +1,14 @@
-import { useEffect, useState } from 'react';
-import { ActionIcon, Alert, Button, Group, Text } from '@mantine/core';
-import { IconDeviceMobileDown, IconX } from '@tabler/icons-react';
+import { useEffect, useState, type ReactNode } from 'react';
+import { Alert, Button, Drawer, Group, List, Stack, Text, ThemeIcon } from '@mantine/core';
+import {
+  IconBolt,
+  IconDeviceMobileDown,
+  IconDotsVertical,
+  IconMaximize,
+  IconShare2,
+  IconSquarePlus,
+  IconWifiOff,
+} from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { KEYS, readJson, writeJson } from '../offline/storage';
 import classes from './InstallHint.module.css';
@@ -9,6 +17,11 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
+
+/** «Später»: asked again after this many days. */
+const SNOOZE_DAYS = 7;
+/** the popup comes a moment after the page – never in the learner's face right away */
+const POPUP_DELAY_MS = 2500;
 
 function isStandalone(): boolean {
   return (
@@ -36,25 +49,18 @@ function isMobile(): boolean {
   );
 }
 
-/**
- * Suggests installing the app (home screen, full screen, works offline).
- * Chrome/Edge/Android: native install prompt. iOS: how to do it via "Share".
- * Phones whose browser offers no prompt (Firefox, Samsung Internet …) get the
- * way through the browser menu. `banner`: a card at the bottom of the screen,
- * only on phones (start page); `alert`: inside the page (dashboard).
- */
-export function InstallHint({ variant = 'alert' }: { variant?: 'alert' | 'banner' }) {
-  const { t } = useTranslation();
-  const [prompt, setPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [dismissed, setDismissed] = useState(
-    () => readJson<boolean>(KEYS.installDismissed) === true,
-  );
-  const [installed, setInstalled] = useState(() => isStandalone());
-  const [how, setHow] = useState(false);
+function snoozed(): boolean {
+  const until = readJson<number>(KEYS.installSnoozedUntil);
+  return typeof until === 'number' && Date.now() < until;
+}
 
+/** The browser's own install prompt (Chrome, Edge, Android), as soon as it offers one. */
+function useInstallPrompt() {
+  const [prompt, setPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installed, setInstalled] = useState(() => isStandalone());
   useEffect(() => {
     const onPrompt = (e: Event) => {
-      e.preventDefault(); // show our own button instead of the browser's mini-infobar
+      e.preventDefault(); // our own hint instead of the browser's mini-infobar
       setPrompt(e as BeforeInstallPromptEvent);
     };
     const onInstalled = () => setInstalled(true);
@@ -65,93 +71,169 @@ export function InstallHint({ variant = 'alert' }: { variant?: 'alert' | 'banner
       window.removeEventListener('appinstalled', onInstalled);
     };
   }, []);
+  const install = async () => {
+    if (!prompt) return;
+    await prompt.prompt();
+    const { outcome } = await prompt.userChoice;
+    setPrompt(null);
+    if (outcome === 'accepted') setInstalled(true);
+  };
+  return { prompt, installed, install };
+}
+
+function Step({ n, icon, children }: { n: number; icon: ReactNode; children: ReactNode }) {
+  return (
+    <li className={classes.step}>
+      <span className={classes.stepNo} aria-hidden>
+        {n}
+      </span>
+      <Text size="sm" className={classes.stepText}>
+        {children}
+      </Text>
+      <span className={classes.stepIcon} aria-hidden>
+        {icon}
+      </span>
+    </li>
+  );
+}
+
+/**
+ * Suggests installing the app (home screen, full screen, works offline).
+ * `popup` (phones): a sheet from the bottom a moment after the page opens –
+ * the browser's install button where there is one (Chrome, Edge, Android),
+ * else the steps for Safari or the browser menu; «Später» asks again in a
+ * week, «Nicht mehr zeigen» never again. `alert` (computers whose browser
+ * can install): a small note inside the page.
+ */
+export function InstallHint({ variant = 'alert' }: { variant?: 'alert' | 'popup' }) {
+  const { t } = useTranslation();
+  const { prompt, installed, install } = useInstallPrompt();
+  const [dismissed, setDismissed] = useState(
+    () => readJson<boolean>(KEYS.installDismissed) === true,
+  );
+  const [later, setLater] = useState(snoozed);
+  const [due, setDue] = useState(false);
+  const mobile = isMobile();
+  const ios = isIos();
+
+  useEffect(() => {
+    if (variant !== 'popup') return;
+    const timer = setTimeout(() => setDue(true), POPUP_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [variant]);
 
   if (installed || dismissed) return null;
-  const ios = isIos();
-  const mobile = isMobile();
-  if (variant === 'banner' && !mobile) return null;
-  if (!prompt && !ios && !mobile) return null;
-  const text = prompt ? t('install.text') : ios ? t('install.ios') : t('install.android');
 
-  const dismiss = () => {
+  const never = () => {
     writeJson(KEYS.installDismissed, true);
     setDismissed(true);
   };
 
-  const installButton = prompt && (
-    <Button
-      size="sm"
-      onClick={async () => {
-        await prompt.prompt();
-        const { outcome } = await prompt.userChoice;
-        setPrompt(null);
-        if (outcome === 'accepted') setInstalled(true);
-      }}
-    >
-      {t('install.button')}
-    </Button>
-  );
-
-  if (variant === 'banner') {
+  if (variant === 'alert') {
+    // phones get the popup; on a computer only where the browser can install
+    if (mobile || !prompt) return null;
     return (
-      <aside className={classes.banner} aria-labelledby="install-title" data-testid="install-hint">
-        <span className={classes.icon} aria-hidden>
-          <IconDeviceMobileDown size={26} />
-        </span>
-        <div className={classes.body}>
-          <Text fw={800} id="install-title">
-            {t('install.title')}
-          </Text>
-          <Text size="sm">{text}</Text>
-          {installButton && <Group mt="xs">{installButton}</Group>}
-        </div>
-        <ActionIcon
-          variant="subtle"
-          color="gray"
-          size="lg"
-          onClick={dismiss}
-          aria-label={t('common.close')}
-        >
-          <IconX size={20} />
-        </ActionIcon>
-      </aside>
+      <Alert
+        color="indigo"
+        variant="light"
+        radius="lg"
+        icon={<IconDeviceMobileDown />}
+        withCloseButton
+        closeButtonLabel={t('common.close')}
+        onClose={never}
+        title={t('install.title')}
+        data-testid="install-hint"
+        py="xs"
+      >
+        <Group mt={4}>
+          <Button size="sm" onClick={() => void install()}>
+            {t('install.button')}
+          </Button>
+        </Group>
+      </Alert>
     );
   }
 
+  if (!mobile || later) return null;
+  const snooze = () => {
+    writeJson(KEYS.installSnoozedUntil, Date.now() + SNOOZE_DAYS * 86_400_000);
+    setLater(true);
+  };
+
   return (
-    <Alert
-      color="indigo"
-      variant="light"
+    <Drawer
+      opened={due}
+      onClose={snooze}
+      position="bottom"
+      size="auto"
       radius="lg"
-      icon={<IconDeviceMobileDown />}
-      withCloseButton
-      closeButtonLabel={t('common.close')}
-      onClose={dismiss}
-      title={t('install.title')}
+      title={
+        <Group gap="sm" wrap="nowrap">
+          <ThemeIcon size={40} radius="md" variant="gradient" aria-hidden>
+            <IconDeviceMobileDown size={24} />
+          </ThemeIcon>
+          <Text fw={800} fz="lg">
+            {t('install.title')}
+          </Text>
+        </Group>
+      }
+      closeButtonProps={{ 'aria-label': t('common.close') }}
+      classNames={{ content: classes.sheet }}
       data-testid="install-hint"
-      py="xs"
     >
-      {/* compact: the steps only when asked for (or the browser's own button) */}
-      {installButton ? (
-        <Group mt={4}>{installButton}</Group>
-      ) : (
-        <>
-          <Button
-            variant="subtle"
-            size="compact-sm"
-            px={0}
-            onClick={() => setHow((h) => !h)}
-            aria-expanded={how}
-          >
-            {t('install.how')}
+      <Stack gap="md" pb="xs">
+        <List spacing={6} size="sm" center>
+          <List.Item icon={<IconBolt size={18} className={classes.perk} />}>
+            {t('install.perks.start')}
+          </List.Item>
+          <List.Item icon={<IconMaximize size={18} className={classes.perk} />}>
+            {t('install.perks.full')}
+          </List.Item>
+          <List.Item icon={<IconWifiOff size={18} className={classes.perk} />}>
+            {t('install.perks.offline')}
+          </List.Item>
+        </List>
+
+        {prompt ? (
+          <Button size="lg" fullWidth onClick={() => void install()} data-testid="install-now">
+            {t('install.button')}
           </Button>
-          {how && (
-            <Text size="sm" mt={4}>
-              {text}
-            </Text>
-          )}
-        </>
-      )}
-    </Alert>
+        ) : (
+          <ol className={classes.steps} aria-label={t('install.how')}>
+            {ios ? (
+              <>
+                <Step n={1} icon={<IconShare2 size={20} />}>
+                  {t('install.ios1')}
+                </Step>
+                <Step n={2} icon={<IconSquarePlus size={20} />}>
+                  {t('install.ios2')}
+                </Step>
+                <Step n={3} icon={null}>
+                  {t('install.ios3')}
+                </Step>
+              </>
+            ) : (
+              <>
+                <Step n={1} icon={<IconDotsVertical size={20} />}>
+                  {t('install.menu1')}
+                </Step>
+                <Step n={2} icon={<IconDeviceMobileDown size={20} />}>
+                  {t('install.menu2')}
+                </Step>
+              </>
+            )}
+          </ol>
+        )}
+
+        <Group justify="space-between" gap="xs">
+          <Button variant="subtle" color="gray" onClick={never} data-testid="install-never">
+            {t('install.never')}
+          </Button>
+          <Button variant="default" onClick={snooze} data-testid="install-later">
+            {t('install.later')}
+          </Button>
+        </Group>
+      </Stack>
+    </Drawer>
   );
 }

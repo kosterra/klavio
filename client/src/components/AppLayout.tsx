@@ -27,6 +27,7 @@ import { Link, Outlet, useNavigate } from 'react-router';
 import { SiteFooter } from './SiteFooter';
 import { SideNav } from './SideNav';
 import { BottomNav } from './BottomNav';
+import { HeaderGarland, LogoCap, NavBells, NavSnow, PeekingReindeer } from '../season/SeasonChrome';
 import classes from './BottomNav.module.css';
 import { useTranslation } from 'react-i18next';
 import { APP_CONFIG } from '@klavio/shared';
@@ -75,6 +76,7 @@ export function AppLayout() {
       padding="md"
     >
       <AppShell.Header px="md">
+        <HeaderGarland />
         <Group h="100%" justify="space-between" wrap="nowrap">
           <Group gap="xs" wrap="nowrap">
             <Burger
@@ -96,7 +98,10 @@ export function AppLayout() {
             />
             <UnstyledButton component={Link} to="/" aria-label={t('nav.home')}>
               <Group gap="xs" wrap="nowrap">
-                <img src="/logo.svg" alt="" width={40} height={40} />
+                <span style={{ position: 'relative', display: 'inline-flex' }}>
+                  <img src="/logo.svg" alt="" width={40} height={40} />
+                  <LogoCap />
+                </span>
                 <Text fw={800} fz="xl" visibleFrom="xs">
                   {APP_CONFIG.name}
                 </Text>
@@ -214,8 +219,11 @@ export function AppLayout() {
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="sm">
+        <NavSnow place="side" />
+        <NavBells />
         <SideNav onNavigate={closeMobile} />
       </AppShell.Navbar>
+      <PeekingReindeer />
       <AppShell.Main className={activeProfile ? classes.withBottomNav : undefined}>
         <Outlet />
         <SiteFooter variant="compact" />

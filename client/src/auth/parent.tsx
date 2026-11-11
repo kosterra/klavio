@@ -23,8 +23,7 @@ import { unlockParentWithPasskey } from './passkey';
 /** PIN entry; calls `onUnlocked` after the server accepted it. */
 export function ParentPinForm({ onUnlocked }: { onUnlocked?: () => void }) {
   const { t } = useTranslation();
-  const { me, refresh, logout } = useSession();
-  const navigate = useNavigate();
+  const { me, refresh } = useSession();
   const errorText = useErrorText();
   const withPasskey = me?.user.parentPin.passkey ?? false;
   const [pin, setPin] = useState('');
@@ -102,21 +101,91 @@ export function ParentPinForm({ onUnlocked }: { onUnlocked?: () => void }) {
         <Button type="submit" loading={busy} disabled={pin.length < 4}>
           {t('parent.open')}
         </Button>
-        <Text size="sm" c="dimmed" ta="center">
-          {t('parent.forgot')}{' '}
-          <Button
-            variant="subtle"
-            size="compact-sm"
-            onClick={async () => {
-              await logout();
-              navigate('/welcome');
-            }}
-          >
-            {t('nav.logout')}
-          </Button>
-        </Text>
+        <PinReset onUnlocked={onUnlocked} />
       </Stack>
     </form>
+  );
+}
+
+/**
+ * «PIN vergessen?»: a code to the account's e-mail address removes the PIN
+ * and opens the parent area – logging in again no longer does that.
+ */
+function PinReset({ onUnlocked }: { onUnlocked?: () => void }) {
+  const { t } = useTranslation();
+  const { me, refresh } = useSession();
+  const errorText = useErrorText();
+  const [step, setStep] = useState<'idle' | 'sent'>('idle');
+  const [code, setCode] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const run = async (work: () => Promise<void>) => {
+    setBusy(true);
+    setError(null);
+    try {
+      await work();
+    } catch (err) {
+      setError(errorText(err));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (step === 'idle') {
+    return (
+      <Stack gap={4} align="center">
+        <Button
+          variant="subtle"
+          size="compact-sm"
+          loading={busy}
+          onClick={() =>
+            void run(async () => {
+              await endpoints.requestPinReset();
+              setStep('sent');
+            })
+          }
+          data-testid="pin-forgot"
+        >
+          {t('parent.forgot')}
+        </Button>
+        {error && (
+          <Text size="sm" c="red.8" role="alert">
+            {error}
+          </Text>
+        )}
+      </Stack>
+    );
+  }
+  return (
+    <Stack gap="xs" align="center" w="100%" data-testid="pin-reset">
+      <Text size="sm" ta="center">
+        {t('parent.resetSent', { email: me?.user.email ?? '' })}
+      </Text>
+      <PinInput
+        length={6}
+        type="number"
+        oneTimeCode
+        value={code}
+        onChange={setCode}
+        aria-label={t('parent.resetCode')}
+        onComplete={(v) =>
+          void run(async () => {
+            await endpoints.confirmPinReset(v);
+            await refresh();
+            onUnlocked?.();
+          })
+        }
+      />
+      {error && (
+        <Alert color="red" role="alert" w="100%">
+          {error}
+        </Alert>
+      )}
+      <Text size="xs" c="dimmed" ta="center">
+        {t('parent.resetHint')}
+      </Text>
+    </Stack>
   );
 }
 

@@ -62,7 +62,7 @@ import { PieceExercise } from '../lesson/PieceExercise';
 import { ImproviseExercise } from '../lesson/ImproviseExercise';
 import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
-import { readPlayOn, writePlayOn } from '../lesson/playOn';
+import { usePlayOn } from '../lesson/playOn';
 import { LessonParts } from '../lesson/LessonParts';
 import { CoachTip } from '../lesson/CoachTip';
 import { HandOnKeys } from '../lesson/HandOnKeys';
@@ -96,7 +96,8 @@ function localResult(
   const stars = starsFor(lessonTargetCount(lesson), body.mistakes);
   const previousBest = before.lessons[lesson.id]?.bestStars ?? 0;
   const { wasDue, bonusXp } = applyCompletion(before.lessons[lesson.id], stars, body.localDate);
-  const xpGained = xpFor(lesson.xp, stars, previousBest) + bonusXp;
+  const replayedToday = before.lessons[lesson.id]?.lastDate === body.localDate;
+  const xpGained = xpFor(lesson.xp, stars, previousBest, replayedToday) + bonusXp;
   const xp = profile.xp + xpGained;
   const level = levelForXp(xp);
   return {
@@ -184,11 +185,14 @@ function LessonRun({
   const [theoryAt, setTheoryAt] = useState(0);
   const theoryShare = discoverFirst && steps.length ? THEORY_SHARE : 0;
   // how the learner played last time on this device: shown first
-  const [playOn] = useState(() => readPlayOn(activeProfile?.id));
+  // what the learner chose (start-up questions, «Mein Profil», last time) – fixed for this visit
+  const [savedPlayOn, setPlayOn] = usePlayOn();
+  const [playOn] = useState(savedPlayOn);
   const startLesson = (choice: 'piano' | 'screen' = 'piano') => {
     // the real piano: the microphone starts with this tap (iOS needs a gesture)
     if (choice === 'piano') input.startPreferred();
-    writePlayOn(choice, activeProfile?.id);
+    // the other way chosen: from now on the first one offered
+    void setPlayOn(choice).catch(() => undefined);
     startedAt.current = performance.now();
     setPhase('play');
   };

@@ -43,7 +43,17 @@ export function chapterColor(world: World, index: number): string {
 }
 
 export type KidsWorldId =
-  'keys' | 'forest' | 'sea' | 'village' | 'mountain' | 'cave' | 'city' | 'night';
+  | 'keys'
+  | 'forest'
+  | 'sea'
+  | 'village'
+  | 'mountain'
+  | 'cave'
+  | 'city'
+  | 'night'
+  | 'circus'
+  | 'desert'
+  | 'garden';
 
 /**
  * The adults' journey (Classic): from the alp down through gorge and mine
@@ -140,6 +150,24 @@ export const WORLDS: Record<KidsWorldId, World> = {
     stickers: ['moon', 'star', 'sparkle'],
     road: { width: 7, dash: '0 12', cap: 'round', color: 'var(--mantine-color-yellow-4)' },
   },
+  // Takt-Zirkus: the ring's sawdust – a beat of dashes, short-short-long
+  circus: {
+    id: 'circus',
+    stickers: ['drum', 'balloon', 'metronome'],
+    road: { width: 12, dash: '6 6 6 6 16 8', cap: 'round', color: LINE },
+  },
+  // Tonleiter-Wüste: footprints in the sand
+  desert: {
+    id: 'desert',
+    stickers: ['sparkle', 'star', 'notes'],
+    road: { width: 10, dash: '1 13', cap: 'round', color: 'var(--chapter-dark)', opacity: 0.35 },
+  },
+  // Konzert-Garten: a gravel path between the beds
+  garden: {
+    id: 'garden',
+    stickers: ['bell', 'heart', 'notes'],
+    road: { width: 18, dash: '2 5', cap: 'round', color: LINE, opacity: 0.9 },
+  },
 };
 
 const BY_CHAPTER: Record<string, KidsWorldId> = {
@@ -151,9 +179,9 @@ const BY_CHAPTER: Record<string, KidsWorldId> = {
   bass: 'cave',
   both: 'city',
   black: 'night',
-  meter: 'mountain',
-  keysigs: 'sea',
-  accomp: 'city',
+  meter: 'circus',
+  keysigs: 'desert',
+  accomp: 'garden',
 };
 
 const ORDER: KidsWorldId[] = [
@@ -165,6 +193,9 @@ const ORDER: KidsWorldId[] = [
   'cave',
   'city',
   'night',
+  'circus',
+  'desert',
+  'garden',
 ];
 
 export const JOURNEY: Record<JourneyWorldId, World> = {

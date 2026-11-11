@@ -50,10 +50,15 @@ const emailAuthRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer
       if (!(await User.exists({ email })) && !(await registrationOpen())) {
         return reply.code(204).send();
       }
-      // the language of later mails (e.g. the warning before deleting an unused account)
-      if (lang) await User.updateOne({ email }, { locale: lang === 'en' ? 'en' : 'de-CH' });
       const code = await issueEmailCode(config, { email, purpose: 'login' });
-      if (code) await mailer.send(await codeMail(config, 'login-code', email, code, lang));
+      // sent without waiting for the mail server: known and unknown addresses
+      // answer equally fast
+      if (code) {
+        const mail = await codeMail(config, 'login-code', email, code, lang);
+        void mailer
+          .send(mail)
+          .catch((err: unknown) => req.log.error(err, 'login code mail failed'));
+      }
       return reply.code(204).send();
     },
   );
@@ -81,6 +86,10 @@ const emailAuthRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer
       await checkEmailCode(config, { email, purpose: 'login', code, consume: true });
 
       if (existing) {
+        // the language of later mails (e.g. the warning before deleting an unused
+        // account) – only once the address is proven, never on a mere request
+        if (lang)
+          await User.updateOne({ _id: existing._id }, { locale: lang === 'en' ? 'en' : 'de-CH' });
         await createSession(config, req, reply, existing._id);
         return { status: 'ok' as const };
       }

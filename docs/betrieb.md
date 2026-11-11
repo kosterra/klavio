@@ -31,7 +31,7 @@ Provenienz und SBOM:
 
 ```bash
 cosign verify kosterra/klavio:2026.11.0 \
-  --certificate-identity-regexp 'https://github.com/kosterra/klavio/.github/workflows/release.yml@.*' \
+  --certificate-identity 'https://github.com/kosterra/klavio/.github/workflows/release.yml@refs/heads/main' \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com
 docker buildx imagetools inspect kosterra/klavio:2026.11.0 --format '{{ json .SBOM }}'
 ```
@@ -148,6 +148,22 @@ PUBLIC_ORIGIN=https://klavio.example.ch
 SITE_ADDRESS=klavio.example.ch    # wird auch als WebAuthn-RP-ID verwendet
 ```
 
+Damit die Rate-Limits weiterhin die echte Adresse der Besucher sehen (und nicht alle die des
+Proxys teilen – sonst könnte eine einzelne Person die Anmeldung für alle blockieren), muss Caddy dem
+äusseren Proxy vertrauen. Im `Caddyfile` im Block `reverse_proxy` bzw. global:
+
+```caddyfile
+{
+	servers {
+		trusted_proxies static 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16   # Adressen des äusseren Proxys
+	}
+}
+```
+
+Bei Cloudflare stattdessen deren Adressbereiche eintragen. Die App selbst vertraut nur Caddy
+(`TRUST_PROXY=1`, ein Hop). Den App-Port 3100 nie direkt veröffentlichen: hinter keinem Proxy würde
+sonst jede Anfrage ihre eigene Adresse angeben können.
+
 ## Konfiguration
 
 Server (`server/src/config.ts`, wird beim Start geprüft – bei Fehlern startet der Server nicht und
@@ -168,7 +184,7 @@ nennt die Variable):
 | `SMTP_REQUIRE_TLS`          | `true`                             | STARTTLS erzwingen. Nur für Mailpit auf `false`.                                           |
 | `SMTP_USER`, `SMTP_PASS`    | –                                  |                                                                                            |
 | `MAIL_FROM`                 | `Klavio <no-reply@localhost>`      | Absender der E-Mail-Codes.                                                                 |
-| `TRUST_PROXY`               | `false`                            | Hinter Caddy `true` (in Docker gesetzt), damit Rate-Limits die echte Client-IP sehen.      |
+| `TRUST_PROXY`               | `false`                            | Anzahl vertrauter Proxys (`1` = Caddy, in Docker gesetzt) oder Liste von Adressen/CIDR.    |
 | `LOG_LEVEL`                 | `info`                             | `fatal` … `trace`, `silent`.                                                               |
 | `PORT`, `HOST`              | `3100`, `0.0.0.0`                  |                                                                                            |
 
@@ -208,13 +224,24 @@ docker compose exec -T mongo mongorestore --drop --archive --gzip < klavio-2026-
 
 Das Volume `caddy_data` enthält nur die Zertifikate; Caddy holt sie bei Verlust neu. Sicherungen
 enthalten Personendaten (E-Mail-Adressen, Profilnamen) – verschlüsselt und nur so lange wie nötig
-aufbewahren, siehe [datenschutz.md](datenschutz.md).
+aufbewahren, siehe [datenschutz.md](datenschutz.md). Zum Beispiel täglich per Cron, verschlüsselt
+mit [age](https://age-encryption.org) an einen öffentlichen Schlüssel, 30 Tage aufbewahrt:
+
+```bash
+# crontab -e  (im Verzeichnis mit docker-compose.yml)
+15 3 * * * cd /srv/klavio && docker compose exec -T mongo mongodump --db klavio --archive --gzip \
+  | age -r age1… > backups/klavio-$(date +\%F).archive.gz.age \
+  && find backups -name 'klavio-*.age' -mtime +30 -delete
+```
+
+Die Sicherung zusätzlich an einen zweiten Ort kopieren und ab und zu das Wiederherstellen mit einer
+Testinstanz ausprobieren (`age -d -i schluessel.txt … | docker compose exec -T mongo mongorestore …`).
 
 ## Aktualisieren
 
 ```bash
 git pull                       # neue docker-compose.yml / Caddyfile, falls geändert
-docker compose pull app
+docker compose pull mongo app caddy   # auch MongoDB und Caddy (TLS) bekommen so ihre Sicherheits-Updates
 docker compose up -d mongo app caddy
 ```
 
@@ -236,17 +263,34 @@ Vorher eine Sicherung machen.
 ## Sicherheit
 
 - **Ports:** Nur Caddy (443, optional 80) ist von aussen erreichbar. MongoDB (27017) und Mailpit sind
-  nur an `127.0.0.1` gebunden; im Betrieb Mailpit nicht starten. MongoDB läuft ohne Passwort im
-  internen Docker-Netz – auf einem geteilten Server zusätzlich die Authentifizierung von MongoDB
-  einschalten und eine Firewall verwenden.
-- **Header** (Caddy): strikte CSP (Skripte nur von der eigenen Domain; `style-src 'unsafe-inline'` für
-  Mantine, `font-src data:` für die eingebettete Notenschrift), HSTS, `Permissions-Policy` erlaubt nur
-  Mikrofon und MIDI für die eigene Domain, kein Einbetten in fremde Seiten.
+  nur an `127.0.0.1` gebunden; im Betrieb Mailpit nicht starten und einen echten SMTP-Server
+  eintragen (ohne SMTP schreibt der Server im Betrieb nur «nicht gesendet» ins Log, nie den Code).
+- **MongoDB-Passwort:** MongoDB läuft ohne Passwort, erreichbar nur aus dem Docker-Netz und von
+  `127.0.0.1`. Auf einem Server, den sich mehrere teilen, die Authentifizierung einschalten – bei
+  einer **neuen** Installation (das Volume `mongo_data` ist noch leer) in `docker-compose.yml` bei
+  `mongo` die Variablen `MONGO_INITDB_ROOT_USERNAME`/`MONGO_INITDB_ROOT_PASSWORD` setzen und bei `app`
+  `MONGO_URL: mongodb://BENUTZER:PASSWORT@mongo:27017/klavio?authSource=admin`. Bei einer bestehenden
+  Installation zuerst sichern, dann den Benutzer mit `mongosh` anlegen (`db.createUser`) und
+  `mongod --auth` einschalten. Zusätzlich eine Firewall verwenden.
+- **Container:** Die App läuft als Benutzer `node`, mit schreibgeschütztem Dateisystem, ohne
+  Linux-Capabilities und mit `no-new-privileges`; Caddy nur mit `NET_BIND_SERVICE`. Alle Logs
+  rotieren (drei Dateien à 10 MB).
+- **Header** setzt die App selbst (Caddy nur TLS und Kompression): strikte CSP (Skripte nur von der
+  eigenen Domain; `style-src 'unsafe-inline'` für Mantine, `font-src data:` für die eingebettete
+  Notenschrift), HSTS (ein Jahr, mit Subdomains), `Referrer-Policy: no-referrer`,
+  `Permissions-Policy` erlaubt nur Mikrofon und MIDI für die eigene Domain, kein Einbetten in fremde
+  Seiten.
 - **API:** Eingaben mit zod geprüft, begrenzte Anfragegrösse, Origin-Prüfung für alle schreibenden
   Anfragen, Rate-Limits (global 300/min; E-Mail-Codes 5 pro Adresse und 30 pro IP in 10 Minuten,
   Prüfungen 10 bzw. 60). Im Entwicklungsmodus ist `localhost` von den IP-Limits ausgenommen.
+  Unabhängig von der IP sperren 10 falsche Codes eine Adresse für eine Stunde und 5 falsche
+  Eltern-PINs das Konto für 15 Minuten (jeweils wachsend bis zu einem Tag, in der Datenbank
+  gespeichert). Eine neue Anmeldung öffnet den Elternbereich nicht; eine vergessene PIN wird per
+  Code an die E-Mail-Adresse des Kontos zurückgesetzt.
 - **Secrets:** nur in `.env` (nicht im Repository). `AUTH_SECRET` nicht mit anderen Diensten teilen.
-- **Sessions** sind 60 Tage gültig; bei Verdacht alle Sitzungen beenden:
+- **Sessions** sind 60 Tage gültig. Unter «Konto» meldet «Auf allen anderen Geräten abmelden» alle
+  übrigen Sitzungen ab, ein Wechsel der E-Mail-Adresse ebenso (die alte Adresse erhält eine
+  Nachricht). Bei Verdacht alle Sitzungen beenden:
   `docker compose exec mongo mongosh klavio --eval 'db.sessions.deleteMany({})'`.
 
 ## Bekannte Plattform-Einschränkungen

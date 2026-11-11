@@ -26,6 +26,7 @@ import {
   IconPlus,
   IconTrash,
   IconDownload,
+  IconDevicesX,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -300,6 +301,32 @@ export function AccountPage() {
       </Card>
 
       <ParentPinSettings />
+
+      {/* --------------------------------------------------- other devices */}
+      <Card withBorder radius="lg" padding="lg">
+        <Stack gap="sm" align="flex-start">
+          <Title order={2} size="h3">
+            {t('account.devices')}
+          </Title>
+          <Text size="sm">{t('account.devicesHint')}</Text>
+          <Button
+            variant="light"
+            size="md"
+            leftSection={<IconDevicesX size={18} />}
+            onClick={async () => {
+              try {
+                const { loggedOut } = await endpoints.logoutOtherDevices();
+                notify(t('account.devicesDone', { count: loggedOut }));
+              } catch (err) {
+                notify(errorText(err), 'red');
+              }
+            }}
+            data-testid="logout-others"
+          >
+            {t('account.devicesButton')}
+          </Button>
+        </Stack>
+      </Card>
 
       {/* ------------------------------------------------------ own data */}
       <Card withBorder radius="lg" padding="lg">

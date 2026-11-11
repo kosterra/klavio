@@ -591,6 +591,22 @@ a.node:active {
   background: color-mix(in srgb, var(--chapter-color) 12%, var(--klavio-surface));
 }
 
+.stageLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+}
+
+.stageLevel {
+  font-weight: 800;
+}
+
+/* the stage's name small below «Stufe 1» – fits a phone without breaking words */
+.stageName {
+  font-size: 0.85em;
+}
+
 .stageTeaser {
   display: flex;
   flex-wrap: wrap;

@@ -20,11 +20,23 @@ test('Advent brings a piece a day, then Christmas, then New Year', async ({ page
   await expect(decor).toHaveAttribute('data-season', 'advent');
   await expect(hero).toHaveText('Hallo Mia!');
 
+  // the 6th: Samichlaus is there; on the 9th he's gone and a reindeer peeks in
+  await page.clock.setFixedTime(new Date('2026-12-06T10:00:00'));
+  await page.goto('/');
+  await expect(decor.locator('[data-piece="samichlaus"]')).toBeVisible();
+  await page.clock.setFixedTime(new Date('2026-12-09T10:00:00'));
+  await page.goto('/');
+  await expect(decor.locator('[data-piece="samichlaus"]')).toHaveCount(0);
+  await expect(page.getByTestId('season-reindeer')).toBeVisible();
+  await expect(page.getByTestId('season-garland')).toBeVisible();
+
   // Christmas Eve: everything, and a greeting
   await page.clock.setFixedTime(new Date('2026-12-24T10:00:00'));
   await page.goto('/');
   await expect(decor).toHaveAttribute('data-season', 'christmas');
   await expect(hero).toHaveText('Frohe Weihnachten, Mia!');
+  await expect(decor.locator('[data-piece="santa"]')).toBeAttached();
+  await expect(page.getByTestId('season-logo-cap')).toBeVisible();
   await audit(page);
 
   // New Year's Day: fireworks
