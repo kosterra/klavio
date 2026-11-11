@@ -49,21 +49,69 @@ export function HandOnKeys({ shape }: { shape: HandShape }) {
   const last = Math.ceil(Math.max(...idx)) + 1;
   const whites = Array.from({ length: last - first + 1 }, (_, i) => whiteMidi(first + i));
   const width = whites.length * W;
-  const height = H + 120;
+  const height = H + 186;
   const x = (midi: number) => (whiteIndex(midi) - first) * W + W / 2;
   const blacks = whites.flatMap((m) => (isBlack(m + 1) && m + 1 <= whites.at(-1)! ? [m + 1] : []));
   const used = new Set(Object.values(shape.keys));
 
-  // fingertips on the keys, the hand comes from below (where the player sits)
-  const tip = (f: Finger) => ({ x: x(keyOf[f]), y: isBlack(keyOf[f]) ? BH - 22 : H - 30 });
-  const longs = ([2, 3, 4, 5] as Finger[]).map(tip);
-  const centre = longs.reduce((n, p) => n + p.x, 0) / 4;
-  const longBase = (f: Finger) => ({ x: centre + (tip(f).x - centre) * 0.82, y: H + 52 });
-  const longBases = ([2, 3, 4, 5] as Finger[]).map(longBase);
-  const palmL = Math.min(...longBases.map((b) => b.x)) - 20;
-  const palmR = Math.max(...longBases.map((b) => b.x)) + 20;
-  // the thumb grows out of the palm's side, lower down
-  const bases = [{ x: shape.side === 'right' ? palmL + 16 : palmR - 16, y: H + 92 }, ...longBases];
+  // fingertips on the keys, the hand comes from below (where the player sits).
+  // Like a real hand: the middle finger reaches furthest, the little finger
+  // and the thumb rest nearer the front edge; the knuckles form an arc.
+  const REACH: Record<Finger, number> = { 1: 22, 2: 32, 3: 38, 4: 34, 5: 24 };
+  const KNUCKLE: Record<Finger, number> = { 1: 0, 2: 50, 3: 45, 4: 50, 5: 60 };
+  const WIDTH: Record<Finger, number> = { 1: 29, 2: 26, 3: 27, 4: 25, 5: 21 };
+  const tip = (f: Finger) => ({
+    x: x(keyOf[f]),
+    y: isBlack(keyOf[f]) ? BH - 22 : H - REACH[f],
+  });
+  const long = [2, 3, 4, 5] as Finger[];
+  const centre = long.reduce((n, f) => n + tip(f).x, 0) / 4;
+  const base = (f: Finger) => ({
+    x: centre + (tip(f).x - centre) * (f === 5 ? 0.74 : 0.84),
+    y: H + KNUCKLE[f],
+  });
+  // s: the thumb's side (−1 left for the right hand, +1 right for the left)
+  const s = shape.side === 'right' ? -1 : 1;
+  // the palm's edges carry on the outer edges of the index and little finger
+  // (the corners lie under the fingers, so finger and palm join without a step)
+  const thumbTop = { x: base(2).x + s * (WIDTH[2] / 2 - 2), y: base(2).y + 10 };
+  const pinkyTop = { x: base(5).x - s * (WIDTH[5] / 2 - 2), y: base(5).y + 10 };
+  const wristY = H + 168;
+  const wristHalf = Math.abs(pinkyTop.x - thumbTop.x) * 0.36;
+  const wristMid = (thumbTop.x + pinkyTop.x) / 2 - s * 6;
+  const wristThumb = wristMid + s * wristHalf;
+  const wristPinky = wristMid - s * wristHalf;
+  const knuckleTop = Math.min(...long.map((f) => base(f).y)) - 16;
+  const palm = [
+    `M ${thumbTop.x} ${thumbTop.y}`,
+    // the ball of the thumb bulges out, then the palm narrows to the wrist
+    `C ${thumbTop.x + s * 18} ${thumbTop.y + 52} ${wristThumb + s * 10} ${wristY - 46} ${wristThumb} ${wristY}`,
+    `L ${wristPinky} ${wristY}`,
+    `C ${wristPinky - s * 2} ${wristY - 44} ${pinkyTop.x - s * 6} ${pinkyTop.y + 46} ${pinkyTop.x} ${pinkyTop.y}`,
+    `Q ${centre} ${knuckleTop} ${thumbTop.x} ${thumbTop.y}`,
+    'Z',
+  ].join(' ');
+  // a finger: from its knuckle to the tip, gently curved; the thumb grows out
+  // of the ball of the thumb low on the palm and bends towards its key
+  const thumbBase = { x: thumbTop.x - s * 6, y: H + 96 };
+  const fingerPath = (f: Finger) => {
+    const t = tip(f);
+    if (f === 1) {
+      return `M ${thumbBase.x} ${thumbBase.y} Q ${(thumbBase.x + t.x) / 2 + s * 12} ${(thumbBase.y + t.y) / 2 + 8} ${t.x} ${t.y}`;
+    }
+    const b = base(f);
+    return `M ${b.x} ${b.y} Q ${(b.x + t.x) / 2 + (b.x - centre) * 0.05} ${(b.y + t.y) / 2} ${t.x} ${t.y}`;
+  };
+  // a crease across each finger, a little below the middle joint
+  const crease = (f: Finger) => {
+    const t = tip(f);
+    const b = f === 1 ? thumbBase : base(f);
+    const k = f === 1 ? 0.45 : 0.5;
+    const cx = t.x + (b.x - t.x) * k;
+    const cy = t.y + (b.y - t.y) * k;
+    const half = WIDTH[f] / 2 - 6;
+    return `M ${cx - half} ${cy} Q ${cx} ${cy + 3} ${cx + half} ${cy}`;
+  };
 
   const label = t(shape.side === 'right' ? 'hand.right' : 'hand.left', {
     keys: known
@@ -102,36 +150,36 @@ export function HandOnKeys({ shape }: { shape: HandShape }) {
         />
       ))}
 
-      {/* the hand: palm, then the fingers, outline under skin */}
+      {/* the hand: outlines first, then the palm, then the skin of the fingers */}
+      {FINGERS.map((f) => (
+        <path
+          key={`line-${f}`}
+          d={fingerPath(f)}
+          strokeLinecap="round"
+          strokeWidth={WIDTH[f] + 6}
+          className={classes.outline}
+        />
+      ))}
+      <path d={palm} strokeWidth={3} strokeLinejoin="round" className={classes.palm} />
+      {FINGERS.map((f) => (
+        <path
+          key={`skin-${f}`}
+          d={fingerPath(f)}
+          strokeLinecap="round"
+          strokeWidth={WIDTH[f]}
+          className={classes.skin}
+        />
+      ))}
+      {FINGERS.map((f) => (
+        <path key={`crease-${f}`} d={crease(f)} className={classes.crease} />
+      ))}
       <rect
-        x={palmL}
-        y={H + 40}
-        width={palmR - palmL}
-        height={120}
-        rx={34}
-        className={classes.palmLine}
-      />
-      {[true, false].map((outline) =>
-        FINGERS.map((f) => (
-          <line
-            key={`${outline}-${f}`}
-            x1={bases[f - 1]!.x}
-            y1={bases[f - 1]!.y}
-            x2={tip(f).x}
-            y2={tip(f).y}
-            strokeLinecap="round"
-            strokeWidth={outline ? 31 : 25}
-            className={outline ? classes.outline : classes.skin}
-          />
-        )),
-      )}
-      <rect
-        x={palmL + 3}
-        y={H + 43}
-        width={palmR - palmL - 6}
-        height={120}
-        rx={31}
-        className={classes.palm}
+        x={wristMid - wristHalf - 10}
+        y={wristY - 8}
+        width={wristHalf * 2 + 20}
+        height={height - wristY + 10}
+        rx={8}
+        className={classes.sleeve}
       />
       {FINGERS.map((f) => {
         const p = tip(f);
