@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Schweizer Volkslieder: Unter «Lieder» gibt es «S’Vreneli ab em Guggisberg» und das Wiegenlied «Es kam ein Herr zum Schlössli» – abgeschrieben aus einer Sammlung von 1826, vereinfacht für Klavio, zum Üben und Drucken.',
+        'Swiss folk songs: under «Songs» there are «Vreneli from Guggisberg» and the lullaby «A Lord Came to the Little Castle» – taken from a collection printed in 1826, simplified for Klavio, to practise and print.',
+      ),
+      L(
         'Erzähl anderen von Klavio: Unter «Konto» können Eltern ein paar Worte für die Startseite schreiben – sie erscheinen nur mit ihrer Zustimmung und nachdem die Betreiberin oder der Betreiber sie gelesen hat, und lassen sich jederzeit zurücknehmen.',
         'Tell others about Klavio: under «Account» parents can write a few words for the start page – they appear only with their consent and after the operator has read them, and can be taken back at any time.',
       ),

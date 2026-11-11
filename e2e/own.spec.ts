@@ -67,4 +67,15 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
   await page.goto('/classics/schumann-melodie/print');
   await expect(page.getByTestId('sheet')).toContainText('Robert Schumann');
   await expect(page.getByTestId('sheet')).toContainText('CC BY-SA 2.5');
+
+  // a Swiss folk song from the print of 1826
+  await page.goto('/songs');
+  await page.getByTestId('classic-volk-guggisberg').click();
+  await expect(page.getByTestId('classic-source')).toContainText('Bern 1826, Nr. 31');
+  await page.getByTestId('own-start').click();
+  await expect(page.getByTestId('song-staff').first()).toBeVisible();
+  await audit(page);
+  await page.goto('/classics/volk-wiegenlied/print');
+  await expect(page.getByTestId('sheet')).toContainText('Schweizer Wiegenlied');
+  await audit(page);
 });

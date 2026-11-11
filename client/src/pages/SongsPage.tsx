@@ -7,7 +7,7 @@ import { usePageTitle } from '../components/usePageTitle';
 import { useLocalized } from '../lesson/useLocalized';
 import { useProgress } from '../lesson/useProgress';
 import { OwnPieces } from '../own/OwnPieces';
-import { Classics } from '../own/Classics';
+import { Classics, FolkSongs } from '../own/Classics';
 import { ProgressPending } from '../components/ProgressPending';
 import classes from './SongsPage.module.css';
 import { useLessonFor } from '../lesson/useLessonFor';
@@ -41,6 +41,7 @@ export function SongsPage() {
         </Text>
       </div>
       <OwnPieces />
+      <FolkSongs />
       <Classics />
       {chapters.map(({ chapter, n, songs }) => (
         <section key={chapter.id} aria-labelledby={`songs-${chapter.id}`}>

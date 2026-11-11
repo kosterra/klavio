@@ -5,7 +5,8 @@ import type { Localized } from '@klavio/shared';
 export function useLocalized() {
   const { i18n } = useTranslation();
   const en = i18n.language.startsWith('en');
-  return (text: Localized) => (en ? text.en : text['de-CH']);
+  return (text: Localized | string) =>
+    typeof text === 'string' ? text : en ? text.en : text['de-CH'];
 }
 
 export function useNoteLang(): 'de' | 'en' {

@@ -181,3 +181,7 @@ mehr als 70 Jahren gestorben sind). Die «Klassik zum Üben» ist aus den Ausgab
 [`shared/src/curriculum/classics.data.ts`](shared/src/curriculum/classics.data.ts) steht deshalb –
 abweichend vom Code – unter der Creative-Commons-Lizenz des jeweiligen Stücks (CC BY-SA 2.5 / 3.0),
 mit Quelle und Notensetzer bei jedem Stück. Neu erzeugen: `npx tsx scripts/import-mutopia.ts`.
+Die «Schweizer Volkslieder»
+([`shared/src/curriculum/folkSongs.ts`](shared/src/curriculum/folkSongs.ts)) sind von Hand aus der
+gemeinfreien «Sammlung von Schweizer-Kühreihen und Volksliedern» (Bern 1826,
+[e-rara](https://doi.org/10.3931/e-rara-150173)) abgeschrieben – Nummer und Seite stehen bei jedem Lied.

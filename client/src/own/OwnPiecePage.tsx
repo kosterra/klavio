@@ -72,7 +72,7 @@ export function ClassicPage() {
     <PracticePiece
       piece={{
         title: loc(c.title),
-        composer: c.composer,
+        composer: loc(c.composer),
         exercise: c.exercise,
         keyboard: c.keyboard,
       }}
@@ -94,7 +94,7 @@ export function ClassicSheetPage() {
     <SheetView
       title={loc(c.title)}
       exercise={c.exercise}
-      chip={{ text: c.composer, color: 'indigo' }}
+      chip={{ text: loc(c.composer), color: c.exercise.type === 'song' ? 'teal' : 'indigo' }}
       note={t('classics.credit', { by: c.source.by, license: c.source.license })}
     />
   );

@@ -1456,6 +1456,10 @@
       "NOT_MIDI": "Klavio cannot read this MIDI file."
     }
   },
+  "folk": {
+    "title": "Swiss folk songs",
+    "intro": "Old songs from Switzerland, taken from a collection printed in 1826 and simplified for Klavio: the melody to practise with listening, and to print – without stars."
+  },
   "classics": {
     "title": "Classics to practise",
     "intro": "Little pieces by great composers, simplified for Klavio: to practise with listening and one hand alone, and to print – without stars.",

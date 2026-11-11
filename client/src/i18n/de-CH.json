@@ -1456,6 +1456,10 @@
       "NOT_MIDI": "Diese MIDI-Datei kann Klavio nicht lesen."
     }
   },
+  "folk": {
+    "title": "Schweizer Volkslieder",
+    "intro": "Alte Lieder aus der Schweiz, abgeschrieben aus einer Sammlung von 1826 und für Klavio vereinfacht: die Melodie zum Üben mit Anhören, und zum Drucken – ohne Sterne."
+  },
   "classics": {
     "title": "Klassik zum Üben",
     "intro": "Kleine Stücke grosser Komponisten, für Klavio vereinfacht: zum Üben mit Anhören und einer Hand allein, und zum Drucken – ohne Sterne.",
