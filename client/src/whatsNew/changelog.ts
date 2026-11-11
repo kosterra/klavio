@@ -23,8 +23,8 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
-        'Korrektur: Die Hand bei «So liegt deine Hand» sieht jetzt aus wie eine echte Hand auf den Tasten – von oben gesehen, mit gekrümmten Fingern, Knöcheln und dem Daumen seitlich.',
-        'Fix: the hand in «This is where your hand goes» now looks like a real hand on the keys – seen from above, with curved fingers, knuckles and the thumb at the side.',
+        'Korrektur: Die Hand bei «So liegt deine Hand» hat jetzt die Proportionen einer echten Hand – von oben gesehen, mit Fingern in richtiger Länge, Knöcheln und dem Daumen schräg daneben.',
+        'Fix: the hand in «This is where your hand goes» now has the proportions of a real hand – seen from above, with fingers of the right length, knuckles and the thumb angled beside them.',
       ),
       L(
         'Schweizer Volkslieder: Unter «Lieder» gibt es «S’Vreneli ab em Guggisberg» und das Wiegenlied «Es kam ein Herr zum Schlössli» – abgeschrieben aus einer Sammlung von 1826, vereinfacht für Klavio, zum Üben und Drucken.',

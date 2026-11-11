@@ -31,14 +31,8 @@
 
 .hand {
   fill: var(--klavio-hand);
-  stroke: none;
-}
-
-.handLine {
-  fill: none;
   stroke: var(--klavio-hand-line);
   stroke-width: 4;
-  stroke-linecap: round;
   stroke-linejoin: round;
 }
 
