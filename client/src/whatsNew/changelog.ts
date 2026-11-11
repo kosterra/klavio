@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Stücke für beide Hände: Übe zuerst eine Hand allein und nur ein paar Takte – die Übungsrunde beginnt immer wieder von vorn und zählt noch nicht für die Sterne. Anhören spielt dann auch nur, was du übst.',
+        'Pieces for both hands: practise one hand alone and only a few bars first – the practice round starts over and over and does not count for the stars yet. Listening then plays only what you practise.',
+      ),
+      L(
         'Noten drucken: Jedes offene Lied gibt es jetzt als Notenblatt im Klavio-Look – mit Welt, Tempo, Notennamen und Fingersätzen nach Wahl, einem Übungstipp von Klavi und einer Woche zum Abhaken. Zum Üben am Klavier zu Hause oder für die Klavierstunde.',
         'Printing sheet music: every open song is now a sheet in Klavio’s look – with its world, tempo, note names and fingering as you like, a practice tip from Klavi and a week to tick off. For practising at the piano at home or for the piano lesson.',
       ),

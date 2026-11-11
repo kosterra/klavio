@@ -1374,5 +1374,19 @@
     "week": "Diese Woche geübt",
     "footer": "Klavio – Klavier lernen · gedruckt am {{date}}",
     "publicDomain": "Melodie gemeinfrei"
+  },
+  "piece": {
+    "hands": "Welche Hand?",
+    "both": "Beide",
+    "right": "Rechts",
+    "left": "Links",
+    "bars": "Takte {{from}} bis {{to}}",
+    "barFrom": "Erster Takt",
+    "barTo": "Letzter Takt",
+    "practising": "Übungsrunde – sie zählt noch nicht für die Sterne und beginnt immer wieder von vorn. Sitzt es? Dann beide Hände und alle Takte.",
+    "loops_one": "{{count}}× geschafft",
+    "loops_other": "{{count}}× geschafft",
+    "roundDone": "Runde geschafft – nochmals!",
+    "nothingHere": "In diesen Takten hat diese Hand nichts zu spielen."
   }
 }

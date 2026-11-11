@@ -1374,5 +1374,19 @@
     "week": "Practised this week",
     "footer": "Klavio – learning the piano · printed on {{date}}",
     "publicDomain": "Melody in the public domain"
+  },
+  "piece": {
+    "hands": "Which hand?",
+    "both": "Both",
+    "right": "Right",
+    "left": "Left",
+    "bars": "Bars {{from}} to {{to}}",
+    "barFrom": "First bar",
+    "barTo": "Last bar",
+    "practising": "Practice round – it does not count for the stars yet and starts over again and again. Got it? Then both hands and all bars.",
+    "loops_one": "{{count}}× done",
+    "loops_other": "{{count}}× done",
+    "roundDone": "Round done – once more!",
+    "nothingHere": "This hand has nothing to play in these bars."
   }
 }
