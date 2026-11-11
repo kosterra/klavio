@@ -252,6 +252,28 @@ Indizes legt der Server beim Start selbst an; Migrationen sind bisher nicht nöt
 laden die neue Version im Hintergrund und zeigen ein Banner «Neue Version verfügbar – Neu laden».
 Vorher eine Sicherung machen.
 
+### MongoDB 8.0 → 9.0
+
+Die mitgelieferte `docker-compose.yml` verwendet MongoDB 9.0 (vorher 8.0). Ein grosser Versionssprung
+geht bei MongoDB nur von der direkt vorherigen Version aus, und die gespeicherten Daten müssen auf
+deren Stand («Feature Compatibility Version», FCV) sein:
+
+```bash
+# 1. Sicherung (siehe oben) – ein Zurück auf 8.0 geht nur, solange Schritt 4 nicht gemacht ist
+# 2. Stand prüfen: muss "8.0" sein (sonst erst mit mongo:8.0 auf 8.0 setzen)
+docker compose exec mongo mongosh --quiet --eval \
+  'db.adminCommand({getParameter: 1, featureCompatibilityVersion: 1}).featureCompatibilityVersion'
+# 3. neue docker-compose.yml holen und MongoDB 9.0 starten
+git pull && docker compose pull mongo && docker compose up -d mongo app
+# 4. nach ein paar Tagen ohne Probleme: die Daten auf 9.0 heben (danach kein Zurück mehr)
+docker compose exec mongo mongosh --quiet --eval \
+  'db.adminCommand({setFeatureCompatibilityVersion: "9.0", confirm: true})'
+```
+
+Wer noch auf MongoDB 7.0 oder älter ist, geht zuerst Schritt für Schritt auf 8.0 (mit `mongo:8.0`
+starten, FCV auf `"8.0"` setzen). Getestet: eine Kopie einer 8.0-Datenbank startet unter 9.0.4
+unverändert (alle Sammlungen und Indizes), die Server-Tests laufen gegen MongoDB 9.0.4.
+
 ## Überwachen
 
 - **Gesundheit:** `GET /api/health` → `{"ok":true}`.
@@ -301,5 +323,5 @@ Vorher eine Sicherung machen.
   noch nicht übertragene Ergebnisse; der Server bleibt die Quelle der Wahrheit. Installation nur über
   «Teilen → Zum Home-Bildschirm».
 - **Firefox:** kein Web MIDI ohne Add-on.
-- **MongoDB 8.0 auf Linux-Kernel 7.x:** startet nur mit `GLIBC_TUNABLES=glibc.pthread.rseq=1`
-  (in `docker-compose.yml` gesetzt), bis das Image mindestens 8.0.35 enthält.
+- **MongoDB 8.0 auf Linux-Kernel 7.x:** wer (noch) `mongo:8.0` vor 8.0.35 betreibt, braucht
+  `GLIBC_TUNABLES=glibc.pthread.rseq=1` in der Umgebung des Containers. MongoDB 9.0 braucht das nicht.

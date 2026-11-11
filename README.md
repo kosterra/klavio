@@ -73,7 +73,7 @@ Repository-Einstellungen. Ablauf und Regeln: `.claude/skills/versioning`, «Was 
 | Frontend | React 19, TypeScript, Vite 8, Mantine 9 (CSS Modules), React Router, i18next, VexFlow 5 |
 | Audio    | Web Audio API mit AudioWorklet (eigene Tonerkennung), Web MIDI                          |
 | PWA      | vite-plugin-pwa (Workbox)                                                               |
-| Backend  | Node 24, Fastify 5, zod 4, Mongoose 9 / MongoDB 8                                       |
+| Backend  | Node 24, Fastify 5, zod 4, Mongoose 9 / MongoDB 9                                       |
 | Auth     | Passkeys mit `@simplewebauthn` 14, E-Mail-Codes, httpOnly-Session-Cookies               |
 | Betrieb  | Ein Image `kosterra/klavio` (App + API), davor Caddy für TLS; MongoDB; GitHub Actions   |
 | Tests    | Vitest, `mongodb-memory-server`, Playwright, axe-core                                   |

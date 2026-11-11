@@ -6,7 +6,7 @@ export default defineConfig({
     testTimeout: 30_000,
     hookTimeout: 120_000,
     globalSetup: ['./test/global-setup.ts'],
-    // mongod < 8.0.35 refuses to start on Linux 7.x kernels (SERVER-131779)
-    env: { GLIBC_TUNABLES: 'glibc.pthread.rseq=1' },
+    // the tests run against the MongoDB version of docker-compose.yml
+    env: { MONGOMS_VERSION: '9.0.4' },
   },
 });

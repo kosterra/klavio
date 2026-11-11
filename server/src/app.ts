@@ -88,6 +88,8 @@ export async function buildApp({
       timeWindow: '1 minute',
       // only the API: the app's own files (one page load fetches dozens) are not counted
       allowList: (req) => !req.url.startsWith('/api/'),
+      // a client that hung up has no address any more – not a server error
+      keyGenerator: (req) => req.ip ?? 'gone',
     });
   }
 

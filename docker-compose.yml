@@ -12,10 +12,6 @@ services:
     image: mongo:9.0
     restart: unless-stopped
     logging: *logging
-    environment:
-      # mongod < 8.0.35 refuses to start on Linux 7.x kernels (SERVER-131779).
-      # Remove once mongo:8.0 resolves to >= 8.0.35.
-      GLIBC_TUNABLES: glibc.pthread.rseq=1
     volumes:
       - mongo_data:/data/db
     # exposed on localhost only, for `npm run dev`

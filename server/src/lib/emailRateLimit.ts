@@ -29,7 +29,7 @@ export function emailRateLimit(
         max: perIp,
         timeWindow: WINDOW,
         allowList,
-        keyGenerator: (req) => `${name}:${req.ip}`,
+        keyGenerator: (req) => `${name}:${req.ip ?? 'gone'}`,
       })
     : null;
 
