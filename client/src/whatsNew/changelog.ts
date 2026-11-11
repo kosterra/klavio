@@ -20,7 +20,7 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
-    version: UPCOMING,
+    version: '2026.11.3',
     changes: [
       L(
         'Datenschutz: Die Seite «Datenschutz» nennt jetzt alle gespeicherten Angaben (auch Wochenziel, Startfragen und Fehlversuche), der Daten-Download enthält zusätzlich die angemeldeten Geräte, und beim Abmelden werden auch die Einstellungen der Profile und noch nicht übertragene Ergebnisse vom Gerät gelöscht.',
