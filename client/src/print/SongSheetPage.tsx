@@ -10,6 +10,7 @@ import {
   isLessonUnlocked,
   localIsoDate,
   midiToPitchName,
+  songFingers,
   type Exercise,
   type PieceExercise,
   type SongExercise,
@@ -109,8 +110,11 @@ export function SongSheetPage() {
     ));
   } else {
     let previousTied = false;
+    let flat = 0;
+    const planned = songFingers(exercise);
     const bars: StaffNote[][] = exercise.bars.map((bar) =>
       bar.map((n) => {
+        const finger = planned[flat++];
         // a tied note is held: its finger is not repeated
         const held = previousTied;
         previousTied = !!n.tie;
@@ -118,7 +122,7 @@ export function SongSheetPage() {
           midi: n.midi,
           duration: n.value,
           label: name(n.midi),
-          finger: fingers && !held ? n.finger : undefined,
+          finger: fingers && !held ? finger : undefined,
           tie: n.tie,
         };
       }),
@@ -138,8 +142,7 @@ export function SongSheetPage() {
       </div>
     ));
   }
-  const hasFingers =
-    exercise.type !== 'piece' && exercise.bars.some((b) => b.some((n) => n.finger));
+  const hasFingers = exercise.type !== 'piece' && songFingers(exercise).some((f) => f);
 
   return (
     <div className={classes.page} data-kids={kids || undefined}>

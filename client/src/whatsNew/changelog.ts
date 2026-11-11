@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Fingersätze: Lieder, bei denen die Hand wandern muss (zum Beispiel «Alle meine Entchen» oder «Bruder Jakob»), zeigen jetzt die Fingernummer genau dort, wo die Hand weiterrückt – in der Lektion und auf dem gedruckten Notenblatt.',
+        'Fingering: songs where the hand has to move (for example «Alle meine Entchen» or «Frère Jacques») now show the finger number exactly where the hand moves on – in the lesson and on the printed sheet.',
+      ),
+      L(
         'Freies Spielen: «Aufnehmen» merkt sich, was du spielst – bis zu zwei Minuten –, und «Anhören» spielt es dir mit dem gewählten Klang vor. Gespeichert werden nur die Töne, nur auf diesem Gerät und nur bis du die Seite verlässt.',
         'Free play: «Record» remembers what you play – up to two minutes – and «Listen» plays it back with the chosen sound. Only the notes are kept, only on this device and only until you leave the page.',
       ),
