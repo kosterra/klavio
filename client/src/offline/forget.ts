@@ -5,7 +5,7 @@ import type { QueuedResult } from './queue';
 const MAP_KEYS = ['klavio-read-aloud', 'klavio-worlds-revealed'];
 const LIST_KEYS = ['klavio-mic-hint-hidden'];
 /** … or as one entry per profile: `<prefix>:<profileId>` */
-const PREFIXES = ['klavio-rain-best', 'klavio-play-on'];
+const PREFIXES = ['klavio-rain-best', 'klavio-play-on', 'klavio-metronome'];
 
 function edit<T>(key: string, change: (v: T) => T) {
   try {

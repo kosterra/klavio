@@ -39,6 +39,10 @@ test('free play, metronome, wardrobe, family overview, placement and data export
   await page.getByTestId('metronome-toggle').click();
   await expect(page.getByTestId('metronome-toggle')).toHaveText('Stopp');
   await page.getByTestId('metronome-toggle').click();
+  // the tempo is remembered for this profile
+  const tapped = await page.getByTestId('tempo').textContent();
+  await page.reload();
+  await expect(page.getByTestId('tempo')).toHaveText(tapped!);
   await audit(page);
 
   // wardrobe: level 1 → only «Nichts»; the cap needs level 2
@@ -58,6 +62,8 @@ test('free play, metronome, wardrobe, family overview, placement and data export
   await seedCompletedLessons(page, ['read-c-d-e']);
   await page.goto('/family');
   await expect(page.getByTestId('progress-Lina')).toContainText('Lektionen');
+  await expect(page.getByTestId('family-next')).toContainText('Als Nächstes: «');
+  await expect(page.getByTestId('family-last')).toHaveText(/Zuletzt geübt: (heute|noch nie)/);
   await audit(page);
 
   // data export

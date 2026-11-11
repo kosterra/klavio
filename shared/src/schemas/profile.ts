@@ -183,4 +183,8 @@ export interface ProfileOverviewDto {
   weeks: { week: string; minutes: number }[];
   /** days practised in the last 28 days */
   activeDays: number;
+  /** the learner's last day with practice time (local date), null: never */
+  lastPracticed: string | null;
+  /** lessons played with one star at most – worth another go (up to three) */
+  needsPractice: string[];
 }

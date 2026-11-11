@@ -90,7 +90,7 @@ export function PieceExercise({
     } else if (inputMode === 'microphone' && (e.midi === step.lh || e.midi === step.rh)) {
       return; // the other hand's note of this step – fine, not needed
     } else {
-      onMistake();
+      onMistake(step.rh ?? step.lh ?? undefined);
       setMissedHere(true);
       setWrong(e.midi);
       clearTimeout(timer.current);

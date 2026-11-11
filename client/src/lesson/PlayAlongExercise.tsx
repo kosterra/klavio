@@ -55,7 +55,7 @@ export function PlayAlongExercise({
         }, FEEDBACK_MS * 1.4);
       }
     } else {
-      onMistake();
+      onMistake(expected);
       setMissedHere(true);
       setWrong(e.midi);
       clearTimeout(timer.current);

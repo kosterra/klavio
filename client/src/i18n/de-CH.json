@@ -53,7 +53,7 @@
     },
     "device": {
       "title": "Was auf deinem Gerät gespeichert wird",
-      "text": "Klavio setzt nur zwei Cookies, beide technisch notwendig: eines hält dich angemeldet, eines schützt die Anmeldung mit Passkey. Im Speicher des Browsers liegen dein letzter Stand (damit Klavio auch offline funktioniert), noch nicht übertragene Ergebnisse, Einstellungen je Profil (z. B. Vorlesen, Rekord im Notenregen) und allgemeine Einstellungen wie Sprache und Farbschema. Beim Abmelden werden dein Stand, deine noch nicht übertragenen Ergebnisse und die Einstellungen deiner Profile vom Gerät gelöscht; nur allgemeine Einstellungen wie Sprache und Farbschema bleiben."
+      "text": "Klavio setzt nur zwei Cookies, beide technisch notwendig: eines hält dich angemeldet, eines schützt die Anmeldung mit Passkey. Im Speicher des Browsers liegen dein letzter Stand (damit Klavio auch offline funktioniert), noch nicht übertragene Ergebnisse, Einstellungen je Profil (z. B. Vorlesen, Rekord im Notenregen, Tempo des Metronoms) und allgemeine Einstellungen wie Sprache und Farbschema. Beim Abmelden werden dein Stand, deine noch nicht übertragenen Ergebnisse und die Einstellungen deiner Profile vom Gerät gelöscht; nur allgemeine Einstellungen wie Sprache und Farbschema bleiben."
     },
     "sharing": {
       "title": "Wer Daten bekommt",
@@ -171,6 +171,8 @@
     }
   },
   "dashboard": {
+    "freeDay": "Ein Tag Pause pro Woche ist erlaubt – dein Feuer bleibt.",
+    "freeDayUsed": "Deinen Pausentag hast du diese Woche schon gebraucht – morgen wieder spielen, dann brennt das Feuer weiter.",
     "greeting": "Hallo {{name}}!",
     "mascotKids": "Schön, dass du da bist! Bereit für die nächste Lektion?",
     "mascotClassic": "Willkommen zurück.",
@@ -543,6 +545,8 @@
     "legend": "Was bedeuten die Zeichen?"
   },
   "lesson": {
+    "hardNotes": "Diese Töne waren noch knifflig: {{notes}}.",
+    "hardNote": "{{note}} ({{count}}×)",
     "close": "Lektion beenden",
     "quit": {
       "title": "Wirklich aufhören?",
@@ -845,6 +849,8 @@
     "toLesson": "Zur Lektion"
   },
   "review": {
+    "quickScore_one": "{{right}} von {{count}} beim ersten Versuch richtig",
+    "quickScore_other": "{{right}} von {{count}} beim ersten Versuch richtig",
     "title": "Heute wiederholen",
     "intro": "Diese Lektionen sind wieder dran – so vergisst du nichts.",
     "allFresh": "Alles frisch im Kopf!",
@@ -1155,6 +1161,17 @@
     "showKeys": "Bildschirm-Tasten zeigen"
   },
   "family": {
+    "streak": "Tage in Folge",
+    "lastPracticed": "Zuletzt geübt: {{when}}",
+    "today": "heute",
+    "yesterday": "gestern",
+    "daysAgo_one": "vor {{count}} Tag",
+    "daysAgo_other": "vor {{count}} Tagen",
+    "never": "noch nie",
+    "next": "Als Nächstes: «{{lesson}}»",
+    "needsPractice": "Lohnt sich nochmals (bisher ein Stern): {{lessons}}",
+    "empty": "Noch keine Profile. Leg für jedes Kind – und wenn du magst, für dich – ein eigenes Profil an.",
+    "addProfile": "Profil anlegen",
     "title": "Familie und Fortschritt",
     "intro": "Wo jedes Profil auf dem Lernpfad steht und wie viel in den letzten Wochen geübt wurde.",
     "mine": "Mein Fortschritt",

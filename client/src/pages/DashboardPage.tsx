@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../components/usePageTitle';
 import { useSession } from '../auth/session';
 import { useMidi } from '../input/useMidi';
-import { CORE_LESSONS, liveStreak, localIsoDate, nextLesson } from '@klavio/shared';
+import { CORE_LESSONS, liveStreak, localIsoDate, nextLesson, weekOf } from '@klavio/shared';
 import { LearningPath } from '../lesson/LearningPath';
 import { PathLegend } from '../lesson/LessonTypeIcon';
 import { BadgeShelf } from '../lesson/Badges';
@@ -88,6 +88,9 @@ export function DashboardPage() {
         today={progress?.today.date ?? localIsoDate()}
         weekDays={progress?.weekDays ?? []}
         weeklyGoal={activeProfile.weeklyGoalDays}
+        freeDayUsed={
+          activeProfile.streak.freeDayWeek === weekOf(progress?.today.date ?? localIsoDate())
+        }
       />
 
       {activeProfile.calibration.noiseFloorDb === null && midi.devices.length === 0 && (

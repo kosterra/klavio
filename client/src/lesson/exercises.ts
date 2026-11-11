@@ -9,7 +9,8 @@ export interface ExerciseProps<E> {
   kids: boolean;
   /** One more target note was played correctly. */
   onCorrect: () => void;
-  onMistake: () => void;
+  /** a wrong note – with the note that was expected, where there is one */
+  onMistake: (expected?: number) => void;
   onDone: () => void;
 }
 

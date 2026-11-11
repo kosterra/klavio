@@ -345,6 +345,7 @@ export function TheorySteps({
   skipLabel,
   lessonTitle,
   onStep,
+  onAnswered,
 }: {
   steps: TheoryStep[];
   kids: boolean;
@@ -359,6 +360,8 @@ export function TheorySteps({
   lessonTitle?: string;
   /** called with the index of the step now shown */
   onStep?: (index: number) => void;
+  /** after each task (not the explanations): was it right at the first try? */
+  onAnswered?: (firstTry: boolean) => void;
 }) {
   const { t } = useTranslation();
   const loc = useLocalized();
@@ -366,12 +369,19 @@ export function TheorySteps({
   const [autoRead] = useAutoRead();
   const [index, setIndex] = useState(0);
   const [solved, setSolved] = useState(false);
-  const [feedback, setFeedback] = useState<Feedback>(null);
+  const [feedback, setFeedbackState] = useState<Feedback>(null);
+  const [missedHere, setMissedHere] = useState(false);
+  const setFeedback = (f: Feedback) => {
+    if (f && !f.ok) setMissedHere(true);
+    setFeedbackState(f);
+  };
   const step = steps[index]!;
   const last = index === steps.length - 1;
   const canGoOn = step.type === 'explain' || solved;
 
   const next = () => {
+    if (step.type !== 'explain') onAnswered?.(solved && !missedHere);
+    setMissedHere(false);
     if (last) {
       onStep?.(steps.length);
       onDone();

@@ -45,6 +45,8 @@ export function QuickRoundPage() {
   const [steps, setSteps] = useState<TheoryStep[] | null>(null);
   const [done, setDone] = useState(false);
   const [quitAsk, setQuitAsk] = useState(false);
+  // the score: tasks right at the first try, of the tasks answered
+  const [score, setScore] = useState({ right: 0, total: 0 });
   const running = !!steps && steps.length > 0 && !done;
 
   if (progress && steps === null) {
@@ -79,6 +81,9 @@ export function QuickRoundPage() {
             steps={steps}
             kids={kids}
             onDone={() => setDone(true)}
+            onAnswered={(firstTry) =>
+              setScore((s) => ({ right: s.right + (firstTry ? 1 : 0), total: s.total + 1 }))
+            }
             title={t('review.quick')}
             doneLabel={t('review.finish')}
             skipLabel={t('review.stop')}
@@ -91,11 +96,17 @@ export function QuickRoundPage() {
               <Title order={1} ta="center">
                 {t('review.quickDone')}
               </Title>
+              {score.total > 0 && (
+                <Text fz="xl" fw={800} ta="center" data-testid="quick-score">
+                  {t('review.quickScore', { right: score.right, count: score.total })}
+                </Text>
+              )}
               <Group>
                 <Button
                   variant="default"
                   onClick={() => {
                     setSteps(pickSteps(completed, world));
+                    setScore({ right: 0, total: 0 });
                     setDone(false);
                   }}
                 >

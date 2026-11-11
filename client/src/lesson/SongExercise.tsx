@@ -101,7 +101,7 @@ export function SongExercise({
       setPos(next);
       if (next >= notes.length) timer.current = setTimeout(onDone, FEEDBACK_MS * 1.5);
     } else {
-      onMistake();
+      onMistake(notes[pos]!.midi);
       setMissedHere(true);
       setWrong(e.midi);
       clearTimeout(timer.current);

@@ -97,6 +97,10 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await solveLesson(page, { mistakeFirst: true });
   await expect(page.getByRole('heading', { name: 'Sehr gut!' })).toBeVisible();
   await expect(page.getByTestId('xp-gained')).toHaveText('+20 XP');
+  // the summary names the note that went wrong
+  await expect(page.getByTestId('hard-notes')).toHaveText(
+    'Diese Töne waren noch knifflig: C (1×).',
+  );
   await expect(page.getByText('1 Tag in Folge')).toBeVisible();
   await expect(page.getByTestId('new-badges')).toContainText('Neues Abzeichen!');
   await expect(page.getByTestId('new-badges')).toContainText('Erste Lektion');

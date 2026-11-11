@@ -23,6 +23,18 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Für Eltern: Die Seite «Familie und Fortschritt» zeigt jetzt, wann jedes Kind zuletzt geübt hat, die Tage in Folge, die nächste Lektion mit Namen und welche Lektionen sich nochmals lohnen (bisher ein Stern).',
+        'For parents: the «Family and progress» page now shows when each child last practised, the days in a row, the next lesson by name and which lessons are worth another go (one star so far).',
+      ),
+      L(
+        'Nach einer Lektion steht, welche Töne noch knifflig waren – so weisst du, worauf du beim nächsten Mal achten kannst.',
+        'After a lesson you see which notes were still tricky – so you know what to watch next time.',
+      ),
+      L(
+        'Tage in Folge: Dass ein Tag Pause pro Woche erlaubt ist, steht jetzt immer dabei – und auch, wenn der Pausentag schon gebraucht ist. Die schnelle Runde zeigt am Schluss, wie viele Aufgaben beim ersten Versuch richtig waren, und das Metronom merkt sich Tempo und Takt.',
+        'Days in a row: that one day off a week is fine is now always shown – and also when the day off has been used. The quick round shows at the end how many tasks were right at the first try, and the metronome remembers tempo and beats per bar.',
+      ),
+      L(
         'Korrektur: Auf dem Handy öffnet sich das Menü hinter der Figur oben rechts jetzt immer – auch wenn die Seite nach unten gescrollt ist; vorher sprang die Seite hin und her.',
         'Fix: on a phone the menu behind the figure at the top right now always opens – also when the page is scrolled down; before, the page jumped back and forth.',
       ),

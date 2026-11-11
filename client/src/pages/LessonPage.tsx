@@ -167,7 +167,7 @@ function LessonRun({
   completedBefore: Set<string>;
   onAgain: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const loc = useLocalized();
   usePageTitle(loc(lesson.title));
   const navigate = useNavigate();
@@ -215,6 +215,9 @@ function LessonRun({
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
   const mistakes = useRef(0);
+  // which notes went wrong (by name): named in the summary, so one knows what to practise
+  const missedNotes = useRef(new Map<string, number>());
+  const [hardNotes, setHardNotes] = useState<{ note: string; count: number }[]>([]);
   const startedAt = useRef(0);
   const [result, setResult] = useState<ShownResult | null>(null);
   const [saving, setSaving] = useState(false);
@@ -296,6 +299,12 @@ function LessonRun({
       return;
     }
     stopMicrophone();
+    setHardNotes(
+      [...missedNotes.current.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([note, count]) => ({ note, count })),
+    );
     setPhase('result');
     void save();
   };
@@ -313,9 +322,13 @@ function LessonRun({
       // a short tap on the screen keys (never with the microphone: it would hear the buzz)
       if (input.mode === 'screen') navigator.vibrate?.(15);
     },
-    onMistake: () => {
+    onMistake: (expected?: number) => {
       mistakes.current++;
       setMissed(true);
+      if (expected !== undefined) {
+        const name = midiToPitchName(expected, i18n.language.startsWith('de') ? 'de' : 'en');
+        missedNotes.current.set(name, (missedNotes.current.get(name) ?? 0) + 1);
+      }
       if (input.mode === 'screen') navigator.vibrate?.([30, 40, 30]);
     },
     onDone: finishExercise,
@@ -547,6 +560,7 @@ function LessonRun({
               error={saveError}
               dailyGoalMinutes={activeProfile?.dailyGoalMinutes ?? 10}
               onRetrySave={() => void save()}
+              hardNotes={hardNotes}
               onAgain={onAgain}
               onNext={next ? () => navigate(`/lesson/${next.id}`) : null}
               onPath={() => navigate('/')}

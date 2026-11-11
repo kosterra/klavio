@@ -22,6 +22,7 @@ import { PlayTabs } from '../components/PlayTabs';
 import { useTranslation } from 'react-i18next';
 import { runMetronome, type MetronomeRun } from '../audio/metronome';
 import { usePageTitle } from '../components/usePageTitle';
+import { useSession } from '../auth/session';
 import classes from './MetronomePage.module.css';
 
 /** About five minutes of clicks per start; long enough to practise a passage. */
@@ -35,8 +36,25 @@ const MAX_BEATS = 600;
 export function MetronomePage() {
   const { t } = useTranslation();
   usePageTitle(t('metronome.title'));
-  const [tempo, setTempo] = useState(80);
-  const [beats, setBeats] = useState(4);
+  // tempo and beats per bar are remembered per profile on this device
+  const { activeProfile } = useSession();
+  const key = `klavio-metronome:${activeProfile?.id ?? 'none'}`;
+  const [saved] = useState(() => {
+    try {
+      const v = JSON.parse(localStorage.getItem(key) ?? 'null') as {
+        tempo?: number;
+        beats?: number;
+      } | null;
+      return {
+        tempo: Math.min(200, Math.max(40, Math.round(Number(v?.tempo) || 80))),
+        beats: [2, 3, 4, 6].includes(Number(v?.beats)) ? Number(v?.beats) : 4,
+      };
+    } catch {
+      return { tempo: 80, beats: 4 };
+    }
+  });
+  const [tempo, setTempo] = useState(saved.tempo);
+  const [beats, setBeats] = useState(saved.beats);
   const [running, setRunning] = useState(false);
   const [beat, setBeat] = useState(-1);
   const run = useRef<MetronomeRun | null>(null);
@@ -83,6 +101,11 @@ export function MetronomePage() {
   const change = (bpm: number, perBar: number) => {
     setTempo(bpm);
     setBeats(perBar);
+    try {
+      localStorage.setItem(key, JSON.stringify({ tempo: bpm, beats: perBar }));
+    } catch {
+      // private mode: just not remembered
+    }
     if (running) start(bpm, perBar);
   };
 
