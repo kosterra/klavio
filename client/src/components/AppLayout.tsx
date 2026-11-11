@@ -147,7 +147,8 @@ export function AppLayout() {
               </Badge>
             )}
             <PrivacyBadge />
-            <Menu position="bottom-end" width={240}>
+            {/* the header is fixed: the menu is placed on the screen, not the page (else, scrolled down, it opened beside the screen and the page jumped) */}
+            <Menu position="bottom-end" width={240} floatingStrategy="fixed">
               <Menu.Target>
                 <ActionIcon variant="subtle" radius="xl" size={56} aria-label={t('nav.menu')}>
                   {activeProfile ? (

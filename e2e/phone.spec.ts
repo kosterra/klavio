@@ -66,3 +66,24 @@ test('on a phone the keys are big enough, a swipe scrolls and only a tap plays',
   await page.touchscreen.tap(t.x + t.width / 2, t.y + t.height * 0.85);
   await expect(page.getByText(/^Aufgabe 2 von/)).toBeVisible();
 });
+
+test('the avatar menu opens on the screen, also when scrolled down', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.addInitScript(() => localStorage.setItem('klavio.installHint.dismissed', 'true'));
+  await signUpWithEmail(page, uniqueEmail('phonemenu'), 'Familie');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Olli');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2017');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
+  await page.getByRole('heading', { name: 'Hallo Olli!' }).waitFor();
+  await page.evaluate(() => window.scrollTo(0, 800));
+  await page.getByRole('button', { name: 'Menü' }).tap();
+  const menu = page.getByRole('menu');
+  await expect(menu).toBeVisible();
+  const box = (await menu.boundingBox())!;
+  expect(box.x).toBeGreaterThanOrEqual(0);
+  expect(box.x + box.width).toBeLessThanOrEqual(390);
+  // the page did not get wider (it would jump sideways)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+});

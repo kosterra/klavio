@@ -23,6 +23,14 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Korrektur: Auf dem Handy öffnet sich das Menü hinter der Figur oben rechts jetzt immer – auch wenn die Seite nach unten gescrollt ist; vorher sprang die Seite hin und her.',
+        'Fix: on a phone the menu behind the figure at the top right now always opens – also when the page is scrolled down; before, the page jumped back and forth.',
+      ),
+      L(
+        'Dunkles Farbschema: Der Lernpfad zeigt gesperrte Lektionen und den Weg in den Farben der Welt statt in Grau.',
+        'Dark colour scheme: the learning path shows locked lessons and the road in the colours of the world instead of grey.',
+      ),
+      L(
         'Handy: Die Startseite ist kürzer – sie zeigt die neusten Abzeichen, alle findest du in «Mein Profil». Die Traumlied-Karte zeigt den nächsten Schritt zuerst und die Fähigkeiten auf Wunsch. Knöpfe und Auswahlen werden nicht mehr abgeschnitten, und das X von Fenstern ist grösser.',
         'Phone: the start page is shorter – it shows the latest badges, all of them are in «My profile». The dream song card shows the next step first and the skills on request. Buttons and choices are no longer cut off, and the X of dialogs is bigger.',
       ),
