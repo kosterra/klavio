@@ -1,3 +1,4 @@
+import { Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { midiToPitchName, type HandShape } from '@klavio/shared';
 import { useNoteLang } from './useLocalized';
@@ -25,40 +26,11 @@ function whiteMidi(index: number): number {
 type Finger = 1 | 2 | 3 | 4 | 5;
 const FINGERS: Finger[] = [1, 2, 3, 4, 5];
 
-/*
- * The hand is a flat silhouette with spread fingers below the keys, as piano
- * books draw it, and an arrow leads from every fingertip to its key. Each
- * finger is a thick rounded line from its knuckle to its tip, the palm a
- * rounded shape bulging at the ball of the thumb; drawn first in the outline
- * colour a little broader, then in the skin colour, the parts melt into one
- * silhouette. Its coordinates are those of a right hand; the left hand is
- * the mirror image.
- */
-const FINGER_LINES: Record<Finger, string> = {
-  1: 'M 42 160 L -6 108',
-  2: 'M 52 118 L 30 30',
-  3: 'M 78 108 L 74 8',
-  4: 'M 104 110 L 116 18',
-  5: 'M 128 122 L 152 52',
-};
-/** the tips, where the numbers sit */
-const TIPS: Record<Finger, [number, number]> = {
-  1: [-6, 108],
-  2: [30, 30],
-  3: [74, 8],
-  4: [116, 18],
-  5: [152, 52],
-};
-/** the palm, bulging out at the ball of the thumb on its left side */
-const PALM =
-  'M 44 118 C 60 100 120 100 136 118 C 146 150 142 190 132 232 L 60 232 C 40 202 26 160 44 118 Z';
-const SCALE = 0.85;
-const TOP = 172; // where the hand starts below the keys
-const HEIGHT = 375;
-
 /**
- * «So liegt deine Hand»: the keys the lesson uses are marked, and a hand
- * below them shows with an arrow which finger plays which key.
+ * «So liegt deine Hand»: the keys the lesson uses, each with the number of
+ * the finger that plays it and its name – the way piano books show a hand
+ * position – and below, in words, which hand it is and where each finger
+ * goes. Fingers the lesson doesn't use get the white key in line, in grey.
  */
 export function HandOnKeys({ shape }: { shape: HandShape }) {
   const { t } = useTranslation();
@@ -82,101 +54,65 @@ export function HandOnKeys({ shape }: { shape: HandShape }) {
   const x = (midi: number) => (whiteIndex(midi) - first) * W + W / 2;
   const blacks = whites.flatMap((m) => (isBlack(m + 1) && m + 1 <= whites.at(-1)! ? [m + 1] : []));
   const used = new Set(Object.values(shape.keys));
+  const name = (midi: number) => midiToPitchName(midi, lang).replace(/-?\d+$/, '');
 
-  // the hand sits under the middle finger's key; the left hand is mirrored
-  const mid = x(keyOf[3]);
-  const place = ([lx, ly]: [number, number]) => ({
-    x: mid + dir * (lx - TIPS[3][0]) * SCALE,
-    y: TOP + ly * SCALE,
-  });
-  const transform = `translate(${mid - dir * TIPS[3][0] * SCALE} ${TOP}) scale(${dir * SCALE} ${SCALE})`;
-  // an arrow from the fingertip to the foot of its key
-  const arrow = (f: Finger) => {
-    const from = place(TIPS[f]);
-    const to = { x: x(keyOf[f]), y: (isBlack(keyOf[f]) ? BH : H) + 2 };
-    const len = Math.hypot(to.x - from.x, to.y - from.y);
-    const u = { x: (to.x - from.x) / len, y: (to.y - from.y) / len };
-    const start = { x: from.x + u.x * 15, y: from.y + u.y * 15 };
-    const base = { x: to.x - u.x * 13, y: to.y - u.y * 13 };
-    const n = { x: -u.y * 6, y: u.x * 6 };
-    return {
-      line: `M ${start.x} ${start.y} L ${base.x} ${base.y}`,
-      head: `M ${to.x} ${to.y} L ${base.x + n.x} ${base.y + n.y} L ${base.x - n.x} ${base.y - n.y} Z`,
-    };
-  };
-
-  const label = t(shape.side === 'right' ? 'hand.right' : 'hand.left', {
+  const caption = t(shape.side === 'right' ? 'hand.right' : 'hand.left', {
     keys: known
       .map((f) => t('hand.finger', { n: f, note: midiToPitchName(shape.keys[f]!, lang) }))
       .join(', '),
   });
 
   return (
-    <svg
-      className={classes.svg}
-      viewBox={`0 0 ${width} ${HEIGHT}`}
-      role="img"
-      aria-label={label}
-      data-testid="hand-on-keys"
-    >
-      {whites.map((m, i) => (
-        <rect
-          key={m}
-          x={i * W}
-          y={0}
-          width={W}
-          height={H}
-          rx={5}
-          className={used.has(m) ? classes.usedWhite : classes.white}
-        />
-      ))}
-      {blacks.map((m) => (
-        <rect
-          key={m}
-          x={x(m) - BW / 2}
-          y={0}
-          width={BW}
-          height={BH}
-          rx={3}
-          className={used.has(m) ? classes.usedBlack : classes.black}
-        />
-      ))}
-
-      <g transform={transform}>
-        <g className={classes.edge} strokeWidth={31}>
-          {FINGERS.map((f) => (
-            <path key={f} d={FINGER_LINES[f]} />
-          ))}
-        </g>
-        <path className={classes.edge} strokeWidth={6} d={PALM} />
-        <g className={classes.skin} strokeWidth={25}>
-          {FINGERS.map((f) => (
-            <path key={f} d={FINGER_LINES[f]} />
-          ))}
-        </g>
-        <path className={classes.skin} d={PALM} />
-      </g>
-
-      {known.map((f) => {
-        const a = arrow(f);
-        return (
-          <g key={f}>
-            <path d={a.line} className={classes.arrow} />
-            <path d={a.head} className={classes.arrowHead} />
-          </g>
-        );
-      })}
-      {FINGERS.map((f) => {
-        const p = place(TIPS[f]);
-        return (
-          <g key={f} className={shape.keys[f] !== undefined ? classes.number : classes.numberIdle}>
-            <circle cx={p.x} cy={p.y} r={13} />
-            <text x={p.x} y={p.y} textAnchor="middle" dominantBaseline="central">
-              {f}
-            </text>
-          </g>
-        );
-      })}
-    </svg>
+    <Stack gap={6} align="center" w="100%" data-testid="hand-on-keys">
+      <svg className={classes.svg} viewBox={`0 0 ${width} ${H + 4}`} aria-hidden>
+        {whites.map((m, i) => (
+          <rect
+            key={m}
+            x={i * W}
+            y={0}
+            width={W}
+            height={H}
+            rx={5}
+            className={used.has(m) ? classes.usedWhite : classes.white}
+          />
+        ))}
+        {blacks.map((m) => (
+          <rect
+            key={m}
+            x={x(m) - BW / 2}
+            y={0}
+            width={BW}
+            height={BH}
+            rx={3}
+            className={used.has(m) ? classes.usedBlack : classes.black}
+          />
+        ))}
+        {FINGERS.map((f) => {
+          const midi = keyOf[f];
+          const black = isBlack(midi);
+          const cx = x(midi);
+          const cy = black ? BH - 22 : H - 20;
+          return (
+            <g
+              key={f}
+              className={shape.keys[f] !== undefined ? classes.number : classes.numberIdle}
+            >
+              {!black && (
+                <text x={cx} y={BH + 16} textAnchor="middle" className={classes.keyName}>
+                  {name(midi)}
+                </text>
+              )}
+              <circle cx={cx} cy={cy} r={13} />
+              <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central">
+                {f}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+      <Text size="sm" ta="center" data-testid="hand-caption">
+        {caption}
+      </Text>
+    </Stack>
   );
 }

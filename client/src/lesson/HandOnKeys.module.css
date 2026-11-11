@@ -1,7 +1,7 @@
 .svg {
   display: block;
   width: 100%;
-  max-width: 420px;
+  max-width: 360px;
   height: auto;
   margin-inline: auto;
 }
@@ -29,34 +29,7 @@
   fill: #7a5a00;
 }
 
-/* the hand: its outline colour drawn first and broader, the skin on top */
-.edge,
-.skin {
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.edge {
-  fill: var(--klavio-hand-line);
-  stroke: var(--klavio-hand-line);
-}
-
-.skin {
-  fill: var(--klavio-hand);
-  stroke: var(--klavio-hand);
-}
-
-.arrow {
-  fill: none;
-  stroke: var(--mantine-color-indigo-7);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-}
-
-.arrowHead {
-  fill: var(--mantine-color-indigo-7);
-}
-
+/* the finger numbers on the keys, and the key's name above them */
 .number circle {
   fill: var(--mantine-color-indigo-7);
 }
@@ -69,5 +42,16 @@
 }
 
 .numberIdle circle {
+  fill: var(--mantine-color-gray-7);
+}
+
+.number .keyName,
+.numberIdle .keyName {
+  fill: #2b2d42;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.numberIdle .keyName {
   fill: var(--mantine-color-gray-7);
 }

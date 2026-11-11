@@ -27,8 +27,8 @@ export const CHANGELOG: Release[] = [
         'Fix: the close button at the top of a lesson no longer sticks out of the bar when hovered.',
       ),
       L(
-        'Korrektur: «So liegt deine Hand» zeigt die Hand jetzt wie in der Klavierschule – als Umriss mit gespreizten Fingern unter den Tasten, und von jedem Finger führt ein Pfeil zu seiner Taste. So ist auf einen Blick klar, welcher Finger wohin gehört, auch auf den schwarzen Tasten.',
-        'Fix: «This is where your hand goes» now shows the hand the way piano books do – as an outline with spread fingers below the keys, and an arrow from every finger to its key. Which finger goes where is clear at a glance, on the black keys too.',
+        'Korrektur: «So liegt deine Hand» kommt jetzt ohne gezeichnete Hand aus: Die Tasten der Lektion tragen ihren Namen und die Nummer des Fingers, der sie spielt, und darunter steht in Worten, welche Hand wohin gehört. Das ist klarer als jede Zeichnung – auch auf den schwarzen Tasten.',
+        'Fix: «This is where your hand goes» no longer needs a drawn hand: the lesson’s keys carry their name and the number of the finger that plays them, and below it says in words which hand goes where. Clearer than any drawing – on the black keys too.',
       ),
       L(
         'Schweizer Volkslieder: Unter «Lieder» gibt es «S’Vreneli ab em Guggisberg» und das Wiegenlied «Es kam ein Herr zum Schlössli» – abgeschrieben aus einer Sammlung von 1826, vereinfacht für Klavio, zum Üben und Drucken.',
