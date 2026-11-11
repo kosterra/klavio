@@ -353,6 +353,7 @@ function LessonRun({
           <Group justify="space-between" wrap="nowrap" gap="sm" className={stage.hud}>
             <CloseButton
               size="xl"
+              radius="xl"
               aria-label={t('lesson.close')}
               onClick={() => (started ? setQuitAsk(true) : navigate('/'))}
             />
