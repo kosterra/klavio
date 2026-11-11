@@ -21,12 +21,13 @@ export type ImportErrorCode =
   'NOT_MUSICXML' | 'NO_NOTES' | 'TOO_LONG' | 'DURATION' | 'TUPLET' | 'RANGE';
 
 export class MusicXmlImportError extends Error {
-  constructor(
-    readonly code: ImportErrorCode,
-    /** the bar (1-based) where it happened, where there is one */
-    readonly bar?: number,
-  ) {
+  readonly code: ImportErrorCode;
+  /** the bar (1-based) where it happened, where there is one */
+  readonly bar?: number;
+  constructor(code: ImportErrorCode, bar?: number) {
     super(code);
+    this.code = code;
+    this.bar = bar;
   }
 }
 

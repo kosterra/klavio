@@ -44,7 +44,10 @@ export const pieceExerciseSchema = z.object({
   time,
   tempo,
   showNames: z.boolean(),
-  bars: z.array(z.object({ rh: hand, lh: hand })).min(1).max(64),
+  bars: z
+    .array(z.object({ rh: hand, lh: hand }))
+    .min(1)
+    .max(64),
 }) satisfies z.ZodType<PieceExercise>;
 
 export const MAX_OWN_PIECES = 30;
