@@ -284,6 +284,8 @@ const appSettingsSchema = new Schema(
     _id: { type: String, default: 'global' },
     /** When false, no new accounts can be created; existing users can still log in. */
     registrationOpen: { type: Boolean, required: true },
+    /** true: visitors get the full start page with the tour; unset/false: only the login */
+    publicPage: { type: Boolean },
     /** who runs this instance (footer, privacy page); empty until an admin fills it in */
     operatorName: { type: String, default: '' },
     contactEmail: { type: String, default: '' },

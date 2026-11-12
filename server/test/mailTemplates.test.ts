@@ -130,6 +130,7 @@ describe('operator info', () => {
     });
     expect(res.json()).toEqual({
       registrationOpen: true,
+      publicPage: false, // by default visitors get only the login
       operatorName: 'Familie Muster',
       contactEmail: 'kontakt@example.ch',
       journeyMinAge: 12,
@@ -140,7 +141,13 @@ describe('operator info', () => {
     expect(pub.json()).toMatchObject({
       operatorName: 'Familie Muster',
       contactEmail: 'kontakt@example.ch',
+      publicPage: false,
     });
+    // the full start page is switched on by an admin
+    await call(admin, 'PUT', '/api/admin/settings', { publicPage: true });
+    expect((await ctx.app.inject({ method: 'GET', url: '/api/config' })).json().publicPage).toBe(
+      true,
+    );
     expect(
       (await call(admin, 'PUT', '/api/admin/settings', { contactEmail: 'no-mail' })).statusCode,
     ).toBe(400);

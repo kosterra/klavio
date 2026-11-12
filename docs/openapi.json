@@ -1805,6 +1805,9 @@
                   "registrationOpen": {
                     "type": "boolean"
                   },
+                  "publicPage": {
+                    "type": "boolean"
+                  },
                   "operatorName": {
                     "type": "string",
                     "maxLength": 120,

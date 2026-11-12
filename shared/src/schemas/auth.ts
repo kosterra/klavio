@@ -105,6 +105,8 @@ export interface OperatorInfo {
 export interface PublicConfigResponse extends OperatorInfo {
   appName: string;
   registrationOpen: boolean;
+  /** true: the full start page with the tour; false (default): just the login */
+  publicPage: boolean;
   /** from this age a profile can choose between the kids' worlds and the journey */
   journeyMinAge: number;
   /** practice reminders: the server's public push key (null: reminders are off on this instance) */
@@ -113,6 +115,8 @@ export interface PublicConfigResponse extends OperatorInfo {
 
 export interface AdminSettingsDto extends OperatorInfo {
   registrationOpen: boolean;
+  /** true: visitors see the full start page; false: only the login */
+  publicPage: boolean;
   journeyMinAge: number;
   /** false: the instance asks search engines not to list it */
   searchIndexing: boolean;
@@ -122,6 +126,7 @@ export interface AdminSettingsDto extends OperatorInfo {
 
 export const adminSettingsSchema = z.object({
   registrationOpen: z.boolean().optional(),
+  publicPage: z.boolean().optional(),
   operatorName: z
     .string()
     .trim()

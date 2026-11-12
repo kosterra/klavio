@@ -107,6 +107,9 @@ für die eigene Familie oder Schule.
 
 Ebenfalls unter «Verwaltung»:
 
+- **Startseite:** Standardmässig zeigt `/welcome` Besuchern nur die Anmeldung. «Ausführliche
+  Startseite zeigen» schaltet die ganze Seite frei: was Klavio kann, die Welten, das Lied zum
+  Ausprobieren, Fragen und Antworten.
 - **Welten:** ab welchem Alter (aus dem Geburtsjahr des Profils) neben den bunten Welten auch «Die
   Reise» wählbar ist (Standard 12). Jüngere Profile sehen immer die bunten Welten.
 - **Daten und Suchmaschinen:** ob Suchmaschinen die Instanz aufnehmen dürfen (aus: `noindex`,

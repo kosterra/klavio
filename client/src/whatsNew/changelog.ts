@@ -20,6 +20,15 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: UPCOMING,
+    changes: [
+      L(
+        'Startseite: Admins entscheiden unter «Verwaltung», ob Besucher die ausführliche Startseite sehen oder nur die Anmeldung. Neu zeigt eine Instanz von sich aus nur die Anmeldung.',
+        'Start page: under «Admin», admins decide whether visitors see the full start page or just the login. By default an instance now shows only the login.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.4',
     changes: [
       L(

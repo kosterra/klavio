@@ -11,6 +11,7 @@ export async function getSettings(config: AppConfig) {
   return {
     // Documents from before the switch was renamed have no `registrationOpen` yet.
     registrationOpen: doc!.registrationOpen ?? config.REGISTRATION_OPEN_DEFAULT,
+    publicPage: doc!.publicPage ?? false,
     operatorName: doc!.operatorName ?? '',
     contactEmail: doc!.contactEmail ?? '',
     journeyMinAge: doc!.journeyMinAge ?? DEFAULT_JOURNEY_MIN_AGE,

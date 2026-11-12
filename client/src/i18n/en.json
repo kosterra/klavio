@@ -284,6 +284,8 @@
     "title": "Administration",
     "registrationOpen": "Allow new accounts to register",
     "registrationOpenHint": "When switched off, no new accounts can be created. Existing accounts can still sign in with a passkey or e-mail code.",
+    "publicPage": "Show the full start page",
+    "publicPageHint": "Switched on, visitors see everything Klavio can do: the song to try, the worlds, the questions and answers. Switched off there is only the login – an instance for your own family or school stays inconspicuous.",
     "operator": {
       "title": "Operator and contact",
       "hint": "Who runs this Klavio instance and how to reach you. Shown in the footer and in the privacy policy – it has to name who is responsible for the data.",

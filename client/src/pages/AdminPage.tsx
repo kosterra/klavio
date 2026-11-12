@@ -45,13 +45,22 @@ export function AdminPage() {
       <Title order={1}>{t('admin.title')}</Title>
       {error && <Alert color="red">{error}</Alert>}
       <Card withBorder radius="lg" padding="lg">
-        <Switch
-          label={t('admin.registrationOpen')}
-          description={t('admin.registrationOpenHint')}
-          checked={settings?.registrationOpen ?? false}
-          disabled={!settings}
-          onChange={(e) => void update({ registrationOpen: e.currentTarget.checked })}
-        />
+        <Stack gap="lg">
+          <Switch
+            label={t('admin.registrationOpen')}
+            description={t('admin.registrationOpenHint')}
+            checked={settings?.registrationOpen ?? false}
+            disabled={!settings}
+            onChange={(e) => void update({ registrationOpen: e.currentTarget.checked })}
+          />
+          <Switch
+            label={t('admin.publicPage')}
+            description={t('admin.publicPageHint')}
+            checked={settings?.publicPage ?? false}
+            disabled={!settings}
+            onChange={(e) => void update({ publicPage: e.currentTarget.checked })}
+          />
+        </Stack>
       </Card>
       <WorldsCard
         settings={settings}

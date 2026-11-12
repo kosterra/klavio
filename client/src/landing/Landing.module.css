@@ -637,3 +637,28 @@
 .voice figcaption {
   color: var(--mantine-color-dimmed);
 }
+
+/* ------------------------------------------- the short start page (only the login) */
+.heroShort {
+  min-height: 100svh;
+  justify-content: center;
+  padding-bottom: calc(var(--mantine-spacing-xl) * 2);
+}
+
+.heroShort .heroGrid {
+  padding-top: var(--mantine-spacing-xl);
+}
+
+@media (max-width: 62em) {
+  .heroShort .heroText {
+    text-align: center;
+  }
+
+  .heroShort .lead {
+    margin-inline: auto;
+  }
+
+  .heroShort .logo {
+    justify-content: center;
+  }
+}

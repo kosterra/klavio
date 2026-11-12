@@ -284,6 +284,8 @@
     "title": "Verwaltung",
     "registrationOpen": "Registrierung neuer Konten erlauben",
     "registrationOpenHint": "Wenn ausgeschaltet, können keine neuen Konten erstellt werden. Bestehende Konten können sich weiterhin mit Passkey oder E-Mail-Code anmelden.",
+    "publicPage": "Ausführliche Startseite zeigen",
+    "publicPageHint": "Eingeschaltet sehen Besucher alles, was Klavio kann: das Lied zum Ausprobieren, die Welten, die Fragen und Antworten. Ausgeschaltet gibt es nur die Anmeldung – so bleibt eine Instanz für die eigene Familie oder Schule unauffällig.",
     "operator": {
       "title": "Betreiber und Kontakt",
       "hint": "Wer diese Klavio-Instanz betreibt und wie man dich erreicht. Steht in der Fusszeile und in der Datenschutzerklärung – dort muss stehen, wer für die Daten verantwortlich ist.",
