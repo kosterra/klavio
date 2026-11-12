@@ -71,13 +71,34 @@ export function MailTemplatesCard() {
         ? renderMail(current, lang, {
             ...(CODE_MAILS.includes(id)
               ? { code: '123456' }
-              : {
-                  months: 24,
-                  date: new Date(deletionSample).toLocaleDateString(
-                    lang === 'en' ? 'en-GB' : 'de-CH',
-                    { day: 'numeric', month: 'long', year: 'numeric' },
-                  ),
-                }),
+              : id === 'weekly-report'
+                ? {
+                    week: lang === 'en' ? '2 November' : '2. November',
+                    report: [
+                      {
+                        name: 'Lina',
+                        lines:
+                          lang === 'en'
+                            ? [
+                                '25 minutes practised, on 3 days',
+                                '2 lessons played',
+                                'Next: «D and E»',
+                              ]
+                            : [
+                                '25 Minuten geübt, an 3 Tagen',
+                                '2 Lektionen gespielt',
+                                'Als Nächstes: «D und E»',
+                              ],
+                      },
+                    ],
+                  }
+                : {
+                    months: 24,
+                    date: new Date(deletionSample).toLocaleDateString(
+                      lang === 'en' ? 'en-GB' : 'de-CH',
+                      { day: 'numeric', month: 'long', year: 'numeric' },
+                    ),
+                  }),
             origin: location.origin,
             images: { logo: '/mail/logo.png', klavi: '/mail/klavi.png' },
           })
@@ -127,7 +148,9 @@ export function MailTemplatesCard() {
             data={[
               { value: 'login-code', label: t('admin.mail.loginCode') },
               { value: 'verify-email', label: t('admin.mail.verifyEmail') },
+              { value: 'pin-reset', label: t('admin.mail.pinReset') },
               { value: 'inactive-warning', label: t('admin.mail.inactiveWarning') },
+              { value: 'weekly-report', label: t('admin.mail.weeklyReport') },
             ]}
             aria-label={t('admin.mail.which')}
           />

@@ -13,7 +13,7 @@ import {
   VisuallyHidden,
 } from '@mantine/core';
 import { IconDeviceDesktop, IconMicrophone, IconPiano } from '@tabler/icons-react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router';
+import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-router';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../components/usePageTitle';
@@ -29,6 +29,7 @@ import {
   localIsoDate,
   nextStreak,
   starsFor,
+  scoringTarget,
   newlyReachedGoalSkills,
   recapFor,
   theoryFor,
@@ -40,9 +41,9 @@ import {
   LESSON_COACH,
   lessonHandShape,
 } from '@klavio/shared';
-import { ApiError } from '../api/client';
 import { enqueueResult } from '../offline/queue';
-import { endpoints } from '../api/endpoints';
+import { flushQueue } from '../offline/sync';
+import { notify } from '../components/notify';
 import { useSession } from '../auth/session';
 import { useErrorText } from '../auth/useErrorText';
 import { useMicErrorText } from '../audio/micErrorText';
@@ -64,6 +65,8 @@ import { LessonSummary } from '../lesson/LessonSummary';
 import { useLessonInput, type LessonInputMode } from '../lesson/useLessonInput';
 import { usePlayOn } from '../lesson/playOn';
 import { LessonParts } from '../lesson/LessonParts';
+import { ProgressPending } from '../components/ProgressPending';
+import { ConfirmModal } from '../components/ConfirmModal';
 import { CoachTip } from '../lesson/CoachTip';
 import { HandOnKeys } from '../lesson/HandOnKeys';
 import { useNoteEvents } from '../input/noteBus';
@@ -81,7 +84,7 @@ import stage from '../lesson/LessonStage.module.css';
 
 /** «Auf meinem Klavier» or «Auf dem Bildschirm», remembered on this device. */
 
-type ShownResult = LessonResultDto & { pending?: boolean };
+type ShownResult = LessonResultDto & { pending?: boolean; loginNeeded?: boolean };
 
 /**
  * What the server would answer, computed on the device with the same rules —
@@ -93,7 +96,7 @@ function localResult(
   profile: ProfileDto,
   before: ProgressDto,
 ): ShownResult {
-  const stars = starsFor(lessonTargetCount(lesson), body.mistakes);
+  const stars = starsFor(scoringTarget(lesson.id), body.mistakes);
   const previousBest = before.lessons[lesson.id]?.bestStars ?? 0;
   const { wasDue, bonusXp } = applyCompletion(before.lessons[lesson.id], stars, body.localDate);
   const replayedToday = before.lessons[lesson.id]?.lastDate === body.localDate;
@@ -132,12 +135,13 @@ export function LessonPage() {
 
 function LessonGate({ lessonId }: { lessonId: string }) {
   const lesson = findLesson(lessonId);
-  const { completed, progress } = useProgress();
+  const { completed, progress, error, reload } = useProgress();
   const [attempt, setAttempt] = useState(0);
   const forMe = useLessonFor();
 
   if (!lesson) return <Navigate to="/" replace />;
-  if (!progress) return null; // short wait for the unlock check
+  // short wait for the unlock check
+  if (!progress) return <ProgressPending fullPage error={error} onRetry={() => void reload()} />;
   if (!isLessonUnlocked(lesson.id, completed)) return <Navigate to="/" replace />;
   return (
     <LessonRun
@@ -163,7 +167,7 @@ function LessonRun({
   completedBefore: Set<string>;
   onAgain: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const loc = useLocalized();
   usePageTitle(loc(lesson.title));
   const navigate = useNavigate();
@@ -211,10 +215,17 @@ function LessonRun({
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
   const mistakes = useRef(0);
+  // which notes went wrong (by name): named in the summary, so one knows what to practise
+  const missedNotes = useRef(new Map<string, number>());
+  const [hardNotes, setHardNotes] = useState<{ note: string; count: number }[]>([]);
   const startedAt = useRef(0);
   const [result, setResult] = useState<ShownResult | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  // the X during the lesson asks first – a tap by mistake must not lose the run
+  const [quitAsk, setQuitAsk] = useState(false);
+  const [missed, setMissed] = useState(false);
+  const started = phase === 'play' && (correct > 0 || missed || exerciseIndex > 0);
   const total = lessonTargetCount(lesson);
   const chapter = chapterOf(lesson.id);
   const handShape = lessonHandShape(lesson);
@@ -233,29 +244,50 @@ function LessonRun({
       ),
       localDate: localIsoDate(),
     };
+    if (!me || !activeProfile) {
+      setSaving(false);
+      return;
+    }
+    // Into the queue first: sent after any results still waiting from before
+    // (a lesson only counts after the ones played earlier), and kept on the
+    // device if it cannot be sent now.
+    const entry = enqueueResult({
+      ...body,
+      userId: me.user.id,
+      profileId: activeProfile.id,
+      lessonId: lesson.id,
+    });
     try {
-      setResult(await endpoints.completeLesson(lesson.id, body));
-      await refresh(); // XP, level and streak on the dashboard
-    } catch (err) {
-      if (err instanceof ApiError && err.code === 'NETWORK' && me && activeProfile) {
-        // Offline: keep the result on the device and show it right away.
-        const before = await loadProgress(activeProfile.id);
-        enqueueResult({
-          ...body,
-          userId: me.user.id,
-          profileId: activeProfile.id,
-          lessonId: lesson.id,
-        });
-        const local = localResult(lesson, body, activeProfile, before);
-        applyLocalResult(activeProfile.id, {
-          xp: local.xp,
-          level: local.level,
-          streak: local.streak,
-        });
-        setResult(local);
-      } else {
-        setSaveError(errorText(err));
+      const out = await flushQueue(me.user.id);
+      const saved = out.saved[entry.id];
+      if (saved) {
+        if (out.synced > 1) notify(t('offline.synced', { count: out.synced - 1 }));
+        setResult(saved);
+        await refresh(); // XP, level and streak on the dashboard
+        return;
       }
+      const refused = out.refused[entry.id];
+      if (refused) {
+        setSaveError(errorText(refused));
+        return;
+      }
+      // Still waiting (offline, server away, logged out): shown right away.
+      const before = await loadProgress(activeProfile.id, entry.id).catch(() => null);
+      if (!before) {
+        setSaveError(t('common.error'));
+        return;
+      }
+      const local = localResult(lesson, body, activeProfile, before);
+      applyLocalResult(activeProfile.id, {
+        xp: local.xp,
+        level: local.level,
+        streak: local.streak,
+      });
+      const loginNeeded = out.stoppedBy?.status === 401;
+      setResult({ ...local, loginNeeded });
+      // offline or the server away: the app notices when it is back and sends it
+      // (logged out: the result waits for the login – the summary stays visible)
+      if (!loginNeeded) void refresh();
     } finally {
       setSaving(false);
     }
@@ -267,6 +299,12 @@ function LessonRun({
       return;
     }
     stopMicrophone();
+    setHardNotes(
+      [...missedNotes.current.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([note, count]) => ({ note, count })),
+    );
     setPhase('result');
     void save();
   };
@@ -284,8 +322,13 @@ function LessonRun({
       // a short tap on the screen keys (never with the microphone: it would hear the buzz)
       if (input.mode === 'screen') navigator.vibrate?.(15);
     },
-    onMistake: () => {
+    onMistake: (expected?: number) => {
       mistakes.current++;
+      setMissed(true);
+      if (expected !== undefined) {
+        const name = midiToPitchName(expected, i18n.language.startsWith('de') ? 'de' : 'en');
+        missedNotes.current.set(name, (missedNotes.current.get(name) ?? 0) + 1);
+      }
       if (input.mode === 'screen') navigator.vibrate?.([30, 40, 30]);
     },
     onDone: finishExercise,
@@ -308,7 +351,12 @@ function LessonRun({
         <Stack gap="md" className={phase === 'play' ? undefined : stage.storyStack}>
           {/* ------------------------------------------------------ top bar */}
           <Group justify="space-between" wrap="nowrap" gap="sm" className={stage.hud}>
-            <CloseButton size="xl" aria-label={t('lesson.close')} onClick={() => navigate('/')} />
+            <CloseButton
+              size="xl"
+              radius="xl"
+              aria-label={t('lesson.close')}
+              onClick={() => (started ? setQuitAsk(true) : navigate('/'))}
+            />
             <Progress
               value={
                 phase === 'result'
@@ -448,7 +496,9 @@ function LessonRun({
                       <Text size="sm" c="dimmed" ta="center">
                         {t('lesson.playPianoHint')}{' '}
                         {activeProfile?.calibration.noiseFloorDb == null && (
-                          <Link to="/mic-setup">{t('mic.setup')}</Link>
+                          <Link to="/mic-setup" state={{ from: `/lesson/${lesson.id}` }}>
+                            {t('mic.setup')}
+                          </Link>
                         )}
                       </Text>
                     )}
@@ -511,6 +561,7 @@ function LessonRun({
               error={saveError}
               dailyGoalMinutes={activeProfile?.dailyGoalMinutes ?? 10}
               onRetrySave={() => void save()}
+              hardNotes={hardNotes}
               onAgain={onAgain}
               onNext={next ? () => navigate(`/lesson/${next.id}`) : null}
               onPath={() => navigate('/')}
@@ -536,6 +587,17 @@ function LessonRun({
           )}
         </Stack>
       </Box>
+      <ConfirmModal
+        opened={quitAsk}
+        title={t('lesson.quit.title')}
+        stay={t('lesson.quit.stay')}
+        go={t('lesson.quit.go')}
+        onStay={() => setQuitAsk(false)}
+        onGo={() => navigate('/')}
+        testId="lesson-quit"
+      >
+        {t('lesson.quit.text')}
+      </ConfirmModal>
     </div>
   );
 }
@@ -551,6 +613,7 @@ function InputInfo({
 }) {
   const { t } = useTranslation();
   const { activeProfile } = useSession();
+  const location = useLocation();
   if (mode === 'midi') {
     return (
       <Alert color="teal" variant="light" icon={<IconPiano />} w="100%">
@@ -564,7 +627,10 @@ function InputInfo({
         {t('lesson.inputMic')}{' '}
         {activeProfile?.calibration.noiseFloorDb == null && (
           <Text span>
-            {t('lesson.inputMicSetup')} <Link to="/mic-setup">{t('mic.setup')}</Link>
+            {t('lesson.inputMicSetup')}{' '}
+            <Link to="/mic-setup" state={{ from: location.pathname }}>
+              {t('mic.setup')}
+            </Link>
           </Text>
         )}
       </Alert>
@@ -581,7 +647,7 @@ function InputInfo({
  * «Ich höre: E» – shows each recognised note for a moment, so one always
  * knows the app heard the piano. Before the first note: that it listens.
  */
-function HeardNote({ mode }: { mode: LessonInputMode }) {
+export function HeardNote({ mode }: { mode: LessonInputMode }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
   const [heard, setHeard] = useState<{ midi: number; n: number } | null>(null);
@@ -613,7 +679,7 @@ function HeardNote({ mode }: { mode: LessonInputMode }) {
 }
 
 /** During the lesson: which input is listening, and switching mic ↔ screen. */
-function InputSwitch({ input }: { input: ReturnType<typeof useLessonInput> }) {
+export function InputSwitch({ input }: { input: ReturnType<typeof useLessonInput> }) {
   const { t } = useTranslation();
   if (input.mode === 'midi') {
     return (

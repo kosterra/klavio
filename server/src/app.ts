@@ -10,6 +10,11 @@ import {
 } from 'fastify-type-provider-zod';
 import type { AppConfig } from './config.js';
 import authPlugin from './plugins/auth.js';
+import { scheduleWeeklyReports } from './lib/weeklyReport.js';
+import { scheduleReminders } from './lib/reminders.js';
+import reminderRoutes from './routes/reminders.js';
+import pieceRoutes from './routes/pieces.js';
+import testimonialRoutes from './routes/testimonials.js';
 import { registerWeb } from './plugins/web.js';
 import { HttpError } from './lib/errors.js';
 import { createMailer, type Mailer } from './lib/mailer.js';
@@ -88,6 +93,8 @@ export async function buildApp({
       timeWindow: '1 minute',
       // only the API: the app's own files (one page load fetches dozens) are not counted
       allowList: (req) => !req.url.startsWith('/api/'),
+      // a client that hung up has no address any more – not a server error
+      keyGenerator: (req) => req.ip ?? 'gone',
     });
   }
 
@@ -119,10 +126,16 @@ export async function buildApp({
   const resolvedMailer = mailer ?? createMailer(config, (m) => app.log.info(m));
   if (jobs) {
     const stop = scheduleRetention(config, resolvedMailer, app.log);
-    app.addHook('onClose', async () => stop());
+    const stopReports = scheduleWeeklyReports(config, resolvedMailer, app.log);
+    const stopReminders = scheduleReminders(config, app.log);
+    app.addHook('onClose', async () => {
+      stop();
+      stopReports();
+      stopReminders();
+    });
   }
 
-  await app.register(authPlugin);
+  await app.register(authPlugin, { config });
   if (beforeRoutes) await beforeRoutes(app);
   await app.register(
     async (api) => {
@@ -137,6 +150,9 @@ export async function buildApp({
       await api.register(accountRoutes, { prefix: '/account', config, mailer: resolvedMailer });
       await api.register(profileRoutes, { prefix: '/profiles', config });
       await api.register(progressRoutes, { prefix: '/progress' });
+      await api.register(reminderRoutes, { prefix: '/reminders', config });
+      await api.register(pieceRoutes, { prefix: '/pieces' });
+      await api.register(testimonialRoutes, { prefix: '/testimonials' });
       await api.register(adminRoutes, { prefix: '/admin', config, mailer: resolvedMailer });
     },
     { prefix: '/api' },

@@ -48,7 +48,13 @@ export const passkeyRenameSchema = z.object({ name: z.string().trim().min(1).max
 
 export const accountEmailVerifySchema = z.object({ code: emailCodeSchema });
 
-export const accountUpdateSchema = z.object({ displayName: displayNameSchema });
+export const accountUpdateSchema = z
+  .object({
+    displayName: displayNameSchema.optional(),
+    /** a weekly e-mail to the account's address with every profile's week */
+    weeklyReport: z.boolean().optional(),
+  })
+  .refine((v) => v.displayName !== undefined || v.weeklyReport !== undefined, 'Nothing to change');
 
 /** Parent PIN: 4–6 digits, protects the parent area from children (not an account password). */
 export const parentPinSchema = z.object({ pin: z.string().regex(/^\d{4,6}$/) });
@@ -64,6 +70,8 @@ export interface MeResponse {
     email: string | null;
     role: UserRole;
     passkeyCount: number;
+    /** the weekly e-mail with every profile's week is switched on */
+    weeklyReport: boolean;
     /** Parent PIN set, and until when this session has the parent area unlocked. */
     parentPin: {
       set: boolean;
@@ -99,6 +107,8 @@ export interface PublicConfigResponse extends OperatorInfo {
   registrationOpen: boolean;
   /** from this age a profile can choose between the kids' worlds and the journey */
   journeyMinAge: number;
+  /** practice reminders: the server's public push key (null: reminders are off on this instance) */
+  pushPublicKey: string | null;
 }
 
 export interface AdminSettingsDto extends OperatorInfo {
@@ -126,3 +136,27 @@ export const adminSettingsSchema = z.object({
 
 /** «PIN vergessen?»: the code sent to the account's address. */
 export const pinResetSchema = z.object({ code: emailCodeSchema });
+
+/** «Erzähl anderen von Klavio»: a few words from a family, published only with consent and after review. */
+export const testimonialInputSchema = z.object({
+  text: z.string().trim().min(10).max(400),
+  /** how it is signed, e.g. «Andrea» – no surname needed */
+  author: z.string().trim().min(1).max(60),
+  /** optional, e.g. «Mutter von zwei Kindern» */
+  role: z.string().trim().max(60).optional(),
+  /** must be true: the words may be shown on the public page */
+  consent: z.literal(true),
+});
+export type TestimonialInput = z.infer<typeof testimonialInputSchema>;
+
+export interface PublicTestimonialDto {
+  text: string;
+  author: string;
+  role: string | null;
+}
+
+export interface TestimonialDto extends PublicTestimonialDto {
+  id: string;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+}

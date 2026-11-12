@@ -15,11 +15,13 @@ import { Buddy } from '../components/Buddy';
 import { NewBadges } from './Badges';
 
 interface Props {
-  result: (LessonResultDto & { pending?: boolean }) | null;
+  result: (LessonResultDto & { pending?: boolean; loginNeeded?: boolean }) | null;
   saving: boolean;
   error: string | null;
   dailyGoalMinutes: number;
   onRetrySave: () => void;
+  /** the notes that went wrong most often (by name) */
+  hardNotes?: { note: string; count: number }[];
   onAgain: () => void;
   onNext: (() => void) | null;
   onPath: () => void;
@@ -34,6 +36,7 @@ export function LessonSummary({
   error,
   dailyGoalMinutes,
   onRetrySave,
+  hardNotes = [],
   onAgain,
   onNext,
   onPath,
@@ -63,6 +66,13 @@ export function LessonSummary({
                 />
               ))}
             </Group>
+            {stars < 3 && hardNotes.length > 0 && (
+              <Text ta="center" data-testid="hard-notes">
+                {t('lesson.hardNotes', {
+                  notes: hardNotes.map((h) => t('lesson.hardNote', h)).join(', '),
+                })}
+              </Text>
+            )}
             {stars < 3 && <Text c="dimmed">{t('lesson.moreStars')}</Text>}
             <Text fz={28} fw={800} c="indigo.8" data-testid="xp-gained">
               {t('lesson.xpGained', { xp: result.xpGained })}
@@ -88,7 +98,7 @@ export function LessonSummary({
                 w="100%"
                 data-testid="pending"
               >
-                {t('offline.pendingResult')}
+                {t(result.loginNeeded ? 'offline.pendingLogin' : 'offline.pendingResult')}
               </Alert>
             )}
             <NewBadges ids={result.newBadges} />

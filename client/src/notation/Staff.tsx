@@ -32,6 +32,10 @@ interface Props {
   keySignature?: KeySignature;
   /** Black keys with ♭ or ♯ (default: as the key signature says, else ♯). */
   spelling?: Spelling;
+  /** On paper (print): always black ink, whatever the colour scheme. */
+  paper?: boolean;
+  /** Drawing scale (default: from the height); smaller leaves more room around the staff. */
+  scale?: number;
 }
 
 const COLORS = {
@@ -50,6 +54,8 @@ export function Staff({
   label,
   keySignature = 'C',
   spelling: spellingProp,
+  paper = false,
+  scale: scaleProp,
 }: Props) {
   const spelling = spellingProp ?? spellingOf(keySignature);
   const bars = barsProp ?? [notes ?? []];
@@ -66,8 +72,19 @@ export function Staff({
     return () => ro.disconnect();
   }, []);
 
-  const scheme = useComputedColorScheme('light');
-  const key = JSON.stringify({ clef, bars, time, height, width, scheme, keySignature, spelling });
+  const computed = useComputedColorScheme('light');
+  const scheme = paper ? 'light' : computed;
+  const key = JSON.stringify({
+    clef,
+    bars,
+    time,
+    height,
+    width,
+    scheme,
+    keySignature,
+    spelling,
+    scaleProp,
+  });
   useEffect(() => {
     const el = host.current;
     if (!el || width < 50) return;
@@ -83,7 +100,7 @@ export function Staff({
       ctx.setFillStyle(ink);
       ctx.setStrokeStyle(ink);
       // VexFlow draws at 1:1; enlarge for readability on tablets
-      const scale = Math.min(1.6, Math.max(1, height / 110));
+      const scale = scaleProp ?? Math.min(1.6, Math.max(1, height / 110));
       ctx.scale(scale, scale);
       const full = width / scale - 20;
       const single = bars.length === 1 && bars[0]!.length <= 1;

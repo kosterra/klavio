@@ -13,7 +13,7 @@ import {
 } from '@mantine/core';
 import { notify } from '../components/notify';
 import { IconMicrophone } from '@tabler/icons-react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../components/usePageTitle';
 import { midiToName } from '@klavio/shared';
@@ -44,6 +44,9 @@ export function MicSetupPage() {
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
   const { activeProfile, refresh } = useSession();
   const navigate = useNavigate();
+  // links to the setup say where they come from; without, the start page
+  const from = (useLocation().state as { from?: unknown } | null)?.from;
+  const back = typeof from === 'string' && from.startsWith('/') ? from : '/';
   const errorText = useErrorText();
   const micErrorText = useMicErrorText();
   const [step, setStep] = useState(0);
@@ -113,7 +116,8 @@ export function MicSetupPage() {
       await pitch.stop();
       await refresh();
       notify(t('micSetup.saved'));
-      navigate('/mic-test');
+      // back where the setup was opened from (a lesson, the start page …)
+      navigate(back, { replace: true });
     } catch (err) {
       setSaveError(errorText(err));
     } finally {

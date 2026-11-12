@@ -10,6 +10,7 @@ import {
   isHeldNote,
   type NoteEvent,
   type TimedSongExercise as Spec,
+  songFingers,
 } from '@klavio/shared';
 import { useNoteEvents } from '../input/noteBus';
 import { runMetronome, type MetronomeRun } from '../audio/metronome';
@@ -70,6 +71,8 @@ export function TimedSongExercise({
 
   // every note with its bar and its start (in beats from the first note)
   const notes = useMemo(() => timeline(exercise.bars), [exercise]);
+  // finger numbers: written into the song, or planned where the hand has to move
+  const fingers = useMemo(() => songFingers(exercise), [exercise]);
   // an upbeat starts before the first «one»: the count-in bar ends with it
   const pickup = exercise.pickup ?? 0;
   const totalBeats = notes.reduce((n, x) => n + beatsOf(x.value), 0) - pickup;
@@ -193,7 +196,7 @@ export function TimedSongExercise({
           midi: n.midi,
           duration: n.value,
           // a held note keeps its finger – no number again
-          finger: isHeldNote(notes, i) ? undefined : n.finger,
+          finger: isHeldNote(notes, i) ? undefined : fingers[i],
           tie: n.tie,
           state: verdict
             ? verdict === 'missed'

@@ -1,5 +1,25 @@
-import { Button, Group, Progress, Text, ThemeIcon, Title, Tooltip } from '@mantine/core';
-import { IconArrowRight, IconCheck, IconClock, IconMusicHeart } from '@tabler/icons-react';
+import { useState } from 'react';
+import {
+  ActionIcon,
+  Button,
+  Collapse,
+  Group,
+  Progress,
+  Text,
+  ThemeIcon,
+  Title,
+  Tooltip,
+} from '@mantine/core';
+import { useSession } from '../auth/session';
+import { useMediaQuery } from '@mantine/hooks';
+import {
+  IconArrowRight,
+  IconCheck,
+  IconChevronDown,
+  IconChevronUp,
+  IconClock,
+  IconMusicHeart,
+} from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import {
@@ -7,6 +27,8 @@ import {
   SKILL_NAMES,
   findLesson,
   goalProgress,
+  isLessonUnlocked,
+  nextLesson as nextOnPath,
   lessonsForSkill,
   type GoalSong,
 } from '@klavio/shared';
@@ -35,7 +57,34 @@ export function GoalSongCard({
   const forMe = useLessonFor();
   const worldSet = useWorldMode();
   const p = goalProgress(goal.skills, completed);
-  const nextLesson = p.next ? findLesson(p.next.lessonId) : undefined;
+  // the card can be folded to its title and bar; remembered per profile on this device
+  const { activeProfile } = useSession();
+  const openKey = `klavio-goal-open:${activeProfile?.id ?? 'none'}`;
+  const [open, setOpen] = useState(() => {
+    try {
+      return localStorage.getItem(openKey) === '1';
+    } catch {
+      return false;
+    }
+  });
+  const toggle = () => {
+    const next = !open;
+    setOpen(next);
+    try {
+      localStorage.setItem(openKey, next ? '1' : '0');
+    } catch {
+      // private mode: just not remembered
+    }
+  };
+  // wide screens show the skills right away, phones on request
+  const wide = useMediaQuery('(min-width: 48em)') ?? false;
+  const [showSkills, setShowSkills] = useState<boolean | null>(null);
+  const skillsOpen = showSkills ?? wide;
+  const target = p.next ? findLesson(p.next.lessonId) : undefined;
+  // the lesson that teaches the next skill may still be locked: then the
+  // button leads to the next lesson on the path, the target is named as «later»
+  const targetOpen = target ? isLessonUnlocked(target.id, completed) : false;
+  const nextLesson = target && !targetOpen ? nextOnPath(completed) : target;
   return (
     <section className={classes.card} aria-labelledby="goal-title" data-testid="goal-card">
       <Group gap="sm" wrap="nowrap" align="flex-start">
@@ -62,95 +111,133 @@ export function GoalSongCard({
               {p.percent} %
             </Text>
           </Group>
-          <Text size="sm" fw={600} mt={4}>
-            {p.reached === 0
-              ? t('goal.skillsStart', { total: p.total })
-              : t('goal.skillsReached', { reached: p.reached, total: p.total })}
-          </Text>
         </div>
+        {/* folded: only the title and the bar – the rest on request, remembered */}
+        <ActionIcon
+          variant="subtle"
+          color="pink.8"
+          radius="xl"
+          size="lg"
+          onClick={toggle}
+          aria-expanded={open}
+          aria-controls="goal-details"
+          aria-label={t(open ? 'goal.fold' : 'goal.unfold')}
+          data-testid="goal-toggle"
+        >
+          {open ? <IconChevronUp /> : <IconChevronDown />}
+        </ActionIcon>
       </Group>
 
-      {journey}
-
-      <Text size="xs" c="dimmed" mt="md">
-        {t('goal.legend')}
-      </Text>
-      <ul className={classes.skills} aria-label={t('goal.skillsLabel')}>
-        {p.skills.map((s) => {
-          const name = loc(SKILL_NAMES[s.id]);
-          const state = s.reached ? 'reached' : s.taught ? 'open' : 'later';
-          // where it is taught: the chapter of its first lesson, in that world's colour
-          const first = lessonsForSkill(s.id)[0];
-          const ci = first
-            ? CURRICULUM.findIndex((c) => c.lessons.some((l) => l.id === first))
-            : -1;
-          const world = ci >= 0 ? worldOf(CURRICULUM[ci]!.id, ci, worldSet) : null;
-          const where = world
-            ? t('goal.inChapter', { n: ci + 1, world: t(`path.worlds.${world.id}`) })
-            : null;
-          const tip = [t(`goal.state.${state}`), where].filter(Boolean).join(' · ');
-          return (
-            <li key={s.id} data-state={state}>
-              <Tooltip label={tip} events={{ hover: true, focus: true, touch: true }}>
-                <span className={classes.skill} tabIndex={0}>
-                  {world ? (
-                    <span
-                      className={classes.stone}
-                      style={{ background: `var(--mantine-color-${chapterColor(world, ci)}-9)` }}
-                      aria-hidden
-                    >
-                      {s.reached ? <IconCheck size={12} stroke={3} /> : ci + 1}
-                    </span>
-                  ) : (
-                    <IconClock size={14} aria-hidden />
-                  )}
-                  {name}
-                  <span className={classes.srOnly}>, {tip}</span>
-                </span>
-              </Tooltip>
-            </li>
-          );
-        })}
-      </ul>
-
-      {p.next && nextLesson ? (
-        <Group justify="space-between" gap="sm" mt="sm" wrap="wrap">
-          <Text size="sm" fw={700}>
-            {t('goal.next', { skill: loc(SKILL_NAMES[p.next.skill]) })}
-          </Text>
-          <Button
-            component={Link}
-            to={`/lesson/${nextLesson.id}`}
-            size="sm"
-            color="pink.8"
-            rightSection={<IconArrowRight size={16} />}
-          >
-            {loc(forMe(nextLesson).title)}
-          </Button>
-        </Group>
-      ) : p.reached === p.total ? (
-        <div data-testid="goal-ready">
-          <Text fw={800} mt="sm">
-            {t('goal.ready', { title: goal.title })}
-          </Text>
-          {/* honest: Klavio teaches the skills, not this song – here is how to go on */}
-          <Text size="sm" mt={4}>
-            {t('goal.howTo')}
-          </Text>
-          <ol className={classes.steps}>
-            {(['sheet', 'slow', 'metronome', 'teacher'] as const).map((k) => (
-              <li key={k}>{t(`goal.howToSteps.${k}`)}</li>
-            ))}
-          </ol>
-          <Button component={Link} to="/metronome" size="sm" variant="light" color="pink.8">
-            {t('metronome.open')}
-          </Button>
-        </div>
-      ) : (
+      <Collapse expanded={open} id="goal-details">
         <Text size="sm" fw={600} mt="sm">
-          {t('goal.waiting')}
+          {p.reached === 0
+            ? t('goal.skillsStart', { total: p.total })
+            : t('goal.skillsReached', { reached: p.reached, total: p.total })}
         </Text>
-      )}
+        {p.next && nextLesson ? (
+          <Group justify="space-between" gap="sm" mt="md" wrap="wrap">
+            <Text size="sm" fw={700}>
+              {t('goal.next', { skill: loc(SKILL_NAMES[p.next.skill]) })}
+              {!targetOpen && target && (
+                <Text span size="sm" fw={400} display="block" data-testid="goal-later">
+                  {t('goal.later', { lesson: loc(forMe(target).title) })}
+                </Text>
+              )}
+            </Text>
+            <Button
+              component={Link}
+              to={`/lesson/${nextLesson.id}`}
+              size="sm"
+              color="pink.8"
+              rightSection={<IconArrowRight size={16} />}
+            >
+              {loc(forMe(nextLesson).title)}
+            </Button>
+          </Group>
+        ) : p.reached === p.total ? (
+          <div data-testid="goal-ready">
+            <Text fw={800} mt="sm">
+              {t('goal.ready', { title: goal.title })}
+            </Text>
+            {/* honest: Klavio teaches the skills, not this song – here is how to go on */}
+            <Text size="sm" mt={4}>
+              {t('goal.howTo')}
+            </Text>
+            <ol className={classes.steps}>
+              {(['sheet', 'slow', 'metronome', 'teacher'] as const).map((k) => (
+                <li key={k}>{t(`goal.howToSteps.${k}`)}</li>
+              ))}
+            </ol>
+            <Button component={Link} to="/play/metronome" size="sm" variant="light" color="pink.8">
+              {t('metronome.open')}
+            </Button>
+          </div>
+        ) : (
+          <Text size="sm" fw={600} mt="sm">
+            {t('goal.waiting')}
+          </Text>
+        )}
+        {journey}
+        {/* the skills: on a phone behind a button – the list is long */}
+        <Button
+          variant="subtle"
+          color="pink.8"
+          size="compact-md"
+          mt="md"
+          px={0}
+          onClick={() => setShowSkills((v) => !v)}
+          aria-expanded={skillsOpen}
+          aria-controls="goal-skills"
+          rightSection={skillsOpen ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
+          data-testid="goal-skills-toggle"
+        >
+          {t(skillsOpen ? 'goal.skillsHide' : 'goal.skillsShow', { total: p.total })}
+        </Button>
+        <Collapse expanded={skillsOpen} id="goal-skills">
+          <Text size="xs" c="dimmed" mt="xs">
+            {t('goal.legend')}
+          </Text>
+          <ul className={classes.skills} aria-label={t('goal.skillsLabel')}>
+            {p.skills.map((s) => {
+              const name = loc(SKILL_NAMES[s.id]);
+              const state = s.reached ? 'reached' : s.taught ? 'open' : 'later';
+              // where it is taught: the chapter of its first lesson, in that world's colour
+              const first = lessonsForSkill(s.id)[0];
+              const ci = first
+                ? CURRICULUM.findIndex((c) => c.lessons.some((l) => l.id === first))
+                : -1;
+              const world = ci >= 0 ? worldOf(CURRICULUM[ci]!.id, ci, worldSet) : null;
+              const where = world
+                ? t('goal.inChapter', { n: ci + 1, world: t(`path.worlds.${world.id}`) })
+                : null;
+              const tip = [t(`goal.state.${state}`), where].filter(Boolean).join(' · ');
+              return (
+                <li key={s.id} data-state={state}>
+                  <Tooltip label={tip} events={{ hover: true, focus: true, touch: true }}>
+                    <span className={classes.skill} tabIndex={0}>
+                      {world ? (
+                        <span
+                          className={classes.stone}
+                          style={{
+                            background: `var(--mantine-color-${chapterColor(world, ci)}-9)`,
+                          }}
+                          aria-hidden
+                        >
+                          {s.reached ? <IconCheck size={12} stroke={3} /> : ci + 1}
+                        </span>
+                      ) : (
+                        <IconClock size={14} aria-hidden />
+                      )}
+                      {name}
+                      <span className={classes.srOnly}>, {tip}</span>
+                    </span>
+                  </Tooltip>
+                </li>
+              );
+            })}
+          </ul>
+        </Collapse>
+      </Collapse>
     </section>
   );
 }

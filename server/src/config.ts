@@ -31,6 +31,18 @@ const envSchema = z.object({
   SMTP_PASS: z.string().optional(),
   MAIL_FROM: z.string().default('Klavio <no-reply@localhost>'),
   /**
+   * Practice reminders (Web Push): the VAPID key pair, made once with
+   * `npm run vapid -w @klavio/server`. Without them there are no reminders.
+   */
+  VAPID_PUBLIC_KEY: z
+    .string()
+    .regex(/^[A-Za-z0-9_-]{87}$/)
+    .optional(),
+  VAPID_PRIVATE_KEY: z
+    .string()
+    .regex(/^[A-Za-z0-9_-]{43}$/)
+    .optional(),
+  /**
    * Which proxies may tell the client's address (X-Forwarded-For): 'false',
    * a number of hops ('1' = one proxy, e.g. the bundled Caddy), or a
    * comma-separated list of addresses / CIDR ranges. 'true' means one hop –

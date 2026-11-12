@@ -46,6 +46,8 @@ export default defineConfig({
         clientsClaim: true,
         // never let the service worker answer API calls from cache
         navigateFallbackDenylist: [/^\/api\//],
+        // practice reminders: show the notification when a push arrives
+        importScripts: ['/push-sw.js'],
       },
       devOptions: { enabled: false },
     }),

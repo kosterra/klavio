@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Accordion, Anchor, Button, Container, Group, Text, ThemeIcon, Title } from '@mantine/core';
 import {
   IconArrowRight,
@@ -14,7 +14,8 @@ import {
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../components/usePageTitle';
-import { APP_CONFIG, CURRICULUM, LESSONS } from '@klavio/shared';
+import { APP_CONFIG, CURRICULUM, LESSONS, type PublicTestimonialDto } from '@klavio/shared';
+import { endpoints } from '../api/endpoints';
 import { useSession } from '../auth/session';
 import { playMelody } from '../audio/synth';
 import { Landmark } from '../lesson/Landmarks';
@@ -41,7 +42,7 @@ const SHOWCASE = [
   { key: 'listen', shot: 'phone-reading' },
   { key: 'duet', shot: 'phone-duet' },
   { key: 'rain', shot: 'phone-rain' },
-  { key: 'dream', shot: 'dream' },
+  { key: 'dream', shot: 'phone-dream' },
 ] as const;
 
 /** A few of the children's worlds – the rest are discovered on the way. */
@@ -79,6 +80,11 @@ export function WelcomePage() {
   const { t } = useTranslation();
   usePageTitle(null, '/welcome');
   const { config } = useSession();
+  // what families wrote – only what they agreed to publish and an admin approved
+  const [voices, setVoices] = useState<PublicTestimonialDto[]>([]);
+  useEffect(() => {
+    endpoints.publicTestimonials().then(setVoices, () => undefined);
+  }, []);
   const registrationOpen = config?.registrationOpen ?? true;
   const [rain, setRain] = useState(0);
   const [ducks, setDucks] = useState(0);
@@ -262,20 +268,7 @@ export function WelcomePage() {
                   </Title>
                   <Text fz={{ base: 'md', sm: 'lg' }}>{t(`landing.show.${s.key}.text`)}</Text>
                 </div>
-                {s.shot === 'dream' ? (
-                  <figure className={`${classes.shot} ${classes.rowCard}`}>
-                    <img
-                      src="/screens/dream.webp"
-                      alt={t(`landing.show.${s.key}.alt`)}
-                      width={640}
-                      height={655}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </figure>
-                ) : (
-                  <Phone shot={s.shot} alt={t(`landing.show.${s.key}.alt`)} />
-                )}
+                <Phone shot={s.shot} alt={t(`landing.show.${s.key}.alt`)} />
               </article>
             ))}
           </div>
@@ -359,6 +352,28 @@ export function WelcomePage() {
           </div>
         </Container>
       </section>
+
+      {/* ------------------------------------------- voices (only real, approved ones) */}
+      {voices.length > 0 && (
+        <section className={classes.section} aria-labelledby="voices-title" data-testid="voices">
+          <Container size="lg">
+            <Title order={2} ta="center" id="voices-title" className={classes.sectionTitle}>
+              {t('testimonial.publicTitle')}
+            </Title>
+            <div className={classes.voices}>
+              {voices.map((v, i) => (
+                <figure key={i} className={classes.voice}>
+                  <blockquote>«{v.text}»</blockquote>
+                  <figcaption>
+                    <strong>{v.author}</strong>
+                    {v.role ? `, ${v.role}` : ''}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
 
       {/* ------------------------------------------------------------- faq */}
       <section className={classes.section} aria-labelledby="faq-title">

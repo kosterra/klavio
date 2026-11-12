@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Alert, Center, Loader, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { Alert, Button, Center, Loader, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { localIsoDate, type ProfileOverviewDto } from '@klavio/shared';
 import { endpoints } from '../api/endpoints';
@@ -32,7 +33,17 @@ export function FamilyPage() {
           <Loader aria-label={t('common.loading')} />
         </Center>
       )}
-      {data && (
+      {data && data.length === 0 && (
+        <Stack align="center" gap="sm" py="xl" data-testid="family-empty">
+          <Text ta="center" maw={420}>
+            {t('family.empty')}
+          </Text>
+          <Button component={Link} to="/profiles">
+            {t('family.addProfile')}
+          </Button>
+        </Stack>
+      )}
+      {data && data.length > 0 && (
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
           {data.map((d) => (
             <ProgressCard key={d.profile.id} data={d} />

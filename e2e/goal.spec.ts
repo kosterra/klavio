@@ -45,6 +45,9 @@ test('dream song: set it in the profile, see progress and the next step on the d
   const card = page.getByTestId('goal-card');
   await expect(card).toContainText('Nothing Else Matters – Metallica');
   await expect(page.getByTestId('goal-percent')).toHaveText('0 %');
+  // folded: only the title and the bar; unfolded (and remembered) the next step
+  await expect(card.getByRole('link', { name: 'Wo ist das C?' })).toBeHidden();
+  await card.getByTestId('goal-toggle').click();
   await expect(card.getByRole('link', { name: 'Wo ist das C?' })).toBeVisible();
 
   // after the first two chapters the first skills are reached

@@ -43,7 +43,9 @@ export function WeeklyGoalSetting() {
         </div>
         <SegmentedControl
           aria-labelledby="weekly-goal-title"
-          size="lg"
+          // four choices side by side, also on the narrowest phone
+          size="md"
+          fullWidth
           disabled={busy}
           value={value}
           onChange={(v) => void change(v)}

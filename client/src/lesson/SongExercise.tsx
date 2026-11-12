@@ -10,6 +10,7 @@ import {
   isHeldNote,
   midiToPitchName,
   type SongExercise as Spec,
+  songFingers,
 } from '@klavio/shared';
 import { inputHub, useNoteEvents } from '../input/noteBus';
 import { playMelody, type Playback } from '../audio/synth';
@@ -45,6 +46,8 @@ export function SongExercise({
     () => exercise.bars.flatMap((bar, b) => bar.map((n) => ({ ...n, bar: b }))),
     [exercise],
   );
+  // finger numbers: written into the song, or planned where the hand has to move
+  const fingers = useMemo(() => songFingers(exercise), [exercise]);
   // «Klavi spielt mit»: a chord when the learner reaches it
   const [duet, setDuet] = useDuet(inputMode);
   const chordAt = useMemo(() => {
@@ -101,7 +104,7 @@ export function SongExercise({
       setPos(next);
       if (next >= notes.length) timer.current = setTimeout(onDone, FEEDBACK_MS * 1.5);
     } else {
-      onMistake();
+      onMistake(notes[pos]!.midi);
       setMissedHere(true);
       setWrong(e.midi);
       clearTimeout(timer.current);
@@ -150,7 +153,7 @@ export function SongExercise({
           duration: n.value,
           label: exercise.showNames ? midiToPitchName(n.midi, lang) : undefined,
           // a held note keeps its finger – no number again
-          finger: isHeldNote(notes, i) ? undefined : n.finger,
+          finger: isHeldNote(notes, i) ? undefined : fingers[i],
           tie: n.tie,
           state:
             playingIndex !== null

@@ -8,7 +8,7 @@ interface Options {
   /** Does the played note count for the current target? */
   matches: (played: number, target: number) => boolean;
   onCorrect: () => void;
-  onMistake: () => void;
+  onMistake: (expected?: number) => void;
   onDone: () => void;
 }
 
@@ -41,7 +41,7 @@ export function useRoundTask({ notes, rounds, matches, onCorrect, onMistake, onD
         else setRound(round + 1);
       }, FEEDBACK_MS);
     } else {
-      onMistake();
+      onMistake(target);
       setWrongInRound((w) => w + 1);
       setFeedback({ midi: e.midi, ok: false });
       clearTimeout(timer.current);

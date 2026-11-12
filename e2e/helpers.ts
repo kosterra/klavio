@@ -89,6 +89,7 @@ export async function logout(page: Page) {
   if (!(await page.getByRole('button', { name: 'Menü' }).isVisible())) await page.goto('/account');
   await page.getByRole('button', { name: 'Menü' }).click();
   await page.getByRole('menuitem', { name: 'Abmelden' }).click();
+  await page.getByTestId('logout-confirm-go').click();
   await expect(page.getByRole('heading', { name: /Willkommen bei Klavio/ })).toBeVisible();
 }
 

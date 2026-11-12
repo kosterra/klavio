@@ -227,3 +227,84 @@ describe('repetition', () => {
     expect(again.review).toBe(false);
   });
 });
+
+describe('results synced later', () => {
+  it('a result names its profile: a sibling, never another account', async () => {
+    const { jar, profileId: lina } = await learner();
+    const tim = (await call(jar, 'POST', '/api/profiles', { name: 'Tim', birthYear: 2017 })).json()
+      .id as string;
+    // Lina is active; Tim's result played offline arrives with his id
+    const res = await complete(jar, first!.id, { profileId: tim });
+    expect(res.statusCode).toBe(200);
+    const timProgress = (
+      await call(jar, 'GET', `/api/progress?date=${today}&profileId=${tim}`)
+    ).json();
+    expect(timProgress.lessons[first!.id].bestStars).toBe(3);
+    const linaProgress = (await call(jar, 'GET', `/api/progress?date=${today}`)).json();
+    expect(linaProgress.lessons[first!.id]).toBeUndefined();
+    // the session's profile stays Lina's
+    expect((await call(jar, 'GET', '/api/auth/me')).json().activeProfileId).toBe(lina);
+
+    const other = await learner('other@example.ch');
+    expect((await complete(other.jar, first!.id, { profileId: tim })).statusCode).toBe(404);
+    expect(
+      (await call(other.jar, 'GET', `/api/progress?date=${today}&profileId=${tim}`)).statusCode,
+    ).toBe(404);
+  });
+
+  it('the same result sent twice is counted once', async () => {
+    const { jar } = await learner();
+    const resultId = crypto.randomUUID();
+    const a = (await complete(jar, first!.id, { resultId, durationSec: 100 })).json();
+    const b = await complete(jar, first!.id, { resultId, durationSec: 100 });
+    expect(b.statusCode).toBe(200);
+    expect(b.json()).toEqual(a);
+    const progress = (await call(jar, 'GET', `/api/progress?date=${today}`)).json();
+    expect(progress.lessons[first!.id].completions).toBe(1);
+    expect(progress.today.seconds).toBe(100);
+    // another account cannot read an answer with someone else's id
+    const other = await learner('other2@example.ch');
+    expect((await complete(other.jar, first!.id, { resultId })).statusCode).toBe(400);
+  });
+
+  it('a result for a deleted profile leaves nothing behind', async () => {
+    const { jar } = await learner();
+    const tim = (await call(jar, 'POST', '/api/profiles', { name: 'Tim', birthYear: 2017 })).json()
+      .id as string;
+    expect((await call(jar, 'DELETE', `/api/profiles/${tim}`)).statusCode).toBe(204);
+    expect((await complete(jar, first!.id, { profileId: tim })).statusCode).toBe(404);
+    const { LessonProgress, DailyActivity } = await import('../src/models/index.js');
+    expect(await LessonProgress.countDocuments({ profileId: tim })).toBe(0);
+    expect(await DailyActivity.countDocuments({ profileId: tim })).toBe(0);
+  });
+});
+
+describe('sessions in use', () => {
+  it('are renewed, so someone who practises stays logged in', async () => {
+    const { jar } = await learner();
+    const { Session } = await import('../src/models/index.js');
+    // as if logged in 50 days ago
+    await Session.updateMany({}, { $set: { expiresAt: new Date(Date.now() + 10 * 864e5) } });
+    const res = await call(jar, 'GET', '/api/auth/me');
+    expect(res.statusCode).toBe(200);
+    expect(res.headers['set-cookie']).toBeDefined();
+    const s = await Session.findOne().lean();
+    expect(s!.expiresAt.getTime()).toBeGreaterThan(Date.now() + 59 * 864e5);
+  });
+});
+
+describe('lessons skipped at the start', () => {
+  it('count as played only once really played: first completion, full XP, no badges for skipped chapters', async () => {
+    const { jar } = await learner();
+    expect(
+      (await call(jar, 'POST', '/api/progress/placement', { chapterId: 'read' })).statusCode,
+    ).toBe(200);
+    const res = (await complete(jar, first!.id)).json();
+    expect(res.firstCompletion).toBe(true);
+    expect(res.xpGained).toBe(first!.xp + 15);
+    expect(res.newBadges).toContain('first-lesson');
+    expect(res.newBadges.filter((b: string) => b.startsWith('chapter-'))).toEqual([]);
+    // played again: an ordinary replay
+    expect((await complete(jar, first!.id)).json().firstCompletion).toBe(false);
+  });
+});

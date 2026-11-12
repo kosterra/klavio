@@ -73,7 +73,7 @@ Repository-Einstellungen. Ablauf und Regeln: `.claude/skills/versioning`, «Was 
 | Frontend | React 19, TypeScript, Vite 8, Mantine 9 (CSS Modules), React Router, i18next, VexFlow 5 |
 | Audio    | Web Audio API mit AudioWorklet (eigene Tonerkennung), Web MIDI                          |
 | PWA      | vite-plugin-pwa (Workbox)                                                               |
-| Backend  | Node 24, Fastify 5, zod 4, Mongoose 9 / MongoDB 8                                       |
+| Backend  | Node 24, Fastify 5, zod 4, Mongoose 9 / MongoDB 9                                       |
 | Auth     | Passkeys mit `@simplewebauthn` 14, E-Mail-Codes, httpOnly-Session-Cookies               |
 | Betrieb  | Ein Image `kosterra/klavio` (App + API), davor Caddy für TLS; MongoDB; GitHub Actions   |
 | Tests    | Vitest, `mongodb-memory-server`, Playwright, axe-core                                   |
@@ -174,3 +174,14 @@ Online-Dienst anbietet, muss deren Quellcode den Nutzern zugänglich machen – 
 die App verlinkt ihn auf der Startseite und unter «Konto». Alle verwendeten Bibliotheken stehen unter
 mit der AGPL vereinbaren Lizenzen (MIT, ISC, BSD, Apache-2.0, 0BSD; die Schrift Nunito unter der SIL
 Open Font License).
+
+Musik: Die Lieder und Stücke des Lernpfads sind gemeinfrei (Volkslieder und Komponisten, die vor
+mehr als 70 Jahren gestorben sind). Die «Klassik zum Üben» ist aus den Ausgaben des
+[Mutopia Project](https://www.mutopiaproject.org) übernommen und vereinfacht;
+[`shared/src/curriculum/classics.data.ts`](shared/src/curriculum/classics.data.ts) steht deshalb –
+abweichend vom Code – unter der Creative-Commons-Lizenz des jeweiligen Stücks (CC BY-SA 2.5 / 3.0),
+mit Quelle und Notensetzer bei jedem Stück. Neu erzeugen: `npx tsx scripts/import-mutopia.ts`.
+Die «Schweizer Volkslieder»
+([`shared/src/curriculum/folkSongs.ts`](shared/src/curriculum/folkSongs.ts)) sind von Hand aus der
+gemeinfreien «Sammlung von Schweizer-Kühreihen und Volksliedern» (Bern 1826,
+[e-rara](https://doi.org/10.3931/e-rara-150173)) abgeschrieben – Nummer und Seite stehen bei jedem Lied.

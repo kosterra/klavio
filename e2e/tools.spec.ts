@@ -28,10 +28,20 @@ test('free play, metronome, wardrobe, family overview, placement and data export
   await expect(page.getByTestId('free-note')).toHaveText('G');
   await expect(page.getByRole('list', { name: 'Deine letzten Töne' })).toHaveText('EG');
   await page.getByText('Spieluhr').click();
+  // record, then listen to it
+  await page.getByTestId('rec-start').click();
+  await expect(page.getByTestId('rec-live')).toBeVisible();
+  for (const k of ['C4', 'D4', 'E4'])
+    await page.getByRole('button', { name: k, exact: true }).click();
+  await page.getByTestId('rec-stop').click();
+  await expect(page.getByTestId('rec-play')).toContainText('Anhören (3 Töne');
+  await page.getByTestId('rec-play').click();
+  await expect(page.getByTestId('rec-play')).toHaveText('Anhören stoppen');
+  await expect(page.getByTestId('rec-play')).toContainText('Anhören (3 Töne', { timeout: 10_000 });
   await audit(page);
 
   // metronome: tap tempo and start/stop
-  await page.goto('/metronome');
+  await page.goto('/play/metronome');
   await page.getByRole('button', { name: 'Tempo tippen' }).click();
   await page.waitForTimeout(500);
   await page.getByRole('button', { name: 'Tempo tippen' }).click();
@@ -39,6 +49,10 @@ test('free play, metronome, wardrobe, family overview, placement and data export
   await page.getByTestId('metronome-toggle').click();
   await expect(page.getByTestId('metronome-toggle')).toHaveText('Stopp');
   await page.getByTestId('metronome-toggle').click();
+  // the tempo is remembered for this profile
+  const tapped = await page.getByTestId('tempo').textContent();
+  await page.reload();
+  await expect(page.getByTestId('tempo')).toHaveText(tapped!);
   await audit(page);
 
   // wardrobe: level 1 → only «Nichts»; the cap needs level 2
@@ -58,6 +72,8 @@ test('free play, metronome, wardrobe, family overview, placement and data export
   await seedCompletedLessons(page, ['read-c-d-e']);
   await page.goto('/family');
   await expect(page.getByTestId('progress-Lina')).toContainText('Lektionen');
+  await expect(page.getByTestId('family-next')).toContainText('Als Nächstes: «');
+  await expect(page.getByTestId('family-last')).toHaveText(/Zuletzt geübt: (heute|noch nie)/);
   await audit(page);
 
   // data export

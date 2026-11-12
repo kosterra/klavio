@@ -15,6 +15,9 @@ const userSchema = new Schema(
     parentPinHash: { type: String, default: null },
     /** the parent area may also be opened with one of the account's passkeys */
     parentPasskeyUnlock: { type: Boolean, default: false },
+    /** weekly report by e-mail (opt-in) and the week (its Monday) last sent */
+    weeklyReport: { type: Boolean, default: false },
+    weeklyReportWeek: { type: String, default: null },
     locale: { type: String, default: 'de-CH' },
     /** last day the account was used (for deleting long-inactive accounts, if admins set it) */
     lastActiveAt: { type: Date, default: null },
@@ -197,6 +200,81 @@ const authThrottleSchema = new Schema({
 });
 authThrottleSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 export const AuthThrottle = model('AuthThrottle', authThrottleSchema);
+
+// ---------------------------------------------------------------------------
+// Lesson receipt: a result the device sent (its own id) – sent again because
+// the answer got lost, it is not counted twice. Kept a little longer than the
+// device keeps unsent results.
+// ---------------------------------------------------------------------------
+const lessonReceiptSchema = new Schema({
+  /** the result's id, chosen on the device */
+  _id: { type: String },
+  profileId: { type: Schema.Types.ObjectId, ref: 'Profile', required: true, index: true },
+  /** the answer given the first time (null while it is being saved) */
+  result: { type: Schema.Types.Mixed, default: null },
+  expiresAt: { type: Date, required: true },
+});
+lessonReceiptSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+export const LessonReceipt = model('LessonReceipt', lessonReceiptSchema);
+
+// ---------------------------------------------------------------------------
+// Practice reminder: one browser (its push subscription) reminds one profile
+// at a time of day on chosen weekdays – only if it has not practised yet.
+// ---------------------------------------------------------------------------
+const pushReminderSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    profileId: { type: Schema.Types.ObjectId, ref: 'Profile', required: true, index: true },
+    /** the browser's push address (at its maker's push service) and keys */
+    endpoint: { type: String, required: true, unique: true },
+    p256dh: { type: String, required: true },
+    auth: { type: String, required: true },
+    /** local time «HH:MM», weekdays 1 (Monday) … 7, the device's time zone */
+    time: { type: String, required: true },
+    days: { type: [Number], default: [1, 2, 3, 4, 5, 6, 7] },
+    tz: { type: String, required: true },
+    /** the learner's local day last handled (sent or not needed) */
+    lastDate: { type: String, default: null },
+  },
+  { timestamps: true },
+);
+export const PushReminder = model('PushReminder', pushReminderSchema);
+
+// ---------------------------------------------------------------------------
+// Own piece: a song or piece the family imported (MusicXML), for everyone of the account
+// ---------------------------------------------------------------------------
+const ownPieceSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    title: { type: String, required: true },
+    composer: { type: String, default: null },
+    /** the notes (checked against the schema on the way in) */
+    exercise: { type: Schema.Types.Mixed, required: true },
+    keyboard: { from: Number, to: Number },
+  },
+  { timestamps: true },
+);
+export const OwnPiece = model('OwnPiece', ownPieceSchema);
+
+// ---------------------------------------------------------------------------
+// Testimonial: a few words from a family, shown publicly once an admin approved them
+// ---------------------------------------------------------------------------
+const testimonialSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    text: { type: String, required: true },
+    author: { type: String, required: true },
+    role: { type: String, default: null },
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending',
+      index: true,
+    },
+  },
+  { timestamps: true },
+);
+export const Testimonial = model('Testimonial', testimonialSchema);
 
 // ---------------------------------------------------------------------------
 // Global settings (singleton document, editable by admins)

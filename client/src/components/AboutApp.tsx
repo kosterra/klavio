@@ -17,7 +17,7 @@ export function AboutCard() {
           component={Link}
           to="/whats-new"
           size="sm"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 6, minHeight: 32 }}
         >
           <IconSparkles size={18} aria-hidden />
           {t('whatsNew.link')} · {t('whatsNew.version', { version: __APP_VERSION__ })}
@@ -27,7 +27,7 @@ export function AboutCard() {
           target="_blank"
           rel="noopener noreferrer"
           size="sm"
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 6, minHeight: 32 }}
         >
           <IconBrandGithub size={18} aria-hidden />
           {t('about.source')}

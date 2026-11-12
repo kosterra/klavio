@@ -11,13 +11,14 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "admin:grant": "tsx --env-file-if-exists=../.env src/scripts/grantAdmin.ts",
-    "openapi": "tsx scripts/openapi.ts"
+    "openapi": "tsx scripts/openapi.ts",
+    "vapid": "tsx scripts/vapid.ts"
   },
   "dependencies": {
     "@fastify/cookie": "^11.1.5",
     "@fastify/helmet": "^13.2.0",
     "@fastify/rate-limit": "^11.2.2",
-    "@fastify/static": "^10.1.2",
+    "@fastify/static": "^10.1.8",
     "@simplewebauthn/server": "^14.1.0",
     "fastify": "^5.12.8",
     "fastify-plugin": "^6.0.1",

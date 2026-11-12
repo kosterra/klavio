@@ -74,3 +74,43 @@ test('lessons work offline; results are synced when back online', async ({ page,
   await expect(page.getByTestId('path-keys-c')).toHaveAccessibleName(/3 von 3 Sternen/);
   await expect(page.getByTestId('xp-total')).toHaveText('25 XP'); // now from the server
 });
+
+test('the server away for a moment is not a logout: the result waits and is sent', async ({
+  page,
+}) => {
+  test.setTimeout(120_000);
+  await page.addInitScript(() => {
+    navigator.mediaDevices.getUserMedia = () =>
+      Promise.reject(new DOMException('denied', 'NotAllowedError'));
+  });
+  await signUpWithEmail(page, uniqueEmail('away'), 'Familie');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Ida');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
+  await page.getByRole('link', { name: 'Erste Lektion starten' }).click();
+  await skipTheory(page);
+
+  // the network is there, but the server restarts (the proxy answers 502)
+  await page.route('**/api/**', (route) => route.fulfill({ status: 502, body: '' }));
+  await page.getByTestId('lesson-start').click();
+  await solveFindC(page);
+  await expect(page.getByRole('heading', { name: 'Perfekt!' })).toBeVisible();
+  await expect(page.getByTestId('pending')).toBeVisible();
+
+  // still logged in, the path shows the result
+  await page.getByRole('button', { name: 'Zum Lernpfad' }).click();
+  await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
+  await expect(page.getByTestId('offline-badge')).toBeVisible();
+  await expect(page.getByTestId('path-keys-c')).toHaveAccessibleName(/3 von 3 Sternen/);
+
+  // the server is back: noticed when the app comes to the front again
+  await page.unroute('**/api/**');
+  await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+  await expect(page.getByText('1 offline gespielte Lektion gespeichert.')).toBeVisible({
+    timeout: 15_000,
+  });
+  await expect(page.getByTestId('offline-badge')).toHaveCount(0);
+  await expect(page.getByTestId('xp-total')).toHaveText('25 XP');
+});

@@ -51,7 +51,10 @@ test('microphone setup wizard calibrates and the test page detects notes', async
   }
   await page.getByRole('button', { name: 'Speichern und fertig' }).click();
 
-  // saved → mic test page, no "not calibrated" hint anymore
+  // saved → back where the setup was opened (the start page); the mic test
+  // page has no "not calibrated" hint anymore
+  await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
+  await page.goto('/mic-test');
   await expect(page.getByRole('heading', { name: 'Mikrofon-Test' })).toBeVisible();
   await expect(page.getByText(/noch nicht eingerichtet/)).toHaveCount(0);
 

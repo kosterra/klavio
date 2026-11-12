@@ -41,7 +41,7 @@ export function MicHint({ profileId }: { profileId: string }) {
         {t('dashboard.micSetupShort')}
       </Text>
       <Group gap="xs" wrap="nowrap">
-        <Button size="sm" component={Link} to="/mic-setup">
+        <Button size="sm" component={Link} to="/mic-setup" state={{ from: '/' }}>
           {t('mic.setup')}
         </Button>
         <Button size="sm" variant="subtle" component={Link} to="/input" visibleFrom="xs">

@@ -4,6 +4,10 @@ import {
   AuthThrottle,
   DailyActivity,
   LessonProgress,
+  LessonReceipt,
+  OwnPiece,
+  Testimonial,
+  PushReminder,
   Passkey,
   Profile,
   Session,
@@ -17,11 +21,14 @@ import { profileToDto } from '../routes/profiles.js';
  * the passkeys' keys are useless outside Klavio and only say «set».
  */
 export async function exportAccount(userId: Types.ObjectId) {
-  const [user, passkeys, profiles, sessions] = await Promise.all([
+  const [user, passkeys, profiles, sessions, reminders, pieces, testimonials] = await Promise.all([
     User.findById(userId).lean(),
     Passkey.find({ userId }).sort({ createdAt: 1 }).lean(),
     Profile.find({ userId }).sort({ createdAt: 1 }).lean(),
     Session.find({ userId }).sort({ expiresAt: 1 }).lean(),
+    PushReminder.find({ userId }).sort({ createdAt: 1 }).lean(),
+    OwnPiece.find({ userId }).sort({ createdAt: 1 }).lean(),
+    Testimonial.find({ userId }).sort({ createdAt: 1 }).lean(),
   ]);
   if (!user) return null;
   // failed attempts kept against this account (PIN) and its address (codes)
@@ -29,12 +36,15 @@ export async function exportAccount(userId: Types.ObjectId) {
     _id: { $in: [`pin:${userId.toString()}`, `code:${user.email}`] },
   }).lean();
   const ids = profiles.map((p) => p._id);
-  const [progress, days] = await Promise.all([
+  const [progress, days, receipts] = await Promise.all([
     LessonProgress.find({ profileId: { $in: ids } })
       .sort({ lessonId: 1 })
       .lean(),
     DailyActivity.find({ profileId: { $in: ids } })
       .sort({ date: 1 })
+      .lean(),
+    LessonReceipt.find({ profileId: { $in: ids } })
+      .sort({ expiresAt: 1 })
       .lean(),
   ]);
   return {
@@ -47,6 +57,8 @@ export async function exportAccount(userId: Types.ObjectId) {
       locale: user.locale,
       parentPin: user.parentPinHash ? 'set' : 'not set',
       parentPasskeyUnlock: user.parentPasskeyUnlock,
+      weeklyReport: user.weeklyReport ?? false,
+      weeklyReportLastWeek: user.weeklyReportWeek ?? null,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       lastActiveAt: user.lastActiveAt,
@@ -56,6 +68,30 @@ export async function exportAccount(userId: Types.ObjectId) {
     sessions: sessions.map((x) => ({
       expiresAt: x.expiresAt,
       profileSelected: !!x.activeProfileId,
+    })),
+    // practice reminders per browser (the push address and keys stay out: they are the browser's)
+    reminders: reminders.map((r) => ({
+      profile: profiles.find((p) => p._id.equals(r.profileId))?.name ?? null,
+      time: r.time,
+      days: r.days,
+      timeZone: r.tz,
+      pushService: new URL(r.endpoint).hostname,
+      lastDay: r.lastDate,
+      createdAt: r.createdAt,
+    })),
+    // imported songs and pieces, with their notes
+    ownPieces: pieces.map((p) => ({
+      title: p.title,
+      composer: p.composer ?? null,
+      notes: p.exercise,
+      createdAt: p.createdAt,
+    })),
+    testimonials: testimonials.map((t) => ({
+      text: t.text,
+      author: t.author,
+      role: t.role ?? null,
+      status: t.status,
+      createdAt: t.createdAt,
     })),
     failedAttempts: throttles.map((x) => ({
       kind: x._id.startsWith('pin:') ? 'parent PIN' : 'e-mail code',
@@ -89,6 +125,10 @@ export async function exportAccount(userId: Types.ObjectId) {
         practiceDays: days
           .filter((d) => d.profileId.equals(p._id))
           .map((d) => ({ date: d.date, seconds: d.seconds, xp: d.xp })),
+        // results received (so one sent twice counts once), with the answer given
+        resultReceipts: receipts
+          .filter((r) => r.profileId.equals(p._id))
+          .map((r) => ({ id: r._id, answer: r.result, expiresAt: r.expiresAt })),
       };
     }),
   };

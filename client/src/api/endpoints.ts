@@ -1,5 +1,12 @@
 import type {
   LessonCompleteInput,
+  ReminderDto,
+  OwnPieceDto,
+  PublicTestimonialDto,
+  TestimonialDto,
+  TestimonialInput,
+  OwnPieceInput,
+  ReminderInput,
   LessonResultDto,
   ProgressDto,
   AdminSettingsDto,
@@ -61,6 +68,22 @@ export const endpoints = {
     api<{ email: string }>('POST', '/account/email/verify', { code }),
   updateAccount: (displayName: string) =>
     api<{ displayName: string }>('PATCH', '/account', { displayName }),
+  setWeeklyReport: (weeklyReport: boolean) => api('PATCH', '/account', { weeklyReport }),
+  reminderStatus: (endpoint: string) =>
+    api<ReminderDto | null>('POST', '/reminders/status', { endpoint }),
+  setReminder: (input: ReminderInput) => api<ReminderDto>('PUT', '/reminders', input),
+  reminderOff: (endpoint: string) => api('POST', '/reminders/off', { endpoint }),
+  pieces: () => api<OwnPieceDto[]>('GET', '/pieces'),
+  piece: (id: string) => api<OwnPieceDto>('GET', `/pieces/${encodeURIComponent(id)}`),
+  addPiece: (input: OwnPieceInput) => api<OwnPieceDto>('POST', '/pieces', input),
+  deletePiece: (id: string) => api('DELETE', `/pieces/${encodeURIComponent(id)}`),
+  publicTestimonials: () => api<PublicTestimonialDto[]>('GET', '/testimonials/public'),
+  myTestimonials: () => api<TestimonialDto[]>('GET', '/testimonials/mine'),
+  addTestimonial: (input: TestimonialInput) => api<TestimonialDto>('POST', '/testimonials', input),
+  deleteTestimonial: (id: string) => api('DELETE', `/testimonials/${encodeURIComponent(id)}`),
+  allTestimonials: () => api<TestimonialDto[]>('GET', '/testimonials/all'),
+  setTestimonialStatus: (id: string, status: TestimonialDto['status']) =>
+    api<TestimonialDto>('PATCH', `/testimonials/${encodeURIComponent(id)}`, { status }),
   deleteAccount: () => api('DELETE', '/account'),
   logoutOtherDevices: () => api<{ loggedOut: number }>('POST', '/account/sessions/logout-others'),
   setParentPin: (pin: string) => api('PUT', '/account/pin', { pin }),
@@ -96,7 +119,11 @@ export const endpoints = {
   placement: (chapterId: string) => api('POST', '/progress/placement', { chapterId }),
   selectProfile: (profileId: string) => api('POST', '/profiles/select', { profileId }),
 
-  progress: (date: string) => api<ProgressDto>('GET', `/progress?date=${encodeURIComponent(date)}`),
+  progress: (date: string, profileId?: string) =>
+    api<ProgressDto>(
+      'GET',
+      `/progress?date=${encodeURIComponent(date)}${profileId ? `&profileId=${encodeURIComponent(profileId)}` : ''}`,
+    ),
   completeLesson: (lessonId: string, body: LessonCompleteInput) =>
     api<LessonResultDto>('POST', `/progress/lessons/${lessonId}`, body),
 

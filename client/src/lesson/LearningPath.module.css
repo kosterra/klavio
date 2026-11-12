@@ -176,6 +176,17 @@ a.node:active {
   background: rgb(255 255 255 / 35%);
 }
 
+/* dark: the faded stone in the world's colour, not a grey blob – a soft gloss, a coloured edge */
+:global([data-mantine-color-scheme='dark']) .locked {
+  color: color-mix(in srgb, var(--chapter-light) 75%, var(--klavio-surface));
+  background: color-mix(in srgb, var(--chapter-color) 30%, var(--klavio-surface));
+  box-shadow: 0 7px 0 color-mix(in srgb, var(--chapter-dark) 55%, var(--klavio-surface));
+}
+
+:global([data-mantine-color-scheme='dark']) .locked::before {
+  background: rgb(255 255 255 / 8%);
+}
+
 .lockBadge {
   position: absolute;
   right: -8px;
@@ -355,6 +366,9 @@ a.node:active {
 }
 
 :global([data-mantine-color-scheme='dark']) .section {
+  /* the road takes on the world's colour instead of a grey band */
+  --klavio-road: color-mix(in srgb, var(--chapter-color) 20%, var(--mantine-color-dark-5));
+  --klavio-road-line: color-mix(in srgb, var(--chapter-light) 35%, var(--mantine-color-dark-3));
   --world-bg: color-mix(in srgb, var(--chapter-color) 12%, var(--klavio-surface));
   --world-hill: color-mix(in srgb, var(--chapter-color) 24%, var(--klavio-surface));
   --world-hill-2: color-mix(in srgb, var(--chapter-color) 36%, var(--klavio-surface));

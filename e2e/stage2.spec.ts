@@ -54,6 +54,25 @@ test('level 2: own map, piece for both hands on the grand staff', async ({ page 
   await keys.getByRole('button', { name: 'D4', exact: true }).click();
   await expect(status).toHaveText('Ton 3 von 27');
   await audit(page);
+
+  // practising: the left hand alone, bars 1 to 2 – a loop that does not count
+  const practice = page.getByTestId('piece-practice');
+  await practice.getByText('Links', { exact: true }).click();
+  const slider = practice.getByRole('slider', { name: 'Letzter Takt' });
+  await slider.focus();
+  for (let i = 0; i < 20; i++) await page.keyboard.press('ArrowLeft');
+  await page.keyboard.press('ArrowRight');
+  await expect(practice).toContainText('Takte 1 bis 2');
+  await expect(page.getByTestId('piece-practising')).toContainText('Übungsrunde');
+  const piece = findLesson('both-entchen')!.exercises[0] as PieceExercise;
+  const left = pieceSteps(piece).filter((s) => s.bar <= 1 && s.lh !== null);
+  await expect(status).toHaveText(`Ton 1 von ${left.length}`);
+  for (const s of left)
+    await keys.getByRole('button', { name: midiToName(s.lh!), exact: true }).click();
+  await expect(page.getByTestId('piece-practising')).toContainText('1× geschafft');
+  // the round starts again; the lesson is not finished by practising
+  await expect(status).toHaveText(`Ton 1 von ${left.length}`);
+  await expect(page.getByRole('heading', { name: 'Perfekt!' })).toHaveCount(0);
 });
 
 test('level 2: more steps with both hands – together, mirror, hold', async ({ page }) => {

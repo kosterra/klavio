@@ -11,6 +11,8 @@ interface Props {
   height?: number;
   /** text alternative for screen readers */
   label: string;
+  /** on paper (print): always black ink */
+  paper?: boolean;
 }
 
 const COLORS = {
@@ -27,7 +29,7 @@ const LOGICAL_HEIGHT = 250;
  * drawn with VexFlow and scaled to the container. Notes of both hands that
  * start together are aligned.
  */
-export function GrandStaff({ bars, time, height = 240, label }: Props) {
+export function GrandStaff({ bars, time, height = 240, label, paper = false }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const [ready, setReady] = useState(false);
@@ -41,7 +43,8 @@ export function GrandStaff({ bars, time, height = 240, label }: Props) {
     return () => ro.disconnect();
   }, []);
 
-  const scheme = useComputedColorScheme('light');
+  const computed = useComputedColorScheme('light');
+  const scheme = paper ? 'light' : computed;
   const key = JSON.stringify({ bars, time, height, width, scheme });
   useEffect(() => {
     const el = host.current;

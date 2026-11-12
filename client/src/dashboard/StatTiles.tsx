@@ -27,6 +27,7 @@ export function StatTiles({
   today,
   weekDays,
   weeklyGoal,
+  freeDayUsed = false,
 }: {
   xp: number;
   level: number;
@@ -39,6 +40,8 @@ export function StatTiles({
   weekDays: string[];
   /** planned days per week; null = no weekly goal */
   weeklyGoal: number | null;
+  /** this week's day off has been used to keep the streak */
+  freeDayUsed?: boolean;
 }) {
   const { t, i18n } = useTranslation();
   const monday = weekOf(today);
@@ -122,6 +125,12 @@ export function StatTiles({
                   : t('dashboard.weekGoal', { count: weekCount, goal: weeklyGoal })}
               </Text>
             </>
+          )}
+          {/* the rule behind the fire, for everyone: one day off a week keeps it burning */}
+          {streak > 0 && (weeklyGoal !== null || freeDayUsed) && (
+            <Text size="xs" c="dimmed" mt={4} data-testid="free-day">
+              {freeDayUsed ? t('dashboard.freeDayUsed') : t('dashboard.freeDay')}
+            </Text>
           )}
         </div>
       </div>

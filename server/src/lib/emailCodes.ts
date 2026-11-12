@@ -74,7 +74,7 @@ export async function checkEmailCode(
   const doc = await EmailCode.findOneAndUpdate(
     { ...filter, attempts: { $lt: MAX_ATTEMPTS } },
     { $inc: { attempts: 1 } },
-    { sort: { expiresAt: -1 }, new: true },
+    { sort: { expiresAt: -1 }, returnDocument: 'after' },
   );
   if (!doc || !safeEqualHex(doc.codeHash, hashCode(config, opts.email, opts.code))) {
     await recordFailure(throttleKey);

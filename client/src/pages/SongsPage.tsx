@@ -1,11 +1,14 @@
-import { Card, Center, Group, Loader, Stack, Text, ThemeIcon, Title } from '@mantine/core';
-import { IconLock, IconMusic, IconPlayerPlay } from '@tabler/icons-react';
+import { ActionIcon, Card, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import { IconLock, IconMusic, IconPlayerPlay, IconPrinter } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { CURRICULUM, isLessonUnlocked } from '@klavio/shared';
 import { usePageTitle } from '../components/usePageTitle';
 import { useLocalized } from '../lesson/useLocalized';
 import { useProgress } from '../lesson/useProgress';
+import { OwnPieces } from '../own/OwnPieces';
+import { Classics, FolkSongs } from '../own/Classics';
+import { ProgressPending } from '../components/ProgressPending';
 import classes from './SongsPage.module.css';
 import { useLessonFor } from '../lesson/useLessonFor';
 
@@ -18,15 +21,9 @@ export function SongsPage() {
   usePageTitle(t('songs.title'));
   const loc = useLocalized();
   const forMe = useLessonFor();
-  const { progress, completed } = useProgress();
+  const { progress, completed, error, reload } = useProgress();
 
-  if (!progress) {
-    return (
-      <Center py="xl">
-        <Loader aria-label={t('common.loading')} />
-      </Center>
-    );
-  }
+  if (!progress) return <ProgressPending error={error} onRetry={() => void reload()} />;
 
   const chapters = CURRICULUM.map((chapter, ci) => ({
     chapter,
@@ -43,6 +40,9 @@ export function SongsPage() {
           {t('songs.intro', { count: open.length })}
         </Text>
       </div>
+      <OwnPieces />
+      <FolkSongs />
+      <Classics />
       {chapters.map(({ chapter, n, songs }) => (
         <section key={chapter.id} aria-labelledby={`songs-${chapter.id}`}>
           <Title order={2} size="h4" mb="xs" id={`songs-${chapter.id}`}>
@@ -82,18 +82,33 @@ export function SongsPage() {
                 </Group>
               );
               return unlocked ? (
-                <Card
-                  key={lesson.id}
-                  component={Link}
-                  to={`/lesson/${lesson.id}`}
-                  withBorder
-                  radius="lg"
-                  padding="sm"
-                  className={classes.song}
-                  data-testid={`song-${lesson.id}`}
-                >
-                  {body}
-                </Card>
+                <Group key={lesson.id} gap="xs" wrap="nowrap" align="stretch">
+                  <Card
+                    component={Link}
+                    to={`/lesson/${lesson.id}`}
+                    withBorder
+                    radius="lg"
+                    padding="sm"
+                    className={classes.song}
+                    style={{ flex: 1, minWidth: 0 }}
+                    data-testid={`song-${lesson.id}`}
+                  >
+                    {body}
+                  </Card>
+                  {/* the notes on paper, for the piano at home or the teacher */}
+                  <ActionIcon
+                    component={Link}
+                    to={`/songs/${lesson.id}/print`}
+                    variant="default"
+                    radius="lg"
+                    size="auto"
+                    w={52}
+                    aria-label={t('sheet.printSong', { title: loc(forMe(lesson).title) })}
+                    data-testid={`print-${lesson.id}`}
+                  >
+                    <IconPrinter size={22} />
+                  </ActionIcon>
+                </Group>
               ) : (
                 <Card
                   key={lesson.id}

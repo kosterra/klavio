@@ -7,7 +7,8 @@
     "continue": "Weiter",
     "close": "Schliessen",
     "loading": "Einen Moment …",
-    "error": "Etwas hat nicht geklappt. Bitte versuche es nochmals."
+    "error": "Etwas hat nicht geklappt. Bitte versuche es nochmals.",
+    "retry": "Nochmals versuchen"
   },
   "privacy": {
     "audioLocal": "Was du spielst, bleibt auf deinem Gerät. Wir senden oder speichern nie Audio.",
@@ -42,17 +43,20 @@
       "title": "Was auf dem Server gespeichert wird",
       "text": "Damit du auf mehreren Geräten weiterlernen kannst, liegt auf dem Server:",
       "items": {
-        "1": "Konto: ein Name (z. B. «Familie Muster»), deine E-Mail-Adresse, die Sprache für E-Mails, ob du Admin bist, wann das Konto zuletzt benutzt wurde (und ob eine Warnung vor dem Löschen verschickt wurde) und – falls gesetzt – eine verschlüsselte Eltern-PIN.",
+        "1": "Konto: ein Name (z. B. «Familie Muster»), deine E-Mail-Adresse, die Sprache für E-Mails, ob du Admin bist, wann das Konto zuletzt benutzt wurde (und ob eine Warnung vor dem Löschen verschickt wurde) und – falls gesetzt – eine verschlüsselte Eltern-PIN und ob du den Wochenbericht per E-Mail willst.",
         "2": "Passkeys: nur der öffentliche Schlüssel und Angaben wie der Name des Passwort-Managers. Fingerabdruck, Gesicht und private Schlüssel bleiben auf deinem Gerät.",
-        "3": "Profile: Name oder Spitzname, Geburtsjahr, Figur und Kleidungsstück, Darstellung und Welt, Tagesziel und Wochenziel, ob du auf dem Klavier oder dem Bildschirm spielst, Mikrofon-Einstellung, die Antworten aus den Startfragen (z. B. warum du spielst), XP, Level, Streak, Abzeichen und – falls gewählt – der Titel deines Traumlieds.",
-        "4": "Lernfortschritt: Sterne, Wiederholungen und das Datum je Lektion sowie die Übungszeit pro Tag.",
+        "3": "Profile: Name oder Spitzname, Geburtsjahr, Figur und Kleidungsstück, Darstellung und Welt, Tagesziel und Wochenziel, ob du auf dem Klavier oder dem Bildschirm spielst, Mikrofon-Einstellung, die Antworten aus den Startfragen (z. B. warum du spielst), XP, Level, Tage in Folge, Abzeichen und – falls gewählt – der Titel deines Traumlieds.",
+        "4": "Lernfortschritt: Sterne, Wiederholungen und das Datum je Lektion sowie die Übungszeit pro Tag. Für jedes übertragene Ergebnis drei Wochen lang eine Quittung (Kennung und Antwort des Servers), damit ein doppelt gesendetes Ergebnis nur einmal zählt.",
         "5": "Server-Protokoll: Zeitpunkt, aufgerufene Adresse und Antwort – ohne IP-Adresse. In der mitgelieferten Einrichtung wird es laufend überschrieben (höchstens drei Dateien à 10 MB).",
-        "6": "Fehlversuche bei E-Mail-Codes und Eltern-PIN: wie viele und wann zuletzt – damit niemand raten kann. Nach einem Tag ohne weiteren Fehlversuch wird das vergessen."
+        "6": "Fehlversuche bei E-Mail-Codes und Eltern-PIN: wie viele und wann zuletzt – damit niemand raten kann. Nach einem Tag ohne weiteren Fehlversuch wird das vergessen.",
+        "7": "Erinnerungen ans Üben (nur wenn du sie einschaltest): Uhrzeit, Wochentage, Zeitzone und die Push-Adresse deines Browsers. Die Erinnerung geht verschlüsselt über den Push-Dienst des Browser-Herstellers (z. B. Google, Apple, Mozilla) – der kann sie nicht lesen, sieht aber, dass eine Mitteilung kommt. Beim Ausschalten, Abmelden oder Löschen des Profils wird alles gelöscht.",
+        "8": "Eigene Stücke (nur wenn du welche importierst): Titel, Komponist und die Noten – die Datei selbst wird auf deinem Gerät gelesen und nicht hochgeladen.",
+        "9": "Stimmen für die Startseite (nur wenn du welche schickst): dein Text, Unterschrift und Rolle, ob sie freigegeben sind. Zurücknehmen geht jederzeit unter «Konto»."
       }
     },
     "device": {
       "title": "Was auf deinem Gerät gespeichert wird",
-      "text": "Klavio setzt nur zwei Cookies, beide technisch notwendig: eines hält dich angemeldet, eines schützt die Anmeldung mit Passkey. Im Speicher des Browsers liegen dein letzter Stand (damit Klavio auch offline funktioniert), noch nicht übertragene Ergebnisse, Einstellungen je Profil (z. B. Vorlesen, Rekord im Notenregen) und allgemeine Einstellungen wie Sprache und Farbschema. Beim Abmelden werden dein Stand, deine noch nicht übertragenen Ergebnisse und die Einstellungen deiner Profile vom Gerät gelöscht; nur allgemeine Einstellungen wie Sprache und Farbschema bleiben."
+      "text": "Klavio setzt nur zwei Cookies, beide technisch notwendig: eines hält dich angemeldet, eines schützt die Anmeldung mit Passkey. Im Speicher des Browsers liegen dein letzter Stand (damit Klavio auch offline funktioniert), noch nicht übertragene Ergebnisse, Einstellungen je Profil (z. B. Vorlesen, Rekord im Notenregen, Tempo des Metronoms) und allgemeine Einstellungen wie Sprache und Farbschema. Beim Abmelden werden dein Stand, deine noch nicht übertragenen Ergebnisse und die Einstellungen deiner Profile vom Gerät gelöscht; nur allgemeine Einstellungen wie Sprache und Farbschema bleiben."
     },
     "sharing": {
       "title": "Wer Daten bekommt",
@@ -60,14 +64,15 @@
       "items": {
         "1": "Der E-Mail-Anbieter dieser Instanz verschickt deine Codes und sieht dabei deine Adresse und den Code.",
         "2": "Wer den Server betreibt (Hosting), hat technisch Zugriff auf die Daten.",
-        "3": "Sonst niemand: keine Werbe-, Analyse- oder Fehlerberichtsdienste."
+        "3": "Nur wenn du Erinnerungen einschaltest: der Push-Dienst deines Browser-Herstellers leitet sie verschlüsselt weiter.",
+        "4": "Sonst niemand: keine Werbe-, Analyse- oder Fehlerberichtsdienste."
       }
     },
     "retention": {
       "title": "Wie lange Daten bleiben",
       "items": {
         "1": "Konto, Profile und Fortschritt, bis du sie löschst.",
-        "2": "Angemeldet bleibst du 60 Tage, danach meldest du dich neu an.",
+        "2": "Angemeldet bleibst du, solange du Klavio benutzt; nach 60 Tagen ohne Benutzung meldest du dich neu an.",
         "3": "E-Mail-Codes verfallen nach 10 Minuten.",
         "4": "In Sicherungskopien bleiben Daten, bis die Sicherung abläuft – wie lange, legt der Betreiber fest.",
         "5": "Falls die Betreiberin oder der Betreiber es eingestellt hat: Konten, die lange nicht benutzt wurden, werden nach einer Warnung per E-Mail gelöscht.",
@@ -170,6 +175,8 @@
     }
   },
   "dashboard": {
+    "freeDay": "Ein Tag Pause pro Woche ist erlaubt – dein Feuer bleibt.",
+    "freeDayUsed": "Deinen Pausentag hast du diese Woche schon gebraucht – morgen wieder spielen, dann brennt das Feuer weiter.",
     "greeting": "Hallo {{name}}!",
     "mascotKids": "Schön, dass du da bist! Bereit für die nächste Lektion?",
     "mascotClassic": "Willkommen zurück.",
@@ -204,8 +211,16 @@
     "account": "Konto",
     "admin": "Verwaltung",
     "logout": "Abmelden",
+    "logoutAsk": {
+      "title": "Abmelden?",
+      "text": "Zum Anmelden braucht es danach einen Code per E-Mail oder einen Passkey – frag am besten deine Eltern.",
+      "pending": "{{count}} Ergebnis ist noch nicht übertragen. Beim Abmelden geht es verloren – warte besser, bis du wieder online bist.",
+      "pending_other": "{{count}} Ergebnisse sind noch nicht übertragen. Beim Abmelden gehen sie verloren – warte besser, bis du wieder online bist.",
+      "stay": "Angemeldet bleiben",
+      "go": "Abmelden"
+    },
     "menu": "Menü",
-    "input": "Eingabe",
+    "input": "Mikrofon und MIDI",
     "profile": "Mein Profil",
     "colorScheme": "Farbschema",
     "scheme": {
@@ -216,11 +231,12 @@
     "knowledge": "Wissen",
     "language": "Sprache",
     "main": "Hauptnavigation",
-    "learn": "Lernen",
+    "learn": "Lernpfad",
     "play": "Spielen",
     "toggle": "Navigation ein- oder ausblenden",
     "learnGroup": "Lernen",
-    "parentGroup": "Für Eltern",
+    "playGroup": "Spielen",
+    "parentGroup": "Elternbereich",
     "adminGroup": "Verwaltung",
     "songs": "Lieder"
   },
@@ -256,9 +272,13 @@
     "exportButton": "Daten herunterladen",
     "devices": "Andere Geräte",
     "devicesHint": "Ein Gerät verloren oder verkauft? Hier meldest du dein Konto überall sonst ab – nur dieses Gerät bleibt angemeldet.",
-    "devicesButton": "Auf allen anderen Geräten abmelden",
+    "devicesButton": "Andere Geräte abmelden",
     "devicesDone_one": "{{count}} anderes Gerät abgemeldet.",
-    "devicesDone_other": "{{count}} andere Geräte abgemeldet."
+    "devicesDone_other": "{{count}} andere Geräte abgemeldet.",
+    "report": "Wochenbericht",
+    "reportHint": "Jeden Montag eine E-Mail an deine Adresse: wie viel jedes Profil in der Woche geübt hat, welche Lektionen gespielt wurden und was als Nächstes kommt. Abbestellen geht jederzeit hier.",
+    "reportSwitch": "Wochenbericht per E-Mail",
+    "reportSaved": "Gespeichert."
   },
   "admin": {
     "title": "Verwaltung",
@@ -297,7 +317,9 @@
       "saved": "E-Mail-Vorlage gespeichert.",
       "saveFirst": "Speichere zuerst, dann kannst du eine Test-E-Mail schicken.",
       "reset": "Standardtexte wiederherstellen",
-      "inactiveWarning": "Warnung vor dem Löschen"
+      "inactiveWarning": "Warnung vor dem Löschen",
+      "pinReset": "Eltern-PIN zurücksetzen",
+      "weeklyReport": "Wochenbericht"
     },
     "worlds": {
       "title": "Welten",
@@ -434,7 +456,7 @@
     "saved": "Mikrofon eingerichtet."
   },
   "input": {
-    "title": "Wie spielst du?",
+    "title": "Mikrofon und MIDI",
     "intro": "Klavio hört dir über das Mikrofon zu oder liest dein Digitalpiano per MIDI. Die Klaviatur auf dem Bildschirm geht immer.",
     "activeNow": "Aktiv: {{source}}",
     "priority": "Ist ein MIDI-Gerät verbunden, hat es Vorrang. Das Mikrofon wird dann ignoriert, weil es das Digitalpiano sonst doppelt hören würde.",
@@ -533,7 +555,16 @@
     "legend": "Was bedeuten die Zeichen?"
   },
   "lesson": {
+    "hardNotes": "Diese Töne waren noch knifflig: {{notes}}.",
+    "hardNote": "{{note}} ({{count}}×)",
     "close": "Lektion beenden",
+    "quit": {
+      "title": "Wirklich aufhören?",
+      "text": "Wenn du jetzt aufhörst, zählt diese Lektion noch nicht.",
+      "quickText": "Du kannst die schnelle Runde jederzeit wieder starten.",
+      "stay": "Weiterspielen",
+      "go": "Aufhören"
+    },
     "progress": "Fortschritt der Lektion",
     "start": "Los geht’s!",
     "inputMidi": "Dein Digitalpiano ({{device}}) ist verbunden. Tippe auf «Los geht’s» – oder spiel einfach eine Taste, dann geht es los.",
@@ -700,6 +731,7 @@
   "badges": {
     "title": "Abzeichen",
     "count": "{{earned}} von {{total}}",
+    "all": "Alle Abzeichen ansehen",
     "new": "Neues Abzeichen!",
     "new_other": "{{count}} neue Abzeichen!",
     "earnedOn": "erhalten am {{date}}"
@@ -708,7 +740,8 @@
     "badge": "Offline",
     "synced": "{{count}} offline gespielte Lektion gespeichert.",
     "synced_other": "{{count}} offline gespielte Lektionen gespeichert.",
-    "pendingResult": "Du bist gerade offline. Dein Ergebnis ist auf diesem Gerät gespeichert und wird übertragen, sobald du wieder online bist. Abzeichen gibt es dann auch."
+    "pendingResult": "Du bist gerade offline. Dein Ergebnis ist auf diesem Gerät gespeichert und wird übertragen, sobald du wieder online bist. Abzeichen gibt es dann auch.",
+    "pendingLogin": "Du bist nicht mehr angemeldet. Dein Ergebnis ist auf diesem Gerät gespeichert und wird übertragen, sobald du dich wieder anmeldest."
   },
   "install": {
     "title": "Klavio als App",
@@ -741,6 +774,7 @@
     "title": "Elternbereich",
     "pin": "Eltern-PIN",
     "enterPin": "Gib die Eltern-PIN ein.",
+    "gateHint": "Das ist für deine Eltern. Du kannst einfach zurückgehen und weiterlernen.",
     "open": "Öffnen",
     "forgot": "PIN vergessen?",
     "explain": "Mit einer Eltern-PIN (4 Ziffern) schützt du Konto, Verwaltung und das Anlegen von Profilen vor Kinderhänden. Lernen und die Mikrofon-Einrichtung gehen ohne PIN.",
@@ -825,6 +859,8 @@
     "toLesson": "Zur Lektion"
   },
   "review": {
+    "quickScore_one": "{{right}} von {{count}} beim ersten Versuch richtig",
+    "quickScore_other": "{{right}} von {{count}} beim ersten Versuch richtig",
     "title": "Heute wiederholen",
     "intro": "Diese Lektionen sind wieder dran – so vergisst du nichts.",
     "allFresh": "Alles frisch im Kopf!",
@@ -946,7 +982,7 @@
         "kicker": "Dein Ziel im Blick",
         "title": "Dein Traumlied",
         "text": "Nenne das Stück, das du einmal spielen möchtest. Klavio zeigt dir den Weg in vier Etappen – auch die zähe Strecke, die dazugehört – und rechnet aus, wann du ungefähr oben bist.",
-        "alt": "Bildschirmfoto: «Dein Gipfel: Für Elise» und darunter die Etappen Gipfelsturm, Aufstieg und Durststrecke"
+        "alt": "Bildschirmfoto auf dem Handy: «Mein Traumlied: Für Elise», 7 % geschafft, als Nächstes die rechte Hand mit der Lektion «Die C-Dur-Tonleiter»"
       }
     },
     "waysTitle": "Für Kinder und für Erwachsene",
@@ -967,6 +1003,8 @@
     "finalText": "Ein Konto für die ganze Familie, ein Profil für jede Person – und los geht's."
   },
   "goal": {
+    "skillsShow": "Alle {{total}} Fähigkeiten ansehen",
+    "skillsHide": "Fähigkeiten ausblenden",
     "kicker": "Mein Traumlied",
     "percent": "{{percent}} % des Weges zum Traumlied",
     "skillsReached": "{{reached}} von {{total}} Fähigkeiten geschafft",
@@ -977,6 +1015,7 @@
       "later": "kommt in einer späteren Welt"
     },
     "next": "Als Nächstes: {{skill}}",
+    "later": "später",
     "ready": "Du kannst alles, was «{{title}}» braucht. Zeit für dein Traumlied!",
     "waiting": "Die nächsten Fähigkeiten kommen in neuen Welten – bleib dran!",
     "promptText": "Hast du ein Traumlied, das du eines Tages spielen möchtest?",
@@ -996,7 +1035,6 @@
     },
     "needs": "Was braucht das Lied?",
     "needsHint": "Vorschlag passend zum Lied – du kannst anpassen. Grundlagen wie Noten lesen sind immer dabei.",
-    "later": "später",
     "copyright": "Klavio speichert nur den Titel – keine Noten. Die Noten deines Traumlieds besorgst du dir später selbst, zum Beispiel als «Easy Piano»-Ausgabe.",
     "save": "Traumlied speichern",
     "remove": "Traumlied entfernen",
@@ -1026,7 +1064,9 @@
       "skills_one": "Braucht {{count}} Fähigkeit",
       "skills_other": "Braucht {{count}} Fähigkeiten"
     },
-    "skillsStart": "{{total}} Fähigkeiten bis zu deinem Traumlied – die erste lernst du gleich in der nächsten Lektion."
+    "skillsStart": "{{total}} Fähigkeiten bis zu deinem Traumlied – die erste lernst du gleich in der nächsten Lektion.",
+    "unfold": "Mehr zum Traumlied zeigen",
+    "fold": "Traumlied zuklappen"
   },
   "speech": {
     "read": "Vorlesen",
@@ -1132,6 +1172,17 @@
     "showKeys": "Bildschirm-Tasten zeigen"
   },
   "family": {
+    "streak": "Tage in Folge",
+    "lastPracticed": "Zuletzt geübt: {{when}}",
+    "today": "heute",
+    "yesterday": "gestern",
+    "daysAgo_one": "vor {{count}} Tag",
+    "daysAgo_other": "vor {{count}} Tagen",
+    "never": "noch nie",
+    "next": "Als Nächstes: «{{lesson}}»",
+    "needsPractice": "Lohnt sich nochmals (bisher ein Stern): {{lessons}}",
+    "empty": "Noch keine Profile. Leg für jedes Kind – und wenn du magst, für dich – ein eigenes Profil an.",
+    "addProfile": "Profil anlegen",
     "title": "Familie und Fortschritt",
     "intro": "Wo jedes Profil auf dem Lernpfad steht und wie viel in den letzten Wochen geübt wurde.",
     "mine": "Mein Fortschritt",
@@ -1148,6 +1199,8 @@
     "weekMinutes_other": "Woche ab {{week}}: {{count}} Minuten"
   },
   "metronome": {
+    "slower": "Langsamer",
+    "faster": "Schneller",
     "title": "Metronom",
     "open": "Zum Metronom",
     "intro": "Zum Üben im eigenen Tempo – auch für Stücke ausserhalb von Klavio. Langsam anfangen, dann Schritt für Schritt schneller.",
@@ -1309,5 +1362,132 @@
     "over_other": "{{count}} Noten gefangen. Nochmals?",
     "record_one": "Neuer Rekord: {{count}} Note!",
     "record_other": "Neuer Rekord: {{count}} Noten!"
+  },
+  "sheet": {
+    "title": "Noten drucken",
+    "pageTitle": "Noten: {{title}}",
+    "printSong": "Noten von «{{title}}» drucken",
+    "back": "Zu den Liedern",
+    "names": "Notennamen",
+    "fingers": "Fingersätze",
+    "print": "Drucken",
+    "lineLabel": "Notenzeile {{n}}",
+    "where": "Kapitel {{n}} · {{world}}",
+    "meta": "Tempo {{tempo}} · {{time}}-Takt",
+    "for": "für {{name}}",
+    "tipTitle": "So übst du mit Klavi",
+    "tips": {
+      "hands": "Lies zuerst die Noten und zeig die Tasten.",
+      "slow": "Spiel langsam – lieber richtig als schnell.",
+      "faster": "Klappt es dreimal ohne Fehler? Dann etwas schneller!"
+    },
+    "week": "Diese Woche geübt",
+    "footer": "Klavio – Klavier lernen · gedruckt am {{date}}",
+    "publicDomain": "Melodie gemeinfrei"
+  },
+  "piece": {
+    "hands": "Welche Hand?",
+    "both": "Beide",
+    "right": "Rechts",
+    "left": "Links",
+    "bars": "Takte {{from}} bis {{to}}",
+    "barFrom": "Erster Takt",
+    "barTo": "Letzter Takt",
+    "practising": "Übungsrunde – sie zählt noch nicht für die Sterne und beginnt immer wieder von vorn. Sitzt es? Dann beide Hände und alle Takte.",
+    "loops_one": "{{count}}× geschafft",
+    "loops_other": "{{count}}× geschafft",
+    "roundDone": "Runde geschafft – nochmals!",
+    "nothingHere": "In diesen Takten hat diese Hand nichts zu spielen."
+  },
+  "recorder": {
+    "record": "Aufnehmen",
+    "stop": "Stopp ({{seconds}} s)",
+    "recording": "Ich höre zu und merke mir, was du spielst …",
+    "play_one": "Anhören ({{count}} Ton)",
+    "play_other": "Anhören ({{count}} Töne, {{seconds}} s)",
+    "stopPlaying": "Anhören stoppen",
+    "delete": "Löschen"
+  },
+  "reminder": {
+    "title": "Erinnerung",
+    "hint": "Dieses Gerät erinnert dich zur gewählten Zeit ans Üben – nur an Tagen, an denen du noch nicht gespielt hast.",
+    "switch": "{{name}} auf diesem Gerät erinnern",
+    "time": "Uhrzeit",
+    "days": "An diesen Tagen",
+    "update": "Änderung speichern",
+    "saved": "Erinnerung um {{time}} eingerichtet.",
+    "off": "Erinnerung ausgeschaltet.",
+    "denied": "Mitteilungen sind für Klavio nicht erlaubt. Du kannst sie in den Einstellungen des Browsers erlauben.",
+    "unsupported": "Dieser Browser kann keine Erinnerungen zeigen. Auf dem iPhone oder iPad geht es, wenn Klavio auf dem Home-Bildschirm installiert ist.",
+    "forOther": "Dieses Gerät erinnert gerade ein anderes Profil. Einschalten erinnert stattdessen dich."
+  },
+  "own": {
+    "title": "Eigene Stücke",
+    "intro": "Bring deine eigenen Noten mit: eine MusicXML- oder MIDI-Datei aus MuseScore, Finale, Sibelius oder Dorico. Klavio liest sie auf deinem Gerät; gespeichert werden nur die Noten, für alle Profile deines Kontos.",
+    "import": "Stück importieren",
+    "how": "Dateien .musicxml, .xml, .mxl oder MIDI (.mid). Klavio nimmt die Hauptstimme (bei zwei Systemen beide Hände) – Ganze bis Achtel, punktierte Halbe und Viertel.",
+    "full": "Höchstens {{count}} eigene Stücke – lösche zuerst eines.",
+    "previewSong_one": "Lied mit einer Notenzeile · {{count}} Takt · {{time}}-Takt",
+    "previewSong_other": "Lied mit einer Notenzeile · {{count}} Takte · {{time}}-Takt",
+    "previewPiece_one": "Stück für beide Hände · {{count}} Takt · {{time}}-Takt",
+    "previewPiece_other": "Stück für beide Hände · {{count}} Takte · {{time}}-Takt",
+    "save": "Speichern",
+    "saved": "«{{title}}» ist bei deinen Stücken.",
+    "remove": "«{{title}}» löschen",
+    "removeTitle": "«{{title}}» löschen?",
+    "kindSong": "Eigenes Lied",
+    "kindPiece": "Eigenes Stück für beide Hände",
+    "close": "Stück beenden",
+    "practiceOnly": "Ein eigenes Stück zum Üben – mit Anhören und Üben einer Hand, aber ohne Sterne und XP.",
+    "start": "Los geht's!",
+    "done": "Geschafft – super!",
+    "again": "Nochmals spielen",
+    "back": "Zu den Liedern",
+    "chip": "Eigenes Stück",
+    "yours": "Eigene Noten",
+    "errors": {
+      "NOT_MUSICXML": "Das ist keine MusicXML-Datei. Exportiere das Stück im Notenprogramm als MusicXML (.musicxml oder .mxl).",
+      "NO_NOTES": "In der Datei sind keine Noten.",
+      "TOO_LONG": "Das Stück ist zu lang – höchstens 64 Takte.",
+      "DURATION": "Takt {{bar}} hat Notenwerte, die Klavio noch nicht kann (z. B. Sechzehntel oder punktierte Achtel).",
+      "TUPLET": "Takt {{bar}} hat Triolen – die kann Klavio noch nicht.",
+      "RANGE": "Die Noten liegen ausserhalb der Klaviatur.",
+      "TOO_BIG": "Die Datei ist zu gross (höchstens 5 MB).",
+      "NOT_MIDI": "Diese MIDI-Datei kann Klavio nicht lesen."
+    }
+  },
+  "folk": {
+    "title": "Schweizer Volkslieder",
+    "intro": "Alte Lieder aus der Schweiz, abgeschrieben aus einer Sammlung von 1826 und für Klavio vereinfacht: die Melodie zum Üben mit Anhören, und zum Drucken – ohne Sterne."
+  },
+  "classics": {
+    "title": "Klassik zum Üben",
+    "intro": "Kleine Stücke grosser Komponisten, für Klavio vereinfacht: zum Üben mit Anhören und einer Hand allein, und zum Drucken – ohne Sterne.",
+    "credit": "Noten: {{by}}, {{license}}",
+    "license": "Lizenz"
+  },
+  "testimonial": {
+    "title": "Erzähl anderen von Klavio",
+    "hint": "Hilft Klavio deiner Familie? Ein paar Worte von dir helfen anderen Familien bei der Entscheidung. Sie erscheinen auf der Startseite erst, wenn die Betreiberin oder der Betreiber sie gelesen hat – und du kannst sie jederzeit zurücknehmen.",
+    "text": "Deine Worte",
+    "author": "Unterschrift",
+    "authorHint": "z. B. dein Vorname – ein Nachname ist nicht nötig",
+    "role": "Wer du bist (freiwillig)",
+    "roleHint": "z. B. «Mutter von zwei Kindern» oder «Wiedereinsteiger, 52»",
+    "consent": "Ich bin einverstanden, dass diese Worte mit dieser Unterschrift auf der öffentlichen Startseite von Klavio erscheinen.",
+    "send": "Abschicken",
+    "thanks": "Danke! Deine Worte werden gelesen und dann veröffentlicht.",
+    "takeBack": "Zurücknehmen",
+    "status": {
+      "pending": "Wird gelesen",
+      "approved": "Veröffentlicht",
+      "rejected": "Nicht veröffentlicht"
+    },
+    "adminTitle": "Stimmen von Familien",
+    "adminHint": "Was Familien über Klavio geschrieben haben – mit ihrer Zustimmung zur Veröffentlichung. Auf der Startseite erscheinen nur freigegebene.",
+    "none": "Noch keine Einträge.",
+    "approve": "Freigeben",
+    "reject": "Nicht zeigen",
+    "publicTitle": "Das sagen Familien"
   }
 }

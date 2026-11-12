@@ -183,4 +183,32 @@ export interface ProfileOverviewDto {
   weeks: { week: string; minutes: number }[];
   /** days practised in the last 28 days */
   activeDays: number;
+  /** the learner's last day with practice time (local date), null: never */
+  lastPracticed: string | null;
+  /** lessons played with one star at most – worth another go (up to three) */
+  needsPractice: string[];
+}
+
+/** A practice reminder for the active profile on this device (Web Push). */
+export const reminderSchema = z.object({
+  subscription: z.object({
+    endpoint: z.string().url().max(1000),
+    keys: z.object({
+      p256dh: z.string().regex(/^[A-Za-z0-9_-]{80,100}$/),
+      auth: z.string().regex(/^[A-Za-z0-9_-]{16,30}$/),
+    }),
+  }),
+  /** local time of day, «HH:MM» */
+  time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+  /** weekdays: 1 = Monday … 7 = Sunday */
+  days: z.array(z.number().int().min(1).max(7)).min(1).max(7),
+  /** the device's IANA time zone, e.g. Europe/Zurich */
+  tz: z.string().min(1).max(64),
+});
+export type ReminderInput = z.infer<typeof reminderSchema>;
+
+export interface ReminderDto {
+  time: string;
+  days: number[];
+  profileId: string;
 }

@@ -97,6 +97,10 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await solveLesson(page, { mistakeFirst: true });
   await expect(page.getByRole('heading', { name: 'Sehr gut!' })).toBeVisible();
   await expect(page.getByTestId('xp-gained')).toHaveText('+20 XP');
+  // the summary names the note that went wrong
+  await expect(page.getByTestId('hard-notes')).toHaveText(
+    'Diese Töne waren noch knifflig: C (1×).',
+  );
   await expect(page.getByText('1 Tag in Folge')).toBeVisible();
   await expect(page.getByTestId('new-badges')).toContainText('Neues Abzeichen!');
   await expect(page.getByTestId('new-badges')).toContainText('Erste Lektion');
@@ -132,9 +136,15 @@ test('learning path: play lessons, earn stars and XP, unlock the next ones', asy
   await expect(page.getByTestId('path-keys-f-g')).toHaveAttribute('aria-current', 'step');
   await expect(page.getByRole('link', { name: 'Weiter: F und G' })).toBeVisible();
   await expect(page.getByTestId('xp-total')).toHaveText('100 XP');
-  await expect(page.getByTestId('badge-first-lesson')).toHaveAttribute('data-earned', 'true');
-  await expect(page.getByTestId('badge-perfect')).toHaveAttribute('data-earned', 'true');
-  await expect(page.getByTestId('badge-first-song')).toHaveAttribute('data-earned', 'false');
+  // the start page shows the latest medals, «Mein Profil» all of them
+  const latest = page.getByTestId('badges-latest');
+  await expect(latest.getByTestId('badge-first-lesson')).toHaveAttribute('data-earned', 'true');
+  await expect(latest.getByTestId('badge-perfect')).toHaveAttribute('data-earned', 'true');
+  await page.getByRole('link', { name: 'Alle Abzeichen ansehen' }).click();
+  const all = page.getByTestId('badges-all');
+  await expect(all.getByTestId('badge-first-lesson')).toHaveAttribute('data-earned', 'true');
+  await expect(all.getByTestId('badge-first-song')).toHaveAttribute('data-earned', 'false');
+  await page.goto('/');
   if (process.env.E2E_SCREENSHOTS) {
     await page.screenshot({ path: `${process.env.E2E_SCREENSHOTS}/path.png`, fullPage: true });
   }

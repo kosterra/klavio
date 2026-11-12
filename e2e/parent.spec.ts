@@ -57,6 +57,16 @@ test('account name and parent PIN protect the parent area', async ({ page }) => 
   await expect(page.getByRole('heading', { name: 'Passkeys' })).toHaveCount(0);
   await audit(page);
 
+  // the child is never stuck at the PIN: back where it was
+  await page.getByTestId('parent-gate-back').click();
+  await expect(page.getByRole('heading', { name: 'Hallo Lina!' })).toBeVisible();
+  // … and sets up the microphone without the PIN
+  await page.goto('/mic-setup');
+  await expect(page.getByRole('heading', { name: 'Mikrofon einrichten' })).toBeVisible();
+  await expect(page.getByText('Gib die Eltern-PIN ein.')).toHaveCount(0);
+  await page.goto('/account');
+  await expect(page.getByText('Gib die Eltern-PIN ein.')).toBeVisible();
+
   await typePin(page, page.locator('form'), '1357');
   await expect(page.getByText('Die PIN stimmt nicht.')).toBeVisible();
   await typePin(page, page.locator('form'), '2468');
@@ -145,9 +155,9 @@ test('the input setup belongs to the parent area; a passkey can open it instead 
   await page.getByRole('button', { name: 'Tim' }).click();
   await page.goto('/input');
   await expect(page.getByText('Gib die Eltern-PIN ein.')).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Wie spielst du?' })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Mikrofon und MIDI' })).toHaveCount(0);
 
   // a parent opens it with the passkey
   await page.getByRole('button', { name: 'Mit Passkey öffnen' }).click();
-  await expect(page.getByRole('heading', { name: 'Wie spielst du?' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Mikrofon und MIDI' })).toBeVisible();
 });

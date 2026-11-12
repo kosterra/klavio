@@ -111,7 +111,7 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
       });
       if (!code) throw new HttpError(429, 'TOO_MANY_CODES');
       await mailer.send(
-        await codeMail(config, 'login-code', user.email, code, user.locale === 'en' ? 'en' : 'de'),
+        await codeMail(config, 'pin-reset', user.email, code, user.locale === 'en' ? 'en' : 'de'),
       );
       return reply.code(204).send();
     },
@@ -300,9 +300,12 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
 
   // ------------------------------------------------------------ display name
   app.patch('/', { schema: { body: accountUpdateSchema } }, async (req) => {
-    const { displayName } = req.body;
-    await User.updateOne({ _id: req.auth!.user._id }, { displayName });
-    return { displayName };
+    const { displayName, weeklyReport } = req.body;
+    const set: Record<string, unknown> = {};
+    if (displayName !== undefined) set.displayName = displayName;
+    if (weeklyReport !== undefined) set.weeklyReport = weeklyReport;
+    await User.updateOne({ _id: req.auth!.user._id }, { $set: set });
+    return { displayName: displayName ?? req.auth!.user.displayName, weeklyReport };
   });
 
   // ------------------------------------------------- delete account entirely

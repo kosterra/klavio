@@ -37,7 +37,7 @@ The repository has a ready-to-copy [`docker-compose.yml`](https://github.com/kos
 
 **HTTPS is required:** passkeys, the microphone and offline use only work on a secure origin. Without Caddy, put any reverse proxy in front of port 3100 and set `TRUST_PROXY=1` (the number of proxies in front of the app, or a comma-separated list of their addresses – never more than there really are, or clients could pick their own address for the rate limits).
 
-A minimal service, next to a MongoDB 8 that only it can reach:
+A minimal service, next to a MongoDB 9 (8.0 works too) that only it can reach:
 
 ```yaml
 services:

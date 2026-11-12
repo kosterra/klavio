@@ -27,3 +27,13 @@ export async function api<T = unknown>(method: Method, path: string, body?: unkn
   if (!res.ok) throw new ApiError(res.status, data.error ?? 'UNKNOWN');
   return data as T;
 }
+
+/**
+ * Not an answer about the request itself: no connection, the server busy or
+ * restarting. Worth trying again later; what is on the device stays valid.
+ */
+export function isTransient(err: unknown): boolean {
+  return (
+    err instanceof ApiError && (err.code === 'NETWORK' || err.status === 429 || err.status >= 500)
+  );
+}

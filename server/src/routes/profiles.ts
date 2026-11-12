@@ -19,10 +19,13 @@ import {
   type Outfit,
   type WorldSet,
 } from '@klavio/shared';
+import type { Types } from 'mongoose';
 import type { AppConfig } from '../config.js';
 import { getSettings } from '../lib/settings.js';
 import {
   DailyActivity,
+  LessonReceipt,
+  PushReminder,
   LessonProgress,
   Profile,
   Session,
@@ -96,9 +99,14 @@ const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
         .sort({ createdAt: 1 })
         .lean<ProfileDoc[]>();
       const ids = profiles.map((p) => p._id);
-      const [progress, days] = await Promise.all([
+      const [progress, days, lastDays] = await Promise.all([
         LessonProgress.find({ profileId: { $in: ids }, bestStars: { $gt: 0 } }).lean(),
         DailyActivity.find({ profileId: { $in: ids }, date: { $gte: weeks[0]! } }).lean(),
+        // the last day with practice, also long ago
+        DailyActivity.aggregate<{ _id: Types.ObjectId; last: string }>([
+          { $match: { profileId: { $in: ids }, seconds: { $gt: 0 } } },
+          { $group: { _id: '$profileId', last: { $max: '$date' } } },
+        ]),
       ]);
       const since28 = addDays(today, -27);
       return profiles.map((p) => {
@@ -110,7 +118,8 @@ const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
           lessonsDone: coreDone,
           nextLessonId:
             coreDone >= CORE_IDS.size ? null : nextLesson(new Set(mine.map((l) => l.lessonId))).id,
-          stars: mine.reduce((n, l) => n + l.bestStars, 0),
+          // stars only for lessons played (not for ones skipped at the start)
+          stars: mine.filter((l) => !l.placed).reduce((n, l) => n + l.bestStars, 0),
           weeks: weeks.map((week) => ({
             week,
             minutes: Math.round(
@@ -120,6 +129,15 @@ const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
             ),
           })),
           activeDays: myDays.filter((d) => d.date >= since28 && (d.seconds ?? 0) > 0).length,
+          lastPracticed: lastDays.find((d) => d._id.equals(p._id))?.last ?? null,
+          // played (not skipped at the start) with one star: the oldest first
+          needsPractice: mine
+            .filter((l) => !l.placed && l.bestStars <= 1)
+            .sort(
+              (a, b) => (a.lastCompletedAt?.getTime() ?? 0) - (b.lastCompletedAt?.getTime() ?? 0),
+            )
+            .slice(0, 3)
+            .map((l) => l.lessonId),
         };
       });
     },
@@ -218,6 +236,8 @@ const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
       await Promise.all([
         LessonProgress.deleteMany({ profileId: req.params.id }),
         DailyActivity.deleteMany({ profileId: req.params.id }),
+        LessonReceipt.deleteMany({ profileId: req.params.id }),
+        PushReminder.deleteMany({ profileId: req.params.id }),
       ]);
       await Session.updateMany({ activeProfileId: req.params.id }, { activeProfileId: null });
       return reply.code(204).send();

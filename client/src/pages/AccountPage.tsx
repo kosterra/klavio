@@ -10,6 +10,7 @@ import {
   Modal,
   PinInput,
   Stack,
+  Switch,
   Text,
   TextInput,
   Title,
@@ -17,6 +18,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { notify } from '../components/notify';
 import { AboutCard } from '../components/AboutApp';
+import { TestimonialCard } from '../components/TestimonialCard';
 import { ParentPinSettings } from '../auth/parent';
 import {
   IconCloud,
@@ -302,6 +304,30 @@ export function AccountPage() {
 
       <ParentPinSettings />
 
+      {/* --------------------------------------------------- weekly report */}
+      <Card withBorder radius="lg" padding="lg" data-testid="weekly-report">
+        <Stack gap="sm">
+          <Title order={2} size="h3">
+            {t('account.report')}
+          </Title>
+          <Text size="sm">{t('account.reportHint')}</Text>
+          <Switch
+            checked={!!me?.user.weeklyReport}
+            disabled={!me?.user.email}
+            label={t('account.reportSwitch')}
+            onChange={async (e) => {
+              try {
+                await endpoints.setWeeklyReport(e.currentTarget.checked);
+                await refresh();
+                notify(t('account.reportSaved'));
+              } catch (err) {
+                notify(errorText(err), 'red');
+              }
+            }}
+          />
+        </Stack>
+      </Card>
+
       {/* --------------------------------------------------- other devices */}
       <Card withBorder radius="lg" padding="lg">
         <Stack gap="sm" align="flex-start">
@@ -313,6 +339,11 @@ export function AccountPage() {
             variant="light"
             size="md"
             leftSection={<IconDevicesX size={18} />}
+            // a long label wraps on a narrow phone instead of being cut off
+            maw="100%"
+            h="auto"
+            mih={42}
+            styles={{ label: { whiteSpace: 'normal', textAlign: 'left' } }}
             onClick={async () => {
               try {
                 const { loggedOut } = await endpoints.logoutOtherDevices();
@@ -348,6 +379,8 @@ export function AccountPage() {
           </Button>
         </Stack>
       </Card>
+
+      <TestimonialCard />
 
       <AboutCard />
 

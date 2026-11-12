@@ -81,6 +81,21 @@ const adminRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }> 
         CODE_MAILS.includes(id)
           ? await codeMail(config, id, to, '123456', req.body.lang)
           : await templateMail(config, id, to, req.body.lang, {
+              // the weekly report: a sample profile
+              ...(id === 'weekly-report'
+                ? {
+                    week: req.body.lang === 'en' ? '2 November' : '2. November',
+                    report: [
+                      {
+                        name: 'Lina',
+                        lines:
+                          req.body.lang === 'en'
+                            ? ['25 minutes practised, on 3 days', 'Next: «D and E»']
+                            : ['25 Minuten geübt, an 3 Tagen', 'Als Nächstes: «D und E»'],
+                      },
+                    ],
+                  }
+                : {}),
               months: (await getSettings(config)).inactiveDeleteMonths || 24,
               date: new Date(Date.now() + 30 * 864e5).toLocaleDateString(
                 req.body.lang === 'en' ? 'en-GB' : 'de-CH',

@@ -1510,10 +1510,28 @@ export function lessonFor(lesson: Lesson, world: 'kids' | 'journey'): Lesson {
   return world === 'journey' && lesson.adult ? { ...lesson, ...lesson.adult } : lesson;
 }
 
-/** A lesson is open once the previous one (in learning order) has been completed. */
+/**
+ * What the stars are counted against: a lesson with a grown-ups' piece has two
+ * versions of about the same length – the longer counts (server and device alike).
+ */
+export function scoringTarget(lessonId: string): number {
+  const lesson = LESSONS.find((l) => l.id === lessonId);
+  if (!lesson) return 0;
+  return Math.max(
+    lessonTargetCount(lesson),
+    lesson.adult ? lessonTargetCount(lessonFor(lesson, 'journey')) : 0,
+  );
+}
+
+/**
+ * A lesson is open once the previous one (in learning order) has been
+ * completed – and one already completed stays open, even when a new lesson is
+ * added before it later.
+ */
 export function isLessonUnlocked(lessonId: string, completed: ReadonlySet<string>): boolean {
   const i = LESSONS.findIndex((l) => l.id === lessonId);
   if (i < 0) return false;
+  if (completed.has(lessonId)) return true;
   // the closest lesson before it that is not a bonus lesson has to be done
   for (let j = i - 1; j >= 0; j--) {
     if (!LESSONS[j]!.bonus) return completed.has(LESSONS[j]!.id);

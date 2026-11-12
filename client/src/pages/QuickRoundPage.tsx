@@ -8,6 +8,8 @@ import { useSession } from '../auth/session';
 import { Buddy } from '../components/Buddy';
 import { TheorySteps } from '../lesson/theory/TheorySteps';
 import { useProgress } from '../lesson/useProgress';
+import { ConfirmModal } from '../components/ConfirmModal';
+import { ProgressPending } from '../components/ProgressPending';
 import { useWorldMode } from '../lesson/useWorldMode';
 
 /** Questions per quick round. */
@@ -37,11 +39,15 @@ export function QuickRoundPage() {
   usePageTitle(t('review.quick'));
   const navigate = useNavigate();
   const { activeProfile } = useSession();
-  const { progress, completed } = useProgress();
+  const { progress, completed, error, reload } = useProgress();
   const kids = activeProfile?.uiMode !== 'classic';
   const world = useWorldMode();
   const [steps, setSteps] = useState<TheoryStep[] | null>(null);
   const [done, setDone] = useState(false);
+  const [quitAsk, setQuitAsk] = useState(false);
+  // the score: tasks right at the first try, of the tasks answered
+  const [score, setScore] = useState({ right: 0, total: 0 });
+  const running = !!steps && steps.length > 0 && !done;
 
   if (progress && steps === null) {
     // pick once, as soon as the progress is known
@@ -52,8 +58,13 @@ export function QuickRoundPage() {
     <Box mih="100dvh" p="md" maw={1100} mx="auto">
       <Stack gap="md">
         <Group>
-          <CloseButton size="xl" aria-label={t('review.close')} onClick={() => navigate('/')} />
+          <CloseButton
+            size="xl"
+            aria-label={t('review.close')}
+            onClick={() => (running ? setQuitAsk(true) : navigate('/'))}
+          />
         </Group>
+        {!progress && <ProgressPending error={error} onRetry={() => void reload()} />}
         {steps && steps.length === 0 && (
           <Card withBorder radius="xl" padding="xl" maw={640} mx="auto" w="100%">
             <Stack align="center">
@@ -70,6 +81,9 @@ export function QuickRoundPage() {
             steps={steps}
             kids={kids}
             onDone={() => setDone(true)}
+            onAnswered={(firstTry) =>
+              setScore((s) => ({ right: s.right + (firstTry ? 1 : 0), total: s.total + 1 }))
+            }
             title={t('review.quick')}
             doneLabel={t('review.finish')}
             skipLabel={t('review.stop')}
@@ -82,11 +96,17 @@ export function QuickRoundPage() {
               <Title order={1} ta="center">
                 {t('review.quickDone')}
               </Title>
+              {score.total > 0 && (
+                <Text fz="xl" fw={800} ta="center" data-testid="quick-score">
+                  {t('review.quickScore', { right: score.right, count: score.total })}
+                </Text>
+              )}
               <Group>
                 <Button
                   variant="default"
                   onClick={() => {
                     setSteps(pickSteps(completed, world));
+                    setScore({ right: 0, total: 0 });
                     setDone(false);
                   }}
                 >
@@ -100,6 +120,17 @@ export function QuickRoundPage() {
           </Card>
         )}
       </Stack>
+      <ConfirmModal
+        opened={quitAsk}
+        title={t('lesson.quit.title')}
+        stay={t('lesson.quit.stay')}
+        go={t('lesson.quit.go')}
+        onStay={() => setQuitAsk(false)}
+        onGo={() => navigate('/')}
+        testId="quick-quit"
+      >
+        {t('lesson.quit.quickText')}
+      </ConfirmModal>
     </Box>
   );
 }

@@ -1,5 +1,6 @@
 import { useId } from 'react';
-import { Card, Group, Popover, Stack, Text, Title, UnstyledButton } from '@mantine/core';
+import { Anchor, Card, Group, Popover, Stack, Text, Title, UnstyledButton } from '@mantine/core';
+import { Link } from 'react-router';
 import {
   IconBook,
   IconBrain,
@@ -125,12 +126,36 @@ function Medal({ badge, earned, size }: { badge: BadgeDef; earned: boolean; size
  * All badges as a shelf of medals to collect: earned ones shine, open ones are
  * silhouettes. A tap shows how to get a medal (or when it was earned).
  */
-export function BadgeShelf({ earned }: { earned: { id: string; earnedAt: string }[] }) {
+export function BadgeShelf({
+  earned,
+  compact = false,
+}: {
+  earned: { id: string; earnedAt: string }[];
+  /**
+   * The start page: only the latest medals earned and a link to all of them
+   * («Mein Profil») – the whole shelf would make the page very long on a phone.
+   */
+  compact?: boolean;
+}) {
   const { t, i18n } = useTranslation();
   const loc = useLocalized();
   const byId = new Map(earned.map((b) => [b.id, b.earnedAt]));
+  const latest = [...earned].sort((a, b) => b.earnedAt.localeCompare(a.earnedAt)).slice(0, 4);
+  // nothing earned yet: the first ones to aim for
+  const shown = compact
+    ? latest.length
+      ? latest.map((e) => findBadge(e.id)).filter((b): b is BadgeDef => !!b)
+      : BADGES.slice(0, 4)
+    : BADGES;
   return (
-    <Card withBorder radius="xl" padding="lg" className={classes.shelf}>
+    <Card
+      withBorder
+      radius="xl"
+      padding="lg"
+      className={classes.shelf}
+      id={compact ? undefined : 'badges'}
+      data-testid={compact ? 'badges-latest' : 'badges-all'}
+    >
       <Group justify="space-between" mb="md">
         <Title order={2} size="h3">
           {t('badges.title')}
@@ -140,7 +165,7 @@ export function BadgeShelf({ earned }: { earned: { id: string; earnedAt: string 
         </Text>
       </Group>
       <ul className={classes.grid}>
-        {BADGES.map((b) => {
+        {shown.map((b) => {
           const at = byId.get(b.id);
           const detail = at
             ? t('badges.earnedOn', { date: new Date(at).toLocaleDateString(i18n.language) })
@@ -169,6 +194,11 @@ export function BadgeShelf({ earned }: { earned: { id: string; earnedAt: string 
           );
         })}
       </ul>
+      {compact && (
+        <Anchor component={Link} to="/profile#badges" fw={700} mt="sm" display="inline-block">
+          {t('badges.all')}
+        </Anchor>
+      )}
     </Card>
   );
 }

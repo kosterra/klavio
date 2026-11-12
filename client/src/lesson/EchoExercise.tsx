@@ -75,7 +75,7 @@ export function EchoExercise({
         }, FEEDBACK_MS);
       }
     } else {
-      onMistake();
+      onMistake(motif[pos]);
       setWrong(e.midi);
       setPos(0);
       clearTimeout(timer.current);

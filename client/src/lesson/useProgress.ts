@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { localIsoDate, weekOf, type ProgressDto } from '@klavio/shared';
-import { ApiError } from '../api/client';
+import { ApiError, isTransient } from '../api/client';
 import { endpoints } from '../api/endpoints';
 import { useSession } from '../auth/session';
 import { KEYS, readJson, writeJson } from '../offline/storage';
@@ -10,15 +10,20 @@ import { readQueue, withQueuedResults } from '../offline/queue';
  * Progress of the active profile: from the server (cached for offline use),
  * always including results that are still waiting to be synced.
  */
-export async function loadProgress(profileId: string): Promise<ProgressDto> {
+export async function loadProgress(
+  profileId: string,
+  /** a queued result to leave out (the one just being sent) */
+  without?: string,
+): Promise<ProgressDto> {
   const date = localIsoDate();
   const key = KEYS.progressPrefix + profileId;
   let progress: ProgressDto;
   try {
-    progress = await endpoints.progress(date);
+    progress = await endpoints.progress(date, profileId);
     writeJson(key, progress);
   } catch (err) {
-    if (!(err instanceof ApiError && err.code === 'NETWORK')) throw err;
+    // no connection or the server busy: what this device knows
+    if (!isTransient(err)) throw err;
     const cached = readJson<ProgressDto>(key);
     progress = cached ?? { lessons: {}, today: { date, seconds: 0, xp: 0 }, weekDays: [] };
     // the cache may be from an earlier day
@@ -28,11 +33,27 @@ export async function loadProgress(profileId: string): Promise<ProgressDto> {
     const monday = weekOf(date);
     progress = { ...progress, weekDays: (progress.weekDays ?? []).filter((d) => d >= monday) };
   }
-  return withQueuedResults(progress, readQueue(), profileId);
+  return withQueuedResults(
+    progress,
+    readQueue().filter((q) => q.id !== without),
+    profileId,
+  );
+}
+
+/**
+ * The server no longer knows this profile or session (deleted on another
+ * device, logged out elsewhere): the session is loaded again, which leads to
+ * the profile picker or the login.
+ */
+function sessionGone(err: unknown): boolean {
+  return (
+    err instanceof ApiError &&
+    (err.status === 401 || err.status === 404 || err.code === 'NO_ACTIVE_PROFILE')
+  );
 }
 
 export function useProgress() {
-  const { activeProfile, dataVersion } = useSession();
+  const { activeProfile, dataVersion, refresh } = useSession();
   const profileId = activeProfile?.id;
   const [progress, setProgress] = useState<ProgressDto | null>(null);
   const [error, setError] = useState<unknown>(null);
@@ -44,8 +65,9 @@ export function useProgress() {
       setError(null);
     } catch (err) {
       setError(err);
+      if (sessionGone(err)) void refresh();
     }
-  }, [profileId]);
+  }, [profileId, refresh]);
 
   useEffect(() => {
     if (!profileId) return;
@@ -58,13 +80,15 @@ export function useProgress() {
         }
       },
       (err: unknown) => {
-        if (!cancelled) setError(err);
+        if (cancelled) return;
+        setError(err);
+        if (sessionGone(err)) void refresh();
       },
     );
     return () => {
       cancelled = true;
     };
-  }, [profileId, dataVersion]);
+  }, [profileId, dataVersion, refresh]);
 
   const completed = new Set(
     Object.entries(progress?.lessons ?? {})

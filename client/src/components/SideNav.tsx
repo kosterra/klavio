@@ -63,12 +63,13 @@ export function SideNav({ onNavigate }: { onNavigate: () => void }) {
       {activeProfile && (
         <>
           {heading(t('nav.learnGroup'))}
-          {item('/', t('dashboard.learnPath'), <IconMap2 size={20} />)}
-          {item('/songs', t('songs.title'), <IconPlaylist size={20} />)}
+          {item('/', t('nav.learn'), <IconMap2 size={20} />)}
+          {item('/songs', t('nav.songs'), <IconPlaylist size={20} />)}
+          {item('/knowledge', t('nav.knowledge'), <IconBulb size={20} />)}
+          {heading(t('nav.playGroup'))}
           {item('/play', t('freePlay.title'), <IconMusic size={20} />)}
           {item('/play/rain', t('rainGame.title'), <IconCloudRain size={20} />)}
-          {item('/metronome', t('metronome.title'), <IconMetronome size={20} />)}
-          {item('/knowledge', t('nav.knowledge'), <IconBulb size={20} />)}
+          {item('/play/metronome', t('metronome.title'), <IconMetronome size={20} />)}
         </>
       )}
       {heading(t('nav.parentGroup'))}

@@ -1,3 +1,4 @@
+import { Stack, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { midiToPitchName, type HandShape } from '@klavio/shared';
 import { useNoteLang } from './useLocalized';
@@ -26,9 +27,10 @@ type Finger = 1 | 2 | 3 | 4 | 5;
 const FINGERS: Finger[] = [1, 2, 3, 4, 5];
 
 /**
- * «So liegt deine Hand»: a drawn hand on the keys, seen from above, with the
- * finger numbers on the fingertips – the keys the lesson uses are marked.
- * Fingers the lesson doesn't use lie on the white keys beside the others.
+ * «So liegt deine Hand»: the keys the lesson uses, each with the number of
+ * the finger that plays it and its name – the way piano books show a hand
+ * position – and below, in words, which hand it is and where each finger
+ * goes. Fingers the lesson doesn't use get the white key in line, in grey.
  */
 export function HandOnKeys({ shape }: { shape: HandShape }) {
   const { t } = useTranslation();
@@ -49,101 +51,68 @@ export function HandOnKeys({ shape }: { shape: HandShape }) {
   const last = Math.ceil(Math.max(...idx)) + 1;
   const whites = Array.from({ length: last - first + 1 }, (_, i) => whiteMidi(first + i));
   const width = whites.length * W;
-  const height = H + 120;
   const x = (midi: number) => (whiteIndex(midi) - first) * W + W / 2;
   const blacks = whites.flatMap((m) => (isBlack(m + 1) && m + 1 <= whites.at(-1)! ? [m + 1] : []));
   const used = new Set(Object.values(shape.keys));
+  const name = (midi: number) => midiToPitchName(midi, lang).replace(/-?\d+$/, '');
 
-  // fingertips on the keys, the hand comes from below (where the player sits)
-  const tip = (f: Finger) => ({ x: x(keyOf[f]), y: isBlack(keyOf[f]) ? BH - 22 : H - 30 });
-  const longs = ([2, 3, 4, 5] as Finger[]).map(tip);
-  const centre = longs.reduce((n, p) => n + p.x, 0) / 4;
-  const longBase = (f: Finger) => ({ x: centre + (tip(f).x - centre) * 0.82, y: H + 52 });
-  const longBases = ([2, 3, 4, 5] as Finger[]).map(longBase);
-  const palmL = Math.min(...longBases.map((b) => b.x)) - 20;
-  const palmR = Math.max(...longBases.map((b) => b.x)) + 20;
-  // the thumb grows out of the palm's side, lower down
-  const bases = [{ x: shape.side === 'right' ? palmL + 16 : palmR - 16, y: H + 92 }, ...longBases];
-
-  const label = t(shape.side === 'right' ? 'hand.right' : 'hand.left', {
+  const caption = t(shape.side === 'right' ? 'hand.right' : 'hand.left', {
     keys: known
       .map((f) => t('hand.finger', { n: f, note: midiToPitchName(shape.keys[f]!, lang) }))
       .join(', '),
   });
 
   return (
-    <svg
-      className={classes.svg}
-      viewBox={`0 0 ${width} ${height}`}
-      role="img"
-      aria-label={label}
-      data-testid="hand-on-keys"
-    >
-      {whites.map((m, i) => (
-        <rect
-          key={m}
-          x={i * W}
-          y={0}
-          width={W}
-          height={H}
-          rx={5}
-          className={used.has(m) ? classes.usedWhite : classes.white}
-        />
-      ))}
-      {blacks.map((m) => (
-        <rect
-          key={m}
-          x={x(m) - BW / 2}
-          y={0}
-          width={BW}
-          height={BH}
-          rx={3}
-          className={used.has(m) ? classes.usedBlack : classes.black}
-        />
-      ))}
-
-      {/* the hand: palm, then the fingers, outline under skin */}
-      <rect
-        x={palmL}
-        y={H + 40}
-        width={palmR - palmL}
-        height={120}
-        rx={34}
-        className={classes.palmLine}
-      />
-      {[true, false].map((outline) =>
-        FINGERS.map((f) => (
-          <line
-            key={`${outline}-${f}`}
-            x1={bases[f - 1]!.x}
-            y1={bases[f - 1]!.y}
-            x2={tip(f).x}
-            y2={tip(f).y}
-            strokeLinecap="round"
-            strokeWidth={outline ? 31 : 25}
-            className={outline ? classes.outline : classes.skin}
+    <Stack gap={6} align="center" w="100%" data-testid="hand-on-keys">
+      <svg className={classes.svg} viewBox={`0 0 ${width} ${H + 4}`} aria-hidden>
+        {whites.map((m, i) => (
+          <rect
+            key={m}
+            x={i * W}
+            y={0}
+            width={W}
+            height={H}
+            rx={5}
+            className={used.has(m) ? classes.usedWhite : classes.white}
           />
-        )),
-      )}
-      <rect
-        x={palmL + 3}
-        y={H + 43}
-        width={palmR - palmL - 6}
-        height={120}
-        rx={31}
-        className={classes.palm}
-      />
-      {FINGERS.map((f) => {
-        const p = tip(f);
-        return (
-          <g key={f} className={shape.keys[f] !== undefined ? classes.number : classes.numberIdle}>
-            <circle cx={p.x} cy={p.y} r={12} />
-            <text x={p.x} y={p.y} textAnchor="middle" dominantBaseline="central">
-              {f}
-            </text>
-          </g>
-        );
-      })}
-    </svg>
+        ))}
+        {blacks.map((m) => (
+          <rect
+            key={m}
+            x={x(m) - BW / 2}
+            y={0}
+            width={BW}
+            height={BH}
+            rx={3}
+            className={used.has(m) ? classes.usedBlack : classes.black}
+          />
+        ))}
+        {FINGERS.map((f) => {
+          const midi = keyOf[f];
+          const black = isBlack(midi);
+          const cx = x(midi);
+          const cy = black ? BH - 22 : H - 20;
+          return (
+            <g
+              key={f}
+              className={shape.keys[f] !== undefined ? classes.number : classes.numberIdle}
+            >
+              {!black && (
+                <text x={cx} y={BH + 16} textAnchor="middle" className={classes.keyName}>
+                  {name(midi)}
+                </text>
+              )}
+              <circle cx={cx} cy={cy} r={13} />
+              <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central">
+                {f}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+      <Text size="sm" ta="center" data-testid="hand-caption">
+        {caption}
+      </Text>
+    </Stack>
   );
 }

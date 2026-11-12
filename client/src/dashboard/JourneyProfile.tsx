@@ -199,11 +199,14 @@ export function JourneyProfile({
                     {t('journey.hardTitle')}
                   </Text>
                   <Text size="sm">{t('journey.hardText')}</Text>
-                  <ul className={classes.helps}>
-                    {(['tips', 'short', 'week'] as const).map((k) => (
-                      <li key={k}>{t(`journey.help.${k}`)}</li>
-                    ))}
-                  </ul>
+                  {/* what helps: once one is in it (before, the warning is enough) */}
+                  {state === 'current' && (
+                    <ul className={classes.helps}>
+                      {(['tips', 'short', 'week'] as const).map((k) => (
+                        <li key={k}>{t(`journey.help.${k}`)}</li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               )}
 

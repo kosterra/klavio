@@ -16,6 +16,7 @@ import { IconLock, IconTrash, IconVolume } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { MyProgress } from '../family/MyProgress';
+import { BadgeShelf } from '../lesson/Badges';
 import { Wardrobe } from '../components/Wardrobe';
 import { PlacementCard } from '../components/PlacementCard';
 import { usePageTitle } from '../components/usePageTitle';
@@ -37,6 +38,7 @@ import classes from './ProfileSettingsPage.module.css';
 import { GoalSongEditor } from '../goal/GoalSongEditor';
 import { WeeklyGoalSetting } from '../components/WeeklyGoalSetting';
 import { PlayOnSetting } from '../components/PlayOnSetting';
+import { ReminderSetting } from '../components/ReminderSetting';
 import { useAutoRead, useCanSpeak } from '../components/useReadAloud';
 
 /**
@@ -187,9 +189,13 @@ export function ProfileSettingsPage() {
 
       <MyProgress />
 
+      <BadgeShelf earned={activeProfile.badges} />
+
       <WeeklyGoalSetting />
 
       <PlayOnSetting />
+
+      <ReminderSetting />
 
       <Wardrobe />
 

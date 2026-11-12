@@ -151,7 +151,7 @@ test('adults travel in four stages – through the hard stretch – up to their 
   const journey = page.getByTestId('journey');
   await expect(journey).toContainText('Vier Etappen bis zu deinem Traumlied');
   await expect(page.getByTestId('journey-phase')).toContainText('Jetzt legst du die Grundlagen');
-  // the hard stretch is announced before it comes, with what helps
+  // the hard stretch is announced before it comes (what helps: once one is in it)
   await expect(page.getByTestId('journey-hard')).toContainText('Hier wird’s zäh');
   await expect(page.getByTestId('stage-start')).toContainText('Du bist hier');
   await expect(page.getByTestId('journey-estimate')).toContainText('Wochenziel');
@@ -171,6 +171,7 @@ test('adults travel in four stages – through the hard stretch – up to their 
   await page.reload();
   await expect(page.getByTestId('journey-phase')).toContainText('Du steckst in der Durststrecke');
   await expect(page.getByTestId('stage-grind')).toContainText('Du bist hier');
+  await expect(page.getByTestId('journey-hard')).toContainText('Klavis Tipps');
   await expect(page.getByTestId('stage-start')).toContainText('Geschafft');
   await page.getByTestId('stage-switch').getByText(/2/).first().click();
   await expect(page.getByTestId('chapter-bass')).toContainText('Die Hölle · −666 m');

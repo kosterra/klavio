@@ -114,6 +114,9 @@ describe('family overview', () => {
     await LessonProgress.create([
       { profileId: profile._id, lessonId: 'keys-c', bestStars: 3, completions: 1 },
       { profileId: profile._id, lessonId: 'keys-middle-c', bestStars: 2, completions: 1 },
+      { profileId: profile._id, lessonId: 'keys-d-e', bestStars: 1, completions: 1 },
+      // skipped at the start: not «worth another go»
+      { profileId: profile._id, lessonId: 'keys-f-g', bestStars: 1, completions: 0, placed: true },
     ]);
     await DailyActivity.create([
       { profileId: profile._id, date: '2026-11-08', seconds: 600 },
@@ -124,10 +127,11 @@ describe('family overview', () => {
     expect(res.statusCode).toBe(200);
     const [lina] = res.json();
     expect(lina).toMatchObject({
-      lessonsDone: 2,
-      stars: 5,
-      nextLessonId: 'keys-d-e',
+      lessonsDone: 4,
+      stars: 6,
       activeDays: 2,
+      lastPracticed: '2026-11-08',
+      needsPractice: ['keys-d-e'],
     });
     expect(lina.weeks).toHaveLength(8);
     // Mon 2 Nov – Sun 8 Nov: 5 + 10 minutes

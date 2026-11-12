@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Center, Group, Loader, Stack, Text, Title } from '@mantine/core';
+import { Badge, Button, Card, Group, Stack, Text, Title } from '@mantine/core';
 import { IconLock, IconPlayerPlay } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +8,7 @@ import { useSession } from '../auth/session';
 import { TheoryPicture } from '../lesson/theory/TheoryPicture';
 import { useLocalized } from '../lesson/useLocalized';
 import { useProgress } from '../lesson/useProgress';
+import { ProgressPending } from '../components/ProgressPending';
 import { worldOf } from '../lesson/worlds';
 import { useWorldMode } from '../lesson/useWorldMode';
 import { useLessonFor } from '../lesson/useLessonFor';
@@ -23,17 +24,11 @@ export function KnowledgePage() {
   const loc = useLocalized();
   const forMe = useLessonFor();
   const { activeProfile } = useSession();
-  const { completed, progress } = useProgress();
+  const { completed, progress, error, reload } = useProgress();
   const kids = activeProfile?.uiMode !== 'classic';
   const worldSet = useWorldMode();
 
-  if (!progress) {
-    return (
-      <Center py="xl">
-        <Loader aria-label={t('common.loading')} />
-      </Center>
-    );
-  }
+  if (!progress) return <ProgressPending error={error} onRetry={() => void reload()} />;
 
   return (
     <Stack gap="xl" maw={900} mx="auto">

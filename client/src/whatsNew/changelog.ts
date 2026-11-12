@@ -20,6 +20,127 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: '2026.11.4',
+    changes: [
+      L(
+        'Korrektur: Der Schliessen-Knopf oben in der Lektion ragt beim Darüberfahren nicht mehr aus der Leiste.',
+        'Fix: the close button at the top of a lesson no longer sticks out of the bar when hovered.',
+      ),
+      L(
+        'Korrektur: «So liegt deine Hand» kommt jetzt ohne gezeichnete Hand aus: Die Tasten der Lektion tragen ihren Namen und die Nummer des Fingers, der sie spielt, und darunter steht in Worten, welche Hand wohin gehört. Das ist klarer als jede Zeichnung – auch auf den schwarzen Tasten.',
+        'Fix: «This is where your hand goes» no longer needs a drawn hand: the lesson’s keys carry their name and the number of the finger that plays them, and below it says in words which hand goes where. Clearer than any drawing – on the black keys too.',
+      ),
+      L(
+        'Schweizer Volkslieder: Unter «Lieder» gibt es «S’Vreneli ab em Guggisberg» und das Wiegenlied «Es kam ein Herr zum Schlössli» – abgeschrieben aus einer Sammlung von 1826, vereinfacht für Klavio, zum Üben und Drucken.',
+        'Swiss folk songs: under «Songs» there are «Vreneli from Guggisberg» and the lullaby «A Lord Came to the Little Castle» – taken from a collection printed in 1826, simplified for Klavio, to practise and print.',
+      ),
+      L(
+        'Erzähl anderen von Klavio: Unter «Konto» können Eltern ein paar Worte für die Startseite schreiben – sie erscheinen nur mit ihrer Zustimmung und nachdem die Betreiberin oder der Betreiber sie gelesen hat, und lassen sich jederzeit zurücknehmen.',
+        'Tell others about Klavio: under «Account» parents can write a few words for the start page – they appear only with their consent and after the operator has read them, and can be taken back at any time.',
+      ),
+      L(
+        'Klassik zum Üben: Unter «Lieder» gibt es vier kleine Stücke aus Robert Schumanns «Album für die Jugend» – Melodie, Trällerliedchen, Choral und Stückchen –, vereinfacht für Klavio, zum Üben und Drucken. Eigene Stücke lassen sich jetzt auch als MIDI-Datei importieren.',
+        'Classics to practise: under «Songs» there are four little pieces from Robert Schumann’s «Album for the Young» – Melody, Humming Song, Chorale and Little Piece –, simplified for Klavio, to practise and print. Own pieces can now also be imported as a MIDI file.',
+      ),
+      L(
+        'Eigene Stücke: Unter «Lieder» kannst du deine eigenen Noten als MusicXML-Datei importieren (aus MuseScore, Finale, Sibelius oder Dorico) – zum Üben wie ein Lied, mit Anhören und einer Hand allein, und zum Drucken im Klavio-Look.',
+        'Own pieces: under «Songs» you can import your own notes as a MusicXML file (from MuseScore, Finale, Sibelius or Dorico) – to practise like a song, with listening and one hand alone, and to print in Klavio’s look.',
+      ),
+      L(
+        'Erinnerung ans Üben: In «Mein Profil» kannst du dich auf diesem Gerät zur gewählten Zeit erinnern lassen – nur an Tagen, an denen du noch nicht gespielt hast. Auf iPhone und iPad geht das, wenn Klavio auf dem Home-Bildschirm installiert ist.',
+        'Practice reminder: in «My profile» you can have this device remind you at a chosen time – only on days you have not played yet. On iPhone and iPad this works when Klavio is installed on the home screen.',
+      ),
+      L(
+        'Wochenbericht für Eltern: Wer will, bekommt jeden Montag eine E-Mail mit der Klavier-Woche jedes Profils – Minuten, Übungstage, gespielte Lektionen und was als Nächstes kommt. Einschalten und abbestellen unter «Konto».',
+        'Weekly report for parents: if you like, you get an e-mail every Monday with each profile’s piano week – minutes, practice days, lessons played and what comes next. Switch it on and off under «Account».',
+      ),
+      L(
+        'Die E-Mail für «PIN vergessen?» sagt jetzt, wofür der Code ist, statt «zum Anmelden».',
+        'The e-mail for «Forgot the PIN?» now says what the code is for, instead of «to sign in».',
+      ),
+      L(
+        'Fingersätze: Lieder, bei denen die Hand wandern muss (zum Beispiel «Alle meine Entchen» oder «Bruder Jakob»), zeigen jetzt die Fingernummer genau dort, wo die Hand weiterrückt – in der Lektion und auf dem gedruckten Notenblatt.',
+        'Fingering: songs where the hand has to move (for example «Alle meine Entchen» or «Frère Jacques») now show the finger number exactly where the hand moves on – in the lesson and on the printed sheet.',
+      ),
+      L(
+        'Freies Spielen: «Aufnehmen» merkt sich, was du spielst – bis zu zwei Minuten –, und «Anhören» spielt es dir mit dem gewählten Klang vor. Gespeichert werden nur die Töne, nur auf diesem Gerät und nur bis du die Seite verlässt.',
+        'Free play: «Record» remembers what you play – up to two minutes – and «Listen» plays it back with the chosen sound. Only the notes are kept, only on this device and only until you leave the page.',
+      ),
+      L(
+        'Stücke für beide Hände: Übe zuerst eine Hand allein und nur ein paar Takte – die Übungsrunde beginnt immer wieder von vorn und zählt noch nicht für die Sterne. Anhören spielt dann auch nur, was du übst.',
+        'Pieces for both hands: practise one hand alone and only a few bars first – the practice round starts over and over and does not count for the stars yet. Listening then plays only what you practise.',
+      ),
+      L(
+        'Noten drucken: Jedes offene Lied gibt es jetzt als Notenblatt im Klavio-Look – mit Welt, Tempo, Notennamen und Fingersätzen nach Wahl, einem Übungstipp von Klavi und einer Woche zum Abhaken. Zum Üben am Klavier zu Hause oder für die Klavierstunde.',
+        'Printing sheet music: every open song is now a sheet in Klavio’s look – with its world, tempo, note names and fingering as you like, a practice tip from Klavi and a week to tick off. For practising at the piano at home or for the piano lesson.',
+      ),
+      L(
+        'Das Traumlied auf der Startseite lässt sich zuklappen: Dann siehst du nur noch Titel und Fortschritt. Klavio merkt sich, ob es offen ist.',
+        'The dream song on the start page can be folded: then you only see its title and progress. Klavio remembers whether it is open.',
+      ),
+      L(
+        'Für Eltern: Die Seite «Familie und Fortschritt» zeigt jetzt, wann jedes Kind zuletzt geübt hat, die Tage in Folge, die nächste Lektion mit Namen und welche Lektionen sich nochmals lohnen (bisher ein Stern).',
+        'For parents: the «Family and progress» page now shows when each child last practised, the days in a row, the next lesson by name and which lessons are worth another go (one star so far).',
+      ),
+      L(
+        'Nach einer Lektion steht, welche Töne noch knifflig waren – so weisst du, worauf du beim nächsten Mal achten kannst.',
+        'After a lesson you see which notes were still tricky – so you know what to watch next time.',
+      ),
+      L(
+        'Tage in Folge: Dass ein Tag Pause pro Woche erlaubt ist, steht jetzt immer dabei – und auch, wenn der Pausentag schon gebraucht ist. Die schnelle Runde zeigt am Schluss, wie viele Aufgaben beim ersten Versuch richtig waren, und das Metronom merkt sich Tempo und Takt.',
+        'Days in a row: that one day off a week is fine is now always shown – and also when the day off has been used. The quick round shows at the end how many tasks were right at the first try, and the metronome remembers tempo and beats per bar.',
+      ),
+      L(
+        'Korrektur: Auf dem Handy öffnet sich das Menü hinter der Figur oben rechts jetzt immer – auch wenn die Seite nach unten gescrollt ist; vorher sprang die Seite hin und her.',
+        'Fix: on a phone the menu behind the figure at the top right now always opens – also when the page is scrolled down; before, the page jumped back and forth.',
+      ),
+      L(
+        'Dunkles Farbschema: Der Lernpfad zeigt gesperrte Lektionen und den Weg in den Farben der Welt statt in Grau.',
+        'Dark colour scheme: the learning path shows locked lessons and the road in the colours of the world instead of grey.',
+      ),
+      L(
+        'Handy: Die Startseite ist kürzer – sie zeigt die neusten Abzeichen, alle findest du in «Mein Profil». Die Traumlied-Karte zeigt den nächsten Schritt zuerst und die Fähigkeiten auf Wunsch. Knöpfe und Auswahlen werden nicht mehr abgeschnitten, und das X von Fenstern ist grösser.',
+        'Phone: the start page is shorter – it shows the latest badges, all of them are in «My profile». The dream song card shows the next step first and the skills on request. Buttons and choices are no longer cut off, and the X of dialogs is bigger.',
+      ),
+      L(
+        'Metronom: jetzt als dritter Reiter unter «Spielen», mit Start gleich unter dem Tempo und Knöpfen für 5 Schläge langsamer oder schneller.',
+        'Metronome: now the third tab under «Play», with Start right under the tempo and buttons for 5 beats slower or faster.',
+      ),
+      L(
+        'Gleiche Namen überall: «Lernpfad», «Elternbereich» und «Mikrofon und MIDI» heissen im Menü und auf der Seite gleich; die Seitenleiste ordnet Lernen und Spielen getrennt.',
+        'The same names everywhere: «Learning path», «Parent area» and «Microphone and MIDI» are called the same in the menu and on the page; the side bar groups learning and playing separately.',
+      ),
+      L(
+        'Mikrofon einrichten geht jetzt ohne Eltern-PIN – wie versprochen – und führt danach zurück, wo du warst, zum Beispiel in die Lektion. Steht doch einmal die PIN-Abfrage im Weg, bringt dich «Zurück» weiter.',
+        'Setting up the microphone now works without the parent PIN – as promised – and takes you back where you were afterwards, for example into the lesson. If the PIN prompt is ever in the way, «Back» gets you on.',
+      ),
+      L(
+        'Nicht aus Versehen aufhören: Das X während einer Lektion oder der schnellen Runde fragt jetzt «Wirklich aufhören?», und «Abmelden» fragt auch – mit einer Warnung, wenn noch Ergebnisse auf die Übertragung warten.',
+        'No stopping by mistake: the X during a lesson or the quick round now asks «Stop now?», and «Sign out» asks too – with a warning when results are still waiting to be sent.',
+      ),
+      L(
+        'Korrektur: Die Traumlied-Karte führt nur noch zu Lektionen, die schon offen sind; liegt die passende noch weiter vorne, steht dabei, wann sie kommt.',
+        'Fix: the dream song card only leads to lessons that are already open; if the right one is further ahead, it says when it comes.',
+      ),
+      L(
+        'Korrektur: Wer beim Start Kapitel übersprungen hat, bekommt beim ersten richtigen Spielen einer übersprungenen Lektion die vollen XP, und Abzeichen gibt es nur für wirklich gespielte Kapitel. Fertige Lektionen bleiben offen, auch wenn später eine neue Lektion davor dazukommt.',
+        'Fix: whoever skipped chapters at the start gets the full XP when really playing a skipped lesson for the first time, and badges only come for chapters really played. Finished lessons stay open, even when a new lesson is added before them later.',
+      ),
+      L(
+        'Korrektur: Ist der Server kurz nicht erreichbar, wirst du nicht mehr abgemeldet – Klavio lernt weiter mit dem, was auf dem Gerät ist, und überträgt Ergebnisse, sobald der Server wieder da ist. Eine Lektion wird erst nach den vorher gespielten gespeichert, ein doppelt gesendetes Ergebnis zählt nur einmal, und ein Profilwechsel ohne Internet gilt auch auf dem Server.',
+        'Fix: when the server is briefly unreachable you are no longer signed out – Klavio keeps going with what is on the device and sends results once the server is back. A lesson is saved only after the ones played before it, a result sent twice counts once, and switching profile without internet also reaches the server.',
+      ),
+      L(
+        'Korrektur: Lädt der Fortschritt nicht, zeigt Klavi das jetzt mit «Nochmals versuchen» an – statt endlos zu laden. Wurde das Profil auf einem anderen Gerät gelöscht, geht es zur Profilwahl.',
+        'Fix: if the progress does not load, Klavi now says so with «Try again» – instead of loading forever. If the profile was deleted on another device, you get to the profile picker.',
+      ),
+      L(
+        'Angemeldet bleiben: Wer Klavio benutzt, bleibt angemeldet – neu anmelden erst nach 60 Tagen ohne Benutzung. Läuft die Anmeldung doch einmal während einer Lektion ab, bleibt das Ergebnis auf dem Gerät und wird nach der Anmeldung übertragen.',
+        'Staying signed in: whoever uses Klavio stays signed in – signing in again only after 60 days without use. If the sign-in still runs out during a lesson, the result stays on the device and is sent after signing in.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.3',
     changes: [
       L(

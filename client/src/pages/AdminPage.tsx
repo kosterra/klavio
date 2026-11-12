@@ -9,6 +9,7 @@ import { useErrorText } from '../auth/useErrorText';
 import { notify } from '../components/notify';
 import { OperatorCard } from '../admin/OperatorCard';
 import { MailTemplatesCard } from '../admin/MailTemplatesCard';
+import { TestimonialsCard } from '../admin/TestimonialsCard';
 import { WorldsCard } from '../admin/WorldsCard';
 import { DataCard } from '../admin/DataCard';
 import { SeasonPreviewCard } from '../admin/SeasonPreviewCard';
@@ -71,6 +72,7 @@ export function AdminPage() {
         }}
       />
       <MailTemplatesCard />
+      <TestimonialsCard />
       <SeasonPreviewCard />
     </Stack>
   );

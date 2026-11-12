@@ -48,7 +48,13 @@ export function MicTestPage() {
           <Title order={1}>{t('mic.title')}</Title>
           <Text c="dimmed">{t('mic.intro')}</Text>
         </div>
-        <Button variant="light" leftSection={<IconAdjustments />} component={Link} to="/mic-setup">
+        <Button
+          variant="light"
+          leftSection={<IconAdjustments />}
+          component={Link}
+          to="/mic-setup"
+          state={{ from: '/mic-test' }}
+        >
           {t('mic.setup')}
         </Button>
       </Group>
