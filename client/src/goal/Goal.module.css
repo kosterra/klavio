@@ -125,19 +125,22 @@ li[data-state='later'] .skill {
 }
 
 /* one dream song to pick (start-up questions, «Mein Profil») */
+/*
+ * A pick: the whole tile is the button that chooses the song; pieces with a
+ * snippet get «anhören» and «Noten» in a row below it. The hover border
+ * follows the button, so what lights up is exactly what selects.
+ */
 .pick {
   display: flex;
-  gap: var(--mantine-spacing-sm);
-  align-items: flex-start;
+  flex-direction: column;
   min-height: 44px;
-  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
   border-radius: var(--mantine-radius-lg);
   border: 2px solid var(--mantine-color-default-border);
   background: var(--klavio-surface);
   text-align: left;
 }
 
-.pick:hover {
+.pick:has(.pickMain:hover) {
   border-color: var(--mantine-color-pink-4);
 }
 
@@ -146,22 +149,22 @@ li[data-state='later'] .skill {
   background: color-mix(in srgb, var(--mantine-color-pink-5) 14%, var(--klavio-surface));
 }
 
-/* the card: the pick itself, and beside it «anhören» and «Noten» for pieces with a snippet */
 .pickMain {
   display: flex;
   flex: 1;
   gap: var(--mantine-spacing-sm);
   align-items: flex-start;
   min-width: 0;
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
   text-align: left;
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--mantine-radius-lg);
 }
 
 .pickActions {
   display: flex;
-  flex: none;
-  flex-direction: column;
   gap: 6px;
+  justify-content: flex-end;
+  padding: 0 var(--mantine-spacing-sm) var(--mantine-spacing-sm);
 }
 
 .pickIcon {
