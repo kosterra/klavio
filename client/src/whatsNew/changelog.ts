@@ -23,6 +23,22 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Technik: «Fingerturnen» macht jeden Finger selbständig, «Daumen drunter» übt den Trick für die Tonleiter, «Fünf Töne in neuen Tonarten» legt die Hand auf G, D, A und E – und in Stufe 3 spielen beide Hände die Tonleiter gespiegelt.',
+        'Technique: «Finger gym» makes every finger independent, «Thumb under» practises the trick for scales, «Five notes in new keys» puts the hand on G, D, A and E – and in stage 3 both hands play the scale in mirror image.',
+      ),
+      L(
+        'Intervalle: «Schritt und Sprung» und «Terz, Quarte, Quinte» zeigen, wie man Noten am Abstand liest. Im neuen Intervallregen steht die erste Note angeschrieben – die zweite liest du am Abstand und spielst sie.',
+        'Intervals: «Step and skip» and «Thirds, fourths and fifths» show how to read notes by their distance. In the new interval rain the first note is named – you read the second by its distance and play it.',
+      ),
+      L(
+        'Vom Blatt spielen: Am Ende der ersten Lieder, im Bassschlüssel und im Walzertakt spielst du Melodien, die du noch nie gesehen hast – jedes Mal neue, im Takt, ohne Anhören und ohne Hilfe auf den Tasten.',
+        'Sight-reading: at the end of the first songs, in the bass clef and in waltz time you play melodies you have never seen – new ones every time, in time, without listening first and without help on the keys.',
+      ),
+      L(
+        'Hör genau hin: In jeder Stufe gibt es jetzt Hörspiele – «Hoch oder tief?», «Hör zu: die linke Hand», «Gleich oder anders?» und «Dur oder Moll?».',
+        'Listen closely: every stage now has listening games – «High or low?», «Listen: the left hand», «Same or different?» and «Major or minor?».',
+      ),
+      L(
         'Pausen in Liedern: Lieder dürfen jetzt Pausen haben – Klavio zeichnet sie, überspringt sie beim Üben und lässt sie «Im Takt» einfach verstreichen. Eigene Melodien mit Pausen bleiben dadurch ein Lied, statt zu einem Stück für zwei Hände mit leerer linker Hand zu werden.',
         'Rests in songs: songs can now have rests – Klavio draws them, skips them while practising and lets them pass «In time». Your own melodies with rests stay a song instead of becoming a two-hand piece with an empty left hand.',
       ),

@@ -132,6 +132,19 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
   'accomp-chords': ['chords'],
   'expr-dynamics': ['dynamics'],
   'expr-pedal': ['pedal'],
+  'tech-fingers': ['right-hand'],
+  'tech-thumb': ['right-hand'],
+  'tech-positions': ['black-keys'],
+  'tech-scale-both': ['scales'],
+  'read-steps': ['treble-clef'],
+  'read-intervals': ['grand-staff'],
+  'sight-first': ['melodies'],
+  'sight-bass': ['bass-clef'],
+  'sight-waltz': ['three-four'],
+  'ear-high-low': ['melodies'],
+  'ear-echo-left': ['left-hand'],
+  'ear-same': ['melodies'],
+  'ear-major-minor': ['minor'],
 };
 
 /** Lessons (in learning order) that teach a skill; empty = planned for later. */

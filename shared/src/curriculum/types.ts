@@ -52,6 +52,13 @@ export interface NoteRainExercise {
   goal: number;
   /** seconds a note needs to fall at the start */
   fall: number;
+  /**
+   * «Intervallregen»: every card shows two notes, the first one named – play
+   * the second, read by its distance from the first. The distances allowed, in
+   * steps on the staff (1 = second/step, 2 = third/skip, 3 = fourth, 4 = fifth);
+   * both notes come from `notes`.
+   */
+  intervals?: number[];
 }
 
 /** Note values (VexFlow notation): whole, half, quarter, eighth; "d" = dotted. */
@@ -141,6 +148,47 @@ export interface EchoExercise {
   tempo: number;
 }
 
+/**
+ * «Hör genau hin»: Klavi plays something, the learner answers by tapping one of
+ * the answers (higher or lower, same or different, major or minor …). A wrong
+ * answer counts as a mistake; the round is played again until it is right.
+ */
+export interface ListenExercise {
+  type: 'listen';
+  question: Localized;
+  /** two or three answers */
+  answers: Localized[];
+  /** quarter notes per minute */
+  tempo: number;
+  rounds: {
+    /** what sounds, one beat each: the keys of a group sound together, an empty group is a pause */
+    notes: number[][];
+    /** index into `answers` */
+    answer: number;
+  }[];
+}
+
+/**
+ * «Vom Blatt spielen»: a short melody the learner has never seen – made up
+ * anew every time from the keys and rhythms given – played in time after a
+ * count-in, without listening first and without help on the keys. Every
+ * rhythm has the same number of notes, so a lesson always counts the same.
+ */
+export interface SightReadExercise {
+  type: 'sight-read';
+  clef: 'treble' | 'bass';
+  time: string;
+  tempo: number;
+  /** the keys the melody may use (white keys, low to high, without gaps) */
+  notes: number[];
+  /** where the melody comes home at the end (default: the lowest key) */
+  tonic?: number;
+  /** whole-melody rhythms in song notation without pitches ("q q q q | h h") */
+  rhythms: string[];
+  /** how many melodies */
+  rounds: number;
+}
+
 /** Rhythm values: note values plus rests ("qr" = quarter rest, …). */
 export type RhythmValue = NoteValue | 'qr' | 'hr' | 'wr';
 
@@ -206,7 +254,9 @@ export type Exercise =
   | PedalExercise
   | RhythmExercise
   | PieceExercise
-  | ImproviseExercise;
+  | ImproviseExercise
+  | ListenExercise
+  | SightReadExercise;
 
 export interface Lesson {
   id: string;

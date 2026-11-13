@@ -18,6 +18,8 @@ export * from './curriculum/songCatalog.ts';
 export * from './curriculum/rewards.ts';
 export * from './schemas/progress.ts';
 export * from './curriculum/song.ts';
+export * from './curriculum/intervals.ts';
+export * from './curriculum/sightReading.ts';
 export * from './curriculum/songFingering.ts';
 export * from './curriculum/classics.ts';
 export * from './curriculum/dreamSnippets.ts';

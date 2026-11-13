@@ -17,6 +17,9 @@ import {
   xpFor,
   xpForLevel,
 } from './rewards.ts';
+import { intervalPairs } from './intervals.ts';
+import { sightRhythm } from './sightReading.ts';
+import { isBlackKey } from '../music/notes.ts';
 
 describe('curriculum data', () => {
   it('has unique, stable-looking ids', () => {
@@ -50,7 +53,7 @@ describe('curriculum data', () => {
                   ? e.bars
                       .flatMap((b) => [...b.rh, ...b.lh])
                       .flatMap((n) => (n.midi === null ? [] : [n.midi]))
-                  : e.type === 'improvise'
+                  : e.type === 'improvise' || e.type === 'listen'
                     ? []
                     : e.type === 'chords'
                       ? e.chords.flat()
@@ -77,6 +80,34 @@ describe('curriculum data', () => {
         }
       }
       expect(lessonTargetCount(l)).toBeGreaterThan(0);
+    }
+  });
+
+  it('has playable intervals, answerable questions and even sight-reading rhythms', () => {
+    for (const l of LESSONS) {
+      for (const e of l.exercises) {
+        if (e.type === 'note-rain' && e.intervals) {
+          expect(intervalPairs(e.notes, e.intervals).length, l.id).toBeGreaterThan(3);
+        }
+        if (e.type === 'listen') {
+          expect(e.answers.length, l.id).toBeGreaterThanOrEqual(2);
+          for (const r of e.rounds) expect(e.answers[r.answer], l.id).toBeDefined();
+          // every answer is right at least once
+          for (const [i] of e.answers.entries())
+            expect(
+              e.rounds.some((r) => r.answer === i),
+              l.id,
+            ).toBe(true);
+        }
+        if (e.type === 'sight-read') {
+          const counts = e.rhythms.map((r) => sightRhythm(r, e.time).flat().length);
+          expect(new Set(counts).size, l.id).toBe(1);
+          expect(
+            e.notes.every((m) => !isBlackKey(m)),
+            l.id,
+          ).toBe(true);
+        }
+      }
     }
   });
 
@@ -249,9 +280,10 @@ describe('bonus lessons', () => {
     const done = new Set([...before, 'song-weihnachtsmann']);
     expect(isLessonUnlocked('song-jakob', done)).toBe(true);
     expect(isLessonUnlocked('song-macdonald', done)).toBe(true);
-    // the path goes on without them
-    expect(isLessonUnlocked('bass-hand', done)).toBe(true);
-    expect(nextLesson(done).id).toBe('bass-hand');
+    // the path goes on without them: sight-reading, then the left hand
+    expect(isLessonUnlocked('sight-first', done)).toBe(true);
+    expect(nextLesson(done).id).toBe('sight-first');
+    expect(isLessonUnlocked('bass-hand', new Set([...done, 'sight-first']))).toBe(true);
     expect(CORE_LESSONS.some((l) => l.bonus)).toBe(false);
   });
 });

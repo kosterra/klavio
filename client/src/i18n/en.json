@@ -711,7 +711,10 @@
       "lives_other": "{{count}} lives left",
       "over": "Three notes have landed. Again?",
       "done": "All caught – great reading!",
-      "note": "Falling note"
+      "note": "Falling note",
+      "taskInterval": "Read the distance – play the second note!",
+      "from": "from {{note}}",
+      "interval": "Two notes, the first one is {{note}}"
     },
     "parts": {
       "label": "Part {{n}} of {{total}}",
@@ -727,7 +730,18 @@
       "pedal": "Pedal",
       "rhythm": "Rhythm",
       "piece": "Both hands",
-      "improvise": "Make it up"
+      "improvise": "Make it up",
+      "listen": "Listen closely",
+      "sight-read": "At first sight"
+    },
+    "ear": {
+      "right": "Well heard!",
+      "again": "Listen closely once more …"
+    },
+    "sight": {
+      "intro": "Look at the notes calmly first. Then I count in – and you play it through without stopping.",
+      "tip": "Tip: always look ahead to the next note – and keep going, even after a mistake.",
+      "round": "Melody {{n}} of {{total}}"
     }
   },
   "badges": {

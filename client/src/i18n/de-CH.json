@@ -711,7 +711,10 @@
       "lives_other": "Noch {{count}} Leben",
       "over": "Drei Noten sind gelandet. Nochmals?",
       "done": "Alle gefangen – super gelesen!",
-      "note": "Fallende Note"
+      "note": "Fallende Note",
+      "taskInterval": "Lies den Abstand – spiel die zweite Note!",
+      "from": "von {{note}}",
+      "interval": "Zwei Noten, die erste ist {{note}}"
     },
     "parts": {
       "label": "Teil {{n}} von {{total}}",
@@ -727,7 +730,18 @@
       "pedal": "Pedal",
       "rhythm": "Rhythmus",
       "piece": "Beide Hände",
-      "improvise": "Erfinden"
+      "improvise": "Erfinden",
+      "listen": "Hör genau hin",
+      "sight-read": "Vom Blatt"
+    },
+    "ear": {
+      "right": "Richtig gehört!",
+      "again": "Hör nochmals genau hin …"
+    },
+    "sight": {
+      "intro": "Schau die Noten zuerst in Ruhe an. Dann zähle ich ein – und du spielst durch, ohne anzuhalten.",
+      "tip": "Tipp: Schau immer schon auf den nächsten Ton – und spiel weiter, auch nach einem Fehler.",
+      "round": "Melodie {{n}} von {{total}}"
     }
   },
   "badges": {

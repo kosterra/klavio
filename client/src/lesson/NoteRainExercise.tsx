@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Button } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import type { NoteRainExercise as Spec } from '@klavio/shared';
+import { intervalPairs, type NoteRainExercise as Spec } from '@klavio/shared';
 import type { ExerciseProps } from './exercises';
 import { NoteRainGame } from './NoteRainGame';
 
@@ -21,12 +21,18 @@ export function NoteRainExercise({
 }: ExerciseProps<Spec>) {
   const { t } = useTranslation();
   const doneTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  // «Intervallregen»: two notes on every card, the second is played
+  const pairs = useMemo(
+    () => (exercise.intervals ? intervalPairs(exercise.notes, exercise.intervals) : undefined),
+    [exercise],
+  );
   useEffect(() => () => clearTimeout(doneTimer.current), []);
 
   return (
     <NoteRainGame
       clef={exercise.clef}
       notes={exercise.notes}
+      pairs={pairs}
       goal={exercise.goal}
       fall={exercise.fall}
       kids={kids}
