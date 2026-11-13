@@ -20,6 +20,23 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: '2026.11.7',
+    changes: [
+      L(
+        'Notenregen: Spielst du auf deinem Klavier, hört Klavio ab «Los, lass es regnen» gleich zu, und die Bildschirm-Tasten zeigen nur noch, was sie hören. Nach einer Runde ist das Feld leer – nur das Ergebnis, die Auswahl und «Nochmals».',
+        'Note rain: when you play on your piano, Klavio listens from «Let it rain» on, and the screen keys only show what they hear. After a round the field is cleared – just the result, the choice and «Again».',
+      ),
+      L(
+        'Freies Spielen: Hört Klavio dein Klavier, spielen die Bildschirm-Tasten nicht mehr mit – sie zeigen nur, was du spielst.',
+        'Free play: while Klavio hears your piano, the screen keys no longer play along – they only show what you play.',
+      ),
+      L(
+        'Korrektur: «Lieber auf dem Bildschirm spielen» beim Start einer Lektion gilt nur für diese Lektion. Vorher stellte es «Wo spielst du?» im Profil um, und alle weiteren Lektionen boten den Bildschirm zuerst an.',
+        'Fix: «Rather play on the screen» at the start of a lesson counts for that lesson only. Before, it changed «Where do you play?» in the profile, and every later lesson offered the screen first.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.6',
     changes: [
       L(

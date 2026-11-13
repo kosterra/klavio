@@ -99,9 +99,11 @@ interface Props {
   /** without Klavi's bubble (the page says what to do); the end of a round shows in the field */
   compact?: boolean;
   /** shown on the field before a round (and after one): what to know and choose before it rains */
-  setup?: ReactNode;
+  setup?: (phase: 'ready' | 'over') => ReactNode;
   /** on the line with the hearts, e.g. the switch for the real piano */
   tools?: ReactNode;
+  /** a round starts (from the tap: e.g. the microphone may start now) */
+  onStart?: () => void;
 }
 
 /**
@@ -128,6 +130,7 @@ export function NoteRainGame({
   compact = false,
   setup,
   tools,
+  onStart,
 }: Props) {
   const { t } = useTranslation();
   const field = useRef<HTMLDivElement>(null);
@@ -176,6 +179,7 @@ export function NoteRainGame({
   useEffect(() => () => stop(), []);
 
   const start = () => {
+    onStart?.();
     stop();
     game.current = fresh(performance.now());
     setDrops([]);
@@ -330,27 +334,29 @@ export function NoteRainGame({
             .map((d) => d.midi),
         )}
       >
-        {drops.map((d) => {
-          const p = Math.min(1, (now - d.born) / d.fallMs);
-          return (
-            <div
-              key={d.id}
-              className={classes.drop}
-              data-end={d.end?.how}
-              style={{
-                left: `calc((100% - var(--card)) * ${d.x / 0.7})`,
-                transform: `translateY(${p * drop}px)`,
-              }}
-              aria-hidden
-            >
-              <NoteCard clef={clefOf(clef, d.midi)} midi={d.midi} from={d.from} />
-            </div>
-          );
-        })}
+        {/* the round is over: the field is cleared for the result */}
+        {phase !== 'over' &&
+          drops.map((d) => {
+            const p = Math.min(1, (now - d.born) / d.fallMs);
+            return (
+              <div
+                key={d.id}
+                className={classes.drop}
+                data-end={d.end?.how}
+                style={{
+                  left: `calc((100% - var(--card)) * ${d.x / 0.7})`,
+                  transform: `translateY(${p * drop}px)`,
+                }}
+                aria-hidden
+              >
+                <NoteCard clef={clefOf(clef, d.midi)} midi={d.midi} from={d.from} />
+              </div>
+            );
+          })}
         <div className={classes.ground} aria-hidden />
         {phase !== 'play' && phase !== 'done' && (
           <div className={classes.overlay}>
-            {phase === 'ready' && setup}
+            {phase === 'ready' && setup?.('ready')}
             {phase === 'ready' && (
               <Button
                 size="lg"
@@ -366,7 +372,7 @@ export function NoteRainGame({
                 {overText?.(result) ?? t('lesson.rain.over')}
               </Text>
             )}
-            {phase === 'over' && setup}
+            {phase === 'over' && setup?.('over')}
             {phase === 'over' && (
               <Group justify="center">
                 <Button

@@ -9,6 +9,7 @@ import { useSession } from '../auth/session';
 import { BuddySays } from '../components/BuddySays';
 import { PlayTabs, PlayTitle } from '../components/PlayTabs';
 import { RealPianoInput } from '../components/RealPianoInput';
+import { useRealPiano } from '../components/useRealPiano';
 import { Recorder } from '../components/Recorder';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { usePageTitle } from '../components/usePageTitle';
@@ -48,6 +49,8 @@ export function FreePlayPage() {
   const [timbre, setTimbre] = useState<Timbre>('piano');
   const [played, setPlayed] = useState<Played[]>([]);
   const [playOn] = usePlayOn();
+  // the real piano heard: the screen keys only show what it plays
+  const piano = useRealPiano();
   // on the real piano the screen keys stay away – one tap brings them
   const [screenKeys, setScreenKeys] = useState(playOn === 'screen');
   const phone = useMediaQuery('(max-width: 36em)') ?? false;
@@ -86,7 +89,7 @@ export function FreePlayPage() {
 
       {/* the real piano: a digital piano is simply there, an acoustic one listens through the mic */}
       <Group justify="center" gap="md">
-        <RealPianoInput prominent={!screenKeys} />
+        <RealPianoInput piano={piano} prominent={!screenKeys} />
         {screenKeys && (
           <SegmentedControl
             value={timbre}
@@ -179,6 +182,8 @@ export function FreePlayPage() {
             height={220}
             timbre={timbre}
             computerKeysFrom={60}
+            // the real piano heard: the keys show its notes, a tap on them plays nothing
+            interactive={!piano.active}
           />
         </>
       ) : (
