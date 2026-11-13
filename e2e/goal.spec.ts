@@ -1,7 +1,10 @@
+import { fileURLToPath } from 'node:url';
 import { expect, test } from '@playwright/test';
 import { LESSONS } from '@klavio/shared';
 import { audit } from './audit';
 import { seedCompletedLessons, signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
+
+const musicXml = fileURLToPath(new URL('./fixtures/mein-lied.musicxml', import.meta.url));
 
 test('dream song: set it in the profile, see progress and the next step on the dashboard', async ({
   page,
@@ -24,7 +27,7 @@ test('dream song: set it in the profile, see progress and the next step on the d
   await expect(page.getByRole('button', { name: '«Für Elise» stoppen' })).toBeVisible();
   await page.getByRole('button', { name: 'Noten von «Für Elise»' }).click();
   const sheet = page.getByRole('dialog', { name: /Für Elise/ });
-  await expect(sheet.getByTestId('snippet-staff')).toHaveCount(3);
+  await expect(sheet.getByTestId('snippet-staff')).toHaveCount(2); // 9 bars: 5 + 4
   await sheet.getByRole('button', { name: 'Anhören' }).click();
   await expect(sheet.getByRole('button', { name: 'Stopp' })).toBeVisible();
   await audit(page);
@@ -53,6 +56,24 @@ test('dream song: set it in the profile, see progress and the next step on the d
   await expect(page.getByRole('checkbox', { name: /Sechsachteltakt/ })).toBeChecked();
   await expect(page.getByRole('checkbox', { name: /Improvisieren/ })).not.toBeChecked();
   await audit(page);
+  await page.getByRole('button', { name: 'Traumlied speichern' }).click();
+  await expect(page.getByText('Traumlied gespeichert.')).toBeVisible();
+
+  // own notes as the dream song: uploaded here, saved with the own pieces, linked from the card
+  await page.getByTestId('goal-upload').locator('input[type=file]').setInputFiles(musicXml);
+  await expect(page.getByTestId('goal-uploaded')).toContainText(
+    '«Mein erstes Lied» ist hochgeladen',
+  );
+  await expect(titleInput).toHaveValue('Mein erstes Lied');
+  await page.getByRole('button', { name: 'Traumlied speichern' }).click();
+  await expect(page.getByText('Traumlied gespeichert.')).toBeVisible();
+  await page.goto('/');
+  await expect(page.getByTestId('goal-card')).toContainText('Mein erstes Lied');
+  await page.getByTestId('goal-piece').click();
+  await expect(page.getByRole('heading', { name: 'Mein erstes Lied' })).toBeVisible();
+  // back to a catalogue title for the rest of the test
+  await page.goto('/profile#goal');
+  await titleInput.fill('Nothing Else Matters – Metallica');
   await page.getByRole('button', { name: 'Traumlied speichern' }).click();
   await expect(page.getByText('Traumlied gespeichert.')).toBeVisible();
 

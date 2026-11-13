@@ -20,20 +20,12 @@ import {
 } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import {
-  MAX_OWN_PIECES,
-  MidiImportError,
-  MusicXmlImportError,
-  importMusicXml,
-  midiToMusicXml,
-  type ImportedPiece,
-  type OwnPieceDto,
-} from '@klavio/shared';
+import { MAX_OWN_PIECES, type ImportedPiece, type OwnPieceDto } from '@klavio/shared';
 import { endpoints } from '../api/endpoints';
 import { useErrorText } from '../auth/useErrorText';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { notify } from '../components/notify';
-import { musicXmlText } from '../import/mxl';
+import { PieceReadError, readPieceFile } from '../import/readPiece';
 import { PreviewButton } from '../components/PreviewButton';
 
 /**
@@ -59,26 +51,11 @@ export function OwnPieces() {
     setDraft(null);
     setProblem(null);
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      setProblem(t('own.errors.TOO_BIG'));
-      return;
-    }
     try {
-      // a MIDI file goes through MusicXML (named after the file)
-      const midi = /\.midi?$/i.test(file.name);
-      const xml = midi
-        ? midiToMusicXml(new Uint8Array(await file.arrayBuffer()), {
-            title: file.name.replace(/\.midi?$/i, '').replace(/[-_]+/g, ' '),
-          })
-        : await musicXmlText(file);
-      setDraft(importMusicXml(xml));
+      setDraft(await readPieceFile(file));
     } catch (err) {
       setProblem(
-        err instanceof MusicXmlImportError
-          ? t(`own.errors.${err.code}`, { bar: err.bar })
-          : err instanceof MidiImportError
-            ? t('own.errors.NOT_MIDI')
-            : t('own.errors.NOT_MUSICXML'),
+        err instanceof PieceReadError ? t(`own.errors.${err.key}`, err.params) : errorText(err),
       );
     }
   };

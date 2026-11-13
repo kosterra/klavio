@@ -71,6 +71,7 @@ export function profileToDto(p: ProfileDoc): ProfileDto {
           title: p.goalSong.title,
           style: p.goalSong.style as GoalSong['style'],
           skills: (p.goalSong.skills ?? []) as GoalSong['skills'],
+          ...(p.goalSong.pieceId ? { pieceId: p.goalSong.pieceId } : {}),
         }
       : null,
   };

@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Traumlied: Hast du die Noten schon als MusicXML- oder MIDI-Datei? Lade sie direkt bei «Mein Traumlied» hoch – das Stück wird dein Traumlied, liegt zum Üben bei deinen Stücken, und die Traumlied-Karte führt mit einem Tipp hin.',
+        'Dream song: already have the sheet music as a MusicXML or MIDI file? Upload it right at «My dream song» – the piece becomes your dream song, lies with your pieces ready to practise, and the dream-song card takes you there with one tap.',
+      ),
+      L(
         'Traumlied: Klavio kennt doppelt so viele Lieder wie bisher – Pop der letzten Jahre (Billie Eilish, Taylor Swift, Adele, The Weeknd …), Film-, Serien- und Game-Musik, Einaudi, und Lieder aus der Schweiz und Deutschland von Mani Matter bis Lo & Leduc.',
         'Dream song: Klavio knows twice as many songs as before – pop of the last years (Billie Eilish, Taylor Swift, Adele, The Weeknd …), film, series and game music, Einaudi, and songs from Switzerland and Germany from Mani Matter to Lo & Leduc.',
       ),

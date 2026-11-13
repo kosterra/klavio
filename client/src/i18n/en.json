@@ -1038,6 +1038,14 @@
     "needs": "What does the song need?",
     "needsHint": "A suggestion for this song – adjust it as you like. Basics like reading notes are always included.",
     "copyright": "Klavio only stores the title – no notes. You get the sheet music of your dream song yourself later, for example as an “easy piano” edition.",
+    "upload": {
+      "title": "Or upload your own piece",
+      "hint": "Already have the sheet music as a MusicXML or MIDI file? Then the piece becomes your dream song and lands under «Songs» with your pieces, ready to practise.",
+      "button": "Upload sheet music",
+      "done": "«{{title}}» is uploaded and set as your dream song – save below.",
+      "open": "Open the piece"
+    },
+    "openPiece": "Practise your piece",
     "save": "Save dream song",
     "remove": "Remove dream song",
     "saved": "Dream song saved.",

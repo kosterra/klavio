@@ -1038,6 +1038,14 @@
     "needs": "Was braucht das Lied?",
     "needsHint": "Vorschlag passend zum Lied – du kannst anpassen. Grundlagen wie Noten lesen sind immer dabei.",
     "copyright": "Klavio speichert nur den Titel – keine Noten. Die Noten deines Traumlieds besorgst du dir später selbst, zum Beispiel als «Easy Piano»-Ausgabe.",
+    "upload": {
+      "title": "Oder lade dein eigenes Stück hoch",
+      "hint": "Hast du die Noten schon als MusicXML- oder MIDI-Datei? Dann wird das Stück dein Traumlied und landet zum Üben unter «Lieder» bei deinen Stücken.",
+      "button": "Noten hochladen",
+      "done": "«{{title}}» ist hochgeladen und als Traumlied eingetragen – speichere unten.",
+      "open": "Zum Stück"
+    },
+    "openPiece": "Dein Stück üben",
     "save": "Traumlied speichern",
     "remove": "Traumlied entfernen",
     "saved": "Traumlied gespeichert.",

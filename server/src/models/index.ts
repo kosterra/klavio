@@ -112,7 +112,13 @@ const profileSchema = new Schema(
     // the learner's goal song: only its title, a style and the skills it needs
     goalSong: {
       type: new Schema(
-        { title: String, style: String, skills: { type: [String], default: [] } },
+        {
+          title: String,
+          style: String,
+          skills: { type: [String], default: [] },
+          /** an own piece uploaded as the dream song */
+          pieceId: String,
+        },
         { _id: false },
       ),
       default: null,

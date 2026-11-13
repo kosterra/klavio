@@ -103,7 +103,7 @@ export function GoalSongPicks({
               {snippet && (
                 <div className={classes.pickActions}>
                   <ActionIcon
-                    variant={isPlaying ? 'filled' : 'light'}
+                    variant={isPlaying ? 'filled' : 'outline'}
                     color="pink.8"
                     size={44}
                     radius="xl"
@@ -115,7 +115,7 @@ export function GoalSongPicks({
                     {isPlaying ? <IconPlayerStop size={22} /> : <IconPlayerPlay size={22} />}
                   </ActionIcon>
                   <ActionIcon
-                    variant="light"
+                    variant="outline"
                     color="pink.8"
                     size={44}
                     radius="xl"

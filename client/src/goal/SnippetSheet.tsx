@@ -6,7 +6,8 @@ import { isHeldNote, type CatalogSong, type DreamSnippet } from '@klavio/shared'
 import { melodyNotes, startPreview, stopPreview, usePreview } from '../audio/preview';
 import { Staff, type StaffNote } from '../notation/Staff';
 
-const BARS_PER_LINE = 4;
+/** at most this many bars on a line; the bars are spread evenly over the lines */
+const MAX_BARS_PER_LINE = 5;
 
 /**
  * The opening of a dream song on the staff, line by line, with a button to
@@ -38,9 +39,11 @@ export function SnippetSheet({
 
   const lines: StaffNote[][][] = [];
   let index = 0;
-  for (let b = 0; b < snippet.bars.length; b += BARS_PER_LINE) {
+  const count = Math.ceil(snippet.bars.length / MAX_BARS_PER_LINE);
+  const perLine = Math.ceil(snippet.bars.length / count);
+  for (let b = 0; b < snippet.bars.length; b += perLine) {
     lines.push(
-      snippet.bars.slice(b, b + BARS_PER_LINE).map((bar) =>
+      snippet.bars.slice(b, b + perLine).map((bar) =>
         bar.map((n) => {
           const i = index++;
           return {
@@ -63,7 +66,7 @@ export function SnippetSheet({
       radius="lg"
       closeButtonProps={{ 'aria-label': t('common.close') }}
     >
-      <Stack gap="md">
+      <Stack gap="xs">
         <Text size="sm" c="dimmed">
           {t('goal.picks.sheetHint')}
         </Text>
@@ -83,7 +86,7 @@ export function SnippetSheet({
               keySignature={snippet.keySignature}
               time={line === 0 ? snippet.time : undefined}
               bars={bars}
-              height={150}
+              height={130}
               label={t('goal.picks.sheetLabel', { line: line + 1, lines: lines.length })}
             />
           </div>

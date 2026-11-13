@@ -92,11 +92,19 @@ export const calibrationSchema = z.object({
 });
 export type Calibration = z.infer<typeof calibrationSchema>;
 
-/** The song an (adult) learner would like to play one day – only its title is stored. */
+/**
+ * The song an (adult) learner would like to play one day – only its title is
+ * stored, or the id of an own piece they uploaded as their dream song.
+ */
 export const goalSongSchema = z.object({
   title: z.string().trim().min(1).max(80),
   style: z.enum(GOAL_STYLES),
   skills: z.array(z.enum(SKILL_IDS)).max(SKILL_IDS.length),
+  /** an own piece (MusicXML/MIDI upload) that is this dream song */
+  pieceId: z
+    .string()
+    .regex(/^[a-f0-9]{24}$/)
+    .optional(),
 });
 export type GoalSong = z.infer<typeof goalSongSchema>;
 

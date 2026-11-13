@@ -1,6 +1,20 @@
 import { useState } from 'react';
-import { Autocomplete, Button, Card, Chip, Group, Select, Stack, Text, Title } from '@mantine/core';
-import { IconMusicHeart, IconSparkles } from '@tabler/icons-react';
+import {
+  Alert,
+  Anchor,
+  Autocomplete,
+  Button,
+  Card,
+  Chip,
+  FileButton,
+  Group,
+  Select,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core';
+import { IconMusicHeart, IconSparkles, IconUpload } from '@tabler/icons-react';
+import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import {
   BASE_SKILLS,
@@ -14,8 +28,12 @@ import {
   songLabel,
   type GoalSong,
   type GoalStyle,
+  type OwnPieceDto,
   type SkillId,
 } from '@klavio/shared';
+import { endpoints } from '../api/endpoints';
+import { useErrorText } from '../auth/useErrorText';
+import { PieceReadError, readPieceFile } from '../import/readPiece';
 import { useLocalized } from '../lesson/useLocalized';
 import { GoalSongPicks } from './GoalSongPicks';
 
@@ -35,7 +53,15 @@ export function GoalSongEditor({
 }) {
   const { t } = useTranslation();
   const loc = useLocalized();
+  const errorText = useErrorText();
   const [title, setTitle] = useState(initial?.title ?? '');
+  // an own piece uploaded here: the dream song itself, not just a title
+  const [piece, setPiece] = useState<Pick<OwnPieceDto, 'id' | 'title'> | null>(
+    initial?.pieceId ? { id: initial.pieceId, title: initial.title } : null,
+  );
+  const [uploaded, setUploaded] = useState<OwnPieceDto | null>(null);
+  const [uploadProblem, setUploadProblem] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [style, setStyle] = useState<GoalStyle>(initial?.style ?? 'ballad');
   const [skills, setSkills] = useState<SkillId[]>(initial?.skills ?? GOAL_STYLE_SKILLS.ballad);
   const choosable = SKILL_IDS.filter((s) => !BASE_SKILLS.includes(s));
@@ -45,8 +71,34 @@ export function GoalSongEditor({
   // the suggestion last applied – a saved goal keeps its own choice until the title changes
   const [applied, setApplied] = useState(() => guessKey(recognizeSong(initial?.title ?? '')));
 
+  const upload = async (file: File | null) => {
+    if (!file) return;
+    setUploadProblem(null);
+    setUploading(true);
+    try {
+      const draft = await readPieceFile(file);
+      const saved = await endpoints.addPiece({
+        title: draft.title.slice(0, 120),
+        composer: draft.composer?.slice(0, 120) ?? null,
+        exercise: draft.exercise,
+        keyboard: draft.keyboard,
+      });
+      setUploaded(saved);
+      setPiece(saved);
+      setTitle(saved.title.slice(0, 80));
+      setApplied('');
+    } catch (err) {
+      setUploadProblem(
+        err instanceof PieceReadError ? t(`own.errors.${err.key}`, err.params) : errorText(err),
+      );
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const changeTitle = (value: string) => {
     setTitle(value);
+    if (piece && value !== piece.title) setPiece(null); // another title: no longer the uploaded piece
     const next = recognizeSong(value);
     const key = guessKey(next);
     if (next && key !== applied) {
@@ -61,7 +113,8 @@ export function GoalSongEditor({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (title.trim()) onSave({ title: title.trim(), style, skills });
+          if (title.trim())
+            onSave({ title: title.trim(), style, skills, ...(piece ? { pieceId: piece.id } : {}) });
         }}
       >
         <Stack gap="md">
@@ -142,6 +195,38 @@ export function GoalSongEditor({
                 </Text>
               ))}
           </Text>
+          <div data-testid="goal-upload">
+            <Text fw={500}>{t('goal.upload.title')}</Text>
+            <Text size="sm" c="dimmed" mb="xs">
+              {t('goal.upload.hint')}
+            </Text>
+            <FileButton onChange={(f) => void upload(f)} accept=".musicxml,.xml,.mxl,.mid,.midi">
+              {(props) => (
+                <Button
+                  {...props}
+                  variant="outline"
+                  color="pink.8"
+                  leftSection={<IconUpload size={18} />}
+                  loading={uploading}
+                >
+                  {t('goal.upload.button')}
+                </Button>
+              )}
+            </FileButton>
+            {uploaded && piece?.id === uploaded.id && (
+              <Alert color="pink" variant="light" mt="xs" data-testid="goal-uploaded">
+                {t('goal.upload.done', { title: uploaded.title })}{' '}
+                <Anchor component={Link} to={`/own/${uploaded.id}`} fw={700}>
+                  {t('goal.upload.open')}
+                </Anchor>
+              </Alert>
+            )}
+            {uploadProblem && (
+              <Alert color="red" variant="light" mt="xs" data-testid="goal-upload-problem">
+                {uploadProblem}
+              </Alert>
+            )}
+          </div>
           <Select
             label={t('goal.style')}
             data={GOAL_STYLES.map((s) => ({ value: s, label: t(`goal.styles.${s}`) }))}
