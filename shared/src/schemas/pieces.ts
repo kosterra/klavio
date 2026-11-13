@@ -37,7 +37,15 @@ export const songExerciseSchema = z.object({
     .max(64),
 }) satisfies z.ZodType<SongExercise>;
 
-const hand = z.array(z.object({ midi: midi.nullable(), value: rhythmValue })).max(32);
+const hand = z
+  .array(
+    z.object({
+      midi: midi.nullable(),
+      value: rhythmValue,
+      finger: z.number().int().min(1).max(5).optional(),
+    }),
+  )
+  .max(32);
 
 export const pieceExerciseSchema = z.object({
   type: z.literal('piece'),

@@ -160,6 +160,8 @@ export interface RhythmExercise {
 export interface PieceNote {
   midi: number | null;
   value: RhythmValue;
+  /** finger (1 = thumb … 5 = little finger), shown at the note */
+  finger?: number;
 }
 
 /**

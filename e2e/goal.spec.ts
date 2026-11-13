@@ -90,7 +90,8 @@ test('dream song: set it in the profile, see progress and the next step on the d
   // after the first two chapters the first skills are reached
   await seedCompletedLessons(
     page,
-    LESSONS.slice(0, 10).map((l) => l.id),
+    // up to the C major scale: the right hand is learned (the first goal skill reached)
+    LESSONS.slice(0, LESSONS.findIndex((l) => l.id === 'hand-scale') + 1).map((l) => l.id),
   );
   await page.reload();
   await expect(page.getByTestId('goal-percent')).not.toHaveText('0 %');

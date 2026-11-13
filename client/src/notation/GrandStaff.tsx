@@ -87,6 +87,14 @@ export function GrandStaff({ bars, time, height = 240, label, paper = false }: P
               0,
             );
           }
+          if (n.finger && !rest) {
+            note.addModifier(
+              new VF.Annotation(String(n.finger))
+                .setFont('Nunito Variable', 12, 'bold')
+                .setVerticalJustification(VF.Annotation.VerticalJustify.TOP),
+              0,
+            );
+          }
           if (n.state) note.setStyle({ fillStyle: COLORS[n.state], strokeStyle: COLORS[n.state] });
           return note;
         });

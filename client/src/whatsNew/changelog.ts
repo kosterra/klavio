@@ -23,6 +23,14 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Lernpfad: «Im Takt» kommt jetzt vor den ersten Liedern – mit Achteln und der punktierten Viertel, damit «Freude» und «Bruder Jakob» keine Überraschung mehr sind. Die linke Hand probiert schon im ersten Kapitel mit, und jedes neue Thema bekommt gleich ein Lied: «London Bridge» im Zweivierteltakt, «Row, Row, Row Your Boat» im Sechsachteltakt, «Bruder Jakob in Moll». Bei den Akkorden kommen zuerst die Akkorde selbst, dann gebrochen, dann der Wechselbass – und das Abschlusskonzert ganz am Schluss.',
+        'Learning path: «In time» now comes before the first songs – with eighths and the dotted quarter, so «Ode to Joy» and «Brother John» are no surprise any more. The left hand has a go in the very first chapter, and every new topic gets a song right away: «London Bridge» in two-four, «Row, Row, Row Your Boat» in six-eight, «Brother John in minor». With chords, the chords themselves come first, then broken, then the alternating bass – and the final concert at the very end.',
+      ),
+      L(
+        'Fingersätze jetzt auch in Stücken für beide Hände: Wo eine Hand wandert, stehen die Finger an den Noten – in der Lektion und auf dem Notenblatt.',
+        'Fingering now also in pieces for both hands: where a hand moves, the fingers are written at the notes – in the lesson and on the printed sheet.',
+      ),
+      L(
         'Traumlied: Hast du die Noten schon als MusicXML- oder MIDI-Datei? Lade sie direkt bei «Mein Traumlied» hoch – das Stück wird dein Traumlied, liegt zum Üben bei deinen Stücken, und die Traumlied-Karte führt mit einem Tipp hin.',
         'Dream song: already have the sheet music as a MusicXML or MIDI file? Upload it right at «My dream song» – the piece becomes your dream song, lies with your pieces ready to practise, and the dream-song card takes you there with one tap.',
       ),

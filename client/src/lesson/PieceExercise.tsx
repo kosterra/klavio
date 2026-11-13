@@ -11,7 +11,13 @@ import {
 import { useMediaQuery } from '@mantine/hooks';
 import { IconPlayerPlay, IconPlayerStop } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { beatsOf, midiToPitchName, pieceSteps, type PieceExercise as Spec } from '@klavio/shared';
+import {
+  beatsOf,
+  midiToPitchName,
+  pieceFingers,
+  pieceSteps,
+  type PieceExercise as Spec,
+} from '@klavio/shared';
 import { inputHub, useNoteEvents } from '../input/noteBus';
 import { playMelody, type Playback } from '../audio/synth';
 import { BuddySays } from '../components/BuddySays';
@@ -46,6 +52,7 @@ export function PieceExercise({
   const wide = useMediaQuery('(min-width: 900px)', true);
   const barsPerLine = wide ? 3 : 2;
   const steps = useMemo(() => pieceSteps(exercise), [exercise]);
+  const fingers = useMemo(() => pieceFingers(exercise), [exercise]);
   // which step each note belongs to (for highlighting)
   const stepOf = useMemo(() => {
     const m = new Map<string, number>();
@@ -206,8 +213,9 @@ export function PieceExercise({
   const toStaff = (b: number, hand: 'rh' | 'lh') =>
     exercise.bars[b]![hand].map((n, i): StaffNote => ({
       midi: n.midi ?? 60,
-      duration: n.midi === null ? n.value : n.value,
+      duration: n.value,
       label: exercise.showNames && n.midi !== null ? midiToPitchName(n.midi, lang) : undefined,
+      finger: fingers[b]![hand][i],
       state: n.midi === null ? undefined : stateOf(`${b}-${hand}-${i}`),
     }));
   const staffBars = exercise.bars

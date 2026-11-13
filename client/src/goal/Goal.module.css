@@ -186,3 +186,9 @@ li[data-state='later'] .skill {
 :global([data-mantine-color-scheme='dark']) .pickChapter {
   color: var(--mantine-color-pink-3);
 }
+
+/* «anhören» and «Noten» in outline: pink 8 is too dark on the dark surface */
+:global([data-mantine-color-scheme='dark']) .pickAction[data-variant='outline'] {
+  --ai-color: var(--mantine-color-pink-3);
+  --ai-bd: 1px solid var(--mantine-color-pink-3);
+}

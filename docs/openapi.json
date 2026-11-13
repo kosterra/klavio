@@ -1517,6 +1517,11 @@
                                           "hr",
                                           "wr"
                                         ]
+                                      },
+                                      "finger": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 5
                                       }
                                     },
                                     "required": [
@@ -1556,6 +1561,11 @@
                                           "hr",
                                           "wr"
                                         ]
+                                      },
+                                      "finger": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 5
                                       }
                                     },
                                     "required": [

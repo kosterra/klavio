@@ -151,7 +151,7 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       hint: L('Grundton C, und fünf Töne weiter: G.', 'Root C, and five notes up: G.'),
     },
   ],
-  'accomp-broken': [
+  'accomp-chords': [
     {
       type: 'explain',
       text: L(
@@ -173,8 +173,6 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
         'From F, always skip one white key.',
       ),
     },
-  ],
-  'accomp-chords': [
     {
       type: 'explain',
       text: L(
@@ -190,6 +188,16 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       ),
       answers: [{ text: L('F', 'F') }, { text: L('G', 'G'), correct: true }, { text: L('C', 'C') }],
       hint: L('Lies nochmals oben nach.', 'Read the text above once more.'),
+    },
+  ],
+  'accomp-broken': [
+    {
+      type: 'explain',
+      text: L(
+        'Gebrochen heisst: Die Töne des Akkords kommen nacheinander – von unten nach oben und wieder zurück. So wird aus drei Tönen eine Begleitung, die fliesst.',
+        'Broken means: the notes of the chord come one after the other – from the bottom up and back again. That way three notes become an accompaniment that flows.',
+      ),
+      picture: { kind: 'keyboard', from: 48, to: 60, labels: 'all', marks: [48, 52, 55] },
     },
   ],
   'meter-eighths': [
@@ -223,6 +231,37 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       hint: L(
         'Zähl «eins-und»: zwei Achtel auf einen Schlag.',
         'Count «one-and»: two eighths on one beat.',
+      ),
+    },
+  ],
+  'rhythm-dotted': [
+    {
+      type: 'explain',
+      text: L(
+        'Ein Punkt hinter einer Note macht sie um die Hälfte länger. Eine Viertel dauert einen Schlag – mit Punkt anderthalb. Der halbe Schlag, der im Takt noch fehlt, ist meistens eine Achtel gleich danach.',
+        'A dot after a note makes it half as long again. A quarter lasts one beat – with a dot, one and a half. The half beat still missing in the bar is usually an eighth right after it.',
+      ),
+    },
+    {
+      type: 'clap',
+      text: L(
+        'Klatsch mit: punktierte Viertel, Achtel, Viertel, Viertel.',
+        'Tap along: dotted quarter, eighth, quarter, quarter.',
+      ),
+      tempo: 72,
+      pattern: ['qd', '8', 'q', 'q'],
+    },
+    {
+      type: 'quiz',
+      text: L('Wie lange dauert eine punktierte Viertel?', 'How long does a dotted quarter last?'),
+      answers: [
+        { text: L('Einen Schlag', 'One beat') },
+        { text: L('Anderthalb Schläge', 'One and a half beats'), correct: true },
+        { text: L('Zwei Schläge', 'Two beats') },
+      ],
+      hint: L(
+        'Der Punkt gibt die Hälfte dazu: ein Schlag und ein halber.',
+        'The dot adds half: one beat and a half.',
       ),
     },
   ],

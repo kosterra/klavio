@@ -95,6 +95,9 @@ Melodie:
 piece('C4/q D4/q E4/q F4/q | G4/h G4/h', 'C3/w | C3/h r/h', { tempo: 90, showNames: true });
 ```
 
+Fingersätze: `:n` hinter einer Note (`E4/q:3`), in Liedern und in beiden Stimmen eines Stücks. Ohne
+Angabe plant Klavio die Finger selbst und zeigt sie nur dort, wo die Hand wandert.
+
 **Improvisieren** – freies Spiel auf den schwarzen Tasten zu einer Begleitung, nichts ist falsch;
 fertig nach `bars` Takten mit mindestens `minNotes` Tönen:
 

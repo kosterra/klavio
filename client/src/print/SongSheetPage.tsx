@@ -10,6 +10,7 @@ import {
   isLessonUnlocked,
   localIsoDate,
   midiToPitchName,
+  pieceFingers,
   songFingers,
   type Exercise,
   type PieceExercise,
@@ -126,17 +127,23 @@ export function SheetView({
 
   let music: React.ReactNode;
   if (exercise.type === 'piece') {
-    const toStaff = (notes: PieceExercise['bars'][number]['rh']): StaffNote[] =>
-      notes.map((n) => ({
+    const planned = pieceFingers(exercise);
+    const toStaff = (b: number, hand: 'rh' | 'lh'): StaffNote[] =>
+      exercise.bars[b]![hand].map((n, i) => ({
         midi: n.midi ?? 60,
         duration: n.value,
         label: n.midi === null ? undefined : name(n.midi),
+        finger: fingers ? planned[b]![hand][i] : undefined,
       }));
+    const at = new Map(exercise.bars.map((bar, b) => [bar, b]));
     music = lines(exercise.bars, per).map((line, i) => (
       <div key={i} className={classes.line} style={{ width: lineWidth(line.length, i, per) }}>
         <GrandStaff
           paper
-          bars={line.map((b) => ({ rh: toStaff(b.rh), lh: toStaff(b.lh) }))}
+          bars={line.map((bar) => {
+            const b = at.get(bar)!;
+            return { rh: toStaff(b, 'rh'), lh: toStaff(b, 'lh') };
+          })}
           time={i === 0 ? exercise.time : undefined}
           height={195}
           label={t('sheet.lineLabel', { n: i + 1 })}
@@ -177,7 +184,10 @@ export function SheetView({
       </div>
     ));
   }
-  const hasFingers = exercise.type !== 'piece' && songFingers(exercise).some((f) => f);
+  const hasFingers =
+    exercise.type === 'piece'
+      ? pieceFingers(exercise).some((b) => [...b.rh, ...b.lh].some((f) => f))
+      : songFingers(exercise).some((f) => f);
 
   return (
     <div className={classes.page} data-kids={kids || undefined}>

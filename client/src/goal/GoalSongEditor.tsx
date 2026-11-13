@@ -204,8 +204,7 @@ export function GoalSongEditor({
               {(props) => (
                 <Button
                   {...props}
-                  variant="outline"
-                  color="pink.8"
+                  variant="default"
                   leftSection={<IconUpload size={18} />}
                   loading={uploading}
                 >

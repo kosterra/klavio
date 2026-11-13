@@ -29,8 +29,9 @@ describe('skills', () => {
   });
 
   it('a skill is reached when every lesson teaching it is done', () => {
-    expect(isSkillReached('note-values', done(['rhythm-quarters']))).toBe(false);
-    expect(isSkillReached('note-values', done(['rhythm-quarters', 'rhythm-rests']))).toBe(true);
+    const values = ['rhythm-quarters', 'rhythm-rests', 'rhythm-dotted', 'song-london'];
+    expect(isSkillReached('note-values', done(values.slice(0, 3)))).toBe(false);
+    expect(isSkillReached('note-values', done(values))).toBe(true);
     expect(isSkillReached('pedal', done(LESSONS.map((l) => l.id)))).toBe(true);
     // every skill is taught somewhere now
     expect(SKILL_IDS.every((id) => isSkillTaught(id))).toBe(true);
@@ -51,17 +52,18 @@ describe('skills', () => {
 
   it('the next step is the earliest open lesson, never one further ahead', () => {
     // the lessons of the path (bonus lessons don't count)
-    const firstTen = done(CORE_LESSONS.slice(0, 10).map((l) => l.id));
-    // songs (chapter 4) are still needed, but reading notes (chapter 3) comes first
-    expect(goalProgress([], firstTen).next).toEqual({
+    // everything before reading: rhythm and songs are still needed, but reading comes first
+    const reading = CORE_LESSONS.findIndex((l) => l.id === 'read-c-d-e');
+    const before = done(CORE_LESSONS.slice(0, reading).map((l) => l.id));
+    expect(goalProgress([], before).next).toEqual({
       skill: 'treble-clef',
-      lessonId: CORE_LESSONS[10]!.id,
+      lessonId: 'read-c-d-e',
     });
   });
 
   it('reports milestones only when a goal skill is completed', () => {
-    const before = done(['rhythm-quarters']);
-    expect(newlyReachedGoalSkills([], before, 'rhythm-rests')).toEqual(['note-values']);
+    const before = done(['rhythm-quarters', 'rhythm-rests', 'rhythm-dotted']);
+    expect(newlyReachedGoalSkills([], before, 'song-london')).toEqual(['note-values']);
     expect(newlyReachedGoalSkills([], done([]), 'rhythm-quarters')).toEqual([]);
   });
 });

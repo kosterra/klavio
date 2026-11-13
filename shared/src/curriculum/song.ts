@@ -184,8 +184,8 @@ export function rhythm(
 }
 
 /**
- * One hand of a piece: "C4/q D4/q r/h | …"; "r/<value>" is a rest. Every bar
- * must be full (checked against `time`).
+ * One hand of a piece: "C4/q D4/q r/h | …"; "r/<value>" is a rest, ":n" after
+ * a note its finger ("E4/q:3"). Every bar must be full (checked against `time`).
  */
 function parsePart(part: string, time: string, hand: string): PieceNote[][] {
   const beatsPerBar = barBeats(time);
@@ -195,7 +195,8 @@ function parsePart(part: string, time: string, hand: string): PieceNote[][] {
     .filter(Boolean)
     .map((bar, i) => {
       const notes = bar.split(/\s+/).map((token): PieceNote => {
-        const [pitch, value = 'q'] = token.split('/');
+        const [note, fingerText] = token.split(':');
+        const [pitch, value = 'q'] = note!.split('/');
         if (pitch === 'r') {
           const rest = (value.endsWith('r') ? value : `${value}r`) as RhythmValue;
           if (!(rest in VALUES)) throw new Error(`Unknown rest "${token}" (${hand}, bar ${i + 1})`);
@@ -204,7 +205,15 @@ function parsePart(part: string, time: string, hand: string): PieceNote[][] {
         if (!(value in VALUES) || value.endsWith('r')) {
           throw new Error(`Unknown note value "${value}" (${hand}, bar ${i + 1})`);
         }
-        return { midi: noteNameToMidi(pitch!), value: value as RhythmValue };
+        const finger = fingerText === undefined ? undefined : Number(fingerText);
+        if (finger !== undefined && !(finger >= 1 && finger <= 5)) {
+          throw new Error(`Unknown finger "${fingerText}" (${hand}, bar ${i + 1})`);
+        }
+        return {
+          midi: noteNameToMidi(pitch!),
+          value: value as RhythmValue,
+          ...(finger ? { finger } : {}),
+        };
       });
       const beats = notes.reduce((n, x) => n + VALUES[x.value], 0);
       if (beats !== beatsPerBar) {

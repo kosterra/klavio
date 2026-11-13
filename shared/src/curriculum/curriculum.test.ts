@@ -91,7 +91,8 @@ describe('curriculum data', () => {
     const third = LESSONS.find((l, i) => i > 1 && !LESSONS[i - 1]!.bonus)!.id;
     expect(isLessonUnlocked(third, new Set([first, third]))).toBe(true);
     expect(nextLesson(new Set([first])).id).toBe(second);
-    expect(nextLesson(new Set(LESSONS.map((l) => l.id))).id).toBe(LESSONS.at(-1)!.id);
+    // all done: the last lesson of the path (a bonus lesson at the very end doesn't count)
+    expect(nextLesson(new Set(LESSONS.map((l) => l.id))).id).toBe(CORE_LESSONS.at(-1)!.id);
   });
 });
 
@@ -249,8 +250,8 @@ describe('bonus lessons', () => {
     expect(isLessonUnlocked('song-jakob', done)).toBe(true);
     expect(isLessonUnlocked('song-macdonald', done)).toBe(true);
     // the path goes on without them
-    expect(isLessonUnlocked('rhythm-quarters', done)).toBe(true);
-    expect(nextLesson(done).id).toBe('rhythm-quarters');
+    expect(isLessonUnlocked('bass-hand', done)).toBe(true);
+    expect(nextLesson(done).id).toBe('bass-hand');
     expect(CORE_LESSONS.some((l) => l.bonus)).toBe(false);
   });
 });

@@ -26,7 +26,8 @@ test('a new profile starts with a few questions: instrument, goal, dream song, w
 
   // --- dream song: picked with one tap, with the skills it needs
   await expect(page.getByTestId('goal-picks')).toBeVisible();
-  const elise = page.getByRole('button', { name: /Für Elise/ });
+  // the pick itself (its name starts with the title; «anhören» and «Noten» are buttons of their own)
+  const elise = page.getByRole('button', { name: /^Für Elise/ });
   await expect(elise).toContainText('Braucht 15 Fähigkeiten');
   await elise.click();
   await expect(elise).toHaveAttribute('aria-pressed', 'true');

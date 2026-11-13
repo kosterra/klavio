@@ -105,6 +105,7 @@ export function GoalSongPicks({
                   <ActionIcon
                     variant={isPlaying ? 'filled' : 'outline'}
                     color="pink.8"
+                    className={classes.pickAction}
                     size={44}
                     radius="xl"
                     aria-label={t(isPlaying ? 'goal.picks.stop' : 'goal.picks.listen', {
@@ -117,6 +118,7 @@ export function GoalSongPicks({
                   <ActionIcon
                     variant="outline"
                     color="pink.8"
+                    className={classes.pickAction}
                     size={44}
                     radius="xl"
                     aria-label={t('goal.picks.sheet', { title: song.title })}
