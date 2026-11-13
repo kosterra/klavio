@@ -67,6 +67,7 @@ export function profileToDto(p: ProfileDoc): ProfileDto {
     weeklyGoalDays: p.weeklyGoalDays ?? null,
     playOn: (p.playOn as PlayOn | null | undefined) ?? null,
     pathOff: p.pathOff ?? false,
+    hasPin: !!p.pinHash,
     goalSong: p.goalSong?.title
       ? {
           title: p.goalSong.title,
@@ -248,6 +249,9 @@ const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
 
   /** Select the active profile for this session (profile picker after login). */
   app.post('/select', { schema: { body: selectProfileSchema } }, async (req) => {
+    // a child who logged in with their PIN stays in their own profile
+    if (req.auth!.childLogin && req.auth!.activeProfileId?.toString() !== req.body.profileId)
+      throw new HttpError(403, 'CHILD_LOGIN');
     const owns = await Profile.exists({ _id: req.body.profileId, userId: req.auth!.user._id });
     if (!owns) throw notFound();
     // Choosing a learner's profile hands the device over: the parent area locks again.

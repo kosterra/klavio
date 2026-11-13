@@ -143,9 +143,10 @@ function Offline() {
 }
 
 function AnonymousOnly() {
-  const { status } = useSession();
+  const { status, me } = useSession();
   if (status === 'loading') return <FullPageLoader />;
-  if (status === 'authenticated') return <Navigate to="/profiles" replace />;
+  if (status === 'authenticated')
+    return <Navigate to={me?.childLogin ? '/' : '/profiles'} replace />;
   return <Outlet />;
 }
 

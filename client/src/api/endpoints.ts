@@ -19,6 +19,8 @@ import type {
   MailTemplateDto,
   MailTemplateId,
   MailTemplateTexts,
+  DeviceDto,
+  DeviceProfilesResponse,
 } from '@klavio/shared';
 import { mailLangOf, type PieceLevel } from '@klavio/shared';
 import i18n from '../i18n';
@@ -111,6 +113,19 @@ export const endpoints = {
   logoutOtherDevices: () => api<{ loggedOut: number }>('POST', '/account/sessions/logout-others'),
   setParentPin: (pin: string) => api('PUT', '/account/pin', { pin }),
   removeParentPin: () => api('DELETE', '/account/pin'),
+  /** a learner's own PIN, for logging in on a child's device (parent area) */
+  setProfilePin: (profileId: string, pin: string) =>
+    api('PUT', `/profiles/${encodeURIComponent(profileId)}/pin`, { pin }),
+  removeProfilePin: (profileId: string) =>
+    api('DELETE', `/profiles/${encodeURIComponent(profileId)}/pin`),
+  devices: () => api<DeviceDto[]>('GET', '/devices'),
+  /** this browser becomes a child's device */
+  addDevice: (name: string) => api<DeviceDto>('POST', '/devices', { name }),
+  removeDevice: (id: string) => api('DELETE', `/devices/${encodeURIComponent(id)}`),
+  /** «Wer spielt?» on a child's device (404: not one) */
+  deviceProfiles: () => api<DeviceProfilesResponse>('GET', '/device/profiles'),
+  childLogin: (profileId: string, pin: string) =>
+    api<{ activeProfileId: string }>('POST', '/device/login', { profileId, pin }),
   verifyParentPin: (pin: string) =>
     api<{ unlockedUntil: string | null }>('POST', '/account/pin/verify', { pin }),
   lockParentArea: () => api('POST', '/account/pin/lock'),

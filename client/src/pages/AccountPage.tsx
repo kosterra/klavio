@@ -19,6 +19,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { notify } from '../components/notify';
 import { AboutCard } from '../components/AboutApp';
 import { TestimonialCard } from '../components/TestimonialCard';
+import { ChildDevicesCard } from '../auth/ChildDevices';
 import { ParentPinSettings } from '../auth/parent';
 import {
   IconCloud,
@@ -303,6 +304,8 @@ export function AccountPage() {
       </Card>
 
       <ParentPinSettings />
+
+      <ChildDevicesCard />
 
       {/* --------------------------------------------------- weekly report */}
       <Card withBorder radius="lg" padding="lg" data-testid="weekly-report">

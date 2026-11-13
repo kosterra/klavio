@@ -11,6 +11,7 @@ import {
   Profile,
   Session,
   User,
+  Device,
 } from '../models/index.js';
 
 /** Deletes an account with everything that belongs to it. */
@@ -27,6 +28,7 @@ export async function deleteAccount(userId: Types.ObjectId) {
     Passkey.deleteMany({ userId }),
     EmailCode.deleteMany({ userId }),
     Session.deleteMany({ userId }),
+    Device.deleteMany({ userId }),
   ]);
   await User.deleteOne({ _id: userId });
 }

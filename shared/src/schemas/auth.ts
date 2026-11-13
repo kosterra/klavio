@@ -83,6 +83,8 @@ export interface MeResponse {
     };
   };
   activeProfileId: string | null;
+  /** a child logged in with their own PIN: this profile only, the parent area needs the parent PIN */
+  childLogin: boolean;
 }
 
 export interface PasskeyDto {

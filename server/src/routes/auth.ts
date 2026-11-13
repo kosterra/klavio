@@ -72,6 +72,7 @@ const authRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, { c
         },
       },
       activeProfileId: activeProfileId?.toString() ?? null,
+      childLogin: req.auth!.childLogin,
     };
   });
 };

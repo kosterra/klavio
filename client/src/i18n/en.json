@@ -217,7 +217,8 @@
       "pending": "{{count}} result has not been sent yet. Signing out loses it – better wait until you are online again.",
       "pending_other": "{{count}} results have not been sent yet. Signing out loses them – better wait until you are online again.",
       "stay": "Stay signed in",
-      "go": "Sign out"
+      "go": "Sign out",
+      "textChild": "You then sign in again with your PIN."
     },
     "menu": "Menu",
     "input": "Microphone and MIDI",
@@ -813,7 +814,8 @@
     "passkeySettingNeedsPasskey": "Set up a passkey above first.",
     "resetSent": "We sent a code to {{email}}. Enter it here – the PIN is then removed and the parent area opens.",
     "resetCode": "Code from the e-mail",
-    "resetHint": "Afterwards you can set a new PIN under «Konto»."
+    "resetHint": "Afterwards you can set a new PIN under «Konto».",
+    "childLogin": "A child is signed in here with their PIN. Only the parent PIN opens the parent area – none is set. Sign out and sign in as a parent."
   },
   "profileSettings": {
     "title": "My profile",
@@ -1636,5 +1638,46 @@
     "4": "Advanced",
     "5": "Demanding",
     "ready": "Ready now"
+  },
+  "childLogin": {
+    "who": "Who’s playing?",
+    "hello": "Hello {{name}}!",
+    "enterPin": "Type your PIN.",
+    "pin": "PIN of {{name}}",
+    "go": "Let’s go",
+    "notMe": "That’s not me",
+    "wrong": "That PIN is not right – try again.",
+    "locked": "Too many tries. Wait a few minutes or ask your parents.",
+    "failed": "That didn’t work – try again.",
+    "parent": "Parents: sign in here",
+    "back": "Back to «Who’s playing?»"
+  },
+  "childPin": {
+    "title": "Sign in with a PIN",
+    "intro": "With a PIN of their own, {{name}} signs in on a device for the children – without e-mail and without you. You set up the device under «Account».",
+    "isSet": "{{name}} has a PIN and can sign in on the children’s devices.",
+    "set": "Set a PIN",
+    "change": "Change the PIN",
+    "remove": "Remove the PIN",
+    "enter": "New PIN (4 digits)",
+    "confirm": "Enter the PIN again",
+    "mismatch": "The two PINs are not the same – enter them again.",
+    "saved": "{{name}} now signs in with the PIN."
+  },
+  "devices": {
+    "title": "Devices for the children",
+    "intro": "On a device for the children Klavio shows «Who’s playing?»: every child taps their figure and enters their own PIN. A child then stays in their profile; only the parent PIN opens the parent area.",
+    "noPins": "First set a PIN for each child: choose the profile → «My profile» → «Sign in with a PIN».",
+    "whoCan": "With a PIN: {{names}}",
+    "this": "this device",
+    "lastUsed": "last used on {{date}}",
+    "since": "set up on {{date}}",
+    "remove": "Remove",
+    "removeLabel": "Remove the device «{{name}}»",
+    "removed": "«{{name}}» is no longer a device for the children.",
+    "name": "Name of the device",
+    "defaultName": "Piano",
+    "setUpHint": "Set up the device the children practise on – you will be signed out. You can sign in there again at any time with «Parents: sign in here».",
+    "setUp": "Set up this device"
   }
 }

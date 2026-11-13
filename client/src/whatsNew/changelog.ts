@@ -31,6 +31,10 @@ export const CHANGELOG: Release[] = [
         'MuseTrainer sheet music library: when the admin switches it on, you fetch piano pieces from the public-domain MuseTrainer collection under «Own pieces» – from «Für Elise» to the Minuet in G. The «Hörprobe» lets you hear each piece before you take it over; each shows how hard it is, the easy ones first.',
       ),
       L(
+        'Kinder melden sich selbst an: Im Elternbereich bekommt jedes Kind eine eigene PIN, und unter «Konto» richtest du ein Gerät für die Kinder ein. Dort zeigt Klavio «Wer spielt?» – Figur antippen, PIN eingeben, los. Ein Kind bleibt in seinem Profil; den Elternbereich öffnet nur die Eltern-PIN.',
+        'Children sign in on their own: in the parent area every child gets a PIN of their own, and under «Account» you set up a device for the children. There Klavio shows «Who’s playing?» – tap the figure, enter the PIN, off you go. A child stays in their profile; only the parent PIN opens the parent area.',
+      ),
+      L(
         'Notenbibliothek Mutopia Project: Wenn die Verwaltung sie einschaltet, findest du rund 600 Klavierstücke des Mutopia Project – von Bach bis Burgmüller, jedes mit seiner Lizenz, die mit dem Stück gespeichert und beim Drucken genannt wird.',
         'Mutopia Project sheet music library: when the admin switches it on, you find about 600 piano pieces of the Mutopia Project – from Bach to Burgmüller, each with its licence, which is stored with the piece and named on prints.',
       ),

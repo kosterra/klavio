@@ -16,6 +16,7 @@ export function useParentUnlocked(): boolean {
   const { me } = useSession();
   const now = useNow();
   const pin = me?.user.parentPin;
-  if (!pin?.set) return true;
+  // a child's PIN login opens the parent area only with the parent PIN
+  if (!pin?.set) return !me?.childLogin;
   return !!pin.unlockedUntil && new Date(pin.unlockedUntil).getTime() > now;
 }

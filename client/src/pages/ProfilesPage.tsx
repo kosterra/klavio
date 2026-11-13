@@ -14,7 +14,7 @@ import {
 } from '@mantine/core';
 import { IconFingerprint, IconPlus } from '@tabler/icons-react';
 import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
-import { useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { usePageTitle } from '../components/usePageTitle';
 import { WorldPanorama } from '../lesson/WorldPanorama';
@@ -71,6 +71,9 @@ export function ProfilesPage() {
       setBusy(false);
     }
   };
+
+  // a child logged in with their PIN does not pick another profile
+  if (me?.childLogin) return <Navigate to="/" replace />;
 
   return (
     <Stack mih="100dvh" justify="space-between" gap={0}>

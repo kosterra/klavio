@@ -23,6 +23,7 @@ import { WorldPanorama } from '../lesson/WorldPanorama';
 import { CHAPTER_COLORS, chapterVars, type KidsWorldId } from '../lesson/worlds';
 import { LoginCard } from '../landing/LoginCard';
 import { ShortWelcome } from '../landing/ShortWelcome';
+import { useChildDevice } from '../auth/childDevice';
 import { TryKeyboard } from '../landing/TryKeyboard';
 import { ThemeSwitch } from '../landing/ThemeSwitch';
 import { LanguageSwitch } from '../landing/LanguageSwitch';
@@ -77,7 +78,10 @@ function Phone({ shot, alt, eager = false }: { shot: string; alt: string; eager?
 export function WelcomePage() {
   usePageTitle(null, '/welcome');
   const { config } = useSession();
-  return config?.publicPage ? <FullWelcome /> : <ShortWelcome />;
+  // a child's device: straight to «Wer spielt?», no tour
+  const device = useChildDevice();
+  if (device === undefined) return null;
+  return config?.publicPage && !device ? <FullWelcome /> : <ShortWelcome />;
 }
 
 /**

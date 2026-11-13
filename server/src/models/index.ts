@@ -64,6 +64,8 @@ const sessionSchema = new Schema(
     activeProfileId: { type: Schema.Types.ObjectId, ref: 'Profile', default: null },
     /** Parent area (PIN-protected) open until then; set by entering the PIN (or resetting it by e-mail). */
     parentUnlockedUntil: { type: Date, default: null },
+    /** a child logged in with their PIN on a child's device: only this profile */
+    childProfileId: { type: Schema.Types.ObjectId, ref: 'Profile', default: null },
     expiresAt: { type: Date, required: true },
   },
   { timestamps: true },
@@ -97,6 +99,8 @@ const profileSchema = new Schema(
     playOn: { type: String, enum: ['piano', 'screen', null], default: null },
     /** the learning path is switched off (advanced players): every lesson open */
     pathOff: { type: Boolean, default: false },
+    /** HMAC of the learner's own PIN (logging in on a child's device); null: none */
+    pinHash: { type: String, default: null },
     calibration: {
       a4Hz: { type: Number, default: 440 },
       noiseFloorDb: { type: Number, default: null },
@@ -278,6 +282,22 @@ const libraryCacheSchema = new Schema({
   data: { type: Schema.Types.Mixed, required: true },
 });
 export const LibraryCache = model('LibraryCache', libraryCacheSchema);
+
+// ---------------------------------------------------------------------------
+// Child's device: a browser a parent set up for the children – it shows
+// «Wer spielt?» and lets a child log in with their own PIN
+// ---------------------------------------------------------------------------
+const deviceSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    /** SHA-256 of the device cookie */
+    tokenHash: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    lastUsedAt: { type: Date, default: null },
+  },
+  { timestamps: true },
+);
+export const Device = model('Device', deviceSchema);
 
 // ---------------------------------------------------------------------------
 // Testimonial: a few words from a family, shown publicly once an admin approved them
