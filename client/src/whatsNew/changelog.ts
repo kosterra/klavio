@@ -20,7 +20,7 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
-    version: UPCOMING,
+    version: '2026.11.6',
     changes: [
       L(
         'Geräte für die Kinder: Wer sich mit seiner PIN anmeldet, sieht weder Konto noch Elternbereich – Eltern melden sich auf dem Gerät über «Eltern: hier anmelden» an.',
