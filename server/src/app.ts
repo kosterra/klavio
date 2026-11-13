@@ -89,7 +89,7 @@ export async function buildApp({
   if (withRateLimit) {
     await app.register(rateLimit, {
       global: true,
-      max: 300,
+      max: config.API_RATE_LIMIT,
       timeWindow: '1 minute',
       // only the API: the app's own files (one page load fetches dozens) are not counted
       allowList: (req) => !req.url.startsWith('/api/'),

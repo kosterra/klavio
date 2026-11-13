@@ -70,6 +70,8 @@ jobs:
         run: |
           cp .env.example .env
           sed -i "s|^AUTH_SECRET=.*|AUTH_SECRET=$(openssl rand -base64 48 | tr -d '\n/+=')|" .env
+          # all tests come from one address: the per-address limit would trip in a busy minute
+          echo "API_RATE_LIMIT=5000" >> .env
       - run: docker compose up -d --wait mongo mailpit
       - name: Start the app
         run: |

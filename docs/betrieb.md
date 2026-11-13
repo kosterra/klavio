@@ -179,6 +179,7 @@ nennt die Variable):
 | `RP_ID`                     | `localhost`                        | WebAuthn-Domain, ohne Schema und Port. In Docker = `SITE_ADDRESS`.                         |
 | `COOKIE_SECURE`             | `true`                             | Session-Cookie nur über HTTPS. Nur für `http://localhost` auf `false`.                     |
 | `SESSION_TTL_DAYS`          | `60`                               | Wie lange eine Anmeldung gilt.                                                             |
+| `API_RATE_LIMIT`            | `300`                              | API-Anfragen pro Minute und Adresse. Die Browser-Tests in CI setzen es höher.              |
 | `REGISTRATION_OPEN_DEFAULT` | `true`                             | Anfangswert des Schalters «Registrierung»; danach gilt der Wert aus der App.               |
 | `MONGO_URL`                 | `mongodb://localhost:27017/klavio` | In Docker gesetzt.                                                                         |
 | `SMTP_HOST`                 | –                                  | Ohne SMTP-Server werden Mails nur ins Log geschrieben (nur für Entwicklung).               |

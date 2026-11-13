@@ -57,7 +57,7 @@ test('dream song: set it in the profile, see progress and the next step on the d
   await expect(page.getByRole('checkbox', { name: /Improvisieren/ })).not.toBeChecked();
   await audit(page);
   await page.getByRole('button', { name: 'Traumlied speichern' }).click();
-  await expect(page.getByText('Traumlied gespeichert.')).toBeVisible();
+  await expect(page.getByText('Traumlied gespeichert.').last()).toBeVisible();
 
   // own notes as the dream song: uploaded here, saved with the own pieces, linked from the card
   await page.getByTestId('goal-upload').locator('input[type=file]').setInputFiles(musicXml);
@@ -66,7 +66,7 @@ test('dream song: set it in the profile, see progress and the next step on the d
   );
   await expect(titleInput).toHaveValue('Mein erstes Lied');
   await page.getByRole('button', { name: 'Traumlied speichern' }).click();
-  await expect(page.getByText('Traumlied gespeichert.')).toBeVisible();
+  await expect(page.getByText('Traumlied gespeichert.').last()).toBeVisible();
   await page.goto('/');
   await expect(page.getByTestId('goal-card')).toContainText('Mein erstes Lied');
   await page.getByTestId('goal-piece').click();
@@ -75,7 +75,7 @@ test('dream song: set it in the profile, see progress and the next step on the d
   await page.goto('/profile#goal');
   await titleInput.fill('Nothing Else Matters – Metallica');
   await page.getByRole('button', { name: 'Traumlied speichern' }).click();
-  await expect(page.getByText('Traumlied gespeichert.')).toBeVisible();
+  await expect(page.getByText('Traumlied gespeichert.').last()).toBeVisible();
 
   // dashboard card: 0 % at the start, the first lesson as the next step
   await page.goto('/');
