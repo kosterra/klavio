@@ -247,6 +247,7 @@ export function LearningPath({
   title,
   worlds = 'kids',
   outfit = null,
+  allOpen = false,
 }: {
   progress: ProgressDto['lessons'];
   currentLessonId: string;
@@ -258,6 +259,8 @@ export function LearningPath({
   worlds?: WorldSet;
   /** the wardrobe piece of the figure on the path */
   outfit?: Outfit | null;
+  /** without the learning path: every lesson open (not done) */
+  allOpen?: boolean;
 }) {
   const { t, i18n } = useTranslation();
   const loc = useLocalized();
@@ -312,7 +315,7 @@ export function LearningPath({
         const done = core.filter((l) => completed.has(l.id)).length;
         // bonus lessons don't count for finishing a chapter
         const finished = done === core.length;
-        const reached = isLessonUnlocked(chapter.lessons[0]!.id, completed);
+        const reached = allOpen || isLessonUnlocked(chapter.lessons[0]!.id, completed);
         const defaultOpen = chapter.lessons.some((l) => l.id === currentLessonId);
         const open = defaultOpen !== toggled.has(chapter.id);
         // the road starts and ends with the level's map
@@ -649,7 +652,7 @@ export function LearningPath({
                 <ol className={classes.list} id={`chapter-board-${chapter.id}`}>
                   {sec.lessons.map(({ lesson, number, point: p }) => {
                     const stars = progress[lesson.id]?.bestStars ?? 0;
-                    const unlocked = isLessonUnlocked(lesson.id, completed);
+                    const unlocked = allOpen || isLessonUnlocked(lesson.id, completed);
                     const current = lesson.id === currentLessonId && !completed.has(lesson.id);
                     const state = current
                       ? 'current'

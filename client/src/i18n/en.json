@@ -1263,12 +1263,16 @@
     }
   },
   "placement": {
-    "title": "I can already …",
-    "hint": "If you already play a little, start later on the learning path. The lessons before then count as passed (with one star, without XP) and can be played any time.",
-    "label": "Start at",
+    "title": "Learning path",
+    "hint": "Who already plays the piano skips stages or chapters – or switches the learning path off altogether.",
+    "label": "Start at (stage or chapter)",
     "button": "Start here",
-    "confirm": "Start at «{{chapter}}»? The lessons before then count as passed.",
-    "done": "Done – the learning path now goes on from there."
+    "confirm": "Start at «{{chapter}}»? The lessons before it then count as passed (with one star) and stay playable.",
+    "done": "Done – the learning path now goes on from there.",
+    "pathOn": "Use the learning path",
+    "pathOnHint": "Off: every lesson can be picked freely, and the start page shows your pieces, songs and tools instead of the map.",
+    "offDone": "The learning path is switched off.",
+    "onDone": "The learning path is back."
   },
   "setup": {
     "title": "Let's start",
@@ -1566,5 +1570,11 @@
       "triplets": "triplets"
     },
     "beyondShort": "plus {{list}}"
+  },
+  "freeHome": {
+    "intro": "The learning path is switched off – play what you like: your pieces, songs, note rain or freely.",
+    "rain": "Note rain",
+    "metronome": "Metronome",
+    "lessons": "All lessons – pick any"
   }
 }

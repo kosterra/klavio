@@ -45,8 +45,8 @@ export function OwnPieces() {
   const [busy, setBusy] = useState(false);
   const [removing, setRemoving] = useState<OwnPieceDto | null>(null);
   // the lessons done: from when on a piece is playable
-  const { completed, progress } = useProgress();
-  const done = progress ? completed : null;
+  const { played, progress } = useProgress();
+  const done = progress ? played : null;
 
   useEffect(() => {
     endpoints.pieces().then(setPieces, () => setPieces([]));

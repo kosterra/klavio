@@ -1007,6 +1007,9 @@
                         "type": "null"
                       }
                     ]
+                  },
+                  "pathOff": {
+                    "type": "boolean"
                   }
                 }
               }

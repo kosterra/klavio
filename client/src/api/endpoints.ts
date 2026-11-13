@@ -113,6 +113,7 @@ export const endpoints = {
       motive?: ProfileDto['motive'];
       weeklyGoalDays?: ProfileDto['weeklyGoalDays'];
       playOn?: ProfileDto['playOn'];
+      pathOff?: boolean;
     },
   ) => api<ProfileDto>('PATCH', `/profiles/${id}`, body),
   deleteProfile: (id: string) => api('DELETE', `/profiles/${id}`),

@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Lernpfad für Fortgeschrittene: Im Elternbereich unter «Lernpfad» lassen sich ganze Stufen überspringen – oder der Lernpfad ausschalten. Dann sind alle Lektionen frei wählbar, und der Start zeigt deine Stücke, Lieder und Werkzeuge statt der Karte.',
+        'Learning path for advanced players: in the parent area under «Learning path» whole stages can be skipped – or the learning path switched off. Then every lesson can be picked freely, and the start page shows your pieces, songs and tools instead of the map.',
+      ),
+      L(
         'Eigene Stücke: Klavio liest jetzt auch Sechzehntel, Zweiunddreissigstel, punktierte Achtel und Triolen – und Stücke bis 300 Takte statt 64. Damit gehen viele echte Klavierstücke wie «Für Elise» ganz.',
         'Own pieces: Klavio now also reads sixteenths, thirty-seconds, dotted eighths and triplets – and pieces up to 300 bars instead of 64. So many real piano pieces like «Für Elise» work in full.',
       ),

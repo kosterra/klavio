@@ -66,6 +66,7 @@ export function profileToDto(p: ProfileDoc): ProfileDto {
     motive: (p.motive as Motive | null | undefined) ?? null,
     weeklyGoalDays: p.weeklyGoalDays ?? null,
     playOn: (p.playOn as PlayOn | null | undefined) ?? null,
+    pathOff: p.pathOff ?? false,
     goalSong: p.goalSong?.title
       ? {
           title: p.goalSong.title,

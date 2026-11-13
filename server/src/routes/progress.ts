@@ -203,7 +203,10 @@ async function saveResult(
 ): Promise<LessonResultDto> {
   const done = await LessonProgress.find({ profileId }, { lessonId: 1 }).lean();
   const completed = new Set(done.map((d) => d.lessonId));
-  if (!isLessonUnlocked(lesson.id, completed)) throw new HttpError(403, 'LESSON_LOCKED');
+  // without the learning path every lesson is open
+  const pathOff = !!(await Profile.exists({ _id: profileId, pathOff: true }));
+  if (!pathOff && !isLessonUnlocked(lesson.id, completed))
+    throw new HttpError(403, 'LESSON_LOCKED');
 
   // Stars and XP come from the server's copy of the curriculum, not the client.
   // a lesson with a grown-ups' piece: both versions are about as long – the longer counts

@@ -1,5 +1,6 @@
 import { NavLink as MantineNavLink, Stack, Text } from '@mantine/core';
 import {
+  IconHome,
   IconBulb,
   IconChartBar,
   IconLock,
@@ -63,7 +64,9 @@ export function SideNav({ onNavigate }: { onNavigate: () => void }) {
       {activeProfile && (
         <>
           {heading(t('nav.learnGroup'))}
-          {item('/', t('nav.learn'), <IconMap2 size={20} />)}
+          {activeProfile.pathOff
+            ? item('/', t('nav.home'), <IconHome size={20} />)
+            : item('/', t('nav.learn'), <IconMap2 size={20} />)}
           {item('/songs', t('nav.songs'), <IconPlaylist size={20} />)}
           {item('/knowledge', t('nav.knowledge'), <IconBulb size={20} />)}
           {heading(t('nav.playGroup'))}

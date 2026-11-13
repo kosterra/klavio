@@ -140,6 +140,8 @@ export const profileUpdateSchema = z
     motive: motiveSchema.nullable(),
     weeklyGoalDays: weeklyGoalSchema.nullable(),
     playOn: playOnSchema.nullable(),
+    /** without the learning path: every lesson open, the start page shows the pieces */
+    pathOff: z.boolean(),
   })
   .partial();
 
@@ -176,6 +178,8 @@ export interface ProfileDto {
   weeklyGoalDays: number | null;
   /** what lessons and free play offer first; null = not chosen yet */
   playOn: PlayOn | null;
+  /** the learning path is switched off: every lesson is open, the start page shows the pieces */
+  pathOff: boolean;
 }
 
 export const MAX_PROFILES_PER_ACCOUNT = 8;

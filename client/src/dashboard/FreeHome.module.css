@@ -1,0 +1,11 @@
+/* the tools: big tiles, the label may wrap */
+.tile {
+  height: auto;
+  min-height: 64px;
+  white-space: normal;
+}
+
+.tile :global(.mantine-Button-label) {
+  white-space: normal;
+  line-height: 1.25;
+}

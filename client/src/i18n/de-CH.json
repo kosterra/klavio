@@ -1263,12 +1263,16 @@
     }
   },
   "placement": {
-    "title": "Ich kann schon …",
-    "hint": "Wer schon etwas Klavier spielt, beginnt später auf dem Lernpfad. Die Lektionen davor zählen dann als bestanden (mit einem Stern, ohne XP) und lassen sich jederzeit spielen.",
-    "label": "Beginnen bei",
+    "title": "Lernpfad",
+    "hint": "Wer schon Klavier spielt, überspringt Stufen oder Kapitel – oder schaltet den Lernpfad ganz aus.",
+    "label": "Beginnen bei (Stufe oder Kapitel)",
     "button": "Hier beginnen",
-    "confirm": "Beginnen bei «{{chapter}}»? Die Lektionen davor zählen dann als bestanden.",
-    "done": "Geschafft – der Lernpfad geht jetzt dort weiter."
+    "confirm": "Beginnen bei «{{chapter}}»? Die Lektionen davor zählen dann als bestanden (mit einem Stern) und bleiben spielbar.",
+    "done": "Geschafft – der Lernpfad geht jetzt dort weiter.",
+    "pathOn": "Lernpfad verwenden",
+    "pathOnHint": "Aus: Alle Lektionen sind frei wählbar, und der Start zeigt deine Stücke, Lieder und Werkzeuge statt der Karte.",
+    "offDone": "Der Lernpfad ist ausgeschaltet.",
+    "onDone": "Der Lernpfad ist wieder da."
   },
   "setup": {
     "title": "Los geht's",
@@ -1566,5 +1570,11 @@
       "triplets": "Triolen"
     },
     "beyondShort": "dazu {{list}}"
+  },
+  "freeHome": {
+    "intro": "Der Lernpfad ist ausgeschaltet – spiel, was du willst: deine Stücke, Lieder, Notenregen oder frei.",
+    "rain": "Notenregen",
+    "metronome": "Metronom",
+    "lessons": "Alle Lektionen – frei wählbar"
   }
 }

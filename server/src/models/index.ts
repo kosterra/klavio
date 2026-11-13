@@ -95,6 +95,8 @@ const profileSchema = new Schema(
     weeklyGoalDays: { type: Number, default: null },
     /** where the learner plays first: the real piano or the screen keys */
     playOn: { type: String, enum: ['piano', 'screen', null], default: null },
+    /** the learning path is switched off (advanced players): every lesson open */
+    pathOff: { type: Boolean, default: false },
     calibration: {
       a4Hz: { type: Number, default: 440 },
       noiseFloorDb: { type: Number, default: null },

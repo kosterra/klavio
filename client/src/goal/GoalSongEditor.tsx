@@ -64,7 +64,7 @@ export function GoalSongEditor({
   );
   const [uploaded, setUploaded] = useState<OwnPieceDto | null>(null);
   // from which lesson on the uploaded piece is playable
-  const { completed, progress } = useProgress();
+  const { played, progress } = useProgress();
   const [uploadProblem, setUploadProblem] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [style, setStyle] = useState<GoalStyle>(initial?.style ?? 'ballad');
@@ -226,7 +226,7 @@ export function GoalSongEditor({
                 <Box mt="xs">
                   <ReadinessNote
                     exercise={uploaded.exercise}
-                    completed={progress ? completed : null}
+                    completed={progress ? played : null}
                   />
                 </Box>
               </Alert>

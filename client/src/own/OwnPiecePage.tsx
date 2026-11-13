@@ -126,7 +126,7 @@ function PracticePiece({
   const { stopMicrophone } = input;
   const [phase, setPhase] = useState<'intro' | 'play' | 'done'>('intro');
   const [run, setRun] = useState(0);
-  const { completed, progress } = useProgress();
+  const { played, progress } = useProgress();
   useEffect(() => () => stopMicrophone(), [stopMicrophone]);
 
   // what the exercises need of a lesson: the keys shown
@@ -168,7 +168,7 @@ function PracticePiece({
               </Alert>
               {/* a recommendation, never a lock: any piece can be tried */}
               <Box w="100%">
-                <ReadinessNote exercise={piece.exercise} completed={progress ? completed : null} />
+                <ReadinessNote exercise={piece.exercise} completed={progress ? played : null} />
               </Box>
               <Button
                 size="lg"
