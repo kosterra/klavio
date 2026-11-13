@@ -1,44 +1,31 @@
-import { useEffect } from 'react';
 import { Alert, Badge, Button, Group, Stack } from '@mantine/core';
 import { IconMicrophone, IconPiano, IconPlayerStop } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { usePitchDetection } from '../audio/usePitchDetection';
 import { microphoneSupported } from '../audio/microphone';
 import { useMicErrorText } from '../audio/micErrorText';
-import { useSession } from '../auth/session';
-import { useMidi } from '../input/useMidi';
 import classes from './RealPianoInput.module.css';
+import type { RealPiano } from './useRealPiano';
 
 /**
  * The real piano outside the lessons: a digital piano (MIDI) is simply
  * there, an acoustic one is heard through the microphone after a tap. The
  * microphone stops when the page is left. `prominent`: the real piano is the
  * learner's way to play – the button is the main thing to tap. `compact`: one
- * small switch for a line next to other things (Notenregen). `onActive`: told
- * whether the real piano is heard (then the screen keys only show the notes).
+ * small switch for a line next to other things (Notenregen). The page holds
+ * the real piano (`useRealPiano`) – it knows when the screen keys only show.
  */
 export function RealPianoInput({
+  piano,
   prominent = false,
   compact = false,
-  onActive,
 }: {
+  piano: RealPiano;
   prominent?: boolean;
   compact?: boolean;
-  onActive?: (active: boolean) => void;
 }) {
   const { t } = useTranslation();
-  const { activeProfile } = useSession();
-  const midi = useMidi();
-  const mic = usePitchDetection({
-    a4Hz: activeProfile?.calibration.a4Hz ?? 440,
-    noiseFloorDb: activeProfile?.calibration.noiseFloorDb ?? null,
-  });
   const micErrorText = useMicErrorText();
-  const midiDevice = midi.devices[0]?.name ?? null;
-  const active = !!midiDevice || mic.status === 'running';
-  useEffect(() => {
-    onActive?.(active);
-  }, [active, onActive]);
+  const { mic, midiDevice, active } = piano;
 
   if (compact) {
     return (

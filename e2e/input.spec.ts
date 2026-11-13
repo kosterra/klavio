@@ -261,3 +261,33 @@ test('the microphone started with the lesson keeps listening', async ({ page }) 
   await expect(page.getByRole('button', { name: 'Mikrofon an' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Mikrofon verwenden' })).toHaveCount(0);
 });
+
+test('playing on the piano: Notenregen listens from the start, the screen keys only show', async ({
+  page,
+}) => {
+  test.setTimeout(90_000);
+  await signUpWithEmail(page, uniqueEmail('micrain'), 'Familie');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Lina');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
+
+  // the profile plays on the piano (the default): «Los» also starts listening
+  await page.goto('/play/rain');
+  await expect(page.getByTestId('real-piano-mic')).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.getByRole('button', { name: 'C4', exact: true })).toBeVisible();
+  await page.getByTestId('rain-start').click();
+  await expect(page.getByTestId('real-piano-mic')).toHaveAttribute('aria-pressed', 'true');
+  // the screen keys are a picture of what is heard now, not buttons
+  await expect(page.getByRole('button', { name: 'C4', exact: true })).toHaveCount(0);
+
+  // free play: with the microphone on, the screen keys do not play either
+  await page.goto('/play');
+  await page.getByTestId('real-piano-mic').click();
+  await expect(page.getByTestId('real-piano-listening')).toBeVisible();
+  await page.getByTestId('free-show-keys').click();
+  await expect(page.getByRole('button', { name: 'C4', exact: true })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Mikrofon aus' }).click();
+  await expect(page.getByRole('button', { name: 'C4', exact: true })).toBeVisible();
+});

@@ -1,10 +1,12 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { Group, SegmentedControl, Stack, Text } from '@mantine/core';
 import { IconTrophy } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useSession } from '../auth/session';
 import { PlayTabs, PlayTitle } from '../components/PlayTabs';
 import { RealPianoInput } from '../components/RealPianoInput';
+import { useRealPiano } from '../components/useRealPiano';
+import { usePlayOn } from '../lesson/playOn';
 import { usePageTitle } from '../components/usePageTitle';
 import { NoteRainGame, type RainClef } from '../lesson/NoteRainGame';
 
@@ -56,8 +58,8 @@ export function RainGamePage() {
   const [best, setBest] = useState<Best>(() => readBest(activeProfile?.id));
   const [record, setRecord] = useState(false);
   // the real piano heard: the screen keys only show what it plays
-  const [real, setReal] = useState(false);
-  const onReal = useCallback((on: boolean) => setReal(on), []);
+  const piano = useRealPiano();
+  const [playOn] = usePlayOn();
   const mode = `${clef}-${range}` as const;
   const notes = NOTES[clef][range];
   const from = Math.floor(Math.min(...notes) / 12) * 12; // from the C below
@@ -78,14 +80,21 @@ export function RainGamePage() {
         kids={kids}
         keyboard={{ from, to }}
         labels={kids ? 'all' : 'c'}
-        interactive={!real}
+        interactive={!piano.active}
+        // playing on the piano (profile): the start tap also starts listening
+        onStart={() => {
+          if (playOn === 'piano') piano.listen();
+        }}
         compact
         // what it is and how it rains: on the field, before it starts – the notes get the room
-        setup={
+        setup={(phase) => (
           <Stack gap="xs" align="center" maw={460}>
-            <Text size="sm" ta="center" fw={600}>
-              {t('rainGame.intro')}
-            </Text>
+            {/* before the first round: what it is; after one: only the choice */}
+            {phase === 'ready' && (
+              <Text size="sm" ta="center" fw={600}>
+                {t('rainGame.intro')}
+              </Text>
+            )}
             <Group gap="xs" justify="center">
               <SegmentedControl
                 size="sm"
@@ -109,8 +118,8 @@ export function RainGamePage() {
               />
             </Group>
           </Stack>
-        }
-        tools={<RealPianoInput compact onActive={onReal} />}
+        )}
+        tools={<RealPianoInput piano={piano} compact />}
         status={(caught) => (
           <>
             {t('rainGame.caught', { count: caught })}
