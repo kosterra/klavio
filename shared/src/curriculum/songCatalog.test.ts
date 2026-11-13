@@ -39,6 +39,11 @@ describe('recognizeSong', () => {
     expect(recognizeSong('mondscheinsonate')?.song?.title).toBe('Moonlight Sonata');
     expect(recognizeSong('Fur Elise (Beethoven)')?.song?.title).toBe('Für Elise');
     expect(recognizeSong('Fluch der Karibik')?.song?.title).toBe("He's a Pirate");
+    // newer songs, Swiss ones and the names they go by
+    expect(recognizeSong('Null Sibe Nüün')?.song?.title).toBe('079');
+    expect(recognizeSong('Ziemlich beste Freunde')?.song?.title).toBe('Fly');
+    expect(recognizeSong('ein hoch auf uns')?.song?.title).toBe('Auf uns');
+    expect(recognizeSong('Blinding Lights – The Weeknd')?.style).toBe('pop');
   });
 
   it('prefers the longest match', () => {

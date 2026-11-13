@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Traumlied: Klavio kennt doppelt so viele Lieder wie bisher – Pop der letzten Jahre (Billie Eilish, Taylor Swift, Adele, The Weeknd …), Film-, Serien- und Game-Musik, Einaudi, und Lieder aus der Schweiz und Deutschland von Mani Matter bis Lo & Leduc.',
+        'Dream song: Klavio knows twice as many songs as before – pop of the last years (Billie Eilish, Taylor Swift, Adele, The Weeknd …), film, series and game music, Einaudi, and songs from Switzerland and Germany from Mani Matter to Lo & Leduc.',
+      ),
+      L(
         'Traumlied: Bei «Für Elise», «Ode to Joy», «Canon in D» und «Minuet in G» kannst du den Anfang anhören und die Noten der Melodie anschauen, bevor du dich entscheidest. Lieder, die noch urheberrechtlich geschützt sind, bleiben ein Titel.',
         'Dream song: for «Für Elise», «Ode to Joy», «Canon in D» and «Minuet in G» you can listen to the opening and see the melody on the staff before you decide. Songs still under copyright stay a title.',
       ),
