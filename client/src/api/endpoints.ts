@@ -19,8 +19,10 @@ import type {
   MailTemplateDto,
   MailTemplateId,
   MailTemplateTexts,
+  DeviceDto,
+  DeviceProfilesResponse,
 } from '@klavio/shared';
-import { mailLangOf } from '@klavio/shared';
+import { mailLangOf, type PieceLevel } from '@klavio/shared';
 import i18n from '../i18n';
 import type {
   PublicKeyCredentialCreationOptionsJSON,
@@ -28,7 +30,7 @@ import type {
   RegistrationResponseJSON,
   AuthenticationResponseJSON,
 } from '@simplewebauthn/browser';
-import { api } from './client';
+import { ApiError, api } from './client';
 
 /** Code mails are written in the language the app is shown in. */
 const lang = () => mailLangOf(i18n.language);
@@ -77,6 +79,29 @@ export const endpoints = {
   piece: (id: string) => api<OwnPieceDto>('GET', `/pieces/${encodeURIComponent(id)}`),
   addPiece: (input: OwnPieceInput) => api<OwnPieceDto>('POST', '/pieces', input),
   deletePiece: (id: string) => api('DELETE', `/pieces/${encodeURIComponent(id)}`),
+  library: (q: string) =>
+    api<{ sources: LibrarySource[]; results: LibraryResult[]; pending: boolean }>(
+      'GET',
+      `/library?q=${encodeURIComponent(q)}`,
+    ),
+  /** a file of the library, passed on by Klavio's server (the browser talks to no one else) */
+  libraryFile: async (id: string): Promise<File> => {
+    let res: Response;
+    try {
+      res = await fetch(`/api/library/${encodeURIComponent(id)}/file`, {
+        credentials: 'same-origin',
+      });
+    } catch {
+      throw new ApiError(0, 'NETWORK');
+    }
+    if (!res.ok) {
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      throw new ApiError(res.status, data.error ?? 'UNKNOWN');
+    }
+    return new File([await res.blob()], id);
+  },
+  renamePiece: (id: string, body: { title: string; composer: string | null }) =>
+    api<OwnPieceDto>('PATCH', `/pieces/${encodeURIComponent(id)}`, body),
   publicTestimonials: () => api<PublicTestimonialDto[]>('GET', '/testimonials/public'),
   myTestimonials: () => api<TestimonialDto[]>('GET', '/testimonials/mine'),
   addTestimonial: (input: TestimonialInput) => api<TestimonialDto>('POST', '/testimonials', input),
@@ -88,6 +113,19 @@ export const endpoints = {
   logoutOtherDevices: () => api<{ loggedOut: number }>('POST', '/account/sessions/logout-others'),
   setParentPin: (pin: string) => api('PUT', '/account/pin', { pin }),
   removeParentPin: () => api('DELETE', '/account/pin'),
+  /** a learner's own PIN, for logging in on a child's device (parent area) */
+  setProfilePin: (profileId: string, pin: string) =>
+    api('PUT', `/profiles/${encodeURIComponent(profileId)}/pin`, { pin }),
+  removeProfilePin: (profileId: string) =>
+    api('DELETE', `/profiles/${encodeURIComponent(profileId)}/pin`),
+  devices: () => api<DeviceDto[]>('GET', '/devices'),
+  /** this browser becomes a child's device */
+  addDevice: (name: string) => api<DeviceDto>('POST', '/devices', { name }),
+  removeDevice: (id: string) => api('DELETE', `/devices/${encodeURIComponent(id)}`),
+  /** «Wer spielt?» on a child's device (404: not one) */
+  deviceProfiles: () => api<DeviceProfilesResponse>('GET', '/device/profiles'),
+  childLogin: (profileId: string, pin: string) =>
+    api<{ activeProfileId: string }>('POST', '/device/login', { profileId, pin }),
   verifyParentPin: (pin: string) =>
     api<{ unlockedUntil: string | null }>('POST', '/account/pin/verify', { pin }),
   lockParentArea: () => api('POST', '/account/pin/lock'),
@@ -113,6 +151,7 @@ export const endpoints = {
       motive?: ProfileDto['motive'];
       weeklyGoalDays?: ProfileDto['weeklyGoalDays'];
       playOn?: ProfileDto['playOn'];
+      pathOff?: boolean;
     },
   ) => api<ProfileDto>('PATCH', `/profiles/${id}`, body),
   deleteProfile: (id: string) => api('DELETE', `/profiles/${id}`),
@@ -138,3 +177,25 @@ export const endpoints = {
   testMailTemplate: (id: MailTemplateId, mailLang: MailLang) =>
     api('POST', `/admin/mail-templates/${id}/test`, { lang: mailLang }),
 };
+
+/** A sheet music library an admin switched on. */
+export interface LibrarySource {
+  key: 'musetrainer' | 'mutopia';
+  name: string;
+  url: string;
+}
+
+/** A piece of the library; level and size once the server has looked at it. */
+export interface LibraryResult {
+  id: string;
+  source: LibrarySource['key'];
+  title: string;
+  /** "Public Domain", "CC BY-SA 3.0" … (null: as the source says for all) */
+  licence: string | null;
+  composer?: string | null;
+  level?: PieceLevel;
+  /** the lesson after which it can be played */
+  lessonId?: string;
+  bars?: number;
+  hands?: 1 | 2;
+}

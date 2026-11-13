@@ -2,7 +2,7 @@ import { noteNameToMidi } from '../music/notes.ts';
 import type { Chapter, Lesson } from './types.ts';
 import {
   fingerInPosition,
-  isHeldNote,
+  isStruck,
   piece,
   pieceSteps,
   rhythm,
@@ -10,6 +10,7 @@ import {
   song,
   type HandPosition,
 } from './song.ts';
+import { sightNoteCount } from './sightReading.ts';
 
 /** "C4 D4 E4" → [60, 62, 64]; German "H" is accepted. */
 const seq = (s: string) => s.trim().split(/\s+/).map(noteNameToMidi);
@@ -131,6 +132,44 @@ export const CURRICULUM: Chapter[] = [
         ],
       },
       {
+        id: 'ear-high-low',
+        kind: 'keys',
+        bonus: true,
+        title: { 'de-CH': 'Hoch oder tief?', en: 'High or low?' },
+        intro: {
+          'de-CH':
+            'Ich spiele zwei Töne. Ist der zweite höher oder tiefer als der erste? Hohe Töne wohnen rechts auf dem Klavier, tiefe links. Hör genau hin – es wird immer knapper.',
+          en: 'I play two notes. Is the second one higher or lower than the first? High notes live on the right of the piano, low ones on the left. Listen closely – it gets closer and closer.',
+        },
+        xp: 15,
+        keyboard: C4_C5,
+        keyLabels: 'all',
+        exercises: [
+          {
+            type: 'listen',
+            question: {
+              'de-CH': 'Ist der zweite Ton höher oder tiefer?',
+              en: 'Is the second note higher or lower?',
+            },
+            answers: [
+              { 'de-CH': 'Höher', en: 'Higher' },
+              { 'de-CH': 'Tiefer', en: 'Lower' },
+            ],
+            tempo: 80,
+            rounds: [
+              { notes: [[48], [72]], answer: 0 },
+              { notes: [[72], [50]], answer: 1 },
+              { notes: [[60], [67]], answer: 0 },
+              { notes: [[67], [60]], answer: 1 },
+              { notes: [[60], [64]], answer: 0 },
+              { notes: [[65], [62]], answer: 1 },
+              { notes: [[62], [64]], answer: 0 },
+              { notes: [[64], [62]], answer: 1 },
+            ],
+          },
+        ],
+      },
+      {
         id: 'keys-f-g',
         kind: 'keys',
         title: { 'de-CH': 'F und G', en: 'F and G' },
@@ -167,6 +206,29 @@ export const CURRICULUM: Chapter[] = [
             seq('C4 D4 E4 F4 G4 F4 E4 D4 C4'),
           ]),
           { type: 'find-key', notes: pcs('C D E F G'), rounds: 5, anyOctave: true },
+        ],
+      },
+      {
+        // a first taste of the left hand – the full chapter follows in stage 2
+        id: 'keys-left',
+        kind: 'play',
+        title: { 'de-CH': 'Die linke Hand probiert’s', en: 'The left hand has a go' },
+        intro: {
+          'de-CH':
+            'Auch die linke Hand will mitspielen! Leg den kleinen Finger auf das C unter dem mittleren C und den Daumen auf das G. Ein Finger pro Taste – wie rechts, nur gespiegelt.',
+          en: 'The left hand wants to play too! Put the little finger on the C below middle C and the thumb on G. One finger per key – like the right hand, only mirrored.',
+        },
+        xp: 15,
+        keyboard: C3_C5,
+        keyLabels: 'all',
+        exercises: [
+          playIn(LH_C3, [
+            seq('C3 D3 E3'),
+            seq('E3 D3 C3'),
+            seq('G3 F3 E3'),
+            seq('C3 D3 E3 F3 G3'),
+            seq('G3 F3 E3 D3 C3'),
+          ]),
         ],
       },
       {
@@ -229,6 +291,65 @@ export const CURRICULUM: Chapter[] = [
         exercises: [
           { type: 'find-key', notes: pcs('C D E F G A H'), rounds: 10, anyOctave: true },
           { type: 'play-along', sequences: [seq('F4 G4 A4 H4 C5'), seq('C5 A4 F4 D4 C4')] },
+        ],
+      },
+      {
+        // technique: every finger on its own, the hand stays still
+        id: 'tech-fingers',
+        kind: 'play',
+        title: { 'de-CH': 'Fingerturnen', en: 'Finger gym' },
+        intro: {
+          'de-CH':
+            'Jeder Finger soll allein spielen können – auch der vierte, der gern mit dem dritten mitgeht. Die Hand bleibt ruhig auf C bis G liegen, nur die Finger bewegen sich. Spiel langsam und gleichmässig.',
+          en: 'Every finger should be able to play on its own – even the fourth, which likes to go along with the third. Your hand stays still on C to G; only the fingers move. Play slowly and evenly.',
+        },
+        xp: 15,
+        keyboard: C4_C5,
+        keyLabels: 'all',
+        exercises: [
+          playIn(RH_C4, [
+            seq('C4 E4 G4 E4 C4'),
+            seq('D4 F4 D4 F4 D4'),
+            seq('C4 C4 D4 D4 E4 E4 F4 F4 G4'),
+            seq('E4 F4 E4 F4 G4 F4 E4'),
+            seq('C4 G4 D4 F4 E4'),
+            seq('G4 F4 E4 D4 C4'),
+          ]),
+        ],
+      },
+      {
+        // technique: the thumb passes under – what every melody wider than five keys needs
+        id: 'tech-thumb',
+        kind: 'play',
+        title: { 'de-CH': 'Daumen drunter', en: 'Thumb under' },
+        intro: {
+          'de-CH':
+            'Fünf Finger, aber acht Töne in der Tonleiter? Der Trick: Der Daumen schlüpft unter dem Mittelfinger durch und spielt den nächsten Ton. Die Hand gleitet ruhig mit, ohne zu hüpfen.',
+          en: 'Five fingers but eight notes in a scale? The trick: the thumb slips under the middle finger and plays the next note. The hand glides along smoothly, without jumping.',
+        },
+        xp: 15,
+        keyboard: C4_C5,
+        keyLabels: 'all',
+        exercises: [
+          {
+            type: 'play-along',
+            sequences: [
+              seq('C4 D4 E4 F4'),
+              seq('E4 F4 E4 F4'),
+              seq('F4 E4 D4 C4'),
+              seq('C4 D4 E4 F4 G4 A4'),
+              seq('A4 G4 F4 E4 D4 C4'),
+              seq('E4 F4 G4 A4 H4 C5'),
+            ],
+            fingers: [
+              [1, 2, 3, 1],
+              [3, 1, 3, 1],
+              [1, 3, 2, 1],
+              [1, 2, 3, 1, 2, 3],
+              [3, 2, 1, 3, 2, 1],
+              [3, 1, 2, 3, 4, 5],
+            ],
+          },
         ],
       },
       {
@@ -383,6 +504,47 @@ CURRICULUM.push({
       ],
     },
     {
+      // reading by distance: step (line → space) and skip (line → line)
+      id: 'read-steps',
+      kind: 'read',
+      title: { 'de-CH': 'Schritt und Sprung', en: 'Step and skip' },
+      intro: {
+        'de-CH':
+          'Du musst nicht jede Note abzählen. Von einer Linie in den Zwischenraum daneben ist ein Schritt – die Nachbartaste. Von Linie zu Linie ist ein Sprung – eine Taste wird übersprungen. Im Intervallregen steht die erste Note angeschrieben: Lies, wie weit die zweite weg ist, und spiel sie.',
+        en: 'You don’t have to count every note. From a line to the space next to it is a step – the next key. From line to line is a skip – one key is skipped. In the interval rain the first note is named: read how far away the second one is, and play it.',
+      },
+      xp: 20,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        {
+          type: 'listen',
+          question: { 'de-CH': 'Ein Schritt oder ein Sprung?', en: 'A step or a skip?' },
+          answers: [
+            { 'de-CH': 'Schritt', en: 'Step' },
+            { 'de-CH': 'Sprung', en: 'Skip' },
+          ],
+          tempo: 80,
+          rounds: [
+            { notes: [[60], [62]], answer: 0 },
+            { notes: [[60], [64]], answer: 1 },
+            { notes: [[67], [64]], answer: 1 },
+            { notes: [[65], [64]], answer: 0 },
+            { notes: [[62], [65]], answer: 1 },
+            { notes: [[69], [67]], answer: 0 },
+          ],
+        },
+        {
+          type: 'note-rain',
+          clef: 'treble',
+          notes: seq('C4 D4 E4 F4 G4 A4 H4 C5'),
+          intervals: [1, 2],
+          goal: 8,
+          fall: 10,
+        },
+      ],
+    },
+    {
       id: 'rain-treble',
       kind: 'read',
       bonus: true,
@@ -422,6 +584,92 @@ CURRICULUM.push({
         song(
           'C4/q C4/q C4/q D4/q | E4/h D4/h | C4/q E4/q D4/q D4/q | C4/w | C4/q C4/q C4/q D4/q | E4/h D4/h | C4/q E4/q D4/q D4/q | C4/w',
           { tempo: 96, position: RH_C4 },
+        ),
+      ],
+    },
+  ],
+});
+
+// «Im Takt» comes before the first songs: what a song asks for is clapped first.
+CURRICULUM.push({
+  id: 'rhythm',
+  title: { 'de-CH': 'Im Takt', en: 'In time' },
+  stage: 1,
+  lessons: [
+    {
+      id: 'rhythm-quarters',
+      kind: 'rhythm',
+      title: { 'de-CH': 'Viertel und Halbe', en: 'Quarters and halves' },
+      intro: {
+        'de-CH':
+          'Jetzt geht es um den Rhythmus: Welche Taste du drückst, ist egal. Ich zähle vor – «1, 2, 3, 4» – dann spielst du mit. Eine Viertelnote dauert einen Schlag, eine halbe Note zwei.',
+        en: 'Now it’s all about rhythm: it doesn’t matter which key you press. I count in – “1, 2, 3, 4” – then you play along. A quarter note lasts one beat, a half note two.',
+      },
+      xp: 20,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [rhythm('q q q q | h h | q q h | h q q | q q q q', { tempo: 76 })],
+    },
+    {
+      id: 'rhythm-rests',
+      kind: 'rhythm',
+      title: { 'de-CH': 'Ganze Noten und Pausen', en: 'Whole notes and rests' },
+      intro: {
+        'de-CH':
+          'Eine ganze Note dauert vier Schläge. Bei einer Pause spielst du nichts – aber du zählst leise weiter.',
+        en: 'A whole note lasts four beats. At a rest you play nothing – but keep counting quietly.',
+      },
+      xp: 20,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [rhythm('w | q q qr q | h hr | q qr q qr | qr q q q', { tempo: 76 })],
+    },
+    {
+      id: 'meter-eighths',
+      kind: 'rhythm',
+      title: { 'de-CH': 'Achtelnoten', en: 'Eighth notes' },
+      intro: {
+        'de-CH':
+          'Eine Achtelnote ist halb so lang wie eine Viertel: Auf einen Schlag passen zwei. Zähl «eins-und, zwei-und» – die Achtel kommen auf die Zahl und auf das «und».',
+        en: 'An eighth note is half as long as a quarter: two fit into one beat. Count «one-and, two-and» – the eighths come on the number and on the «and».',
+      },
+      xp: 25,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        rhythm('q q 8 8 q | 8 8 8 8 h | q 8 8 q q | 8 8 q 8 8 q | h 8 8 q', { tempo: 72 }),
+      ],
+    },
+    {
+      id: 'rhythm-dotted',
+      kind: 'rhythm',
+      title: { 'de-CH': 'Die punktierte Viertel', en: 'The dotted quarter' },
+      intro: {
+        'de-CH':
+          'Ein Punkt hinter einer Note macht sie um die Hälfte länger: Die punktierte Viertel dauert anderthalb Schläge. Danach bleibt Platz für eine Achtel – zähl «eins – zwei-und».',
+        en: 'A dot after a note makes it half as long again: the dotted quarter lasts one and a half beats. After it there is room for an eighth – count «one – two-and».',
+      },
+      xp: 25,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [rhythm('qd 8 q q | qd 8 h | q q qd 8 | h h | qd 8 qd 8 | w', { tempo: 72 })],
+    },
+    {
+      id: 'song-london',
+      kind: 'song',
+      title: { 'de-CH': 'London Bridge', en: 'London Bridge' },
+      intro: {
+        'de-CH':
+          'Ein englisches Kinderlied im Zweivierteltakt: nur zwei Schläge pro Takt, «eins, zwei». Gleich am Anfang kommt die punktierte Viertel mit ihrer Achtel.',
+        en: 'An English children’s song in two-four time: only two beats per bar, «one, two». Right at the start comes the dotted quarter with its eighth.',
+      },
+      xp: 25,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'G4/qd A4/8 | G4/q F4/q | E4/q F4/q | G4/h | D4/q E4/q | F4/h | E4/q F4/q | G4/h | G4/qd A4/8 | G4/q F4/q | E4/q F4/q | G4/h | D4/h | G4/h | E4/h | C4/h',
+          { time: '2/4', tempo: 100 },
         ),
       ],
     },
@@ -472,8 +720,8 @@ CURRICULUM.push({
       title: { 'de-CH': 'Freude, schöner Götterfunken', en: 'Ode to Joy' },
       intro: {
         'de-CH':
-          'Die berühmte Melodie von Ludwig van Beethoven. Achtung: Der Punkt hinter einer Note macht sie ein wenig länger.',
-        en: 'The famous melody by Ludwig van Beethoven. Watch out: a dot after a note makes it a little longer.',
+          'Die berühmte Melodie von Ludwig van Beethoven. Am Ende der Zeilen kommt die punktierte Viertel mit ihrer Achtel – die kennst du schon aus «Im Takt».',
+        en: 'The famous melody by Ludwig van Beethoven. At the end of the lines comes the dotted quarter with its eighth – you know it from «In time».',
       },
       xp: 30,
       keyboard: C4_C5,
@@ -529,8 +777,8 @@ CURRICULUM.push({
       title: { 'de-CH': 'Bruder Jakob', en: 'Brother John' },
       intro: {
         'de-CH':
-          'Ein Kanon, den man auf der ganzen Welt singt. Neu: zwei schnelle Achtelnoten hintereinander – und am Schluss geht es hinunter zum tiefen G.',
-        en: 'A round sung all over the world. New: two quick eighth notes in a row – and at the end it goes down to the low G.',
+          'Ein Kanon, den man auf der ganzen Welt singt. Die Achtel kennst du schon – hier kommen vier hintereinander. Und am Schluss geht es hinunter zum tiefen G.',
+        en: 'A round sung all over the world. You know eighth notes already – here come four in a row. And at the end it goes down to the low G.',
       },
       xp: 25,
       keyboard: { from: 55, to: 72 },
@@ -600,41 +848,29 @@ CURRICULUM.push({
       keyLabels: 'c',
       exercises: [{ type: 'improvise', keys: 'white', tempo: 84, bars: 8, minNotes: 12 }],
     },
-  ],
-});
-
-CURRICULUM.push({
-  id: 'rhythm',
-  title: { 'de-CH': 'Im Takt', en: 'In time' },
-  stage: 1,
-  lessons: [
     {
-      id: 'rhythm-quarters',
-      kind: 'rhythm',
-      title: { 'de-CH': 'Viertel und Halbe', en: 'Quarters and halves' },
+      id: 'sight-first',
+      kind: 'read',
+      title: { 'de-CH': 'Vom Blatt spielen', en: 'Sight-reading' },
       intro: {
         'de-CH':
-          'Jetzt geht es um den Rhythmus: Welche Taste du drückst, ist egal. Ich zähle vor – «1, 2, 3, 4» – dann spielst du mit. Eine Viertelnote dauert einen Schlag, eine halbe Note zwei.',
-        en: 'Now it’s all about rhythm: it doesn’t matter which key you press. I count in – “1, 2, 3, 4” – then you play along. A quarter note lasts one beat, a half note two.',
+          'Jetzt kommt eine Melodie, die du noch nie gesehen hast – jedes Mal eine neue. Schau sie zuerst in Ruhe an: Wo fängt sie an? Geht sie hinauf oder hinunter? Wo sind Schritte, wo Sprünge? Dann zähle ich vor, und du spielst einfach weiter, auch wenn einmal ein Ton danebengeht.',
+        en: 'Here comes a melody you have never seen – a new one every time. Look at it calmly first: where does it start? Does it go up or down? Where are steps, where skips? Then I count in, and you just keep going, even if a note goes wrong.',
       },
-      xp: 20,
+      xp: 25,
       keyboard: C4_C5,
       keyLabels: 'c',
-      exercises: [rhythm('q q q q | h h | q q h | h q q | q q q q', { tempo: 76 })],
-    },
-    {
-      id: 'rhythm-rests',
-      kind: 'rhythm',
-      title: { 'de-CH': 'Ganze Noten und Pausen', en: 'Whole notes and rests' },
-      intro: {
-        'de-CH':
-          'Eine ganze Note dauert vier Schläge. Bei einer Pause spielst du nichts – aber du zählst leise weiter.',
-        en: 'A whole note lasts four beats. At a rest you play nothing – but keep counting quietly.',
-      },
-      xp: 20,
-      keyboard: C4_C5,
-      keyLabels: 'c',
-      exercises: [rhythm('w | q q qr q | h hr | q qr q qr | qr q q q', { tempo: 76 })],
+      exercises: [
+        {
+          type: 'sight-read',
+          clef: 'treble',
+          time: '4/4',
+          tempo: 66,
+          notes: seq('C4 D4 E4 F4 G4'),
+          rhythms: ['q q q q | h h', 'h q q | q q h', 'q q h | q q h', 'h h | q q q q'],
+          rounds: 3,
+        },
+      ],
     },
   ],
 });
@@ -712,6 +948,30 @@ CURRICULUM.push({
       ],
     },
     {
+      id: 'sight-bass',
+      kind: 'read',
+      title: { 'de-CH': 'Vom Blatt im Bass', en: 'Sight-reading in the bass' },
+      intro: {
+        'de-CH':
+          'Eine neue Melodie für die linke Hand, im Bassschlüssel. Schau zuerst: Auf welcher Linie fängt sie an? Dann spiel sie im Takt durch – ohne anzuhalten.',
+        en: 'A new melody for the left hand, in the bass clef. Look first: which line does it start on? Then play it through in time – without stopping.',
+      },
+      xp: 25,
+      keyboard: C3_C4,
+      keyLabels: 'c',
+      exercises: [
+        {
+          type: 'sight-read',
+          clef: 'bass',
+          time: '4/4',
+          tempo: 66,
+          notes: seq('C3 D3 E3 F3 G3'),
+          rhythms: ['q q q q | h h', 'h q q | q q h', 'qd 8 q q | h h'],
+          rounds: 3,
+        },
+      ],
+    },
+    {
       id: 'rain-bass',
       kind: 'read',
       bonus: true,
@@ -731,6 +991,27 @@ CURRICULUM.push({
           notes: seq('G2 A2 H2 C3 D3 E3 F3 G3'),
           goal: 20,
           fall: 7,
+        },
+      ],
+    },
+    {
+      id: 'ear-echo-left',
+      kind: 'keys',
+      bonus: true,
+      title: { 'de-CH': 'Hör zu: die linke Hand', en: 'Listen: the left hand' },
+      intro: {
+        'de-CH':
+          'Ich spiele dir ein paar tiefe Töne vor, zwischen C und G. Spiel sie mit der linken Hand nach – ohne sie zu sehen.',
+        en: 'I play you a few low notes, between C and G. Play them back with your left hand – without seeing them.',
+      },
+      xp: 20,
+      keyboard: C3_C4,
+      keyLabels: 'all',
+      exercises: [
+        {
+          type: 'echo',
+          tempo: 76,
+          motifs: [seq('C3 D3'), seq('E3 C3'), seq('C3 D3 E3'), seq('G3 F3 E3'), seq('C3 E3 G3')],
         },
       ],
     },
@@ -868,6 +1149,35 @@ CURRICULUM.push({
       ],
     },
     {
+      // intervals by name: third, fourth, fifth – felt in the hand, then read in the rain
+      id: 'read-intervals',
+      kind: 'read',
+      title: { 'de-CH': 'Terz, Quarte, Quinte', en: 'Thirds, fourths and fifths' },
+      intro: {
+        'de-CH':
+          'Abstände haben Namen: die Sekunde ist der Nachbar, die Terz überspringt eine Taste, dann kommen Quarte und Quinte. Eine Quinte reicht vom Daumen bis zum kleinen Finger. In den Noten: Terz = Linie zu Linie, Quinte = eine Linie überspringen.',
+        en: 'Distances have names: the second is the neighbour, the third skips one key, then come the fourth and the fifth. A fifth reaches from the thumb to the little finger. In the music: third = line to line, fifth = skip one line.',
+      },
+      xp: 25,
+      keyboard: { from: 60, to: 79 },
+      keyLabels: 'c',
+      exercises: [
+        playIn(RH_C4, [
+          seq('C4 E4 C4 F4 C4 G4'),
+          seq('G4 E4 G4 D4 G4 C4'),
+          seq('D4 F4 E4 G4 C4 G4'),
+        ]),
+        {
+          type: 'note-rain',
+          clef: 'treble',
+          notes: seq('C4 D4 E4 F4 G4 A4 H4 C5 D5 E5 F5 G5'),
+          intervals: [2, 3, 4],
+          goal: 10,
+          fall: 10,
+        },
+      ],
+    },
+    {
       id: 'both-hold',
       kind: 'play',
       title: { 'de-CH': 'Halten und spielen', en: 'Hold and play' },
@@ -942,6 +1252,41 @@ CURRICULUM.push({
         ),
       ],
     },
+    {
+      id: 'ear-same',
+      kind: 'keys',
+      bonus: true,
+      title: { 'de-CH': 'Gleich oder anders?', en: 'Same or different?' },
+      intro: {
+        'de-CH':
+          'Ich spiele dir eine kurze Melodie zweimal vor. Manchmal ist beim zweiten Mal ein Ton anders – hörst du ihn? So hörst du später auch deine eigenen falschen Töne.',
+        en: 'I play you a short melody twice. Sometimes one note is different the second time – can you hear it? That is how you will later hear your own wrong notes too.',
+      },
+      xp: 20,
+      keyboard: C4_C5,
+      keyLabels: 'all',
+      exercises: [
+        {
+          type: 'listen',
+          question: { 'de-CH': 'Waren beide Male gleich?', en: 'Were both times the same?' },
+          answers: [
+            { 'de-CH': 'Gleich', en: 'Same' },
+            { 'de-CH': 'Anders', en: 'Different' },
+          ],
+          tempo: 132,
+          rounds: [
+            { notes: [[60], [62], [64], [], [60], [62], [64]], answer: 0 },
+            { notes: [[60], [62], [64], [], [60], [62], [65]], answer: 1 },
+            { notes: [[64], [62], [60], [], [64], [64], [60]], answer: 1 },
+            { notes: [[60], [64], [67], [], [60], [64], [67]], answer: 0 },
+            { notes: [[67], [65], [64], [62], [], [67], [65], [64], [62]], answer: 0 },
+            { notes: [[67], [65], [64], [62], [], [67], [64], [64], [62]], answer: 1 },
+            { notes: [[60], [60], [67], [67], [], [60], [60], [69], [69]], answer: 1 },
+            { notes: [[64], [65], [67], [], [64], [65], [67]], answer: 0 },
+          ],
+        },
+      ],
+    },
   ],
 });
 
@@ -993,6 +1338,39 @@ CURRICULUM.push({
       ],
     },
     {
+      // technique: the same five-finger shape in G, D, A and E – the black keys under the fingers
+      id: 'tech-positions',
+      kind: 'play',
+      title: { 'de-CH': 'Fünf Töne in neuen Tonarten', en: 'Five notes in new keys' },
+      intro: {
+        'de-CH':
+          'Dieselbe Handform, nur woanders hingelegt: Daumen auf G, D, A oder E – und es klingt wie C-Dur, nur in einer neuen Tonart. Damit es stimmt, braucht der Mittelfinger manchmal eine schwarze Taste. Hör hin: Klingt es hell und fröhlich wie in C?',
+        en: 'The same hand shape, just put somewhere else: thumb on G, D, A or E – and it sounds like C major, only in a new key. To get it right, the middle finger sometimes needs a black key. Listen: does it sound bright and happy, like in C?',
+      },
+      xp: 20,
+      keyboard: { from: 60, to: 76 },
+      keyLabels: 'all',
+      exercises: [
+        {
+          type: 'play-along',
+          sequences: [
+            seq('G4 A4 H4 C5 D5 C5 H4 A4 G4'),
+            seq('D4 E4 F#4 G4 A4 G4 F#4 E4 D4'),
+            seq('A4 H4 C#5 D5 E5 D5 C#5 H4 A4'),
+            seq('E4 F#4 G#4 A4 H4 A4 G#4 F#4 E4'),
+            seq('D4 F#4 A4 F#4 D4'),
+          ],
+          fingers: [
+            [1, 2, 3, 4, 5, 4, 3, 2, 1],
+            [1, 2, 3, 4, 5, 4, 3, 2, 1],
+            [1, 2, 3, 4, 5, 4, 3, 2, 1],
+            [1, 2, 3, 4, 5, 4, 3, 2, 1],
+            [1, 3, 5, 3, 1],
+          ],
+        },
+      ],
+    },
+    {
       id: 'black-lamb',
       kind: 'song',
       title: { 'de-CH': 'Mary auf den schwarzen Tasten', en: 'Mary on the black keys' },
@@ -1036,22 +1414,6 @@ CURRICULUM.push({
   stage: 3,
   lessons: [
     {
-      id: 'meter-eighths',
-      kind: 'rhythm',
-      title: { 'de-CH': 'Achtelnoten', en: 'Eighth notes' },
-      intro: {
-        'de-CH':
-          'Eine Achtelnote ist halb so lang wie eine Viertel: Auf einen Schlag passen zwei. Zähl «eins-und, zwei-und» – die Achtel kommen auf die Zahl und auf das «und».',
-        en: 'An eighth note is half as long as a quarter: two fit into one beat. Count «one-and, two-and» – the eighths come on the number and on the «and».',
-      },
-      xp: 25,
-      keyboard: C4_C5,
-      keyLabels: 'c',
-      exercises: [
-        rhythm('q q 8 8 q | 8 8 8 8 h | q 8 8 q q | 8 8 q 8 8 q | h 8 8 q', { tempo: 72 }),
-      ],
-    },
-    {
       id: 'meter-waltz',
       kind: 'rhythm',
       title: { 'de-CH': 'Der Dreivierteltakt', en: 'Three-four time' },
@@ -1065,6 +1427,35 @@ CURRICULUM.push({
       keyLabels: 'c',
       exercises: [
         rhythm('q q q | h q | q q q | hd | q h | 8 8 q q | hd', { time: '3/4', tempo: 92 }),
+      ],
+    },
+    {
+      id: 'sight-waltz',
+      kind: 'read',
+      title: { 'de-CH': 'Vom Blatt im Walzertakt', en: 'Sight-reading a waltz' },
+      intro: {
+        'de-CH':
+          'Vier Takte im Dreivierteltakt, die du noch nie gesehen hast – vom C bis zum nächsten C. Lies zuerst den Rhythmus, dann die Töne. Und dann: eins, zwei, drei – los!',
+        en: 'Four bars in three-four time you have never seen – from C up to the next C. Read the rhythm first, then the notes. And then: one, two, three – go!',
+      },
+      xp: 30,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        {
+          type: 'sight-read',
+          clef: 'treble',
+          time: '3/4',
+          tempo: 84,
+          notes: seq('C4 D4 E4 F4 G4 A4 H4 C5'),
+          rhythms: [
+            'q q q | h q | q q q | hd',
+            'h q | q q q | q q q | hd',
+            'q q q | q q q | h q | hd',
+            'q h | q q q | q q q | hd',
+          ],
+          rounds: 3,
+        },
       ],
     },
     {
@@ -1121,6 +1512,25 @@ CURRICULUM.push({
         rhythm('qd qd | q 8 q 8 | 8 8 8 qd | hd | q 8 8 8 8 | hd', { time: '6/8', tempo: 60 }),
       ],
     },
+    {
+      id: 'song-row',
+      kind: 'song',
+      title: { 'de-CH': 'Row, Row, Row Your Boat', en: 'Row, Row, Row Your Boat' },
+      intro: {
+        'de-CH':
+          'Ein englischer Kanon im Sechsachteltakt – er schaukelt wie ein Ruderboot. In der Mitte kommen viermal drei schnelle Achtel: «mer-ri-ly, mer-ri-ly».',
+        en: 'An English round in six-eight time – it rocks like a rowing boat. In the middle come four groups of three quick eighths: «merrily, merrily».',
+      },
+      xp: 30,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'C4/qd C4/qd | C4/q D4/8 E4/qd | E4/q D4/8 E4/q F4/8 | G4/hd | C5/8 C5/8 C5/8 G4/8 G4/8 G4/8 | E4/8 E4/8 E4/8 C4/8 C4/8 C4/8 | G4/q F4/8 E4/q D4/8 | C4/hd',
+          { time: '6/8', tempo: 84 },
+        ),
+      ],
+    },
   ],
 });
 
@@ -1150,6 +1560,27 @@ CURRICULUM.push({
           rounds: 10,
           spelling: 'flat',
         },
+      ],
+    },
+    {
+      // technique: the scale with both hands, in contrary motion – both hands use the same fingers
+      id: 'tech-scale-both',
+      kind: 'play',
+      title: { 'de-CH': 'Tonleiter mit beiden Händen', en: 'The scale with both hands' },
+      intro: {
+        'de-CH':
+          'Beide Hände spielen die C-Dur-Tonleiter – die rechte hinauf, die linke hinunter, wie ein Spiegel. Das Schöne daran: Beide brauchen genau dieselben Finger, und beide Daumen schlüpfen im gleichen Moment unter.',
+        en: 'Both hands play the C major scale – the right one up, the left one down, like a mirror. The nice thing: both use exactly the same fingers, and both thumbs slip under at the same moment.',
+      },
+      xp: 25,
+      keyboard: { from: 36, to: 72 },
+      keyLabels: 'c',
+      exercises: [
+        piece(
+          'C4/q:1 D4/q:2 E4/q:3 F4/q:1 | G4/q:2 A4/q:3 H4/q:4 C5/q:5 | C5/q:5 H4/q:4 A4/q:3 G4/q:2 | F4/q:1 E4/q:3 D4/q:2 C4/q:1',
+          'C3/q:1 H2/q:2 A2/q:3 G2/q:1 | F2/q:2 E2/q:3 D2/q:4 C2/q:5 | C2/q:5 D2/q:4 E2/q:3 F2/q:2 | G2/q:1 A2/q:3 H2/q:2 C3/q:1',
+          { tempo: 60 },
+        ),
       ],
     },
     {
@@ -1297,6 +1728,60 @@ CURRICULUM.push({
         },
       ],
     },
+    {
+      id: 'song-jakob-minor',
+      kind: 'song',
+      title: { 'de-CH': 'Bruder Jakob in Moll', en: 'Brother John in minor' },
+      intro: {
+        'de-CH':
+          '«Bruder Jakob» kennst du – jetzt in a-Moll. Gustav Mahler hat das Lied in seiner ersten Sinfonie so gesetzt: langsam, wie ein Trauermarsch. Hör, wie dieselbe Melodie plötzlich ganz anders klingt.',
+        en: 'You know «Brother John» – now in A minor. Gustav Mahler set the song this way in his first symphony: slowly, like a funeral march. Listen how the same melody suddenly sounds completely different.',
+      },
+      xp: 30,
+      keyboard: { from: 64, to: 79 },
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'A4/q H4/q C5/q A4/q | A4/q H4/q C5/q A4/q | C5/q D5/q E5/h | C5/q D5/q E5/h | E5/8 F5/8 E5/8 D5/8 C5/q A4/q | E5/8 F5/8 E5/8 D5/8 C5/q A4/q | A4/q E4/q A4/h | A4/q E4/q A4/h',
+          { tempo: 72 },
+        ),
+      ],
+    },
+    {
+      id: 'ear-major-minor',
+      kind: 'keys',
+      bonus: true,
+      title: { 'de-CH': 'Dur oder Moll?', en: 'Major or minor?' },
+      intro: {
+        'de-CH':
+          'Dur klingt hell und fröhlich, Moll dunkler, ein bisschen traurig – wie Bruder Jakob in Moll. Ich spiele dir Akkorde vor, mal zusammen, mal nacheinander. Was hörst du?',
+        en: 'Major sounds bright and happy, minor darker, a little sad – like Frère Jacques in minor. I play you chords, sometimes together, sometimes one note after the other. What do you hear?',
+      },
+      xp: 20,
+      keyboard: C4_C5,
+      keyLabels: 'all',
+      exercises: [
+        {
+          type: 'listen',
+          question: { 'de-CH': 'Dur oder Moll?', en: 'Major or minor?' },
+          answers: [
+            { 'de-CH': 'Dur – hell', en: 'Major – bright' },
+            { 'de-CH': 'Moll – dunkel', en: 'Minor – dark' },
+          ],
+          tempo: 50,
+          rounds: [
+            { notes: [[60, 64, 67]], answer: 0 },
+            { notes: [[57, 60, 64]], answer: 1 },
+            { notes: [[65, 69, 72]], answer: 0 },
+            { notes: [[62, 65, 69]], answer: 1 },
+            { notes: [[60], [63], [67]], answer: 1 },
+            { notes: [[67], [71], [74]], answer: 0 },
+            { notes: [[64, 67, 71]], answer: 1 },
+            { notes: [[62], [66], [69]], answer: 0 },
+          ],
+        },
+      ],
+    },
   ],
 });
 
@@ -1308,47 +1793,24 @@ CURRICULUM.push({
   stage: 3,
   lessons: [
     {
-      id: 'accomp-bass',
-      kind: 'song',
-      title: { 'de-CH': 'Hänschen mit Wechselbass', en: 'Little Hans with alternating bass' },
+      id: 'accomp-chords',
+      kind: 'play',
+      title: { 'de-CH': 'Die Akkorde C, F und G', en: 'The chords C, F and G' },
       intro: {
         'de-CH':
-          'Die rechte Hand spielt die Melodie, die linke begleitet: Grundton und Quinte im Wechsel – C und G, und wo die Melodie zum G-Dur wechselt, G und D.',
-        en: 'The right hand plays the melody, the left accompanies: root and fifth in turn – C and G, and where the melody moves to G major, G and D.',
+          'Ein Akkord sind drei Töne mit je einer Taste Abstand – C, E, G. Spiel sie zusammen: mit dem kleinen Finger, dem Mittelfinger und dem Daumen der linken Hand. Mit C-, F- und G-Dur kannst du schon viele Lieder begleiten. Mit einem Digitalpiano müssen alle drei Töne gleichzeitig klingen.',
+        en: 'A chord is three notes, each one key apart – C, E, G. Play them together: with the little finger, the middle finger and the thumb of the left hand. With C, F and G major you can already accompany many songs. With a digital piano all three notes have to sound at the same time.',
       },
       xp: 30,
-      keyboard: C3_C5,
-      keyLabels: 'c',
+      keyboard: { from: 48, to: 64 },
+      keyLabels: 'all',
       exercises: [
-        piece(
-          'G4/q E4/q E4/h | F4/q D4/q D4/h | C4/q D4/q E4/q F4/q | G4/q G4/q G4/h | G4/q E4/q E4/h | F4/q D4/q D4/h | C4/q E4/q G4/q G4/q | C4/w',
-          'C3/h G3/h | G3/h D3/h | C3/h G3/h | C3/h G3/h | C3/h G3/h | G3/h D3/h | C3/h G3/h | C3/w',
-          { tempo: 84 },
-        ),
-      ],
-    },
-    {
-      id: 'accomp-finale',
-      kind: 'song',
-      bonus: true,
-      title: {
-        'de-CH': 'Abschlusskonzert: Freude mit Wechselbass',
-        en: 'Final concert: Ode to Joy with alternating bass',
-      },
-      intro: {
-        'de-CH':
-          'Dein Abschlussstück: Beethovens «Freude» ganz, mit dem Mittelteil – rechts die Melodie, links der Wechselbass. Spiel es jemandem vor!',
-        en: 'Your final piece: Beethoven’s “Ode to Joy” in full, with the middle part – the melody on the right, the alternating bass on the left. Play it for someone!',
-      },
-      xp: 40,
-      keyboard: C3_C5,
-      keyLabels: 'c',
-      exercises: [
-        piece(
-          'E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | E4/qd D4/8 D4/h | E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | D4/qd C4/8 C4/h | D4/q D4/q E4/q C4/q | D4/q E4/8 F4/8 E4/q C4/q | D4/q E4/8 F4/8 E4/q D4/q | C4/q D4/q G3/h | E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | D4/qd C4/8 C4/h',
-          'C3/h G3/h | G3/h D3/h | C3/h G3/h | G3/h D3/h | C3/h G3/h | G3/h D3/h | C3/h G3/h | G3/h C3/h | G3/h D3/h | C3/h G3/h | G3/h D3/h | C3/w | C3/h G3/h | G3/h D3/h | C3/h G3/h | G3/h C3/h',
-          { tempo: 84 },
-        ),
+        {
+          type: 'chords',
+          chords: [seq('C3 E3 G3'), seq('F3 A3 C4'), seq('G3 H3 D4'), seq('C3 E3 G3')],
+          names: ['C', 'F', 'G', 'C'],
+          fingers: [0, 1, 2, 3].map(() => LH_FINGERS_531),
+        },
       ],
     },
     {
@@ -1357,8 +1819,8 @@ CURRICULUM.push({
       title: { 'de-CH': 'Gebrochene Akkorde', en: 'Broken chords' },
       intro: {
         'de-CH':
-          'Ein Akkord sind drei Töne mit je einer Taste Abstand – C, E, G. Gebrochen spielst du sie nacheinander: mit dem kleinen Finger, dem Mittelfinger und dem Daumen der linken Hand.',
-        en: 'A chord is three notes, each one key apart – C, E, G. Broken, you play them one after the other: with the little finger, the middle finger and the thumb of the left hand.',
+          'Die Akkorde kennst du jetzt. Gebrochen spielst du ihre Töne nacheinander – hinauf und wieder hinunter, wie eine kleine Welle: kleiner Finger, Mittelfinger, Daumen.',
+        en: 'You know the chords now. Broken, you play their notes one after the other – up and down again, like a little wave: little finger, middle finger, thumb.',
       },
       xp: 30,
       keyboard: { from: 48, to: 64 },
@@ -1377,24 +1839,23 @@ CURRICULUM.push({
       ],
     },
     {
-      id: 'accomp-chords',
-      kind: 'play',
-      title: { 'de-CH': 'Die Akkorde C, F und G', en: 'The chords C, F and G' },
+      id: 'accomp-bass',
+      kind: 'song',
+      title: { 'de-CH': 'Hänschen mit Wechselbass', en: 'Little Hans with alternating bass' },
       intro: {
         'de-CH':
-          'Jetzt alle drei Töne zusammen! Mit C-, F- und G-Dur kannst du schon viele Lieder begleiten. Mit einem Digitalpiano müssen alle drei Töne gleichzeitig klingen.',
-        en: 'Now all three notes together! With C, F and G major you can already accompany many songs. With a digital piano all three notes have to sound at the same time.',
+          'Die rechte Hand spielt die Melodie, die linke begleitet: Grundton und Quinte im Wechsel – C und G, und wo die Melodie zum G-Dur wechselt, G und D.',
+        en: 'The right hand plays the melody, the left accompanies: root and fifth in turn – C and G, and where the melody moves to G major, G and D.',
       },
       xp: 30,
-      keyboard: { from: 48, to: 64 },
-      keyLabels: 'all',
+      keyboard: C3_C5,
+      keyLabels: 'c',
       exercises: [
-        {
-          type: 'chords',
-          chords: [seq('C3 E3 G3'), seq('F3 A3 C4'), seq('G3 H3 D4'), seq('C3 E3 G3')],
-          names: ['C', 'F', 'G', 'C'],
-          fingers: [0, 1, 2, 3].map(() => LH_FINGERS_531),
-        },
+        piece(
+          'G4/q E4/q E4/h | F4/q D4/q D4/h | C4/q D4/q E4/q F4/q | G4/q G4/q G4/h | G4/q E4/q E4/h | F4/q D4/q D4/h | C4/q E4/q G4/q G4/q | C4/w',
+          'C3/h G3/h | G3/h D3/h | C3/h G3/h | C3/h G3/h | C3/h G3/h | G3/h D3/h | C3/h G3/h | C3/w',
+          { tempo: 84 },
+        ),
       ],
     },
     {
@@ -1439,6 +1900,30 @@ CURRICULUM.push({
       keyLabels: 'c',
       exercises: [{ type: 'pedal', notes: seq('C3 F3 G3 C3 E4 F4 G4 C5') }],
     },
+    {
+      id: 'accomp-finale',
+      kind: 'song',
+      bonus: true,
+      title: {
+        'de-CH': 'Abschlusskonzert: Freude mit Wechselbass',
+        en: 'Final concert: Ode to Joy with alternating bass',
+      },
+      intro: {
+        'de-CH':
+          'Dein Abschlussstück: Beethovens «Freude» ganz, mit dem Mittelteil – rechts die Melodie, links der Wechselbass. Spiel es jemandem vor!',
+        en: 'Your final piece: Beethoven’s “Ode to Joy” in full, with the middle part – the melody on the right, the alternating bass on the left. Play it for someone!',
+      },
+      xp: 40,
+      keyboard: C3_C5,
+      keyLabels: 'c',
+      exercises: [
+        piece(
+          'E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | E4/qd D4/8 D4/h | E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | D4/qd C4/8 C4/h | D4/q D4/q E4/q C4/q | D4/q E4/8 F4/8 E4/q C4/q | D4/q E4/8 F4/8 E4/q D4/q | C4/q D4/q G3/h | E4/q E4/q F4/q G4/q | G4/q F4/q E4/q D4/q | C4/q C4/q D4/q E4/q | D4/qd C4/8 C4/h',
+          'C3/h G3/h | G3/h D3/h | C3/h G3/h | G3/h D3/h | C3/h G3/h | G3/h D3/h | C3/h G3/h | G3/h C3/h | G3/h D3/h | C3/h G3/h | G3/h D3/h | C3/w | C3/h G3/h | G3/h D3/h | C3/h G3/h | G3/h C3/h',
+          { tempo: 84 },
+        ),
+      ],
+    },
   ],
 });
 
@@ -1480,7 +1965,7 @@ export function lessonTargetCount(lesson: Lesson): number {
       (e.type === 'play-along'
         ? e.sequences.reduce((m, s) => m + s.length, 0)
         : e.type === 'song' || e.type === 'song-timed'
-          ? e.bars.flat().filter((n, i, all) => !isHeldNote(all, i)).length
+          ? e.bars.flat().filter((_, i, all) => isStruck(all, i)).length
           : e.type === 'rhythm'
             ? e.patterns.reduce((m, p) => m + rhythmOnsets(p).length, 0)
             : e.type === 'piece'
@@ -1497,7 +1982,11 @@ export function lessonTargetCount(lesson: Lesson): number {
                         ? 1
                         : e.type === 'note-rain'
                           ? e.goal
-                          : e.rounds),
+                          : e.type === 'listen'
+                            ? e.rounds.length
+                            : e.type === 'sight-read'
+                              ? e.rounds * sightNoteCount(e)
+                              : e.rounds),
     0,
   );
 }

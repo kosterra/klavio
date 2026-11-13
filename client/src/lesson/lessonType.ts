@@ -16,7 +16,7 @@ export type LessonType = (typeof LESSON_TYPES)[number];
 
 export function lessonType(lesson: Lesson): LessonType {
   const types = new Set(lesson.exercises.map((e) => e.type));
-  if (types.has('echo')) return 'ear';
+  if (types.has('echo') || (types.size === 1 && types.has('listen'))) return 'ear';
   if (types.has('chords')) return 'chords';
   if (types.has('dynamics') || types.has('pedal')) return 'expression';
   return lesson.kind;

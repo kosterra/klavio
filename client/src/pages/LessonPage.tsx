@@ -55,6 +55,8 @@ import { ReadNoteExercise } from '../lesson/ReadNoteExercise';
 import { SongExercise } from '../lesson/SongExercise';
 import { TimedSongExercise } from '../lesson/TimedSongExercise';
 import { ChordsExercise } from '../lesson/ChordsExercise';
+import { ListenExercise } from '../lesson/ListenExercise';
+import { SightReadExercise } from '../lesson/SightReadExercise';
 import { EchoExercise } from '../lesson/EchoExercise';
 import { DynamicsExercise } from '../lesson/DynamicsExercise';
 import { PedalExercise } from '../lesson/PedalExercise';
@@ -549,6 +551,10 @@ function LessonRun({
               <RhythmExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : exercise.type === 'echo' ? (
               <EchoExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'listen' ? (
+              <ListenExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
+            ) : exercise.type === 'sight-read' ? (
+              <SightReadExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ) : (
               <PlayAlongExercise key={exerciseIndex} exercise={exercise} {...exerciseProps} />
             ))}

@@ -217,7 +217,8 @@
       "pending": "{{count}} Ergebnis ist noch nicht übertragen. Beim Abmelden geht es verloren – warte besser, bis du wieder online bist.",
       "pending_other": "{{count}} Ergebnisse sind noch nicht übertragen. Beim Abmelden gehen sie verloren – warte besser, bis du wieder online bist.",
       "stay": "Angemeldet bleiben",
-      "go": "Abmelden"
+      "go": "Abmelden",
+      "textChild": "Danach meldest du dich mit deiner PIN wieder an."
     },
     "menu": "Menü",
     "input": "Mikrofon und MIDI",
@@ -284,6 +285,8 @@
     "title": "Verwaltung",
     "registrationOpen": "Registrierung neuer Konten erlauben",
     "registrationOpenHint": "Wenn ausgeschaltet, können keine neuen Konten erstellt werden. Bestehende Konten können sich weiterhin mit Passkey oder E-Mail-Code anmelden.",
+    "publicPage": "Ausführliche Startseite zeigen",
+    "publicPageHint": "Eingeschaltet sehen Besucher alles, was Klavio kann: das Lied zum Ausprobieren, die Welten, die Fragen und Antworten. Ausgeschaltet gibt es nur die Anmeldung – so bleibt eine Instanz für die eigene Familie oder Schule unauffällig.",
     "operator": {
       "title": "Betreiber und Kontakt",
       "hint": "Wer diese Klavio-Instanz betreibt und wie man dich erreicht. Steht in der Fusszeile und in der Datenschutzerklärung – dort muss stehen, wer für die Daten verantwortlich ist.",
@@ -360,7 +363,11 @@
         "newYearsEve": "Silvester",
         "newYear": "Neujahr"
       }
-    }
+    },
+    "pieceLibrary": "Notenbibliothek MuseTrainer",
+    "pieceLibraryHint": "Eingeschaltet können alle bei «Eigene Stücke» Klavierstücke aus der MuseTrainer-Bibliothek (github.com/musetrainer/library) suchen und übernehmen – Klavio holt die Datei über diesen Server, der Browser spricht mit niemand anderem. Die Sammlung bezeichnet ihre Dateien als gemeinfrei; Klavio prüft die Rechte nicht einzeln.",
+    "mutopiaLibrary": "Notenbibliothek Mutopia Project",
+    "mutopiaLibraryHint": "Eingeschaltet können alle bei «Eigene Stücke» Klavierstücke des Mutopia Project (mutopiaproject.org, rund 750 Stücke für Klavier allein) suchen und übernehmen – als MIDI-Datei, über diesen Server geholt. Die Stücke sind gemeinfrei oder unter Creative Commons; die Lizenz wird beim Stück gespeichert und beim Drucken genannt."
   },
   "errors": {
     "EMAIL_CODE_INVALID": "Der Code stimmt nicht oder ist abgelaufen.",
@@ -709,7 +716,10 @@
       "lives_other": "Noch {{count}} Leben",
       "over": "Drei Noten sind gelandet. Nochmals?",
       "done": "Alle gefangen – super gelesen!",
-      "note": "Fallende Note"
+      "note": "Fallende Note",
+      "taskInterval": "Lies den Abstand – spiel die zweite Note!",
+      "from": "von {{note}}",
+      "interval": "Zwei Noten, die erste ist {{note}}"
     },
     "parts": {
       "label": "Teil {{n}} von {{total}}",
@@ -725,7 +735,18 @@
       "pedal": "Pedal",
       "rhythm": "Rhythmus",
       "piece": "Beide Hände",
-      "improvise": "Erfinden"
+      "improvise": "Erfinden",
+      "listen": "Hör genau hin",
+      "sight-read": "Vom Blatt"
+    },
+    "ear": {
+      "right": "Richtig gehört!",
+      "again": "Hör nochmals genau hin …"
+    },
+    "sight": {
+      "intro": "Schau die Noten zuerst in Ruhe an. Dann zähle ich ein – und du spielst durch, ohne anzuhalten.",
+      "tip": "Tipp: Schau immer schon auf den nächsten Ton – und spiel weiter, auch nach einem Fehler.",
+      "round": "Melodie {{n}} von {{total}}"
     }
   },
   "badges": {
@@ -793,7 +814,8 @@
     "passkeySettingNeedsPasskey": "Richte dafür zuerst oben einen Passkey ein.",
     "resetSent": "Wir haben einen Code an {{email}} geschickt. Gib ihn hier ein – die PIN wird dann entfernt und der Elternbereich öffnet sich.",
     "resetCode": "Code aus der E-Mail",
-    "resetHint": "Danach kannst du unter «Konto» eine neue PIN festlegen."
+    "resetHint": "Danach kannst du unter «Konto» eine neue PIN festlegen.",
+    "childLogin": "Hier ist ein Kind mit seiner PIN angemeldet. Den Elternbereich öffnet nur die Eltern-PIN – es ist keine festgelegt. Melde dich ab und als Elternteil an."
   },
   "profileSettings": {
     "title": "Mein Profil",
@@ -1036,6 +1058,14 @@
     "needs": "Was braucht das Lied?",
     "needsHint": "Vorschlag passend zum Lied – du kannst anpassen. Grundlagen wie Noten lesen sind immer dabei.",
     "copyright": "Klavio speichert nur den Titel – keine Noten. Die Noten deines Traumlieds besorgst du dir später selbst, zum Beispiel als «Easy Piano»-Ausgabe.",
+    "upload": {
+      "title": "Oder lade dein eigenes Stück hoch",
+      "hint": "Hast du die Noten schon als MusicXML- oder MIDI-Datei? Dann wird das Stück dein Traumlied und landet zum Üben unter «Lieder» bei deinen Stücken.",
+      "button": "Noten hochladen",
+      "done": "«{{title}}» ist hochgeladen und als Traumlied eingetragen – speichere unten.",
+      "open": "Zum Stück"
+    },
+    "openPiece": "Dein Stück üben",
     "save": "Traumlied speichern",
     "remove": "Traumlied entfernen",
     "saved": "Traumlied gespeichert.",
@@ -1062,7 +1092,14 @@
     "picks": {
       "title": "Beliebte Traumlieder",
       "skills_one": "Braucht {{count}} Fähigkeit",
-      "skills_other": "Braucht {{count}} Fähigkeiten"
+      "skills_other": "Braucht {{count}} Fähigkeiten",
+      "listen": "«{{title}}» anhören",
+      "stop": "«{{title}}» stoppen",
+      "sheet": "Noten von «{{title}}»",
+      "sheetHint": "Nur der Anfang und nur die Melodie – zum Reinhören. Die ganzen Noten besorgst du dir später selbst.",
+      "sheetLabel": "Zeile {{line}} von {{lines}}",
+      "play": "Anhören",
+      "stopShort": "Stopp"
     },
     "skillsStart": "{{total}} Fähigkeiten bis zu deinem Traumlied – die erste lernst du gleich in der nächsten Lektion.",
     "unfold": "Mehr zum Traumlied zeigen",
@@ -1232,12 +1269,16 @@
     }
   },
   "placement": {
-    "title": "Ich kann schon …",
-    "hint": "Wer schon etwas Klavier spielt, beginnt später auf dem Lernpfad. Die Lektionen davor zählen dann als bestanden (mit einem Stern, ohne XP) und lassen sich jederzeit spielen.",
-    "label": "Beginnen bei",
+    "title": "Lernpfad",
+    "hint": "Wer schon Klavier spielt, überspringt Stufen oder Kapitel – oder schaltet den Lernpfad ganz aus.",
+    "label": "Beginnen bei (Stufe oder Kapitel)",
     "button": "Hier beginnen",
-    "confirm": "Beginnen bei «{{chapter}}»? Die Lektionen davor zählen dann als bestanden.",
-    "done": "Geschafft – der Lernpfad geht jetzt dort weiter."
+    "confirm": "Beginnen bei «{{chapter}}»? Die Lektionen davor zählen dann als bestanden (mit einem Stern) und bleiben spielbar.",
+    "done": "Geschafft – der Lernpfad geht jetzt dort weiter.",
+    "pathOn": "Lernpfad verwenden",
+    "pathOnHint": "Aus: Alle Lektionen sind frei wählbar, und der Start zeigt deine Stücke, Lieder und Werkzeuge statt der Karte.",
+    "offDone": "Der Lernpfad ist ausgeschaltet.",
+    "onDone": "Der Lernpfad ist wieder da."
   },
   "setup": {
     "title": "Los geht's",
@@ -1326,10 +1367,17 @@
   },
   "songs": {
     "title": "Lieder",
-    "intro_one": "{{count}} Lied ist offen – spiel es, so oft du willst.",
-    "intro_other": "{{count}} Lieder sind offen – spiel sie, so oft du willst.",
+    "intro_one": "{{count}} von {{total}} Liedern ist offen – spiel es, so oft du willst.",
+    "intro_other": "{{count}} von {{total}} Liedern sind offen – spiel sie, so oft du willst.",
     "new": "Neu – noch nicht gespielt",
-    "locked": "Kommt in Kapitel {{n}}"
+    "locked": "Kommt in Kapitel {{n}}",
+    "introNone": "Die Lieder kommen mit den Lektionen – das erste in Kapitel {{n}}.",
+    "tabs": {
+      "path": "Lernpfad",
+      "own": "Meine Stücke",
+      "collection": "Sammlung"
+    },
+    "collectionIntro": "Volkslieder und kleine Klassikstücke, für Klavio vereinfacht – zum Üben, Anhören und Drucken, ohne Sterne."
   },
   "duet": {
     "label": "Klavi spielt mit",
@@ -1421,11 +1469,15 @@
     "unsupported": "Dieser Browser kann keine Erinnerungen zeigen. Auf dem iPhone oder iPad geht es, wenn Klavio auf dem Home-Bildschirm installiert ist.",
     "forOther": "Dieses Gerät erinnert gerade ein anderes Profil. Einschalten erinnert stattdessen dich."
   },
+  "preview": {
+    "listen": "Hörprobe: «{{title}}»",
+    "stop": "Hörprobe stoppen: «{{title}}»"
+  },
   "own": {
     "title": "Eigene Stücke",
-    "intro": "Bring deine eigenen Noten mit: eine MusicXML- oder MIDI-Datei aus MuseScore, Finale, Sibelius oder Dorico. Klavio liest sie auf deinem Gerät; gespeichert werden nur die Noten, für alle Profile deines Kontos.",
+    "intro": "Deine Notensammlung: Importiere eine Datei oder hol ein Stück aus der Bibliothek. Gespeichert werden nur die Noten, für alle Profile deines Kontos.",
     "import": "Stück importieren",
-    "how": "Dateien .musicxml, .xml, .mxl oder MIDI (.mid). Klavio nimmt die Hauptstimme (bei zwei Systemen beide Hände) – Ganze bis Achtel, punktierte Halbe und Viertel.",
+    "how": "Dateien .musicxml, .xml, .mxl oder MIDI (.mid), bis 1000 Takte. Klavio nimmt die Hauptstimme (bei zwei Systemen beide Hände) – von Ganzen bis zu Vierundsechzigsteln, mit Punkten und Triolen.",
     "full": "Höchstens {{count}} eigene Stücke – lösche zuerst eines.",
     "previewSong_one": "Lied mit einer Notenzeile · {{count}} Takt · {{time}}-Takt",
     "previewSong_other": "Lied mit einer Notenzeile · {{count}} Takte · {{time}}-Takt",
@@ -1448,21 +1500,54 @@
     "errors": {
       "NOT_MUSICXML": "Das ist keine MusicXML-Datei. Exportiere das Stück im Notenprogramm als MusicXML (.musicxml oder .mxl).",
       "NO_NOTES": "In der Datei sind keine Noten.",
-      "TOO_LONG": "Das Stück ist zu lang – höchstens 64 Takte.",
-      "DURATION": "Takt {{bar}} hat Notenwerte, die Klavio noch nicht kann (z. B. Sechzehntel oder punktierte Achtel).",
-      "TUPLET": "Takt {{bar}} hat Triolen – die kann Klavio noch nicht.",
+      "TOO_LONG": "Das Stück ist zu lang – höchstens 1000 Takte.",
+      "DURATION": "Takt {{bar}} hat Notenwerte, die Klavio noch nicht kann (z. B. Vierundsechzigstel-Triolen).",
+      "TUPLET": "Takt {{bar}} hat Quintolen oder ähnliche Gruppen – Triolen gehen, diese noch nicht.",
       "RANGE": "Die Noten liegen ausserhalb der Klaviatur.",
       "TOO_BIG": "Die Datei ist zu gross (höchstens 5 MB).",
       "NOT_MIDI": "Diese MIDI-Datei kann Klavio nicht lesen."
-    }
+    },
+    "search": "In deinen Stücken suchen",
+    "noMatch": "Kein Stück passt zu deiner Suche.",
+    "more": "Mehr zu «{{title}}»",
+    "rename": "«{{title}}» umbenennen",
+    "renameTitle": "Stück umbenennen",
+    "renamed": "Gespeichert.",
+    "fieldTitle": "Titel",
+    "fieldComposer": "Komponist oder Herkunft",
+    "library": "Aus der Bibliothek",
+    "libraryTitle": "Stück aus der Bibliothek",
+    "librarySearch": "Titel oder Komponist",
+    "libraryNone": "Nichts gefunden – versuch ein anderes Wort.",
+    "libraryAdd": "Übernehmen",
+    "libraryAddLabel": "«{{title}}» übernehmen",
+    "librarySource": {
+      "musetrainer": "{{name}}: Die Sammlung bezeichnet ihre Stücke als gemeinfrei.",
+      "mutopia": "{{name}}: gemeinfrei oder Creative Commons – die Lizenz steht bei jedem Stück und wird mit ihm gespeichert."
+    },
+    "libraryCannotRead": "«{{title}}» kann Klavio nicht lesen: {{reason}}",
+    "libraryUnreachable": "Die Bibliothek ist gerade nicht erreichbar – versuch es später nochmals.",
+    "bars_one": "{{count}} Takt",
+    "bars_other": "{{count}} Takte",
+    "oneHand": "Eine Hand",
+    "bothHands": "Beide Hände",
+    "librarySortLevel": "Leicht zuerst",
+    "librarySortTitle": "A–Z",
+    "librarySort": "Sortieren",
+    "libraryLooking": "Klavio schätzt die Schwierigkeit noch ein …",
+    "sourceLine": "Noten: {{source}}",
+    "libraryHow": "Klavio liest das Stück wie eine eigene Datei; du siehst es, bevor du es speicherst.",
+    "publicDomain": "gemeinfrei",
+    "libraryAll": "Alle",
+    "librarySources": "Sammlung"
   },
   "folk": {
     "title": "Schweizer Volkslieder",
-    "intro": "Alte Lieder aus der Schweiz, abgeschrieben aus einer Sammlung von 1826 und für Klavio vereinfacht: die Melodie zum Üben mit Anhören, und zum Drucken – ohne Sterne."
+    "intro": "Alte Lieder aus der Schweiz, abgeschrieben aus einer Sammlung von 1826."
   },
   "classics": {
     "title": "Klassik zum Üben",
-    "intro": "Kleine Stücke grosser Komponisten, für Klavio vereinfacht: zum Üben mit Anhören und einer Hand allein, und zum Drucken – ohne Sterne.",
+    "intro": "Kleine Stücke grosser Komponisten – auch mit einer Hand allein zu üben.",
     "credit": "Noten: {{by}}, {{license}}",
     "license": "Lizenz"
   },
@@ -1489,5 +1574,110 @@
     "approve": "Freigeben",
     "reject": "Nicht zeigen",
     "publicTitle": "Das sagen Familien"
+  },
+  "readiness": {
+    "ready": "Passt zu deinem Stand: Alles dafür kommt im Lernpfad bis «{{lesson}}» vor – und das hast du geschafft.",
+    "after": "Empfohlen nach der Lektion «{{lesson}}» (Kapitel {{chapter}}).",
+    "missing": "Dafür lernst du noch: {{list}}.",
+    "go": "Weiter mit «{{lesson}}»",
+    "beyondText": "Geht über den Lernpfad hinaus: {{list}} – mit Geduld und langsamem Tempo trotzdem machbar.",
+    "needs": {
+      "keys": "fünf Töne",
+      "read-cde": "Noten C, D, E lesen",
+      "read-fg": "Noten bis G lesen",
+      "read-octave": "Noten bis zum hohen C lesen",
+      "wide": "Daumen drunter (mehr als fünf Töne)",
+      "read-high": "Noten mit Hilfslinien",
+      "rests": "Pausen",
+      "eighths": "Achtelnoten",
+      "dotted": "punktierte Viertel",
+      "two-four": "Zweivierteltakt",
+      "bass": "Bassschlüssel",
+      "bass-low": "tiefe Töne im Bass",
+      "both": "beide Hände zusammen",
+      "sharps": "Kreuze (♯) und schwarze Tasten",
+      "three-four": "Dreivierteltakt",
+      "upbeat": "Auftakt",
+      "ties": "Haltebögen",
+      "six-eight": "Sechsachteltakt",
+      "flats": "Be (♭)",
+      "key-g": "G-Dur",
+      "key-f": "F-Dur"
+    },
+    "beyond": {
+      "very-high": "sehr hohe Töne",
+      "very-low": "sehr tiefe Töne",
+      "other-time": "eine besondere Taktart",
+      "key-d": "D-Dur",
+      "sixteenths": "Sechzehntel",
+      "dotted-eighths": "punktierte Achtel",
+      "triplets": "Triolen"
+    }
+  },
+  "freeHome": {
+    "intro": "Der Lernpfad ist ausgeschaltet – spiel, was du willst: deine Stücke, Lieder, Notenregen oder frei.",
+    "rain": "Notenregen",
+    "metronome": "Metronom",
+    "lessons": "Alle Lektionen – frei wählbar"
+  },
+  "notes": {
+    "open": "Noten ansehen",
+    "openLabel": "Noten von «{{title}}» ansehen",
+    "practice": "Üben",
+    "size": "Grösse der Noten",
+    "sizes": {
+      "s": "Klein",
+      "m": "Mittel",
+      "l": "Gross"
+    }
+  },
+  "level": {
+    "1": "Stufe 1",
+    "2": "Stufe 2",
+    "3": "Stufe 3",
+    "4": "Fortgeschritten",
+    "5": "Anspruchsvoll",
+    "ready": "Passt jetzt"
+  },
+  "childLogin": {
+    "who": "Wer spielt?",
+    "hello": "Hallo {{name}}!",
+    "enterPin": "Tipp deine PIN ein.",
+    "pin": "PIN von {{name}}",
+    "go": "Los geht’s",
+    "notMe": "Das bin ich nicht",
+    "wrong": "Die PIN stimmt nicht – versuch es nochmals.",
+    "locked": "Zu viele Versuche. Warte ein paar Minuten oder frag deine Eltern.",
+    "failed": "Das hat nicht geklappt – versuch es nochmals.",
+    "parent": "Eltern: hier anmelden",
+    "back": "Zurück zu «Wer spielt?»"
+  },
+  "childPin": {
+    "title": "Anmelden mit PIN",
+    "intro": "Mit einer eigenen PIN meldet sich {{name}} auf einem Gerät für die Kinder selbst an – ohne E-Mail und ohne dich. Das Gerät richtest du unter «Konto» ein.",
+    "isSet": "{{name}} hat eine PIN und kann sich auf den Geräten für die Kinder selbst anmelden.",
+    "set": "PIN festlegen",
+    "change": "PIN ändern",
+    "remove": "PIN entfernen",
+    "enter": "Neue PIN (4 Ziffern)",
+    "confirm": "PIN nochmals eingeben",
+    "mismatch": "Die beiden PINs sind nicht gleich – gib sie nochmals ein.",
+    "saved": "{{name}} meldet sich jetzt mit der PIN an."
+  },
+  "devices": {
+    "title": "Geräte für die Kinder",
+    "intro": "Auf einem Gerät für die Kinder zeigt Klavio «Wer spielt?»: Jedes Kind tippt auf seine Figur und gibt seine eigene PIN ein. Ein Kind bleibt dann in seinem Profil; den Elternbereich öffnet nur die Eltern-PIN.",
+    "noPins": "Lege zuerst für jedes Kind eine PIN fest: Profil wählen → «Mein Profil» → «Anmelden mit PIN».",
+    "whoCan": "Mit PIN: {{names}}",
+    "this": "dieses Gerät",
+    "lastUsed": "zuletzt benutzt am {{date}}",
+    "since": "eingerichtet am {{date}}",
+    "remove": "Entfernen",
+    "removeLabel": "Gerät «{{name}}» entfernen",
+    "removed": "«{{name}}» ist kein Gerät für die Kinder mehr.",
+    "name": "Name des Geräts",
+    "defaultName": "Klavier",
+    "setUpHint": "Richte das Gerät ein, auf dem die Kinder üben – du wirst dabei abgemeldet. Anmelden kannst du dich dort jederzeit wieder über «Eltern: hier anmelden».",
+    "setUp": "Dieses Gerät einrichten"
   }
 }

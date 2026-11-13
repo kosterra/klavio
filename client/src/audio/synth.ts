@@ -158,3 +158,37 @@ export function playMelody(
     },
   };
 }
+
+/**
+ * Plays groups of keys one beat each at `tempo`: the keys of a group sound
+ * together (a chord), an empty group is a pause. For «Hör genau hin».
+ */
+export function playGroups(groups: number[][], tempo: number, velocity = 0.7): Playback {
+  const beatMs = 60000 / tempo;
+  const timers: ReturnType<typeof setTimeout>[] = [];
+  const voices: (Voice | null)[] = [];
+  let resolve!: () => void;
+  const done = new Promise<void>((r) => (resolve = r));
+  groups.forEach((group, i) => {
+    timers.push(
+      setTimeout(() => {
+        for (const midi of group) voices.push(playNote(midi, velocity));
+      }, i * beatMs),
+      setTimeout(
+        () => {
+          for (const v of voices.splice(0)) v?.release();
+        },
+        (i + 0.9) * beatMs,
+      ),
+    );
+  });
+  timers.push(setTimeout(resolve, groups.length * beatMs + 200));
+  return {
+    done,
+    stop() {
+      timers.forEach(clearTimeout);
+      voices.forEach((v) => v?.release());
+      resolve();
+    },
+  };
+}

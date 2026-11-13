@@ -22,11 +22,16 @@ export const NOTE_NAMES_EN_FLAT = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'A
 /** How black keys are named and written: with ♯ (Cis) or with ♭ (Des). */
 export type Spelling = 'sharp' | 'flat';
 
-/** The key signatures Klavio teaches: none, one ♯ (G major), one ♭ (F major). */
-export type KeySignature = 'C' | 'G' | 'F';
+/** The key signatures Klavio knows: none, one ♯ (G major), two ♯ (D major), one ♭ (F major). */
+export type KeySignature = 'C' | 'G' | 'D' | 'F';
 
-/** The keys a key signature changes (pitch classes): G major F♯, F major B♭. */
-export const KEY_SIGNATURE_ALTERS: Record<KeySignature, number[]> = { C: [], G: [6], F: [10] };
+/** The keys a key signature changes (pitch classes): G major F♯, D major F♯ C♯, F major B♭. */
+export const KEY_SIGNATURE_ALTERS: Record<KeySignature, number[]> = {
+  C: [],
+  G: [6],
+  D: [6, 1],
+  F: [10],
+};
 
 export function spellingOf(key: KeySignature): Spelling {
   return key === 'F' ? 'flat' : 'sharp';

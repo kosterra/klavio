@@ -1,0 +1,119 @@
+/* one piece in a list: a single card, the actions inside it on the right */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-right: var(--mantine-spacing-xs);
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-lg);
+  background: var(--mantine-color-body);
+  transition: border-color 120ms;
+}
+
+.row[data-link]:hover {
+  border-color: var(--mantine-primary-color-filled);
+}
+
+.row[data-locked] {
+  background: var(--klavio-locked-bg);
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--mantine-spacing-sm);
+  min-width: 0;
+  min-height: 64px;
+  padding: var(--mantine-spacing-sm);
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--mantine-radius-lg);
+}
+
+.icon {
+  flex: none;
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+}
+
+/* long titles wrap onto a second line instead of being cut */
+.title {
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+}
+
+/* level: five dots and a word */
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-top: 4px;
+}
+
+.level,
+.ready {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.dots > span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--mantine-color-default-border);
+}
+
+.level {
+  --level-color: var(--mantine-color-teal-6);
+}
+
+.level[data-level='4'] {
+  --level-color: var(--mantine-color-orange-6);
+}
+
+.level[data-level='5'] {
+  --level-color: var(--mantine-color-red-6);
+}
+
+.dots > span[data-on] {
+  background: var(--level-color);
+}
+
+.ready {
+  color: var(--mantine-color-teal-9);
+}
+
+:global([data-mantine-color-scheme='dark']) .ready {
+  color: var(--mantine-color-teal-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
+}
+
+/* in the library: where a piece comes from and its licence, on a line of its own */
+.origin {
+  display: block;
+  font-size: var(--mantine-font-size-xs);
+}

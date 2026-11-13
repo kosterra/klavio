@@ -151,7 +151,7 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       hint: L('Grundton C, und fünf Töne weiter: G.', 'Root C, and five notes up: G.'),
     },
   ],
-  'accomp-broken': [
+  'accomp-chords': [
     {
       type: 'explain',
       text: L(
@@ -173,8 +173,6 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
         'From F, always skip one white key.',
       ),
     },
-  ],
-  'accomp-chords': [
     {
       type: 'explain',
       text: L(
@@ -190,6 +188,16 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       ),
       answers: [{ text: L('F', 'F') }, { text: L('G', 'G'), correct: true }, { text: L('C', 'C') }],
       hint: L('Lies nochmals oben nach.', 'Read the text above once more.'),
+    },
+  ],
+  'accomp-broken': [
+    {
+      type: 'explain',
+      text: L(
+        'Gebrochen heisst: Die Töne des Akkords kommen nacheinander – von unten nach oben und wieder zurück. So wird aus drei Tönen eine Begleitung, die fliesst.',
+        'Broken means: the notes of the chord come one after the other – from the bottom up and back again. That way three notes become an accompaniment that flows.',
+      ),
+      picture: { kind: 'keyboard', from: 48, to: 60, labels: 'all', marks: [48, 52, 55] },
     },
   ],
   'meter-eighths': [
@@ -223,6 +231,206 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       hint: L(
         'Zähl «eins-und»: zwei Achtel auf einen Schlag.',
         'Count «one-and»: two eighths on one beat.',
+      ),
+    },
+  ],
+  'tech-fingers': [
+    {
+      type: 'explain',
+      text: L(
+        'Leg die Hand locker auf C bis G, die Finger leicht gebogen – wie wenn du einen kleinen Ball hältst. Jetzt hebt nur ein Finger ab und spielt, die anderen bleiben liegen. Der vierte Finger braucht dafür am meisten Übung.',
+        'Rest your hand loosely on C to G, fingers slightly curved – as if you were holding a small ball. Now only one finger lifts and plays, the others stay where they are. The fourth finger needs the most practice for that.',
+      ),
+      picture: {
+        kind: 'keyboard',
+        ...C4_C5,
+        labels: 'all',
+        marks: [65],
+        fingering: [
+          [60, 1],
+          [62, 2],
+          [64, 3],
+          [65, 4],
+          [67, 5],
+        ],
+      },
+    },
+    {
+      type: 'quiz',
+      text: L('Was macht die Hand beim Fingerturnen?', 'What does the hand do in finger gym?'),
+      answers: [
+        { text: L('Sie bleibt ruhig liegen', 'It stays still'), correct: true },
+        { text: L('Sie hüpft mit jedem Ton', 'It jumps with every note') },
+      ],
+      hint: L('Nur die Finger bewegen sich.', 'Only the fingers move.'),
+    },
+  ],
+  'tech-thumb': [
+    {
+      type: 'explain',
+      text: L(
+        'Hinauf: Nach dem E (Mittelfinger) schlüpft der Daumen unter der Hand durch und spielt das F. Hinunter ist es umgekehrt: Der Mittelfinger klettert über den Daumen. Die Hand gleitet dabei ruhig weiter, der Ellbogen hilft ein wenig mit.',
+        'Going up: after E (middle finger) the thumb slips under the hand and plays F. Going down it is the other way round: the middle finger climbs over the thumb. The hand glides on calmly, the elbow helps a little.',
+      ),
+      picture: {
+        kind: 'keyboard',
+        ...C4_C5,
+        labels: 'all',
+        fingering: [
+          [60, 1],
+          [62, 2],
+          [64, 3],
+          [65, 1],
+          [67, 2],
+          [69, 3],
+        ],
+      },
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Du spielst C, D, E mit 1, 2, 3. Welcher Finger spielt dann das F?',
+        'You play C, D, E with 1, 2, 3. Which finger plays F next?',
+      ),
+      answers: [{ text: L('1', '1'), correct: true }, { text: L('4', '4') }, { text: L('5', '5') }],
+      hint: L(
+        'Der Daumen schlüpft unter – so bleiben noch Finger für die Töne danach.',
+        'The thumb slips under – so there are fingers left for the notes after it.',
+      ),
+    },
+  ],
+  'read-steps': [
+    {
+      type: 'explain',
+      text: L(
+        'Ein Schritt geht von einer Linie in den Zwischenraum gleich daneben – auf dem Klavier zur Nachbartaste. Hier: C, D, E, F – lauter Schritte.',
+        'A step goes from a line to the space right next to it – on the piano, to the next key. Here: C, D, E, F – all steps.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [60, 62, 64, 65], names: true },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Ein Sprung geht von Linie zu Linie oder von Zwischenraum zu Zwischenraum – eine Taste wird übersprungen. Hier: E, G, H – lauter Sprünge auf den Linien.',
+        'A skip goes from line to line or from space to space – one key is skipped. Here: E, G, B – all skips on the lines.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [64, 67, 71], names: true },
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Die erste Note ist ein E auf der untersten Linie. Die zweite liegt auf der nächsten Linie. Welche ist es?',
+        'The first note is E on the bottom line. The second one is on the next line. Which is it?',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [64, 67] },
+      answers: [{ text: L('F', 'F') }, { text: L('G', 'G'), correct: true }, { text: L('A', 'A') }],
+      hint: L(
+        'Linie zu Linie ist ein Sprung: E – (F) – G.',
+        'Line to line is a skip: E – (F) – G.',
+      ),
+    },
+  ],
+  'read-intervals': [
+    {
+      type: 'explain',
+      text: L(
+        'Zähl beide Noten mit: C bis E sind drei Töne (C, D, E) – eine Terz. C bis F sind vier – eine Quarte. C bis G sind fünf – eine Quinte, vom Daumen bis zum kleinen Finger.',
+        'Count both notes: C to E is three notes (C, D, E) – a third. C to F is four – a fourth. C to G is five – a fifth, from the thumb to the little finger.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [60, 64, 60, 65, 60, 67], names: true },
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Von einer Linie springt die Note über die nächste Linie hinweg auf die übernächste. Was für ein Abstand ist das?',
+        'From a line, the note jumps over the next line onto the one after. What distance is that?',
+      ),
+      answers: [
+        { text: L('Terz', 'Third') },
+        { text: L('Quarte', 'Fourth') },
+        { text: L('Quinte', 'Fifth'), correct: true },
+      ],
+      hint: L(
+        'Linie zu Linie ist eine Terz – noch eine Linie weiter ist die Quinte.',
+        'Line to line is a third – one more line up is the fifth.',
+      ),
+    },
+  ],
+  'sight-first': [
+    {
+      type: 'explain',
+      text: L(
+        'Vom Blatt spielen heisst: Noten spielen, die du noch nie gesehen hast. Drei Blicke vor dem Start helfen: Wo fängt die Melodie an? Welcher Rhythmus kommt? Geht sie in Schritten oder Sprüngen?',
+        'Sight-reading means playing music you have never seen. Three looks before you start help: where does the melody begin? What rhythm comes? Does it move in steps or skips?',
+      ),
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Mitten in der Melodie spielst du einen falschen Ton. Was tust du?',
+        'In the middle of the melody you play a wrong note. What do you do?',
+      ),
+      answers: [
+        { text: L('Weiterspielen, im Takt', 'Keep playing, in time'), correct: true },
+        { text: L('Anhalten und neu anfangen', 'Stop and start again') },
+      ],
+      hint: L(
+        'Beim Vom-Blatt-Spielen läuft die Zeit weiter – wie in einer Band.',
+        'When sight-reading, time goes on – like in a band.',
+      ),
+    },
+  ],
+  'tech-positions': [
+    {
+      type: 'explain',
+      text: L(
+        'Dur klingt immer gleich hell, egal wo du anfängst – wenn die Abstände stimmen. Bei D braucht der Mittelfinger das Fis, damit es so klingt wie C, D, E in C-Dur.',
+        'Major always sounds just as bright, wherever you start – if the distances are right. On D, the middle finger needs F sharp so it sounds like C, D, E in C major.',
+      ),
+      picture: {
+        kind: 'keyboard',
+        from: 60,
+        to: 72,
+        labels: 'all',
+        marks: [62, 64, 66, 67, 69],
+        fingering: [
+          [62, 1],
+          [64, 2],
+          [66, 3],
+          [67, 4],
+          [69, 5],
+        ],
+      },
+    },
+  ],
+  'rhythm-dotted': [
+    {
+      type: 'explain',
+      text: L(
+        'Ein Punkt hinter einer Note macht sie um die Hälfte länger. Eine Viertel dauert einen Schlag – mit Punkt anderthalb. Der halbe Schlag, der im Takt noch fehlt, ist meistens eine Achtel gleich danach.',
+        'A dot after a note makes it half as long again. A quarter lasts one beat – with a dot, one and a half. The half beat still missing in the bar is usually an eighth right after it.',
+      ),
+    },
+    {
+      type: 'clap',
+      text: L(
+        'Klatsch mit: punktierte Viertel, Achtel, Viertel, Viertel.',
+        'Tap along: dotted quarter, eighth, quarter, quarter.',
+      ),
+      tempo: 72,
+      pattern: ['qd', '8', 'q', 'q'],
+    },
+    {
+      type: 'quiz',
+      text: L('Wie lange dauert eine punktierte Viertel?', 'How long does a dotted quarter last?'),
+      answers: [
+        { text: L('Einen Schlag', 'One beat') },
+        { text: L('Anderthalb Schläge', 'One and a half beats'), correct: true },
+        { text: L('Zwei Schläge', 'Two beats') },
+      ],
+      hint: L(
+        'Der Punkt gibt die Hälfte dazu: ein Schlag und ein halber.',
+        'The dot adds half: one beat and a half.',
       ),
     },
   ],

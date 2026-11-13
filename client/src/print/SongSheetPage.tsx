@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { fitBarsPerLine } from '../notation/lineLength';
 import { Button, Group, Switch, Text } from '@mantine/core';
 import { IconArrowLeft, IconPrinter } from '@tabler/icons-react';
 import { Link, Navigate, useParams } from 'react-router';
@@ -10,7 +11,9 @@ import {
   isLessonUnlocked,
   localIsoDate,
   midiToPitchName,
+  pieceFingers,
   songFingers,
+  staffDuration,
   type Exercise,
   type PieceExercise,
   type SongExercise,
@@ -28,7 +31,7 @@ import { useWorldMode } from '../lesson/useWorldMode';
 import { chapterColor, worldOf } from '../lesson/worlds';
 import classes from './SongSheet.module.css';
 
-type Printable = SongExercise | TimedSongExercise | PieceExercise;
+export type Printable = SongExercise | TimedSongExercise | PieceExercise;
 
 /** bars per line on paper: four fit an A4 page in a readable size (two on a phone's preview) */
 const BARS_PER_LINE = 4;
@@ -114,70 +117,27 @@ export function SheetView({
   const [names, setNames] = useState(() => !!exercise.showNames);
   const [fingers, setFingers] = useState(true);
   const narrow = useMediaQuery('(max-width: 36em)') ?? false;
-  const per = narrow ? BARS_PER_LINE_NARROW : BARS_PER_LINE;
+  const per = fitBarsPerLine(
+    narrow ? BARS_PER_LINE_NARROW : BARS_PER_LINE,
+    exercise.type === 'piece'
+      ? exercise.bars.map((b) => Math.max(b.rh.length, b.lh.length))
+      : exercise.bars.map((b) => b.length),
+  );
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
   const kids = activeProfile?.uiMode !== 'classic';
-  const name = (midi: number) => (names ? midiToPitchName(midi, lang) : undefined);
   const days = Array.from({ length: 7 }, (_, i) =>
     new Intl.DateTimeFormat(i18n.language, { weekday: 'short' }).format(
       new Date(Date.UTC(2026, 10, 2 + i, 12)), // a Monday … Sunday
     ),
   );
 
-  let music: React.ReactNode;
-  if (exercise.type === 'piece') {
-    const toStaff = (notes: PieceExercise['bars'][number]['rh']): StaffNote[] =>
-      notes.map((n) => ({
-        midi: n.midi ?? 60,
-        duration: n.value,
-        label: n.midi === null ? undefined : name(n.midi),
-      }));
-    music = lines(exercise.bars, per).map((line, i) => (
-      <div key={i} className={classes.line} style={{ width: lineWidth(line.length, i, per) }}>
-        <GrandStaff
-          paper
-          bars={line.map((b) => ({ rh: toStaff(b.rh), lh: toStaff(b.lh) }))}
-          time={i === 0 ? exercise.time : undefined}
-          height={195}
-          label={t('sheet.lineLabel', { n: i + 1 })}
-        />
-      </div>
-    ));
-  } else {
-    let previousTied = false;
-    let flat = 0;
-    const planned = songFingers(exercise);
-    const bars: StaffNote[][] = exercise.bars.map((bar) =>
-      bar.map((n) => {
-        const finger = planned[flat++];
-        // a tied note is held: its finger is not repeated
-        const held = previousTied;
-        previousTied = !!n.tie;
-        return {
-          midi: n.midi,
-          duration: n.value,
-          label: name(n.midi),
-          finger: fingers && !held ? finger : undefined,
-          tie: n.tie,
-        };
-      }),
-    );
-    music = lines(bars, per).map((line, i) => (
-      <div key={i} className={classes.line} style={{ width: lineWidth(line.length, i, per) }}>
-        <Staff
-          paper
-          clef={exercise.clef}
-          keySignature={exercise.keySignature}
-          time={i === 0 ? exercise.time : undefined}
-          bars={line}
-          height={names ? 150 : 135}
-          scale={1.15}
-          label={t('sheet.lineLabel', { n: i + 1 })}
-        />
-      </div>
-    ));
-  }
-  const hasFingers = exercise.type !== 'piece' && songFingers(exercise).some((f) => f);
+  const music = (
+    <SheetMusic exercise={exercise} names={names} fingers={fingers} per={per} paper lang={lang} />
+  );
+  const hasFingers =
+    exercise.type === 'piece'
+      ? pieceFingers(exercise).some((b) => [...b.rh, ...b.lh].some((f) => f))
+      : songFingers(exercise).some((f) => f);
 
   return (
     <div className={classes.page} data-kids={kids || undefined}>
@@ -295,4 +255,91 @@ export function SheetView({
       </article>
     </div>
   );
+}
+
+/**
+ * The notes of a song or piece, line by line – on paper (black ink) or on the
+ * screen (the colour scheme's ink), with note names and fingers if wanted.
+ */
+export function SheetMusic({
+  exercise,
+  names,
+  fingers,
+  per,
+  paper = false,
+  lang,
+  staffHeight,
+}: {
+  exercise: Printable;
+  names: boolean;
+  fingers: boolean;
+  /** bars per line */
+  per: number;
+  paper?: boolean;
+  lang: 'de' | 'en';
+  /** bigger notes on the screen (the music stand) */
+  staffHeight?: number;
+}) {
+  const { t } = useTranslation();
+  const name = (midi: number) => (names ? midiToPitchName(midi, lang) : undefined);
+  let music: React.ReactNode;
+  if (exercise.type === 'piece') {
+    const planned = pieceFingers(exercise);
+    const toStaff = (b: number, hand: 'rh' | 'lh'): StaffNote[] =>
+      exercise.bars[b]![hand].map((n, i) => ({
+        midi: n.midi ?? 60,
+        duration: n.value,
+        label: n.midi === null ? undefined : name(n.midi),
+        finger: fingers ? planned[b]![hand][i] : undefined,
+      }));
+    const at = new Map(exercise.bars.map((bar, b) => [bar, b]));
+    music = lines(exercise.bars, per).map((line, i) => (
+      <div key={i} className={classes.line} style={{ width: lineWidth(line.length, i, per) }}>
+        <GrandStaff
+          paper={paper}
+          bars={line.map((bar) => {
+            const b = at.get(bar)!;
+            return { rh: toStaff(b, 'rh'), lh: toStaff(b, 'lh') };
+          })}
+          time={i === 0 ? exercise.time : undefined}
+          height={staffHeight ? staffHeight * 1.45 : 195}
+          label={t('sheet.lineLabel', { n: i + 1 })}
+        />
+      </div>
+    ));
+  } else {
+    let previousTied = false;
+    let flat = 0;
+    const planned = songFingers(exercise);
+    const bars: StaffNote[][] = exercise.bars.map((bar) =>
+      bar.map((n) => {
+        const finger = planned[flat++];
+        // a tied note is held: its finger is not repeated
+        const held = previousTied;
+        previousTied = !!n.tie;
+        return {
+          midi: n.midi,
+          duration: staffDuration(n),
+          label: n.rest ? undefined : name(n.midi),
+          finger: fingers && !held ? finger : undefined,
+          tie: n.tie,
+        };
+      }),
+    );
+    music = lines(bars, per).map((line, i) => (
+      <div key={i} className={classes.line} style={{ width: lineWidth(line.length, i, per) }}>
+        <Staff
+          paper={paper}
+          clef={exercise.clef}
+          keySignature={exercise.keySignature}
+          time={i === 0 ? exercise.time : undefined}
+          bars={line}
+          height={staffHeight ?? (names ? 150 : 135)}
+          scale={1.15}
+          label={t('sheet.lineLabel', { n: i + 1 })}
+        />
+      </div>
+    ));
+  }
+  return <>{music}</>;
 }

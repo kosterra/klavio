@@ -64,6 +64,8 @@ const sessionSchema = new Schema(
     activeProfileId: { type: Schema.Types.ObjectId, ref: 'Profile', default: null },
     /** Parent area (PIN-protected) open until then; set by entering the PIN (or resetting it by e-mail). */
     parentUnlockedUntil: { type: Date, default: null },
+    /** a child logged in with their PIN on a child's device: only this profile */
+    childProfileId: { type: Schema.Types.ObjectId, ref: 'Profile', default: null },
     expiresAt: { type: Date, required: true },
   },
   { timestamps: true },
@@ -95,6 +97,10 @@ const profileSchema = new Schema(
     weeklyGoalDays: { type: Number, default: null },
     /** where the learner plays first: the real piano or the screen keys */
     playOn: { type: String, enum: ['piano', 'screen', null], default: null },
+    /** the learning path is switched off (advanced players): every lesson open */
+    pathOff: { type: Boolean, default: false },
+    /** HMAC of the learner's own PIN (logging in on a child's device); null: none */
+    pinHash: { type: String, default: null },
     calibration: {
       a4Hz: { type: Number, default: 440 },
       noiseFloorDb: { type: Number, default: null },
@@ -112,7 +118,13 @@ const profileSchema = new Schema(
     // the learner's goal song: only its title, a style and the skills it needs
     goalSong: {
       type: new Schema(
-        { title: String, style: String, skills: { type: [String], default: [] } },
+        {
+          title: String,
+          style: String,
+          skills: { type: [String], default: [] },
+          /** an own piece uploaded as the dream song */
+          pieceId: String,
+        },
         { _id: false },
       ),
       default: null,
@@ -251,10 +263,41 @@ const ownPieceSchema = new Schema(
     /** the notes (checked against the schema on the way in) */
     exercise: { type: Schema.Types.Mixed, required: true },
     keyboard: { from: Number, to: Number },
+    /** where it comes from and under which licence (a library piece), shown on its pages and prints */
+    source: { type: String, default: null },
   },
   { timestamps: true },
 );
 export const OwnPiece = model('OwnPiece', ownPieceSchema);
+
+// ---------------------------------------------------------------------------
+// Sheet music libraries: their lists and what Klavio made of each file, kept
+// across restarts so the sources are not asked again and again
+// ---------------------------------------------------------------------------
+const libraryCacheSchema = new Schema({
+  /** "list:<source>" or "info:<file id>" */
+  _id: { type: String, required: true },
+  /** the list: when it was fetched; a file: its version (hash or date) */
+  version: { type: String, required: true },
+  data: { type: Schema.Types.Mixed, required: true },
+});
+export const LibraryCache = model('LibraryCache', libraryCacheSchema);
+
+// ---------------------------------------------------------------------------
+// Child's device: a browser a parent set up for the children – it shows
+// «Wer spielt?» and lets a child log in with their own PIN
+// ---------------------------------------------------------------------------
+const deviceSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+    /** SHA-256 of the device cookie */
+    tokenHash: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    lastUsedAt: { type: Date, default: null },
+  },
+  { timestamps: true },
+);
+export const Device = model('Device', deviceSchema);
 
 // ---------------------------------------------------------------------------
 // Testimonial: a few words from a family, shown publicly once an admin approved them
@@ -284,6 +327,12 @@ const appSettingsSchema = new Schema(
     _id: { type: String, default: 'global' },
     /** When false, no new accounts can be created; existing users can still log in. */
     registrationOpen: { type: Boolean, required: true },
+    /** true: visitors get the full start page with the tour; unset/false: only the login */
+    publicPage: { type: Boolean },
+    /** true: pieces can be fetched from the MuseTrainer library; unset/false: off */
+    pieceLibrary: { type: Boolean },
+    /** true: pieces can be fetched from the Mutopia Project; unset/false: off */
+    mutopiaLibrary: { type: Boolean },
     /** who runs this instance (footer, privacy page); empty until an admin fills it in */
     operatorName: { type: String, default: '' },
     contactEmail: { type: String, default: '' },

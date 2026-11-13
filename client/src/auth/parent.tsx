@@ -193,6 +193,7 @@ function PinReset({ onUnlocked }: { onUnlocked?: () => void }) {
 export function ParentGate({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { me } = useSession();
   const unlocked = useParentUnlocked();
   if (unlocked) return <>{children}</>;
   // a child who got here is never stuck: back to where they were
@@ -209,10 +210,19 @@ export function ParentGate({ children }: { children: ReactNode }) {
           <Title order={1} size="h2" ta="center">
             {t('parent.title')}
           </Title>
-          <ParentPinForm />
-          <Text size="sm" c="dimmed" ta="center">
-            {t('parent.gateHint')}
-          </Text>
+          {me?.childLogin && !me.user.parentPin.set ? (
+            // a child logged in with their PIN, and there is no parent PIN to open it with
+            <Text ta="center" data-testid="parent-gate-child">
+              {t('parent.childLogin')}
+            </Text>
+          ) : (
+            <>
+              <ParentPinForm />
+              <Text size="sm" c="dimmed" ta="center">
+                {t('parent.gateHint')}
+              </Text>
+            </>
+          )}
           <Button
             variant="subtle"
             leftSection={<IconArrowLeft size={18} />}

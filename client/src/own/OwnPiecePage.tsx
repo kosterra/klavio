@@ -27,6 +27,9 @@ import { PieceExercise } from '../lesson/PieceExercise';
 import { useLessonInput } from '../lesson/useLessonInput';
 import { HeardNote, InputSwitch } from '../pages/LessonPage';
 import { SheetView } from '../print/SongSheetPage';
+import { useProgress } from '../lesson/useProgress';
+import { ReadinessNote } from './ReadinessNote';
+import { NotesView } from './NotesView';
 
 /** An own piece fetched by its id (shared by playing and printing). */
 function useOwnPiece() {
@@ -58,7 +61,13 @@ export function OwnPiecePage() {
   const { piece, error, retry } = useOwnPiece();
   usePageTitle(piece?.title ?? t('own.title'));
   if (!piece) return <ProgressPending fullPage error={error} onRetry={retry} />;
-  return <PracticePiece piece={piece} printTo={`/own/${piece.id}/print`} />;
+  return (
+    <PracticePiece
+      piece={piece}
+      printTo={`/own/${piece.id}/print`}
+      credit={piece.source ? t('own.sourceLine', { source: piece.source }) : undefined}
+    />
+  );
 }
 
 /** A classical piece of the library, to practise. */
@@ -111,10 +120,13 @@ function PracticePiece({
   piece,
   printTo,
   source,
+  credit,
 }: {
   piece: Playable;
   printTo: string;
   source?: ClassicPiece['source'];
+  /** where a library piece comes from, with its licence */
+  credit?: string;
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -124,6 +136,7 @@ function PracticePiece({
   const { stopMicrophone } = input;
   const [phase, setPhase] = useState<'intro' | 'play' | 'done'>('intro');
   const [run, setRun] = useState(0);
+  const { played, progress } = useProgress();
   useEffect(() => () => stopMicrophone(), [stopMicrophone]);
 
   // what the exercises need of a lesson: the keys shown
@@ -163,6 +176,10 @@ function PracticePiece({
               <Alert color="blue" variant="light" w="100%">
                 {t('own.practiceOnly')}
               </Alert>
+              {/* a recommendation, never a lock: any piece can be tried */}
+              <Box w="100%">
+                <ReadinessNote exercise={piece.exercise} completed={progress ? played : null} />
+              </Box>
               <Button
                 size="lg"
                 onClick={() => {
@@ -173,6 +190,11 @@ function PracticePiece({
               >
                 {t('own.start')}
               </Button>
+              {credit && (
+                <Text size="xs" c="dimmed" ta="center" data-testid="own-source">
+                  {credit}
+                </Text>
+              )}
               {source && (
                 <Text size="xs" c="dimmed" ta="center" data-testid="classic-source">
                   {t('classics.credit', { by: source.by, license: source.license })} ·{' '}
@@ -246,8 +268,48 @@ export function OwnSheetPage() {
       title={piece.title}
       exercise={piece.exercise}
       chip={{ text: t('own.chip'), color: 'grape' }}
-      note={piece.composer ?? t('own.yours')}
+      note={[
+        piece.composer ?? t('own.yours'),
+        piece.source && t('own.sourceLine', { source: piece.source }),
+      ]
+        .filter(Boolean)
+        .join(' · ')}
       backTo={`/own/${piece.id}`}
+    />
+  );
+}
+
+/** An own piece on the music stand: just the notes. */
+export function OwnNotesPage() {
+  const { t } = useTranslation();
+  const { piece, error, retry } = useOwnPiece();
+  usePageTitle(piece?.title ?? t('own.title'));
+  if (!piece) return <ProgressPending fullPage error={error} onRetry={retry} />;
+  return (
+    <NotesView
+      title={piece.title}
+      composer={piece.composer}
+      exercise={piece.exercise}
+      practiceTo={`/own/${piece.id}`}
+      printTo={`/own/${piece.id}/print`}
+    />
+  );
+}
+
+/** A classical piece on the music stand. */
+export function ClassicNotesPage() {
+  const { classicId = '' } = useParams();
+  const loc = useLocalized();
+  const c = findClassic(classicId);
+  usePageTitle(c ? loc(c.title) : null);
+  if (!c) return <Navigate to="/songs" replace />;
+  return (
+    <NotesView
+      title={loc(c.title)}
+      composer={loc(c.composer)}
+      exercise={c.exercise}
+      practiceTo={`/classics/${c.id}`}
+      printTo={`/classics/${c.id}/print`}
     />
   );
 }

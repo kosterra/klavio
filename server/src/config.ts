@@ -21,6 +21,8 @@ const envSchema = z.object({
   AUTH_SECRET: z.string().min(32),
   COOKIE_SECURE: bool.default(true),
   SESSION_TTL_DAYS: z.coerce.number().int().min(1).max(365).default(60),
+  /** API requests per minute and address (the browser tests raise it: they all come from one address). */
+  API_RATE_LIMIT: z.coerce.number().int().min(10).default(300),
   /** Initial value of the global "registration open" switch; admins can change it at runtime. */
   REGISTRATION_OPEN_DEFAULT: bool.default(true),
   SMTP_HOST: z.string().optional(),

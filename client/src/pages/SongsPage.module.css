@@ -1,24 +1,32 @@
-.song {
-  color: inherit;
-  text-decoration: none;
+/* the three parts of «Lieder»: big pills that wrap on narrow phones */
+.tabs {
+  flex-wrap: wrap;
+  gap: var(--mantine-spacing-xs);
+  padding: 4px;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-xl);
+  background: var(--mantine-color-body);
 }
 
-.song:hover {
-  border-color: var(--mantine-color-pink-5);
+.tabs button {
+  min-height: 44px;
+  font-size: var(--mantine-font-size-md);
+  font-weight: 700;
 }
 
-.locked {
-  background: var(--klavio-locked-bg);
-}
+/* phones: the three side by side, without their icons */
+@media (max-width: 36em) {
+  .tabs {
+    flex-wrap: nowrap;
+    gap: 2px;
+  }
 
-/* the play button: a round sign at the end of the row */
-.play {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
-  color: #fff;
-  background: var(--mantine-primary-color-filled);
+  .tabs button {
+    padding-inline: 8px;
+    font-size: var(--mantine-font-size-sm);
+  }
+
+  .tabs :global(.mantine-Tabs-tabSection) {
+    display: none;
+  }
 }

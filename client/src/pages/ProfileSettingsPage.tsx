@@ -19,6 +19,7 @@ import { MyProgress } from '../family/MyProgress';
 import { BadgeShelf } from '../lesson/Badges';
 import { Wardrobe } from '../components/Wardrobe';
 import { PlacementCard } from '../components/PlacementCard';
+import { ProfilePinCard } from '../auth/ChildDevices';
 import { usePageTitle } from '../components/usePageTitle';
 import type { GoalSong } from '@klavio/shared';
 import { endpoints, type ProfileInput } from '../api/endpoints';
@@ -209,6 +210,8 @@ export function ProfileSettingsPage() {
       />
 
       {parentUnlocked && <PlacementCard />}
+
+      {parentUnlocked && <ProfilePinCard />}
 
       {parentUnlocked && (
         <Card

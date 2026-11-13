@@ -10,7 +10,7 @@ describe('Swiss folk songs', () => {
       expect(s.id).toMatch(/^volk-/);
       expect(s.source.url).toMatch(/^https:\/\//);
       if (s.exercise.type !== 'song') throw new Error('a song');
-      for (const n of s.exercise.bars.flat()) {
+      for (const n of s.exercise.bars.flat().filter((x) => !x.rest)) {
         expect(n.midi).toBeGreaterThanOrEqual(s.keyboard.from);
         expect(n.midi).toBeLessThanOrEqual(s.keyboard.to);
       }

@@ -107,6 +107,24 @@ für die eigene Familie oder Schule.
 
 Ebenfalls unter «Verwaltung»:
 
+- **Startseite:** Standardmässig zeigt `/welcome` Besuchern nur die Anmeldung. «Ausführliche
+  Startseite zeigen» schaltet die ganze Seite frei: was Klavio kann, die Welten, das Lied zum
+  Ausprobieren, Fragen und Antworten.
+- **Notenbibliothek MuseTrainer:** standardmässig aus. Eingeschaltet können alle unter «Eigene
+  Stücke» Klavierstücke aus [github.com/musetrainer/library](https://github.com/musetrainer/library)
+  suchen und übernehmen. Der Server holt dafür einmal am Tag die Liste von `api.github.com` und die
+  gewählte Datei von `musetrainer.github.io` – ohne Angaben zu Nutzern; der Browser spricht mit
+  niemand anderem. Die Sammlung bezeichnet ihre Dateien als gemeinfrei, prüft das aber nicht
+  einzeln; wer sie einschaltet, übernimmt diese Einschätzung.
+- **Notenbibliothek Mutopia Project:** standardmässig aus, eigener Schalter. Eingeschaltet können
+  alle die rund 600 Stücke für Klavier allein aus [mutopiaproject.org](https://www.mutopiaproject.org)
+  suchen und übernehmen, die es als einzelne MIDI-Datei gibt (Stücke aus mehreren Sätzen in einem
+  Zip fehlen). Der Server liest einmal in der Woche die Liste (rund 80 Seiten nacheinander) und holt
+  die gewählte Datei – ohne Angaben zu Nutzern. Die Stücke sind gemeinfrei oder unter Creative
+  Commons; die Lizenz steht beim Stück, wird mit ihm gespeichert und beim Drucken genannt.
+- **Schwierigkeit:** Klavio schaut sich jedes Stück der eingeschalteten Bibliotheken einmal an
+  (im Hintergrund, drei Dateien gleichzeitig) und merkt sich Stufe, Länge und Hände in der Datenbank
+  (`librarycaches`); geänderte Dateien werden neu angeschaut.
 - **Welten:** ab welchem Alter (aus dem Geburtsjahr des Profils) neben den bunten Welten auch «Die
   Reise» wählbar ist (Standard 12). Jüngere Profile sehen immer die bunten Welten.
 - **Daten und Suchmaschinen:** ob Suchmaschinen die Instanz aufnehmen dürfen (aus: `noindex`,
@@ -176,6 +194,7 @@ nennt die Variable):
 | `RP_ID`                     | `localhost`                        | WebAuthn-Domain, ohne Schema und Port. In Docker = `SITE_ADDRESS`.                         |
 | `COOKIE_SECURE`             | `true`                             | Session-Cookie nur über HTTPS. Nur für `http://localhost` auf `false`.                     |
 | `SESSION_TTL_DAYS`          | `60`                               | Wie lange eine Anmeldung gilt.                                                             |
+| `API_RATE_LIMIT`            | `300`                              | API-Anfragen pro Minute und Adresse. Die Browser-Tests in CI setzen es höher.              |
 | `REGISTRATION_OPEN_DEFAULT` | `true`                             | Anfangswert des Schalters «Registrierung»; danach gilt der Wert aus der App.               |
 | `MONGO_URL`                 | `mongodb://localhost:27017/klavio` | In Docker gesetzt.                                                                         |
 | `SMTP_HOST`                 | –                                  | Ohne SMTP-Server werden Mails nur ins Log geschrieben (nur für Entwicklung).               |

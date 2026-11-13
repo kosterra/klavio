@@ -2,7 +2,7 @@ import { CURRICULUM } from '@klavio/shared';
 import { expect, test } from '@playwright/test';
 import rootPackage from '../package.json' with { type: 'json' };
 import { audit } from './audit';
-import { signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
+import { grantAdmin, signUpWithEmail, uniqueEmail, skipSetup } from './helpers';
 
 test('landing page: sections, login card and easter eggs', async ({ page }) => {
   test.setTimeout(90_000);
@@ -74,6 +74,47 @@ test('landing page: sections, login card and easter eggs', async ({ page }) => {
   const klavi = page.getByRole('button', { name: 'Klavi, das Maskottchen' });
   for (let i = 0; i < 5; i++) await klavi.click();
   await expect(status).toContainText('Für Elise');
+});
+
+test('the short start page: only the login, until an admin switches the full page on', async ({
+  page,
+  browser,
+}) => {
+  const email = uniqueEmail('pageadmin');
+  await signUpWithEmail(page, email, 'Admin');
+  grantAdmin(email);
+  await page.goto('/admin');
+  const full = page.getByLabel('Ausführliche Startseite zeigen');
+  await expect(full).toBeChecked();
+  await full.click();
+  await expect(full).not.toBeChecked();
+
+  // a visitor (own browser context, not signed in) gets the headline and the login, nothing else
+  const context = await browser.newContext();
+  const visitor = await context.newPage();
+  await visitor.goto('/welcome');
+  await expect(visitor.getByTestId('welcome-short')).toBeVisible();
+  await expect(visitor.getByRole('heading', { level: 1, name: /Klavier lernen/ })).toBeVisible();
+  await expect(visitor.getByRole('heading', { name: /Willkommen bei Klavio/ })).toBeVisible();
+  await expect(visitor.getByRole('link', { name: 'Konto erstellen' })).toBeVisible();
+  await expect(visitor.getByRole('heading', { name: 'Spiel dein erstes Lied' })).toHaveCount(0);
+  await expect(visitor.getByRole('heading', { name: 'Häufige Fragen' })).toHaveCount(0);
+  await expect(visitor.getByRole('link', { name: 'Was ist neu' })).toBeVisible();
+  await audit(visitor);
+  await visitor.getByRole('button', { name: /Farbschema/ }).click();
+  await visitor.getByRole('menuitem', { name: 'Dunkel' }).click();
+  await expect(visitor.locator('html')).toHaveAttribute('data-mantine-color-scheme', 'dark');
+  await audit(visitor);
+  await context.close();
+
+  // back on for the other specs
+  await full.click();
+  await expect(full).toBeChecked();
+  const again = await browser.newContext();
+  const check = await again.newPage();
+  await check.goto('/welcome');
+  await expect(check.getByRole('heading', { name: 'Spiel dein erstes Lied' })).toBeVisible();
+  await again.close();
 });
 
 test('profile page: the own figure plays its tune after five taps', async ({ page }) => {

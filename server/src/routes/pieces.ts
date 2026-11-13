@@ -1,6 +1,11 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import { z } from 'zod';
-import { MAX_OWN_PIECES, ownPieceInputSchema, type OwnPieceDto } from '@klavio/shared';
+import {
+  MAX_OWN_PIECES,
+  ownPieceInputSchema,
+  ownPieceMetaSchema,
+  type OwnPieceDto,
+} from '@klavio/shared';
 import { OwnPiece } from '../models/index.js';
 import { HttpError, notFound } from '../lib/errors.js';
 
@@ -12,6 +17,7 @@ type Doc = {
   composer?: string | null;
   exercise: unknown;
   keyboard?: { from?: number | null; to?: number | null } | null;
+  source?: string | null;
   createdAt: Date;
 };
 
@@ -22,6 +28,7 @@ function toDto(p: Doc): OwnPieceDto {
     composer: p.composer ?? null,
     exercise: p.exercise as OwnPieceDto['exercise'],
     keyboard: { from: p.keyboard?.from ?? 48, to: p.keyboard?.to ?? 72 },
+    source: p.source ?? null,
     createdAt: p.createdAt.toISOString(),
   };
 }
@@ -43,7 +50,7 @@ const pieceRoutes: FastifyPluginAsyncZod = async (app) => {
 
   app.post(
     '/',
-    { schema: { body: ownPieceInputSchema }, bodyLimit: 512 * 1024 },
+    { schema: { body: ownPieceInputSchema }, bodyLimit: 2 * 1024 * 1024 },
     async (req, reply): Promise<OwnPieceDto> => {
       const userId = req.auth!.user._id;
       if ((await OwnPiece.countDocuments({ userId })) >= MAX_OWN_PIECES)
@@ -51,6 +58,20 @@ const pieceRoutes: FastifyPluginAsyncZod = async (app) => {
       const created = await OwnPiece.create({ ...req.body, userId });
       reply.code(201);
       return toDto(created.toObject() as unknown as Doc);
+    },
+  );
+
+  app.patch(
+    '/:id',
+    { schema: { params: idParams, body: ownPieceMetaSchema } },
+    async (req): Promise<OwnPieceDto> => {
+      const p = await OwnPiece.findOneAndUpdate(
+        { _id: req.params.id, userId: req.auth!.user._id },
+        { $set: { title: req.body.title, composer: req.body.composer } },
+        { new: true },
+      ).lean();
+      if (!p) throw notFound();
+      return toDto(p as unknown as Doc);
     },
   );
 

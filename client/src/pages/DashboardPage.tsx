@@ -19,6 +19,7 @@ import { MicHint } from '../dashboard/MicHint';
 import { ReviewCard } from '../dashboard/ReviewCard';
 import { GoalSongCard, GoalSongPrompt } from '../goal/GoalSongCard';
 import { JourneyProfile } from '../dashboard/JourneyProfile';
+import { FreeHome } from '../dashboard/FreeHome';
 
 /** Home of a learner: greeting, stats, daily goal and the learning path. */
 export function DashboardPage() {
@@ -51,6 +52,46 @@ export function DashboardPage() {
       {t('dashboard.learnPath')}
     </Title>
   );
+  // without the learning path: the pieces and tools first, every lesson open
+  if (activeProfile.pathOff) {
+    return (
+      <Stack gap="lg" maw={1100} mx="auto">
+        <InstallHint />
+        <FreeHome
+          name={activeProfile.name}
+          path={
+            progress && (
+              <LearningPath
+                progress={progress.lessons}
+                currentLessonId={current.id}
+                avatar={activeProfile.avatar}
+                profileId={activeProfile.id}
+                title={pathTitle}
+                worlds={worldSet}
+                outfit={activeProfile.outfit}
+                allOpen
+              />
+            )
+          }
+        />
+        <StatTiles
+          xp={activeProfile.xp}
+          level={activeProfile.level}
+          streak={liveStreak(activeProfile.streak, localIsoDate())}
+          todayMinutes={todayMinutes}
+          goalMinutes={activeProfile.dailyGoalMinutes}
+          today={progress?.today.date ?? localIsoDate()}
+          weekDays={progress?.weekDays ?? []}
+          weeklyGoal={activeProfile.weeklyGoalDays}
+          freeDayUsed={
+            activeProfile.streak.freeDayWeek === weekOf(progress?.today.date ?? localIsoDate())
+          }
+        />
+        <BadgeShelf earned={activeProfile.badges} compact />
+        <PrivacyNote />
+      </Stack>
+    );
+  }
   return (
     <Stack gap="lg" maw={1100} mx="auto">
       <InstallHint />

@@ -40,7 +40,7 @@ const pc = (midi: number) => ((midi % 12) + 12) % 12;
 
 /** The major key (tonic pitch class) the melody fits best. */
 export function melodyKey(bars: SongNote[][]): number {
-  const notes = bars.flat();
+  const notes = bars.flat().filter((n) => !n.rest);
   const last = notes.at(-1);
   let best = 0;
   let bestScore = -Infinity;
@@ -107,7 +107,7 @@ export function harmonize(
     const timed: Timed[] = [];
     let t = 0;
     for (const n of bar) {
-      timed.push({ midi: n.midi, at: t, beats: beatsOf(n.value) });
+      if (!n.rest) timed.push({ midi: n.midi, at: t, beats: beatsOf(n.value) });
       t += beatsOf(n.value);
     }
     const end = b === lastBar;
@@ -143,7 +143,7 @@ export function harmonize(
 const from = (low: number, p: number) => low + ((p - pc(low) + 12) % 12);
 
 function lowMelody(melody: Melody): boolean {
-  const notes = melody.bars.flat();
+  const notes = melody.bars.flat().filter((n) => !n.rest);
   const mean = notes.reduce((n, x) => n + x.midi, 0) / Math.max(1, notes.length);
   return melody.clef === 'bass' || mean < 57;
 }

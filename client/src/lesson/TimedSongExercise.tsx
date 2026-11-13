@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { fitBarsPerLine } from '../notation/lineLength';
 import { Box, Button, Group, SegmentedControl, Stack, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconMetronome, IconRefresh } from '@tabler/icons-react';
@@ -8,6 +9,8 @@ import {
   barBeats,
   beatsOf,
   isHeldNote,
+  isStruck,
+  staffDuration,
   type NoteEvent,
   type TimedSongExercise as Spec,
   songFingers,
@@ -58,12 +61,19 @@ export function TimedSongExercise({
   onCorrect,
   onMistake,
   onDone,
-}: ExerciseProps<Spec>) {
+  sight = false,
+}: ExerciseProps<Spec> & {
+  /** «Vom Blatt»: as written, without tempo choice, accompaniment, hints or fingers */
+  sight?: boolean;
+}) {
   const { t } = useTranslation();
   const wide = useMediaQuery('(min-width: 900px)', true);
-  const barsPerLine = wide ? 4 : 2;
+  const barsPerLine = fitBarsPerLine(
+    wide ? 4 : 2,
+    exercise.bars.map((b) => b.length),
+  );
   // the tempo ladder, like a teacher would: slow first, then faster, then as written
-  const [level, setLevel] = useState<TempoLevel>('medium');
+  const [level, setLevel] = useState<TempoLevel>(sight ? 'original' : 'medium');
   const tempo = Math.round(exercise.tempo * TEMPO_LEVELS[level]);
   const beatMs = 60000 / tempo;
   const beatsPerBar = barBeats(exercise.time);
@@ -72,13 +82,16 @@ export function TimedSongExercise({
   // every note with its bar and its start (in beats from the first note)
   const notes = useMemo(() => timeline(exercise.bars), [exercise]);
   // finger numbers: written into the song, or planned where the hand has to move
-  const fingers = useMemo(() => songFingers(exercise), [exercise]);
+  const fingers = useMemo(
+    () => (sight ? exercise.bars.flat().map(() => undefined) : songFingers(exercise)),
+    [exercise, sight],
+  );
   // an upbeat starts before the first «one»: the count-in bar ends with it
   const pickup = exercise.pickup ?? 0;
   const totalBeats = notes.reduce((n, x) => n + beatsOf(x.value), 0) - pickup;
-  // the notes that are played (a tied note is only held)
+  // the notes that are played (a tied note is only held, a rest is silent)
   const playedIdx = useMemo(
-    () => notes.flatMap((n, i) => (isHeldNote(notes, i) ? [] : [i])),
+    () => notes.flatMap((_, i) => (isStruck(notes, i) ? [i] : [])),
     [notes],
   );
 
@@ -89,7 +102,8 @@ export function TimedSongExercise({
   const [firstAt, setFirstAt] = useState<number | null>(null);
   const run = useRef<MetronomeRun | null>(null);
   // «Klavi spielt mit»: bass and chords in time
-  const [duet, setDuet] = useDuet(inputMode);
+  const [duetChoice, setDuet] = useDuet(inputMode);
+  const duet = duetChoice && !sight;
   const events = useMemo(() => accompaniment(exercise), [exercise]);
   const backing = useRef<Accompaniment | null>(null);
   const played = useRef<{ ms: number; midi: number }[]>([]);
@@ -194,7 +208,7 @@ export function TimedSongExercise({
         const verdict = k >= 0 ? score?.perNote[k] : undefined;
         return {
           midi: n.midi,
-          duration: n.value,
+          duration: staffDuration(n),
           // a held note keeps its finger – no number again
           finger: isHeldNote(notes, i) ? undefined : fingers[i],
           tie: n.tie,
@@ -210,7 +224,8 @@ export function TimedSongExercise({
     );
   const countBeat =
     now !== null && now < 0 ? Math.floor(now - pickup + beatsPerBar) % beatsPerBar : null;
-  const hint = kids && phase === 'play' ? [notes[current]!.midi] : [];
+  const hint =
+    kids && !sight && phase === 'play' && !notes[current]!.rest ? [notes[current]!.midi] : [];
 
   return (
     <Stack
@@ -226,7 +241,7 @@ export function TimedSongExercise({
         mood={good ? 'cheer' : phase === 'result' ? 'think' : 'listen'}
         size={kids ? 80 : 56}
         kids={kids}
-        say={t('lesson.timed.intro')}
+        say={t(sight ? 'lesson.sight.intro' : 'lesson.timed.intro')}
         classicRow
       >
         <Text fz={kids ? 24 : 20} fw={800} aria-live="polite" data-testid="timed-status">
@@ -238,7 +253,7 @@ export function TimedSongExercise({
                 ? good
                   ? t('lesson.rhythm.perfect')
                   : t('lesson.rhythm.almost')
-                : t('lesson.timed.intro')}
+                : t(sight ? 'lesson.sight.intro' : 'lesson.timed.intro')}
         </Text>
       </BuddySays>
 
@@ -265,7 +280,7 @@ export function TimedSongExercise({
         </Group>
       )}
 
-      {(phase === 'ready' || (phase === 'result' && !good)) && (
+      {!sight && (phase === 'ready' || (phase === 'result' && !good)) && (
         <Group gap="md" justify="center">
           <SegmentedControl
             value={level}
@@ -296,7 +311,7 @@ export function TimedSongExercise({
           <Text fw={800}>{t('lesson.timed.hits', { count: hits, total: playedIdx.length })}</Text>
           {!good && (
             <Text size="sm" c="dimmed" ta="center">
-              {t('lesson.timed.tip')}
+              {t(sight ? 'lesson.sight.tip' : 'lesson.timed.tip')}
             </Text>
           )}
         </Stack>

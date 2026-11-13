@@ -2,6 +2,8 @@ import { memo, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Button, Group, Stack, Text } from '@mantine/core';
 import { IconCloudRain, IconHeart, IconHeartBroken, IconRefresh } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+import { midiToPitchName } from '@klavio/shared';
+import { useNoteLang } from './useLocalized';
 import { useNoteEvents } from '../input/noteBus';
 import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
@@ -18,6 +20,8 @@ interface Drop {
   x: number;
   born: number;
   fallMs: number;
+  /** «Intervallregen»: the named first note – `midi` is the one to play */
+  from?: number;
   /** caught or landed: shown a moment longer, then gone */
   end?: { at: number; how: 'caught' | 'landed' };
 }
@@ -31,9 +35,34 @@ const clefOf = (clef: RainClef, midi: number) =>
   clef === 'both' ? (midi >= 60 ? 'treble' : 'bass') : clef;
 
 /** One falling note: a little staff on a raindrop card (drawn once, then only moved). */
-const NoteCard = memo(function NoteCard({ clef, midi }: { clef: 'treble' | 'bass'; midi: number }) {
+const NoteCard = memo(function NoteCard({
+  clef,
+  midi,
+  from,
+}: {
+  clef: 'treble' | 'bass';
+  midi: number;
+  from?: number;
+}) {
   const { t } = useTranslation();
-  return <Staff clef={clef} notes={[{ midi }]} height={CARD_H - 8} label={t('lesson.rain.note')} />;
+  const lang = useNoteLang();
+  if (from === undefined)
+    return (
+      <Staff clef={clef} notes={[{ midi }]} height={CARD_H - 8} label={t('lesson.rain.note')} />
+    );
+  // an interval: the first note is given (named, in colour), the second is read from it
+  const name = midiToPitchName(from, lang);
+  return (
+    <>
+      <div className={classes.from}>{t('lesson.rain.from', { note: name })}</div>
+      <Staff
+        clef={clef}
+        notes={[{ midi: from, state: 'done' }, { midi }]}
+        height={CARD_H - 30}
+        label={t('lesson.rain.interval', { note: name })}
+      />
+    </>
+  );
 });
 
 export interface RainResult {
@@ -44,6 +73,8 @@ export interface RainResult {
 interface Props {
   clef: RainClef;
   notes: readonly number[];
+  /** «Intervallregen»: pairs [given, to play] instead of single notes */
+  pairs?: readonly (readonly [number, number])[];
   /** catch this many and the round is won; without: it rains until three notes land */
   goal?: number;
   /** seconds a note takes to fall at the start */
@@ -77,6 +108,7 @@ interface Props {
 export function NoteRainGame({
   clef,
   notes,
+  pairs,
   goal,
   fall,
   fastest = 2.8,
@@ -175,12 +207,20 @@ export function NoteRainGame({
       const alive = out.filter((d) => !d.end).length;
       // nothing falling: the next one comes right away
       if ((tNow >= g.next || alive === 0) && alive < 3) {
-        const choices = notes.filter((m) => m !== g.last);
-        const midi = choices[Math.floor(Math.random() * choices.length)] ?? notes[0]!;
+        let midi: number;
+        let from: number | undefined;
+        if (pairs?.length) {
+          // an interval whose note to play is not the one just asked for
+          const options = pairs.filter(([, to]) => to !== g.last);
+          [from, midi] = options[Math.floor(Math.random() * options.length)] ?? pairs[0]!;
+        } else {
+          const choices = notes.filter((m) => m !== g.last);
+          midi = choices[Math.floor(Math.random() * choices.length)] ?? notes[0]!;
+        }
         const lane = out.at(-1)?.x ?? -1;
         let x = Math.random() * 0.7;
         if (Math.abs(x - lane) < 0.25) x = (x + 0.35) % 0.7;
-        out = [...out, { id: g.id++, midi, x, born: tNow, fallMs: g.fallMs }];
+        out = [...out, { id: g.id++, midi, from, x, born: tNow, fallMs: g.fallMs }];
         g.last = midi;
         g.next = tNow + g.fallMs * 0.5;
       }
@@ -237,7 +277,7 @@ export function NoteRainGame({
           mood={phase === 'done' ? 'cheer' : phase === 'over' ? 'think' : 'listen'}
           size={kids ? 80 : 56}
           kids={kids}
-          say={t('lesson.rain.task')}
+          say={t(pairs?.length ? 'lesson.rain.taskInterval' : 'lesson.rain.task')}
           classicRow
         >
           <Text fz={kids ? 24 : 20} fw={800} aria-live="polite">
@@ -245,7 +285,7 @@ export function NoteRainGame({
               ? t('lesson.rain.done')
               : phase === 'over'
                 ? (overText?.(result) ?? t('lesson.rain.over'))
-                : t('lesson.rain.task')}
+                : t(pairs?.length ? 'lesson.rain.taskInterval' : 'lesson.rain.task')}
           </Text>
         </BuddySays>
       )}
@@ -269,6 +309,7 @@ export function NoteRainGame({
         ref={field}
         className={classes.field}
         data-kids={kids || undefined}
+        data-pairs={pairs?.length ? true : undefined}
         style={{ height }}
         // for automated tests: the falling notes, lowest first
         data-drops={JSON.stringify(
@@ -291,7 +332,7 @@ export function NoteRainGame({
               }}
               aria-hidden
             >
-              <NoteCard clef={clefOf(clef, d.midi)} midi={d.midi} />
+              <NoteCard clef={clefOf(clef, d.midi)} midi={d.midi} from={d.from} />
             </div>
           );
         })}

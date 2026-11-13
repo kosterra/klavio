@@ -76,7 +76,8 @@ song('C4/q D4/q E4/q F4/q | G4/h G4/h | A4/q A4/q A4/q A4/q | G4/w', {
 ```
 
 Notenwerte: `w` ganze, `hd` punktierte halbe, `h` halbe, `qd` punktierte Viertel, `q` Viertel,
-`8` Achtel. Jeder Takt muss genau voll sein, sonst wirft `song()` beim Laden einen Fehler (und die
+`8` Achtel. Pausen: `r/w`, `r/h`, `r/q`, `r/8` (eine punktierte Pause als zwei schreiben); im Modus
+«Warte auf mich» wird eine Pause übersprungen, «Im Takt» läuft die Zeit einfach weiter. Jeder Takt muss genau voll sein, sonst wirft `song()` beim Laden einen Fehler (und die
 Tests schlagen fehl) – Tippfehler fallen so sofort auf.
 
 **Notenlesen im grossen Notensystem** – `clef: 'grand'`: ab dem mittleren C oben (rechte Hand),
@@ -95,6 +96,9 @@ Melodie:
 piece('C4/q D4/q E4/q F4/q | G4/h G4/h', 'C3/w | C3/h r/h', { tempo: 90, showNames: true });
 ```
 
+Fingersätze: `:n` hinter einer Note (`E4/q:3`), in Liedern und in beiden Stimmen eines Stücks. Ohne
+Angabe plant Klavio die Finger selbst und zeigt sie nur dort, wo die Hand wandert.
+
 **Improvisieren** – freies Spiel auf den schwarzen Tasten zu einer Begleitung, nichts ist falsch;
 fertig nach `bars` Takten mit mindestens `minNotes` Tönen:
 
@@ -109,6 +113,42 @@ rhythm('q q q q | h h | q qr q qr', { tempo: 76 });
 ```
 
 Werte wie oben plus Pausen `qr`, `hr`, `wr`. Toleranz: Kids ±150 ms, Classic ±100 ms.
+
+**Intervallregen** – Notenregen mit zwei Noten pro Karte: Die erste ist angeschrieben, gespielt wird
+die zweite, gelesen am Abstand. `intervals` in Schritten auf den Notenlinien (1 = Sekunde, 2 = Terz,
+3 = Quarte, 4 = Quinte), beide Noten kommen aus `notes` (weisse Tasten):
+
+```ts
+{ type: 'note-rain', clef: 'treble', notes: seq('C4 D4 E4 F4 G4 A4 H4 C5'), intervals: [1, 2], goal: 8, fall: 10 }
+```
+
+**Hör genau hin** – Klavi spielt etwas vor, das Kind tippt die Antwort an (höher/tiefer, gleich/anders,
+Dur/Moll …). Jede Gruppe in `notes` dauert einen Schlag; ihre Tasten klingen zusammen, eine leere
+Gruppe ist eine Pause. Nur die erste Antwort einer Runde zählt:
+
+```ts
+{
+  type: 'listen',
+  question: L('Dur oder Moll?', 'Major or minor?'),
+  answers: [L('Dur', 'Major'), L('Moll', 'Minor')],
+  tempo: 50,
+  rounds: [{ notes: [[60, 64, 67]], answer: 0 }, { notes: [[57], [60], [64]], answer: 1 }],
+}
+```
+
+**Vom Blatt spielen** – jedes Mal eine neue Melodie aus `notes` (weisse Tasten ohne Lücke) und einem
+der `rhythms` (ohne Tonhöhen geschrieben), im Takt gespielt, ohne Anhören, ohne markierte Tasten.
+Sie geht in Schritten und Sprüngen und endet auf `tonic` (sonst der tiefsten Taste). Alle Rhythmen
+brauchen gleich viele Noten, damit die Sterne immer gleich zählen:
+
+```ts
+{
+  type: 'sight-read', clef: 'treble', time: '4/4', tempo: 66,
+  notes: seq('C4 D4 E4 F4 G4'),
+  rhythms: ['q q q q | h h', 'h q q | q q h'],
+  rounds: 3,
+}
+```
 
 ## Entdecken (Theorie)
 

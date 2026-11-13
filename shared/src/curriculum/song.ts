@@ -14,11 +14,31 @@ const VALUES: Record<RhythmValue, number> = {
   h: 2,
   qd: 1.5,
   q: 1,
+  '8d': 0.75,
+  qt: 2 / 3,
   '8': 0.5,
+  '8t': 1 / 3,
+  '16d': 0.375,
+  '16': 0.25,
+  '16t': 1 / 6,
+  '32': 0.125,
+  '32t': 1 / 12,
+  '64': 0.0625,
   wr: 4,
   hr: 2,
   qr: 1,
+  qtr: 2 / 3,
+  '8r': 0.5,
+  '8tr': 1 / 3,
+  '16r': 0.25,
+  '16tr': 1 / 6,
+  '32r': 0.125,
+  '32tr': 1 / 12,
+  '64r': 0.0625,
 };
+
+/** Whether two lengths in beats are the same (triplets are thirds: no exact sums). */
+const sameBeats = (a: number, b: number) => Math.abs(a - b) < 1e-6;
 
 /** Length of a note value or rest in quarter notes. */
 export function beatsOf(value: RhythmValue): number {
@@ -71,7 +91,7 @@ export function fingerInPosition(midi: number, position: HandPosition): number |
 
 /**
  * Compact melody notation: notes as "pitch/value", bars separated by "|",
- * an optional finger after a colon ("E4/q:3").
+ * an optional finger after a colon ("E4/q:3"), rests as "r/<value>" (w, h, q, 8).
  *   "C4/q D4/q E4/q F4/q | G4/h G4/h"
  * German "H" is accepted. Every bar must be full (checked against `time`).
  */
@@ -82,10 +102,16 @@ export function parseSong(melody: string, time: string, pickup = 0): SongNote[][
     .map((bar) => bar.trim())
     .filter(Boolean)
     .map((bar, i) => {
-      const notes = bar.split(/\s+/).map((token) => {
+      const notes = bar.split(/\s+/).map((token): SongNote => {
         const tie = token.endsWith('~');
         const [note, fingerText] = (tie ? token.slice(0, -1) : token).split(':');
         const [pitch, value = 'q'] = note!.split('/');
+        if (pitch === 'r') {
+          if (!SONG_RESTS.includes(value) || tie || fingerText !== undefined) {
+            throw new Error(`Unknown rest "${token}" in bar ${i + 1}`);
+          }
+          return { midi: -1, value: value as NoteValue, rest: true };
+        }
         if (!(value in VALUES) || value.endsWith('r')) {
           throw new Error(`Unknown note value "${value}" in bar ${i + 1}`);
         }
@@ -111,7 +137,7 @@ export function parseSong(melody: string, time: string, pickup = 0): SongNote[][
         : pickup && i === bars.length - 1
           ? beatsPerBar - pickup
           : beatsPerBar;
-    if (beats !== expected) {
+    if (!sameBeats(beats, expected)) {
       throw new Error(`Bar ${i + 1} has ${beats} beats, expected ${expected}`);
     }
   });
@@ -125,9 +151,22 @@ export function parseSong(melody: string, time: string, pickup = 0): SongNote[][
   return bars;
 }
 
+/** The rests a song can have (dotted rests are written as two). */
+const SONG_RESTS = ['w', 'h', 'q', '8', '16', '32', '64', 'qt', '8t', '16t', '32t'];
+
 /** Whether the i-th note of a song is only held (the tied continuation of the one before). */
 export function isHeldNote(notes: SongNote[], i: number): boolean {
   return i > 0 && !!notes[i - 1]!.tie;
+}
+
+/** Whether the i-th note of a song is struck: neither a rest nor the held part of a tie. */
+export function isStruck(notes: SongNote[], i: number): boolean {
+  return !notes[i]!.rest && !isHeldNote(notes, i);
+}
+
+/** The duration as the staff draws it: a rest gets its «r». */
+export function staffDuration(n: SongNote): string {
+  return n.rest ? `${n.value}r` : n.value;
 }
 
 export function song(
@@ -172,7 +211,8 @@ export function rhythm(
   bars.forEach((bar, i) => {
     for (const v of bar) if (!(v in VALUES)) throw new Error(`Unknown rhythm value "${v}"`);
     const beats = bar.reduce((n, v) => n + VALUES[v], 0);
-    if (beats !== barBeats(time)) throw new Error(`Rhythm bar ${i + 1} has ${beats} beats`);
+    if (!sameBeats(beats, barBeats(time)))
+      throw new Error(`Rhythm bar ${i + 1} has ${beats} beats`);
   });
   return {
     type: 'rhythm' as const,
@@ -184,8 +224,8 @@ export function rhythm(
 }
 
 /**
- * One hand of a piece: "C4/q D4/q r/h | …"; "r/<value>" is a rest. Every bar
- * must be full (checked against `time`).
+ * One hand of a piece: "C4/q D4/q r/h | …"; "r/<value>" is a rest, ":n" after
+ * a note its finger ("E4/q:3"). Every bar must be full (checked against `time`).
  */
 function parsePart(part: string, time: string, hand: string): PieceNote[][] {
   const beatsPerBar = barBeats(time);
@@ -195,7 +235,8 @@ function parsePart(part: string, time: string, hand: string): PieceNote[][] {
     .filter(Boolean)
     .map((bar, i) => {
       const notes = bar.split(/\s+/).map((token): PieceNote => {
-        const [pitch, value = 'q'] = token.split('/');
+        const [note, fingerText] = token.split(':');
+        const [pitch, value = 'q'] = note!.split('/');
         if (pitch === 'r') {
           const rest = (value.endsWith('r') ? value : `${value}r`) as RhythmValue;
           if (!(rest in VALUES)) throw new Error(`Unknown rest "${token}" (${hand}, bar ${i + 1})`);
@@ -204,10 +245,18 @@ function parsePart(part: string, time: string, hand: string): PieceNote[][] {
         if (!(value in VALUES) || value.endsWith('r')) {
           throw new Error(`Unknown note value "${value}" (${hand}, bar ${i + 1})`);
         }
-        return { midi: noteNameToMidi(pitch!), value: value as RhythmValue };
+        const finger = fingerText === undefined ? undefined : Number(fingerText);
+        if (finger !== undefined && !(finger >= 1 && finger <= 5)) {
+          throw new Error(`Unknown finger "${fingerText}" (${hand}, bar ${i + 1})`);
+        }
+        return {
+          midi: noteNameToMidi(pitch!),
+          value: value as RhythmValue,
+          ...(finger ? { finger } : {}),
+        };
       });
       const beats = notes.reduce((n, x) => n + VALUES[x.value], 0);
-      if (beats !== beatsPerBar) {
+      if (!sameBeats(beats, beatsPerBar)) {
         throw new Error(`${hand} bar ${i + 1} has ${beats} beats, expected ${beatsPerBar}`);
       }
       return notes;

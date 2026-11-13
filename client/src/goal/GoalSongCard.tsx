@@ -17,6 +17,7 @@ import {
   IconCheck,
   IconChevronDown,
   IconChevronUp,
+  IconFileMusic,
   IconClock,
   IconMusicHeart,
 } from '@tabler/icons-react';
@@ -111,6 +112,21 @@ export function GoalSongCard({
               {p.percent} %
             </Text>
           </Group>
+          {/* an uploaded piece is the dream song itself: always one tap away */}
+          {goal.pieceId && (
+            <Button
+              component={Link}
+              to={`/own/${goal.pieceId}`}
+              size="sm"
+              variant="outline"
+              color="pink.8"
+              mt="sm"
+              leftSection={<IconFileMusic size={18} />}
+              data-testid="goal-piece"
+            >
+              {t('goal.openPiece')}
+            </Button>
+          )}
         </div>
         {/* folded: only the title and the bar – the rest on request, remembered */}
         <ActionIcon

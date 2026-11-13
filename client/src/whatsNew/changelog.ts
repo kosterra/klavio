@@ -20,6 +20,103 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: '2026.11.5',
+    changes: [
+      L(
+        'Deine Notenbibliothek: «Eigene Stücke» fasst jetzt bis 200 Stücke, lässt sich durchsuchen, und Titel und Komponist kannst du ändern. «Noten ansehen» zeigt ein Stück einfach als Noten – gross für den Notenständer, mit oder ohne Notennamen; auch bei der Klassik und den Volksliedern.',
+        'Your sheet music library: «Own pieces» now holds up to 200 pieces, can be searched, and you can change title and composer. «View notes» shows a piece simply as sheet music – large for the music stand, with or without note names; also for the classics and the folk songs.',
+      ),
+      L(
+        'Notenbibliothek MuseTrainer: Wenn die Verwaltung sie einschaltet, holst du unter «Eigene Stücke» Klavierstücke aus der gemeinfreien MuseTrainer-Sammlung – von «Für Elise» bis zum Menuett in G. Mit der Hörprobe hörst du jedes Stück an, bevor du es übernimmst; jedes zeigt, wie schwer es ist, die leichten zuerst.',
+        'MuseTrainer sheet music library: when the admin switches it on, you fetch piano pieces from the public-domain MuseTrainer collection under «Own pieces» – from «Für Elise» to the Minuet in G. The «Hörprobe» lets you hear each piece before you take it over; each shows how hard it is, the easy ones first.',
+      ),
+      L(
+        'Kinder melden sich selbst an: Im Elternbereich bekommt jedes Kind eine eigene PIN, und unter «Konto» richtest du ein Gerät für die Kinder ein. Dort zeigt Klavio «Wer spielt?» – Figur antippen, PIN eingeben, los. Ein Kind bleibt in seinem Profil; den Elternbereich öffnet nur die Eltern-PIN.',
+        'Children sign in on their own: in the parent area every child gets a PIN of their own, and under «Account» you set up a device for the children. There Klavio shows «Who’s playing?» – tap the figure, enter the PIN, off you go. A child stays in their profile; only the parent PIN opens the parent area.',
+      ),
+      L(
+        'Notenbibliothek Mutopia Project: Wenn die Verwaltung sie einschaltet, findest du rund 600 Klavierstücke des Mutopia Project – von Bach bis Burgmüller, jedes mit seiner Lizenz, die mit dem Stück gespeichert und beim Drucken genannt wird.',
+        'Mutopia Project sheet music library: when the admin switches it on, you find about 600 piano pieces of the Mutopia Project – from Bach to Burgmüller, each with its licence, which is stored with the piece and named on prints.',
+      ),
+      L(
+        'Korrektur: MIDI-Dateien behalten jetzt ihre Sechzehntel – vorher wurde jede Note auf Achtel gerundet.',
+        'Fix: MIDI files now keep their sixteenths – before every note was rounded to eighths.',
+      ),
+      L(
+        'Lieder in drei Teilen: «Lernpfad», «Meine Stücke» und «Sammlung». Jedes Stück zeigt seine Schwierigkeit – Stufe 1 bis 3 des Lernpfads, «Fortgeschritten» oder «Anspruchsvoll» – und «Passt jetzt», wenn du die nötigen Lektionen gemacht hast. Anhören geht mit einem Tipp, Noten, Drucken und Umbenennen sind im Menü des Stücks.',
+        'Songs in three parts: «Learning path», «My pieces» and «Collection». Every piece shows how hard it is – stage 1 to 3 of the learning path, «Advanced» or «Demanding» – and «Ready now» once you have done the lessons it needs. Listening takes one tap; notes, printing and renaming are in the piece’s menu.',
+      ),
+      L(
+        'Korrektur: Jede Hörprobe dauert jetzt etwa 15 Sekunden – vorher waren es immer acht Takte, bei schnellen Stücken nur ein paar Sekunden.',
+        'Fix: every «Hörprobe» now lasts about 15 seconds – before it was always eight bars, only a few seconds for fast pieces.',
+      ),
+      L(
+        'Korrektur: Im Fenster «Abmelden?» ist «Angemeldet bleiben» auf dem Handy nicht mehr abgeschnitten, und auf der Anmeldeseite sind die Knöpfe gleich gross.',
+        'Fix: in the «Sign out?» window, «Stay signed in» is no longer cut off on phones, and on the login page the buttons are the same size.',
+      ),
+      L(
+        'Lernpfad für Fortgeschrittene: Im Elternbereich unter «Lernpfad» lassen sich ganze Stufen überspringen – oder der Lernpfad ausschalten. Dann sind alle Lektionen frei wählbar, und der Start zeigt deine Stücke, Lieder und Werkzeuge statt der Karte.',
+        'Learning path for advanced players: in the parent area under «Learning path» whole stages can be skipped – or the learning path switched off. Then every lesson can be picked freely, and the start page shows your pieces, songs and tools instead of the map.',
+      ),
+      L(
+        'Eigene Stücke: Klavio liest jetzt auch Sechzehntel, Zweiunddreissigstel, punktierte Achtel und Triolen – und Stücke bis 1000 Takte statt 64. Damit gehen viele echte Klavierstücke wie «Für Elise» ganz.',
+        'Own pieces: Klavio now also reads sixteenths, thirty-seconds, dotted eighths and triplets – and pieces up to 1000 bars instead of 64. So many real piano pieces like «Für Elise» work in full.',
+      ),
+      L(
+        'Ab wann spielbar? Bei jedem hochgeladenen Stück – auch beim Traumlied – und bei den Klassik-Stücken steht, nach welcher Lektion es passt und was dir dafür noch fehlt. Es ist eine Empfehlung: Ausprobieren kannst du jedes Stück jederzeit.',
+        'When can I play it? Every uploaded piece – including your dream song – and every classical piece says after which lesson it fits and what you still need for it. It is a recommendation: you can try any piece at any time.',
+      ),
+      L(
+        'Technik: «Fingerturnen» macht jeden Finger selbständig, «Daumen drunter» übt den Trick für die Tonleiter, «Fünf Töne in neuen Tonarten» legt die Hand auf G, D, A und E – und in Stufe 3 spielen beide Hände die Tonleiter gespiegelt.',
+        'Technique: «Finger gym» makes every finger independent, «Thumb under» practises the trick for scales, «Five notes in new keys» puts the hand on G, D, A and E – and in stage 3 both hands play the scale in mirror image.',
+      ),
+      L(
+        'Intervalle: «Schritt und Sprung» und «Terz, Quarte, Quinte» zeigen, wie man Noten am Abstand liest. Im neuen Intervallregen steht die erste Note angeschrieben – die zweite liest du am Abstand und spielst sie.',
+        'Intervals: «Step and skip» and «Thirds, fourths and fifths» show how to read notes by their distance. In the new interval rain the first note is named – you read the second by its distance and play it.',
+      ),
+      L(
+        'Vom Blatt spielen: Am Ende der ersten Lieder, im Bassschlüssel und im Walzertakt spielst du Melodien, die du noch nie gesehen hast – jedes Mal neue, im Takt, ohne Anhören und ohne Hilfe auf den Tasten.',
+        'Sight-reading: at the end of the first songs, in the bass clef and in waltz time you play melodies you have never seen – new ones every time, in time, without listening first and without help on the keys.',
+      ),
+      L(
+        'Hör genau hin: In jeder Stufe gibt es jetzt Hörspiele – «Hoch oder tief?», «Hör zu: die linke Hand», «Gleich oder anders?» und «Dur oder Moll?».',
+        'Listen closely: every stage now has listening games – «High or low?», «Listen: the left hand», «Same or different?» and «Major or minor?».',
+      ),
+      L(
+        'Pausen in Liedern: Lieder dürfen jetzt Pausen haben – Klavio zeichnet sie, überspringt sie beim Üben und lässt sie «Im Takt» einfach verstreichen. Eigene Melodien mit Pausen bleiben dadurch ein Lied, statt zu einem Stück für zwei Hände mit leerer linker Hand zu werden.',
+        'Rests in songs: songs can now have rests – Klavio draws them, skips them while practising and lets them pass «In time». Your own melodies with rests stay a song instead of becoming a two-hand piece with an empty left hand.',
+      ),
+      L(
+        'Lernpfad: «Im Takt» kommt jetzt vor den ersten Liedern – mit Achteln und der punktierten Viertel, damit «Freude» und «Bruder Jakob» keine Überraschung mehr sind. Die linke Hand probiert schon im ersten Kapitel mit, und jedes neue Thema bekommt gleich ein Lied: «London Bridge» im Zweivierteltakt, «Row, Row, Row Your Boat» im Sechsachteltakt, «Bruder Jakob in Moll». Bei den Akkorden kommen zuerst die Akkorde selbst, dann gebrochen, dann der Wechselbass – und das Abschlusskonzert ganz am Schluss.',
+        'Learning path: «In time» now comes before the first songs – with eighths and the dotted quarter, so «Ode to Joy» and «Brother John» are no surprise any more. The left hand has a go in the very first chapter, and every new topic gets a song right away: «London Bridge» in two-four, «Row, Row, Row Your Boat» in six-eight, «Brother John in minor». With chords, the chords themselves come first, then broken, then the alternating bass – and the final concert at the very end.',
+      ),
+      L(
+        'Fingersätze jetzt auch in Stücken für beide Hände: Wo eine Hand wandert, stehen die Finger an den Noten – in der Lektion und auf dem Notenblatt.',
+        'Fingering now also in pieces for both hands: where a hand moves, the fingers are written at the notes – in the lesson and on the printed sheet.',
+      ),
+      L(
+        'Traumlied: Hast du die Noten schon als MusicXML- oder MIDI-Datei? Lade sie direkt bei «Mein Traumlied» hoch – das Stück wird dein Traumlied, liegt zum Üben bei deinen Stücken, und die Traumlied-Karte führt mit einem Tipp hin.',
+        'Dream song: already have the sheet music as a MusicXML or MIDI file? Upload it right at «My dream song» – the piece becomes your dream song, lies with your pieces ready to practise, and the dream-song card takes you there with one tap.',
+      ),
+      L(
+        'Traumlied: Klavio kennt doppelt so viele Lieder wie bisher – Pop der letzten Jahre (Billie Eilish, Taylor Swift, Adele, The Weeknd …), Film-, Serien- und Game-Musik, Einaudi, und Lieder aus der Schweiz und Deutschland von Mani Matter bis Lo & Leduc.',
+        'Dream song: Klavio knows twice as many songs as before – pop of the last years (Billie Eilish, Taylor Swift, Adele, The Weeknd …), film, series and game music, Einaudi, and songs from Switzerland and Germany from Mani Matter to Lo & Leduc.',
+      ),
+      L(
+        'Traumlied: Bei «Für Elise», «Ode to Joy», «Canon in D» und «Minuet in G» kannst du den Anfang anhören und die Noten der Melodie anschauen, bevor du dich entscheidest. Lieder, die noch urheberrechtlich geschützt sind, bleiben ein Titel.',
+        'Dream song: for «Für Elise», «Ode to Joy», «Canon in D» and «Minuet in G» you can listen to the opening and see the melody on the staff before you decide. Songs still under copyright stay a title.',
+      ),
+      L(
+        'Hörprobe: Bei den Volksliedern, der Klassik und deinen eigenen Stücken spielt ein Tipp aufs Ohr die ersten Takte – so weisst du, wie es klingt, bevor du es öffnest.',
+        'Preview: for the folk songs, the classics and your own pieces, a tap on the ear plays the first bars – so you know how it sounds before opening it.',
+      ),
+      L(
+        'Startseite: Admins entscheiden unter «Verwaltung», ob Besucher die ausführliche Startseite sehen oder nur die Anmeldung. Neu zeigt eine Instanz von sich aus nur die Anmeldung.',
+        'Start page: under «Admin», admins decide whether visitors see the full start page or just the login. By default an instance now shows only the login.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.4',
     changes: [
       L(

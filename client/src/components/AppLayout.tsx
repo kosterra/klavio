@@ -164,12 +164,15 @@ export function AppLayout() {
               </Menu.Target>
               <Menu.Dropdown>
                 {activeProfile && <Menu.Label>{activeProfile.name}</Menu.Label>}
-                <Menu.Item
-                  leftSection={<IconUsers size={18} />}
-                  onClick={() => navigate('/profiles')}
-                >
-                  {t('profiles.switch')}
-                </Menu.Item>
+                {/* a child logged in with their PIN stays in their own profile */}
+                {!me?.childLogin && (
+                  <Menu.Item
+                    leftSection={<IconUsers size={18} />}
+                    onClick={() => navigate('/profiles')}
+                  >
+                    {t('profiles.switch')}
+                  </Menu.Item>
+                )}
                 {activeProfile && (
                   <Menu.Item
                     leftSection={<IconUserCircle size={18} />}
@@ -266,7 +269,7 @@ export function AppLayout() {
         danger
         testId="logout-confirm"
       >
-        <Text>{t('nav.logoutAsk.text')}</Text>
+        <Text>{t(me?.childLogin ? 'nav.logoutAsk.textChild' : 'nav.logoutAsk.text')}</Text>
         {unsent > 0 && (
           <Alert color="orange" data-testid="logout-unsent">
             {t('nav.logoutAsk.pending', { count: unsent })}

@@ -23,6 +23,8 @@ export async function createSession(
   req: FastifyRequest,
   reply: FastifyReply,
   userId: Types.ObjectId,
+  /** a child's PIN login: the session starts with that profile and stays with it */
+  child?: { profileId: Types.ObjectId },
 ): Promise<void> {
   // Rotate: a login always replaces any session the browser already had.
   await destroySession(req, reply, config);
@@ -35,6 +37,8 @@ export async function createSession(
     // asks for it (logging out and in again must not get round it); without a
     // PIN the area is open anyway
     parentUnlockedUntil: null,
+    activeProfileId: child?.profileId ?? null,
+    childProfileId: child?.profileId ?? null,
     expiresAt: new Date(Date.now() + maxAge * 1000),
   });
   reply.setCookie(SESSION_COOKIE, token, { ...cookieBase(config), maxAge });

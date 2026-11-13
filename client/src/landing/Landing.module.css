@@ -568,6 +568,11 @@
   box-shadow: 0 3px 0 rgb(0 0 0 / 18%);
 }
 
+/* the language button and the light / dark switch: the same height */
+.cornerButton {
+  height: 44px;
+}
+
 /* phones: the short lead, so the buttons stay on the first screen */
 .leadShort {
   display: none;
@@ -636,4 +641,38 @@
 
 .voice figcaption {
   color: var(--mantine-color-dimmed);
+}
+
+/* ------------------------------------------- the short start page (only the login) */
+.heroShort {
+  position: relative;
+  min-height: 100svh;
+  justify-content: center;
+  padding-bottom: calc(var(--mantine-spacing-xl) * 2);
+}
+
+/* the short page centres its content: the switches sit in the corner, out of its way */
+.heroShort .cornerTools {
+  position: absolute;
+  top: var(--mantine-spacing-md);
+  right: 0;
+  margin: 0;
+}
+
+.heroShort .heroGrid {
+  padding-top: var(--mantine-spacing-xl);
+}
+
+@media (max-width: 62em) {
+  .heroShort .heroText {
+    text-align: center;
+  }
+
+  .heroShort .lead {
+    margin-inline: auto;
+  }
+
+  .heroShort .logo {
+    justify-content: center;
+  }
 }

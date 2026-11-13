@@ -4,7 +4,10 @@ import { writeMicFixture } from './fixtures/micAudio';
 
 export const MIC_FIXTURE = join(import.meta.dirname, '..', 'test-results', 'mic-fixture.wav');
 
-/** Reopens registration directly in the dev database (no browser needed). */
+/**
+ * Reopens registration and switches the full start page on, directly in the
+ * dev database (no browser needed) – the specs expect both.
+ */
 export function reopenRegistration() {
   execFileSync('docker', [
     'compose',
@@ -15,7 +18,7 @@ export function reopenRegistration() {
     'klavio',
     '--quiet',
     '--eval',
-    `db.appsettings.updateOne({ _id: 'global' }, { $set: { registrationOpen: true } })`,
+    `db.appsettings.updateOne({ _id: 'global' }, { $set: { registrationOpen: true, publicPage: true } })`,
   ]);
 }
 

@@ -16,6 +16,8 @@ declare module 'fastify' {
       parentUnlockedUntil: Date | null;
       /** No parent PIN set, or it was entered recently. */
       parentUnlocked: boolean;
+      /** a child logged in with their own PIN: only this profile, and the parent area needs the parent PIN */
+      childLogin: boolean;
     } | null;
   }
   interface FastifyInstance {
@@ -52,12 +54,16 @@ export default fp<{ config: AppConfig }>(async (app, { config }) => {
       await User.updateOne({ _id: user._id }, { lastActiveAt: new Date(), inactiveWarnedAt: null });
     }
     const until = session.parentUnlockedUntil ?? null;
+    const childLogin = !!session.childProfileId;
     req.auth = {
       user,
       sessionId: session._id,
       activeProfileId: session.activeProfileId ?? null,
       parentUnlockedUntil: until,
-      parentUnlocked: !user.parentPinHash || (!!until && until.getTime() > Date.now()),
+      // a child's login never opens the parent area by itself – not even without a parent PIN
+      parentUnlocked:
+        (!user.parentPinHash && !childLogin) || (!!until && until.getTime() > Date.now()),
+      childLogin,
     };
   });
 

@@ -92,11 +92,19 @@ export const calibrationSchema = z.object({
 });
 export type Calibration = z.infer<typeof calibrationSchema>;
 
-/** The song an (adult) learner would like to play one day – only its title is stored. */
+/**
+ * The song an (adult) learner would like to play one day – only its title is
+ * stored, or the id of an own piece they uploaded as their dream song.
+ */
 export const goalSongSchema = z.object({
   title: z.string().trim().min(1).max(80),
   style: z.enum(GOAL_STYLES),
   skills: z.array(z.enum(SKILL_IDS)).max(SKILL_IDS.length),
+  /** an own piece (MusicXML/MIDI upload) that is this dream song */
+  pieceId: z
+    .string()
+    .regex(/^[a-f0-9]{24}$/)
+    .optional(),
 });
 export type GoalSong = z.infer<typeof goalSongSchema>;
 
@@ -132,6 +140,8 @@ export const profileUpdateSchema = z
     motive: motiveSchema.nullable(),
     weeklyGoalDays: weeklyGoalSchema.nullable(),
     playOn: playOnSchema.nullable(),
+    /** without the learning path: every lesson open, the start page shows the pieces */
+    pathOff: z.boolean(),
   })
   .partial();
 
@@ -168,7 +178,37 @@ export interface ProfileDto {
   weeklyGoalDays: number | null;
   /** what lessons and free play offer first; null = not chosen yet */
   playOn: PlayOn | null;
+  /** the learning path is switched off: every lesson is open, the start page shows the pieces */
+  pathOff: boolean;
+  /** the learner can log in with a PIN of their own on a child's device */
+  hasPin: boolean;
 }
+
+/** A learner's own PIN: 4 digits, for logging in on a child's device. */
+export const profilePinSchema = z.object({ pin: z.string().regex(/^\d{4}$/) });
+
+/** «Wer spielt?» on a child's device: who can log in there. */
+export interface DeviceProfilesResponse {
+  family: string;
+  profiles: { id: string; name: string; avatar: Avatar; outfit: Outfit | null }[];
+}
+
+export const childLoginSchema = z.object({
+  profileId: z.string().regex(/^[a-f0-9]{24}$/),
+  pin: z.string().regex(/^\d{4}$/),
+});
+
+/** A device set up for the children (parent area). */
+export interface DeviceDto {
+  id: string;
+  name: string;
+  createdAt: string;
+  lastUsedAt: string | null;
+  /** the device this list is looked at on */
+  current: boolean;
+}
+
+export const deviceCreateSchema = z.object({ name: z.string().trim().min(1).max(60) });
 
 export const MAX_PROFILES_PER_ACCOUNT = 8;
 

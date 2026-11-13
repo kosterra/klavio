@@ -1,6 +1,6 @@
 /**
  * A Standard MIDI File → MusicXML text, so the MusicXML importer can take it
- * from there. Notes are quantised to eighths; with two tracks of notes the
+ * from there. Notes are quantised to sixteenths; with two tracks of notes the
  * first is the right hand, the second the left (as notation programs and
  * LilyPond write them). Bars come from the time signature; a note across a
  * bar line is split and tied. Optional: an upbeat (in eighths) at the start.
@@ -91,7 +91,13 @@ function parseMidi(data: Uint8Array): ParsedMidi {
   return result;
 }
 
-const TYPES: Record<number, string> = { 1: 'eighth', 2: 'quarter', 4: 'half', 8: 'whole' };
+const TYPES: Record<number, string> = {
+  1: '16th',
+  2: 'eighth',
+  4: 'quarter',
+  8: 'half',
+  16: 'whole',
+};
 const STEPS = ['C', 'C', 'D', 'D', 'E', 'F', 'F', 'G', 'G', 'A', 'A', 'B'];
 const ALTERS = [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0];
 
@@ -99,18 +105,18 @@ function escape(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-/** MIDI bytes → MusicXML text (divisions: 2 per quarter, i.e. counted in eighths). */
+/** MIDI bytes → MusicXML text (divisions: 4 per quarter, i.e. counted in sixteenths). */
 export function midiToMusicXml(
   data: Uint8Array,
   meta: { title: string; composer?: string | null; pickupEighths?: number },
 ): string {
   const midi = parseMidi(data);
   if (!midi.tracks.length) throw new MidiImportError();
-  const eighth = midi.division / 2;
-  const q = (tick: number) => Math.round(tick / eighth);
+  const sixteenth = midi.division / 4;
+  const q = (tick: number) => Math.round(tick / sixteenth);
   const [num, den] = midi.time;
-  const barLen = Math.round((num * 8) / den);
-  const pickup = meta.pickupEighths ?? 0;
+  const barLen = Math.round((num * 16) / den);
+  const pickup = (meta.pickupEighths ?? 0) * 2;
   const hands = midi.tracks.slice(0, 2);
 
   // per hand: onsets (top or bottom note) with their length up to the next onset
@@ -180,7 +186,7 @@ export function midiToMusicXml(
     });
     const attrs =
       b === 0
-        ? `<attributes><divisions>2</divisions><key><fifths>${midi.fifths}</fifths></key><time><beats>${num}</beats><beat-type>${den}</beat-type></time>${hands.length > 1 ? '<staves>2</staves>' : ''}<clef number="1"><sign>G</sign><line>2</line></clef>${hands.length > 1 ? '<clef number="2"><sign>F</sign><line>4</line></clef>' : ''}</attributes>${midi.tempo ? `<sound tempo="${midi.tempo}"/>` : ''}`
+        ? `<attributes><divisions>4</divisions><key><fifths>${midi.fifths}</fifths></key><time><beats>${num}</beats><beat-type>${den}</beat-type></time>${hands.length > 1 ? '<staves>2</staves>' : ''}<clef number="1"><sign>G</sign><line>2</line></clef>${hands.length > 1 ? '<clef number="2"><sign>F</sign><line>4</line></clef>' : ''}</attributes>${midi.tempo ? `<sound tempo="${midi.tempo}"/>` : ''}`
         : '';
     const second = parts[1]
       ? `<backup><duration>${parts[0]!.len}</duration></backup>${parts[1].xml}`

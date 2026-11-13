@@ -125,25 +125,46 @@ li[data-state='later'] .skill {
 }
 
 /* one dream song to pick (start-up questions, «Mein Profil») */
+/*
+ * A pick: the whole tile is the button that chooses the song; pieces with a
+ * snippet get «anhören» and «Noten» in a row below it. The hover border
+ * follows the button, so what lights up is exactly what selects.
+ */
 .pick {
   display: flex;
-  gap: var(--mantine-spacing-sm);
-  align-items: flex-start;
+  flex-direction: column;
   min-height: 44px;
-  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
   border-radius: var(--mantine-radius-lg);
   border: 2px solid var(--mantine-color-default-border);
   background: var(--klavio-surface);
   text-align: left;
 }
 
-.pick:hover {
+.pick:has(.pickMain:hover) {
   border-color: var(--mantine-color-pink-4);
 }
 
 .pick[data-selected] {
   border-color: var(--mantine-color-pink-7);
   background: color-mix(in srgb, var(--mantine-color-pink-5) 14%, var(--klavio-surface));
+}
+
+.pickMain {
+  display: flex;
+  flex: 1;
+  gap: var(--mantine-spacing-sm);
+  align-items: flex-start;
+  min-width: 0;
+  padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
+  text-align: left;
+  border-radius: var(--mantine-radius-lg);
+}
+
+.pickActions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  padding: 0 var(--mantine-spacing-sm) var(--mantine-spacing-sm);
 }
 
 .pickIcon {
@@ -164,4 +185,10 @@ li[data-state='later'] .skill {
 
 :global([data-mantine-color-scheme='dark']) .pickChapter {
   color: var(--mantine-color-pink-3);
+}
+
+/* «anhören» and «Noten» in outline: pink 8 is too dark on the dark surface */
+:global([data-mantine-color-scheme='dark']) .pickAction[data-variant='outline'] {
+  --ai-color: var(--mantine-color-pink-3);
+  --ai-bd: 1px solid var(--mantine-color-pink-3);
 }

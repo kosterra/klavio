@@ -68,6 +68,24 @@ test('free play, metronome, wardrobe, family overview, placement and data export
   await page.getByRole('button', { name: 'Hier beginnen' }).click();
   await expect(page.getByText('Kapitel 3 · Noten-Meer').first()).toBeVisible();
 
+  // the learning path switched off: the start page shows the pieces, every lesson is open
+  await page.goto('/profile');
+  await page.getByRole('switch', { name: 'Lernpfad verwenden' }).click({ force: true });
+  await expect(page.getByText('Der Lernpfad ist ausgeschaltet.')).toBeVisible();
+  await page.goto('/');
+  await expect(page.getByTestId('free-home')).toBeVisible();
+  await expect(page.getByTestId('own-pieces')).toBeVisible();
+  await audit(page);
+  await page.getByTestId('free-lessons-toggle').click();
+  await page.goto('/lesson/accomp-finale');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Abschlusskonzert');
+  // … and back on
+  await page.goto('/profile');
+  await page.getByRole('switch', { name: 'Lernpfad verwenden' }).click({ force: true });
+  await expect(page.getByText('Der Lernpfad ist wieder da.')).toBeVisible();
+  await page.goto('/');
+  await expect(page.getByTestId('free-home')).toHaveCount(0);
+
   // family overview
   await seedCompletedLessons(page, ['read-c-d-e']);
   await page.goto('/family');

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { localIsoDate, weekOf, type ProgressDto } from '@klavio/shared';
+import { LESSONS, localIsoDate, weekOf, type ProgressDto } from '@klavio/shared';
 import { ApiError, isTransient } from '../api/client';
 import { endpoints } from '../api/endpoints';
 import { useSession } from '../auth/session';
@@ -90,10 +90,13 @@ export function useProgress() {
     };
   }, [profileId, dataVersion, refresh]);
 
-  const completed = new Set(
+  // the lessons really done …
+  const played = new Set(
     Object.entries(progress?.lessons ?? {})
       .filter(([, p]) => p.bestStars > 0)
       .map(([id]) => id),
   );
-  return { progress, completed, error, reload };
+  // … and the ones open as if done: without the learning path, all of them
+  const completed = activeProfile?.pathOff ? new Set(LESSONS.map((l) => l.id)) : played;
+  return { progress, completed, played, error, reload };
 }

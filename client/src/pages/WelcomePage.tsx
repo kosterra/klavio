@@ -22,6 +22,8 @@ import { Landmark } from '../lesson/Landmarks';
 import { WorldPanorama } from '../lesson/WorldPanorama';
 import { CHAPTER_COLORS, chapterVars, type KidsWorldId } from '../lesson/worlds';
 import { LoginCard } from '../landing/LoginCard';
+import { ShortWelcome } from '../landing/ShortWelcome';
+import { useChildDevice } from '../auth/childDevice';
 import { TryKeyboard } from '../landing/TryKeyboard';
 import { ThemeSwitch } from '../landing/ThemeSwitch';
 import { LanguageSwitch } from '../landing/LanguageSwitch';
@@ -70,15 +72,27 @@ function Phone({ shot, alt, eager = false }: { shot: string; alt: string; eager?
 }
 
 /**
+ * The start page for visitors. By default only the login (ShortWelcome); an
+ * admin switches the full page on under «Verwaltung».
+ */
+export function WelcomePage() {
+  usePageTitle(null, '/welcome');
+  const { config } = useSession();
+  // a child's device: straight to «Wer spielt?», no tour
+  const device = useChildDevice();
+  if (device === undefined) return null;
+  return config?.publicPage && !device ? <FullWelcome /> : <ShortWelcome />;
+}
+
+/**
  * Public landing page: what Klavio is, shown on a phone; a mini lesson to try
  * right away; what it does (listen, play along, note rain, dream song); the
  * two ways for children and adults; the privacy promise in a few honest
  * numbers; the questions; and the login at the end. A few easter eggs hide
  * here: the Konami code and tapping Klavi on the login card.
  */
-export function WelcomePage() {
+function FullWelcome() {
   const { t } = useTranslation();
-  usePageTitle(null, '/welcome');
   const { config } = useSession();
   // what families wrote – only what they agreed to publish and an admin approved
   const [voices, setVoices] = useState<PublicTestimonialDto[]>([]);

@@ -217,7 +217,8 @@
       "pending": "{{count}} result has not been sent yet. Signing out loses it – better wait until you are online again.",
       "pending_other": "{{count}} results have not been sent yet. Signing out loses them – better wait until you are online again.",
       "stay": "Stay signed in",
-      "go": "Sign out"
+      "go": "Sign out",
+      "textChild": "You then sign in again with your PIN."
     },
     "menu": "Menu",
     "input": "Microphone and MIDI",
@@ -284,6 +285,8 @@
     "title": "Administration",
     "registrationOpen": "Allow new accounts to register",
     "registrationOpenHint": "When switched off, no new accounts can be created. Existing accounts can still sign in with a passkey or e-mail code.",
+    "publicPage": "Show the full start page",
+    "publicPageHint": "Switched on, visitors see everything Klavio can do: the song to try, the worlds, the questions and answers. Switched off there is only the login – an instance for your own family or school stays inconspicuous.",
     "operator": {
       "title": "Operator and contact",
       "hint": "Who runs this Klavio instance and how to reach you. Shown in the footer and in the privacy policy – it has to name who is responsible for the data.",
@@ -360,7 +363,11 @@
         "newYearsEve": "New Year’s Eve",
         "newYear": "New Year’s Day"
       }
-    }
+    },
+    "pieceLibrary": "MuseTrainer sheet music library",
+    "pieceLibraryHint": "When switched on, everyone can search piano pieces from the MuseTrainer library (github.com/musetrainer/library) under «Own pieces» and take them over – Klavio fetches the file through this server, the browser talks to no one else. The collection calls its files public domain; Klavio does not check the rights one by one.",
+    "mutopiaLibrary": "Mutopia Project sheet music library",
+    "mutopiaLibraryHint": "When on, everyone can search piano pieces of the Mutopia Project (mutopiaproject.org, about 750 pieces for solo piano) under «Own pieces» and take them over – as MIDI files, fetched through this server. The pieces are public domain or Creative Commons; the licence is stored with the piece and named on prints."
   },
   "errors": {
     "EMAIL_CODE_INVALID": "The code is wrong or has expired.",
@@ -709,7 +716,10 @@
       "lives_other": "{{count}} lives left",
       "over": "Three notes have landed. Again?",
       "done": "All caught – great reading!",
-      "note": "Falling note"
+      "note": "Falling note",
+      "taskInterval": "Read the distance – play the second note!",
+      "from": "from {{note}}",
+      "interval": "Two notes, the first one is {{note}}"
     },
     "parts": {
       "label": "Part {{n}} of {{total}}",
@@ -725,7 +735,18 @@
       "pedal": "Pedal",
       "rhythm": "Rhythm",
       "piece": "Both hands",
-      "improvise": "Make it up"
+      "improvise": "Make it up",
+      "listen": "Listen closely",
+      "sight-read": "At first sight"
+    },
+    "ear": {
+      "right": "Well heard!",
+      "again": "Listen closely once more …"
+    },
+    "sight": {
+      "intro": "Look at the notes calmly first. Then I count in – and you play it through without stopping.",
+      "tip": "Tip: always look ahead to the next note – and keep going, even after a mistake.",
+      "round": "Melody {{n}} of {{total}}"
     }
   },
   "badges": {
@@ -793,7 +814,8 @@
     "passkeySettingNeedsPasskey": "Set up a passkey above first.",
     "resetSent": "We sent a code to {{email}}. Enter it here – the PIN is then removed and the parent area opens.",
     "resetCode": "Code from the e-mail",
-    "resetHint": "Afterwards you can set a new PIN under «Konto»."
+    "resetHint": "Afterwards you can set a new PIN under «Konto».",
+    "childLogin": "A child is signed in here with their PIN. Only the parent PIN opens the parent area – none is set. Sign out and sign in as a parent."
   },
   "profileSettings": {
     "title": "My profile",
@@ -1036,6 +1058,14 @@
     "needs": "What does the song need?",
     "needsHint": "A suggestion for this song – adjust it as you like. Basics like reading notes are always included.",
     "copyright": "Klavio only stores the title – no notes. You get the sheet music of your dream song yourself later, for example as an “easy piano” edition.",
+    "upload": {
+      "title": "Or upload your own piece",
+      "hint": "Already have the sheet music as a MusicXML or MIDI file? Then the piece becomes your dream song and lands under «Songs» with your pieces, ready to practise.",
+      "button": "Upload sheet music",
+      "done": "«{{title}}» is uploaded and set as your dream song – save below.",
+      "open": "Open the piece"
+    },
+    "openPiece": "Practise your piece",
     "save": "Save dream song",
     "remove": "Remove dream song",
     "saved": "Dream song saved.",
@@ -1062,7 +1092,14 @@
     "picks": {
       "title": "Popular dream songs",
       "skills_one": "Needs {{count}} skill",
-      "skills_other": "Needs {{count}} skills"
+      "skills_other": "Needs {{count}} skills",
+      "listen": "Listen to «{{title}}»",
+      "stop": "Stop «{{title}}»",
+      "sheet": "Sheet music of «{{title}}»",
+      "sheetHint": "Just the opening and just the melody – to get a taste. You will get the full sheet music yourself later on.",
+      "sheetLabel": "Line {{line}} of {{lines}}",
+      "play": "Listen",
+      "stopShort": "Stop"
     },
     "skillsStart": "{{total}} skills to your dream song – you’ll learn the first one in your next lesson.",
     "unfold": "Show more about the dream song",
@@ -1232,12 +1269,16 @@
     }
   },
   "placement": {
-    "title": "I can already …",
-    "hint": "If you already play a little, start later on the learning path. The lessons before then count as passed (with one star, without XP) and can be played any time.",
-    "label": "Start at",
+    "title": "Learning path",
+    "hint": "Who already plays the piano skips stages or chapters – or switches the learning path off altogether.",
+    "label": "Start at (stage or chapter)",
     "button": "Start here",
-    "confirm": "Start at «{{chapter}}»? The lessons before then count as passed.",
-    "done": "Done – the learning path now goes on from there."
+    "confirm": "Start at «{{chapter}}»? The lessons before it then count as passed (with one star) and stay playable.",
+    "done": "Done – the learning path now goes on from there.",
+    "pathOn": "Use the learning path",
+    "pathOnHint": "Off: every lesson can be picked freely, and the start page shows your pieces, songs and tools instead of the map.",
+    "offDone": "The learning path is switched off.",
+    "onDone": "The learning path is back."
   },
   "setup": {
     "title": "Let's start",
@@ -1326,10 +1367,17 @@
   },
   "songs": {
     "title": "Songs",
-    "intro_one": "{{count}} song is open – play it as often as you like.",
-    "intro_other": "{{count}} songs are open – play them as often as you like.",
+    "intro_one": "{{count}} of {{total}} songs is open – play it as often as you like.",
+    "intro_other": "{{count}} of {{total}} songs are open – play them as often as you like.",
     "new": "New – not played yet",
-    "locked": "Comes in chapter {{n}}"
+    "locked": "Comes in chapter {{n}}",
+    "introNone": "The songs come with the lessons – the first one in chapter {{n}}.",
+    "tabs": {
+      "path": "Learning path",
+      "own": "My pieces",
+      "collection": "Collection"
+    },
+    "collectionIntro": "Folk songs and little classical pieces, simplified for Klavio – to practise, listen to and print, without stars."
   },
   "duet": {
     "label": "Klavi plays along",
@@ -1421,11 +1469,15 @@
     "unsupported": "This browser cannot show reminders. On an iPhone or iPad it works when Klavio is installed on the home screen.",
     "forOther": "This device currently reminds another profile. Switching on reminds you instead."
   },
+  "preview": {
+    "listen": "Preview: «{{title}}»",
+    "stop": "Stop preview: «{{title}}»"
+  },
   "own": {
     "title": "Own pieces",
-    "intro": "Bring your own notes: a MusicXML or MIDI file from MuseScore, Finale, Sibelius or Dorico. Klavio reads it on your device; only the notes are stored, for all profiles of your account.",
+    "intro": "Your sheet music collection: import a file or fetch a piece from the library. Only the notes are stored, for all profiles of your account.",
     "import": "Import a piece",
-    "how": "Files .musicxml, .xml, .mxl or MIDI (.mid). Klavio takes the main voice (with two staves both hands) – whole to eighth notes, dotted halves and quarters.",
+    "how": "Files .musicxml, .xml, .mxl or MIDI (.mid), up to 1000 bars. Klavio takes the main voice (with two staves both hands) – from whole notes to sixty-fourths, with dots and triplets.",
     "full": "At most {{count}} own pieces – delete one first.",
     "previewSong_one": "Song on one staff · {{count}} bar · {{time}} time",
     "previewSong_other": "Song on one staff · {{count}} bars · {{time}} time",
@@ -1448,21 +1500,54 @@
     "errors": {
       "NOT_MUSICXML": "This is not a MusicXML file. Export the piece from your notation program as MusicXML (.musicxml or .mxl).",
       "NO_NOTES": "There are no notes in the file.",
-      "TOO_LONG": "The piece is too long – at most 64 bars.",
-      "DURATION": "Bar {{bar}} has note values Klavio cannot do yet (e.g. sixteenths or dotted eighths).",
-      "TUPLET": "Bar {{bar}} has triplets – Klavio cannot do them yet.",
+      "TOO_LONG": "The piece is too long – at most 1000 bars.",
+      "DURATION": "Bar {{bar}} has note values Klavio cannot do yet (e.g. sixty-fourth triplets).",
+      "TUPLET": "Bar {{bar}} has quintuplets or similar groups – triplets work, these not yet.",
       "RANGE": "The notes are outside the keyboard.",
       "TOO_BIG": "The file is too big (at most 5 MB).",
       "NOT_MIDI": "Klavio cannot read this MIDI file."
-    }
+    },
+    "search": "Search your pieces",
+    "noMatch": "No piece matches your search.",
+    "more": "More for «{{title}}»",
+    "rename": "Rename «{{title}}»",
+    "renameTitle": "Rename piece",
+    "renamed": "Saved.",
+    "fieldTitle": "Title",
+    "fieldComposer": "Composer or origin",
+    "library": "From the library",
+    "libraryTitle": "A piece from the library",
+    "librarySearch": "Title or composer",
+    "libraryNone": "Nothing found – try another word.",
+    "libraryAdd": "Take over",
+    "libraryAddLabel": "Take over «{{title}}»",
+    "librarySource": {
+      "musetrainer": "{{name}}: the collection describes its pieces as public domain.",
+      "mutopia": "{{name}}: public domain or Creative Commons – the licence is shown with every piece and stored with it."
+    },
+    "libraryCannotRead": "Klavio cannot read «{{title}}»: {{reason}}",
+    "libraryUnreachable": "The library cannot be reached right now – try again later.",
+    "bars_one": "{{count}} bar",
+    "bars_other": "{{count}} bars",
+    "oneHand": "One hand",
+    "bothHands": "Both hands",
+    "librarySortLevel": "Easy first",
+    "librarySortTitle": "A–Z",
+    "librarySort": "Sort",
+    "libraryLooking": "Klavio is still estimating the difficulty …",
+    "sourceLine": "Notes: {{source}}",
+    "libraryHow": "Klavio reads the piece like your own file; you see it before you save it.",
+    "publicDomain": "public domain",
+    "libraryAll": "All",
+    "librarySources": "Collection"
   },
   "folk": {
     "title": "Swiss folk songs",
-    "intro": "Old songs from Switzerland, taken from a collection printed in 1826 and simplified for Klavio: the melody to practise with listening, and to print – without stars."
+    "intro": "Old songs from Switzerland, taken from a collection printed in 1826."
   },
   "classics": {
     "title": "Classics to practise",
-    "intro": "Little pieces by great composers, simplified for Klavio: to practise with listening and one hand alone, and to print – without stars.",
+    "intro": "Little pieces by great composers – also to practise with one hand alone.",
     "credit": "Notes: {{by}}, {{license}}",
     "license": "Licence"
   },
@@ -1489,5 +1574,110 @@
     "approve": "Approve",
     "reject": "Do not show",
     "publicTitle": "What families say"
+  },
+  "readiness": {
+    "ready": "Right for you: everything it needs comes in the learning path up to «{{lesson}}» – and you have done that.",
+    "after": "Recommended after the lesson «{{lesson}}» (chapter {{chapter}}).",
+    "missing": "Still to learn for it: {{list}}.",
+    "go": "Go on with «{{lesson}}»",
+    "beyondText": "Goes beyond the learning path: {{list}} – still possible with patience and a slow tempo.",
+    "needs": {
+      "keys": "five notes",
+      "read-cde": "reading C, D, E",
+      "read-fg": "reading up to G",
+      "read-octave": "reading up to high C",
+      "wide": "thumb under (more than five notes)",
+      "read-high": "notes on ledger lines",
+      "rests": "rests",
+      "eighths": "eighth notes",
+      "dotted": "dotted quarters",
+      "two-four": "two-four time",
+      "bass": "bass clef",
+      "bass-low": "low notes in the bass",
+      "both": "both hands together",
+      "sharps": "sharps (♯) and black keys",
+      "three-four": "three-four time",
+      "upbeat": "upbeat",
+      "ties": "ties",
+      "six-eight": "six-eight time",
+      "flats": "flats (♭)",
+      "key-g": "G major",
+      "key-f": "F major"
+    },
+    "beyond": {
+      "very-high": "very high notes",
+      "very-low": "very low notes",
+      "other-time": "an unusual time signature",
+      "key-d": "D major",
+      "sixteenths": "sixteenths",
+      "dotted-eighths": "dotted eighths",
+      "triplets": "triplets"
+    }
+  },
+  "freeHome": {
+    "intro": "The learning path is switched off – play what you like: your pieces, songs, note rain or freely.",
+    "rain": "Note rain",
+    "metronome": "Metronome",
+    "lessons": "All lessons – pick any"
+  },
+  "notes": {
+    "open": "View notes",
+    "openLabel": "View the notes of «{{title}}»",
+    "practice": "Practise",
+    "size": "Size of the notes",
+    "sizes": {
+      "s": "Small",
+      "m": "Medium",
+      "l": "Large"
+    }
+  },
+  "level": {
+    "1": "Stage 1",
+    "2": "Stage 2",
+    "3": "Stage 3",
+    "4": "Advanced",
+    "5": "Demanding",
+    "ready": "Ready now"
+  },
+  "childLogin": {
+    "who": "Who’s playing?",
+    "hello": "Hello {{name}}!",
+    "enterPin": "Type your PIN.",
+    "pin": "PIN of {{name}}",
+    "go": "Let’s go",
+    "notMe": "That’s not me",
+    "wrong": "That PIN is not right – try again.",
+    "locked": "Too many tries. Wait a few minutes or ask your parents.",
+    "failed": "That didn’t work – try again.",
+    "parent": "Parents: sign in here",
+    "back": "Back to «Who’s playing?»"
+  },
+  "childPin": {
+    "title": "Sign in with a PIN",
+    "intro": "With a PIN of their own, {{name}} signs in on a device for the children – without e-mail and without you. You set up the device under «Account».",
+    "isSet": "{{name}} has a PIN and can sign in on the children’s devices.",
+    "set": "Set a PIN",
+    "change": "Change the PIN",
+    "remove": "Remove the PIN",
+    "enter": "New PIN (4 digits)",
+    "confirm": "Enter the PIN again",
+    "mismatch": "The two PINs are not the same – enter them again.",
+    "saved": "{{name}} now signs in with the PIN."
+  },
+  "devices": {
+    "title": "Devices for the children",
+    "intro": "On a device for the children Klavio shows «Who’s playing?»: every child taps their figure and enters their own PIN. A child then stays in their profile; only the parent PIN opens the parent area.",
+    "noPins": "First set a PIN for each child: choose the profile → «My profile» → «Sign in with a PIN».",
+    "whoCan": "With a PIN: {{names}}",
+    "this": "this device",
+    "lastUsed": "last used on {{date}}",
+    "since": "set up on {{date}}",
+    "remove": "Remove",
+    "removeLabel": "Remove the device «{{name}}»",
+    "removed": "«{{name}}» is no longer a device for the children.",
+    "name": "Name of the device",
+    "defaultName": "Piano",
+    "setUpHint": "Set up the device the children practise on – you will be signed out. You can sign in there again at any time with «Parents: sign in here».",
+    "setUp": "Set up this device"
   }
 }
