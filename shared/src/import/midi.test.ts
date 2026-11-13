@@ -37,7 +37,7 @@ function smf(tracks: [number, number, number][][]): Uint8Array {
 }
 
 describe('MIDI import', () => {
-  it('two tracks become right and left hand, quantised to eighths, bars from the time signature', () => {
+  it('two tracks become right and left hand, quantised to sixteenths, bars from the time signature', () => {
     const q = 480;
     const rh: [number, number, number][] = [
       [64, 0, q],
@@ -63,6 +63,28 @@ describe('MIDI import', () => {
     ]);
     expect(r.exercise.bars[0]!.lh).toEqual([{ midi: 48, value: 'w' }]);
     expect(r.exercise.bars[1]!.rh).toEqual([{ midi: 60, value: 'w' }]);
+  });
+
+  it('sixteenths stay sixteenths; a slightly late note lands on the grid', () => {
+    const q = 480;
+    const s = q / 4;
+    const rh: [number, number, number][] = [
+      [60, 0, s],
+      [62, s + 10, s], // a little late
+      [64, 2 * s, s],
+      [65, 3 * s, s],
+      [67, q, 3 * q],
+    ];
+    const r = importMusicXml(midiToMusicXml(smf([rh]), { title: 'Schnell' }));
+    expect(r.kind).toBe('song');
+    if (r.kind !== 'song') return;
+    expect(r.exercise.bars[0]!.map((n) => [n.midi, n.value])).toEqual([
+      [60, '16'],
+      [62, '16'],
+      [64, '16'],
+      [65, '16'],
+      [67, 'hd'],
+    ]);
   });
 
   it('refuses what is not MIDI', () => {

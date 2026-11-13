@@ -109,6 +109,8 @@ export interface PublicConfigResponse extends OperatorInfo {
   publicPage: boolean;
   /** true: pieces can be fetched from the MuseTrainer library (MusicXML) */
   pieceLibrary: boolean;
+  /** true: pieces can be fetched from the Mutopia Project (MIDI) */
+  mutopiaLibrary: boolean;
   /** from this age a profile can choose between the kids' worlds and the journey */
   journeyMinAge: number;
   /** practice reminders: the server's public push key (null: reminders are off on this instance) */
@@ -121,6 +123,8 @@ export interface AdminSettingsDto extends OperatorInfo {
   publicPage: boolean;
   /** true: pieces can be fetched from the MuseTrainer library; false (default): off */
   pieceLibrary: boolean;
+  /** true: pieces can be fetched from the Mutopia Project; false (default): off */
+  mutopiaLibrary: boolean;
   journeyMinAge: number;
   /** false: the instance asks search engines not to list it */
   searchIndexing: boolean;
@@ -132,6 +136,7 @@ export const adminSettingsSchema = z.object({
   registrationOpen: z.boolean().optional(),
   publicPage: z.boolean().optional(),
   pieceLibrary: z.boolean().optional(),
+  mutopiaLibrary: z.boolean().optional(),
   operatorName: z
     .string()
     .trim()

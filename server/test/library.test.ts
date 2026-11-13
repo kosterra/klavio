@@ -6,13 +6,20 @@ import {
   analyseLibrary,
   cleanComposer,
   libraryEntries,
+  parseMutopiaTable,
   resetLibraryCache,
   searchLibrary,
+  shortLicence,
   titleOf,
 } from '../src/lib/pieceLibrary.js';
 
 /** a small MusicXML file: two bars for one hand */
 const SONG = readFileSync(new URL('../../e2e/fixtures/mein-lied.musicxml', import.meta.url));
+
+/** one piece of Mutopia's table, as its pages write it */
+const mutopiaRow = (id: number, title: string, by: string, licence: string, file: string) =>
+  `<table class="table-bordered result-table"> <tr><td>${title}</td> <td>by ${by}</td> <td>&nbsp;</td> <td>&nbsp;</td> </tr><tr> <td>for Piano</td> <td>&nbsp;</td> <td>Romantic</td> <td></td> </tr><tr> <td>Edition</td> <td><a href="../legal.html">${licence}</a></td> <td><a href="piece-info.cgi?id=${id}">More Information</a></td> <td>2019/07/24</td> </tr><tr> <td>Download: <a href="https://www.mutopiaproject.org/ftp/X/${file}/${file}.ly">.ly file</a></td> <td>${file ? `<a href="https://www.mutopiaproject.org/ftp/X/${file}/${file}.mid">.mid file</a>` : '<a href="x-mids.zip">.mid files</a>'}</td></tr></table>`;
+const MUTOPIA_PAGE = `<html><body>${mutopiaRow(223, 'L&#39;Adieu', 'J. F. F. Burgmüller (1806–1874)', 'Public Domain', 'adieu')}${mutopiaRow(1731, 'Prélude', 'C.-V. Alkan (1813–1888)', 'Creative Commons Attribution-ShareAlike 3.0', 'alkan')}${mutopiaRow(492, 'Suite', 'J. S. Bach', 'Public Domain', '')}</body></html>`;
 
 let ctx: Awaited<ReturnType<typeof setupTestApp>>;
 beforeAll(async () => {
@@ -62,6 +69,9 @@ function fakeGitHub() {
       return new Response(SONG, { headers: { 'content-length': String(SONG.length) } });
     if (u === 'https://musetrainer.github.io/library/scores/Broken.mxl')
       return new Response('<nothing/>');
+    if (u.startsWith('https://www.mutopiaproject.org/cgibin/make-table.cgi'))
+      return new Response(u.includes('startat=0&') ? MUTOPIA_PAGE : '<html>no more</html>');
+    if (u === 'https://www.mutopiaproject.org/ftp/X/adieu/adieu.mid') return new Response(SONG); // the test serves MusicXML; read the same way
     return new Response('nope', { status: 404 });
   });
   vi.stubGlobal('fetch', fetcher);
@@ -80,6 +90,10 @@ describe('piece library (MuseTrainer)', () => {
     expect(cleanComposer('Ludwig van Beethoven(1770–1827)')).toBe('Ludwig van Beethoven');
     expect(cleanComposer('Erik Satie(1866 – 1925)')).toBe('Erik Satie');
     expect(cleanComposer('Unknown')).toBeNull();
+    expect(cleanComposer('by J. S. Bach (1685–1750)')).toBe('J. S. Bach');
+    expect(shortLicence('Creative Commons Attribution-ShareAlike 4.0')).toBe('CC BY-SA 4.0');
+    expect(shortLicence('Creative Commons Attribution 3.0')).toBe('CC BY 3.0');
+    expect(shortLicence('Public Domain')).toBe('Public Domain');
     expect(searchLibrary(entries, 'fur').map((e) => e.id)).toEqual(['a.mxl']);
     expect(searchLibrary(entries, 'bach minuet').map((e) => e.id)).toEqual(['b.mxl']);
   });
@@ -94,16 +108,28 @@ describe('piece library (MuseTrainer)', () => {
     const found = await call(jar, 'GET', '/api/library?q=elise');
     expect(found.statusCode).toBe(200);
     // levels come in the background: first only the names
-    expect(found.json().results).toEqual([{ id: 'Fur_Elise.mxl', title: 'Fur Elise' }]);
+    expect(found.json().results).toEqual([
+      {
+        id: 'Fur_Elise.mxl',
+        source: 'musetrainer',
+        title: 'Fur Elise',
+        licence: null,
+        composer: null,
+      },
+    ]);
     expect(found.json().pending).toBe(true);
-    expect(found.json().source.name).toBe('MuseTrainer');
-    await analyseLibrary(await libraryEntries());
+    expect(found.json().sources).toEqual([
+      { key: 'musetrainer', name: 'MuseTrainer', url: 'https://github.com/musetrainer/library' },
+    ]);
+    await analyseLibrary(await libraryEntries(['musetrainer']));
     const looked = (await call(jar, 'GET', '/api/library?q=')).json();
     expect(looked.pending).toBe(false);
     expect(looked.results).toEqual([
       {
         id: 'Fur_Elise.mxl',
+        source: 'musetrainer',
         title: 'Fur Elise',
+        licence: null,
         readable: true,
         composer: 'Lina',
         level: 1,
@@ -112,7 +138,13 @@ describe('piece library (MuseTrainer)', () => {
         hands: 1,
       },
       // the minuet could not be fetched (tried again later); the broken file is not offered
-      { id: 'Minuet_in_G_Major_Bach.mxl', title: 'Minuet in G Major Bach' },
+      {
+        id: 'Minuet_in_G_Major_Bach.mxl',
+        source: 'musetrainer',
+        title: 'Minuet in G Major Bach',
+        licence: null,
+        composer: null,
+      },
     ]);
 
     const file = await call(jar, 'GET', '/api/library/Fur_Elise.mxl/file');
@@ -128,5 +160,51 @@ describe('piece library (MuseTrainer)', () => {
 
     // without an account: nothing
     expect((await call(new CookieJar(), 'GET', '/api/library?q=elise')).statusCode).toBe(401);
+  });
+
+  it("reads Mutopia's table: title, composer, licence, the MIDI file (no zips)", () => {
+    expect(parseMutopiaTable(MUTOPIA_PAGE)).toEqual([
+      {
+        id: 'mutopia-223.mid',
+        source: 'mutopia',
+        title: "L'Adieu",
+        composer: 'J. F. F. Burgmüller',
+        licence: 'Public Domain',
+        version: '2019/07/24',
+        url: 'https://www.mutopiaproject.org/ftp/X/adieu/adieu.mid',
+      },
+      {
+        id: 'mutopia-1731.mid',
+        source: 'mutopia',
+        title: 'Prélude',
+        composer: 'C.-V. Alkan',
+        licence: 'CC BY-SA 3.0',
+        version: '2019/07/24',
+        url: 'https://www.mutopiaproject.org/ftp/X/alkan/alkan.mid',
+      },
+    ]);
+  });
+
+  it('Mutopia has its own switch; its list is kept in the database', async () => {
+    const fetcher = fakeGitHub();
+    const jar = await account('mutopia@example.ch');
+    await AppSettings.updateOne({ _id: 'global' }, { $set: { mutopiaLibrary: true } });
+    const res = (await call(jar, 'GET', '/api/library?q=adieu')).json();
+    expect(res.sources.map((x: { key: string }) => x.key)).toEqual(['mutopia']);
+    expect(res.results).toMatchObject([
+      { id: 'mutopia-223.mid', source: 'mutopia', composer: 'J. F. F. Burgmüller' },
+    ]);
+    const file = await call(jar, 'GET', '/api/library/mutopia-223.mid/file');
+    expect(file.statusCode).toBe(200);
+    expect(file.headers['content-type']).toContain('audio/midi');
+    // MuseTrainer is still off
+    expect((await call(jar, 'GET', '/api/library/Fur_Elise.mxl/file')).statusCode).toBe(404);
+    await analyseLibrary(await libraryEntries(['mutopia']));
+    // after a restart the list comes from the database, not from Mutopia
+    resetLibraryCache();
+    const pages = () => fetcher.mock.calls.filter(([u]) => String(u).includes('make-table')).length;
+    const before = pages();
+    await call(jar, 'GET', '/api/library?q=');
+    expect(pages()).toBe(before);
   });
 });

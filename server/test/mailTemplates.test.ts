@@ -132,6 +132,7 @@ describe('operator info', () => {
       registrationOpen: true,
       publicPage: false, // by default visitors get only the login
       pieceLibrary: false, // the MuseTrainer library is off until an admin switches it on
+      mutopiaLibrary: false, // so is the Mutopia Project
       operatorName: 'Familie Muster',
       contactEmail: 'kontakt@example.ch',
       journeyMinAge: 12,

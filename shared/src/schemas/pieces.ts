@@ -110,6 +110,8 @@ export const ownPieceInputSchema = z.object({
   keyboard: z
     .object({ from: midi, to: midi })
     .refine((k) => k.to - k.from >= 12, 'At least an octave'),
+  /** a library piece: where it comes from and its licence («Mutopia Project · CC BY-SA 3.0») */
+  source: z.string().trim().max(200).nullable().optional(),
 });
 export type OwnPieceInput = z.infer<typeof ownPieceInputSchema>;
 

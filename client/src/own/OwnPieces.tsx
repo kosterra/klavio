@@ -11,7 +11,7 @@ import {
   IconUpload,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { MAX_OWN_PIECES, UNTITLED, type ImportedPiece, type OwnPieceDto } from '@klavio/shared';
+import { MAX_OWN_PIECES, type ImportedPiece, type OwnPieceDto } from '@klavio/shared';
 import { endpoints } from '../api/endpoints';
 import { useErrorText } from '../auth/useErrorText';
 import { ConfirmModal } from '../components/ConfirmModal';
@@ -40,7 +40,7 @@ export function OwnPieces({ heading = true }: { heading?: boolean } = {}) {
   const { t } = useTranslation();
   const errorText = useErrorText();
   const [pieces, setPieces] = useState<OwnPieceDto[] | null>(null);
-  const [draft, setDraft] = useState<ImportedPiece | null>(null);
+  const [draft, setDraft] = useState<(ImportedPiece & { source?: string }) | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [removing, setRemoving] = useState<OwnPieceDto | null>(null);
@@ -56,14 +56,29 @@ export function OwnPieces({ heading = true }: { heading?: boolean } = {}) {
     endpoints.pieces().then(setPieces, () => setPieces([]));
   }, []);
 
-  /** `title`: the name it has where it comes from, for a file without a title of its own */
-  const read = async (file: File | null, title?: string) => {
+  /**
+   * A file to look at before saving. From a library: its name and composer
+   * there, and where it comes from (with the licence) to keep with the piece.
+   */
+  const read = async (
+    file: File | null,
+    from?: { title: string; composer: string | null; source: string },
+  ) => {
     setDraft(null);
     setProblem(null);
     if (!file) return;
     try {
       const piece = await readPieceFile(file);
-      setDraft(title && piece.title === UNTITLED ? { ...piece, title } : piece);
+      setDraft(
+        from
+          ? {
+              ...piece,
+              title: from.title,
+              composer: from.composer ?? piece.composer,
+              source: from.source,
+            }
+          : piece,
+      );
     } catch (err) {
       setProblem(
         err instanceof PieceReadError ? t(`own.errors.${err.key}`, err.params) : errorText(err),
@@ -79,6 +94,7 @@ export function OwnPieces({ heading = true }: { heading?: boolean } = {}) {
         title: draft.title.slice(0, 120),
         composer: draft.composer?.slice(0, 120) ?? null,
         exercise: draft.exercise,
+        source: draft.source ?? null,
         keyboard: draft.keyboard,
       });
       setPieces((p) => [...(p ?? []), saved]);
@@ -190,6 +206,11 @@ export function OwnPieces({ heading = true }: { heading?: boolean } = {}) {
           <Alert color="grape" variant="light" data-testid="own-draft">
             <Stack gap="xs">
               <Text fw={800}>{draft.title}</Text>
+              {draft.source && (
+                <Text size="sm" data-testid="own-draft-source">
+                  {t('own.sourceLine', { source: draft.source })}
+                </Text>
+              )}
               <Text size="sm">
                 {t(draft.kind === 'piece' ? 'own.previewPiece' : 'own.previewSong', {
                   count: draft.exercise.bars.length,
@@ -229,7 +250,7 @@ export function OwnPieces({ heading = true }: { heading?: boolean } = {}) {
               </Button>
             )}
           </FileButton>
-          {config?.pieceLibrary && (
+          {(config?.pieceLibrary || config?.mutopiaLibrary) && (
             <Button
               variant="default"
               leftSection={<IconBooks size={18} />}

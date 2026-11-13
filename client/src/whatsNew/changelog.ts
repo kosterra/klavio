@@ -31,6 +31,14 @@ export const CHANGELOG: Release[] = [
         'MuseTrainer sheet music library: when the admin switches it on, you fetch piano pieces from the public-domain MuseTrainer collection under «Own pieces» – from «Für Elise» to the Minuet in G. The «Hörprobe» lets you hear each piece before you take it over; each shows how hard it is, the easy ones first.',
       ),
       L(
+        'Notenbibliothek Mutopia Project: Wenn die Verwaltung sie einschaltet, findest du rund 600 Klavierstücke des Mutopia Project – von Bach bis Burgmüller, jedes mit seiner Lizenz, die mit dem Stück gespeichert und beim Drucken genannt wird.',
+        'Mutopia Project sheet music library: when the admin switches it on, you find about 600 piano pieces of the Mutopia Project – from Bach to Burgmüller, each with its licence, which is stored with the piece and named on prints.',
+      ),
+      L(
+        'Korrektur: MIDI-Dateien behalten jetzt ihre Sechzehntel – vorher wurde jede Note auf Achtel gerundet.',
+        'Fix: MIDI files now keep their sixteenths – before every note was rounded to eighths.',
+      ),
+      L(
         'Lieder in drei Teilen: «Lernpfad», «Meine Stücke» und «Sammlung». Jedes Stück zeigt seine Schwierigkeit – Stufe 1 bis 3 des Lernpfads, «Fortgeschritten» oder «Anspruchsvoll» – und «Passt jetzt», wenn du die nötigen Lektionen gemacht hast. Anhören geht mit einem Tipp, Noten, Drucken und Umbenennen sind im Menü des Stücks.',
         'Songs in three parts: «Learning path», «My pieces» and «Collection». Every piece shows how hard it is – stage 1 to 3 of the learning path, «Advanced» or «Demanding» – and «Ready now» once you have done the lessons it needs. Listening takes one tap; notes, printing and renaming are in the piece’s menu.',
       ),

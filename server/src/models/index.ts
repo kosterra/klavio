@@ -259,10 +259,25 @@ const ownPieceSchema = new Schema(
     /** the notes (checked against the schema on the way in) */
     exercise: { type: Schema.Types.Mixed, required: true },
     keyboard: { from: Number, to: Number },
+    /** where it comes from and under which licence (a library piece), shown on its pages and prints */
+    source: { type: String, default: null },
   },
   { timestamps: true },
 );
 export const OwnPiece = model('OwnPiece', ownPieceSchema);
+
+// ---------------------------------------------------------------------------
+// Sheet music libraries: their lists and what Klavio made of each file, kept
+// across restarts so the sources are not asked again and again
+// ---------------------------------------------------------------------------
+const libraryCacheSchema = new Schema({
+  /** "list:<source>" or "info:<file id>" */
+  _id: { type: String, required: true },
+  /** the list: when it was fetched; a file: its version (hash or date) */
+  version: { type: String, required: true },
+  data: { type: Schema.Types.Mixed, required: true },
+});
+export const LibraryCache = model('LibraryCache', libraryCacheSchema);
 
 // ---------------------------------------------------------------------------
 // Testimonial: a few words from a family, shown publicly once an admin approved them
@@ -296,6 +311,8 @@ const appSettingsSchema = new Schema(
     publicPage: { type: Boolean },
     /** true: pieces can be fetched from the MuseTrainer library; unset/false: off */
     pieceLibrary: { type: Boolean },
+    /** true: pieces can be fetched from the Mutopia Project; unset/false: off */
+    mutopiaLibrary: { type: Boolean },
     /** who runs this instance (footer, privacy page); empty until an admin fills it in */
     operatorName: { type: String, default: '' },
     contactEmail: { type: String, default: '' },

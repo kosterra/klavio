@@ -78,7 +78,7 @@ export const endpoints = {
   addPiece: (input: OwnPieceInput) => api<OwnPieceDto>('POST', '/pieces', input),
   deletePiece: (id: string) => api('DELETE', `/pieces/${encodeURIComponent(id)}`),
   library: (q: string) =>
-    api<{ source: { name: string; url: string }; results: LibraryResult[]; pending: boolean }>(
+    api<{ sources: LibrarySource[]; results: LibraryResult[]; pending: boolean }>(
       'GET',
       `/library?q=${encodeURIComponent(q)}`,
     ),
@@ -163,10 +163,20 @@ export const endpoints = {
     api('POST', `/admin/mail-templates/${id}/test`, { lang: mailLang }),
 };
 
+/** A sheet music library an admin switched on. */
+export interface LibrarySource {
+  key: 'musetrainer' | 'mutopia';
+  name: string;
+  url: string;
+}
+
 /** A piece of the library; level and size once the server has looked at it. */
 export interface LibraryResult {
   id: string;
+  source: LibrarySource['key'];
   title: string;
+  /** "Public Domain", "CC BY-SA 3.0" … (null: as the source says for all) */
+  licence: string | null;
   composer?: string | null;
   level?: PieceLevel;
   /** the lesson after which it can be played */

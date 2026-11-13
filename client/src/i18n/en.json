@@ -364,7 +364,9 @@
       }
     },
     "pieceLibrary": "MuseTrainer sheet music library",
-    "pieceLibraryHint": "When switched on, everyone can search piano pieces from the MuseTrainer library (github.com/musetrainer/library) under «Own pieces» and take them over – Klavio fetches the file through this server, the browser talks to no one else. The collection calls its files public domain; Klavio does not check the rights one by one."
+    "pieceLibraryHint": "When switched on, everyone can search piano pieces from the MuseTrainer library (github.com/musetrainer/library) under «Own pieces» and take them over – Klavio fetches the file through this server, the browser talks to no one else. The collection calls its files public domain; Klavio does not check the rights one by one.",
+    "mutopiaLibrary": "Mutopia Project sheet music library",
+    "mutopiaLibraryHint": "When on, everyone can search piano pieces of the Mutopia Project (mutopiaproject.org, about 750 pieces for solo piano) under «Own pieces» and take them over – as MIDI files, fetched through this server. The pieces are public domain or Creative Commons; the licence is stored with the piece and named on prints."
   },
   "errors": {
     "EMAIL_CODE_INVALID": "The code is wrong or has expired.",
@@ -1517,7 +1519,10 @@
     "libraryNone": "Nothing found – try another word.",
     "libraryAdd": "Take over",
     "libraryAddLabel": "Take over «{{title}}»",
-    "librarySource": "From the collection of {{name}} – published as public domain. Klavio reads the piece like your own file; you see it before you save it.",
+    "librarySource": {
+      "musetrainer": "{{name}}: the collection describes its pieces as public domain.",
+      "mutopia": "{{name}}: public domain or Creative Commons – the licence is shown with every piece and stored with it."
+    },
     "libraryCannotRead": "Klavio cannot read «{{title}}»: {{reason}}",
     "libraryUnreachable": "The library cannot be reached right now – try again later.",
     "bars_one": "{{count}} bar",
@@ -1527,7 +1532,12 @@
     "librarySortLevel": "Easy first",
     "librarySortTitle": "A–Z",
     "librarySort": "Sort",
-    "libraryLooking": "Klavio is still estimating the difficulty …"
+    "libraryLooking": "Klavio is still estimating the difficulty …",
+    "sourceLine": "Notes: {{source}}",
+    "libraryHow": "Klavio reads the piece like your own file; you see it before you save it.",
+    "publicDomain": "public domain",
+    "libraryAll": "All",
+    "librarySources": "Collection"
   },
   "folk": {
     "title": "Swiss folk songs",

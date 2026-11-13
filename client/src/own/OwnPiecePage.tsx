@@ -61,7 +61,13 @@ export function OwnPiecePage() {
   const { piece, error, retry } = useOwnPiece();
   usePageTitle(piece?.title ?? t('own.title'));
   if (!piece) return <ProgressPending fullPage error={error} onRetry={retry} />;
-  return <PracticePiece piece={piece} printTo={`/own/${piece.id}/print`} />;
+  return (
+    <PracticePiece
+      piece={piece}
+      printTo={`/own/${piece.id}/print`}
+      credit={piece.source ? t('own.sourceLine', { source: piece.source }) : undefined}
+    />
+  );
 }
 
 /** A classical piece of the library, to practise. */
@@ -114,10 +120,13 @@ function PracticePiece({
   piece,
   printTo,
   source,
+  credit,
 }: {
   piece: Playable;
   printTo: string;
   source?: ClassicPiece['source'];
+  /** where a library piece comes from, with its licence */
+  credit?: string;
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -181,6 +190,11 @@ function PracticePiece({
               >
                 {t('own.start')}
               </Button>
+              {credit && (
+                <Text size="xs" c="dimmed" ta="center" data-testid="own-source">
+                  {credit}
+                </Text>
+              )}
               {source && (
                 <Text size="xs" c="dimmed" ta="center" data-testid="classic-source">
                   {t('classics.credit', { by: source.by, license: source.license })} ·{' '}
@@ -254,7 +268,12 @@ export function OwnSheetPage() {
       title={piece.title}
       exercise={piece.exercise}
       chip={{ text: t('own.chip'), color: 'grape' }}
-      note={piece.composer ?? t('own.yours')}
+      note={[
+        piece.composer ?? t('own.yours'),
+        piece.source && t('own.sourceLine', { source: piece.source }),
+      ]
+        .filter(Boolean)
+        .join(' · ')}
       backTo={`/own/${piece.id}`}
     />
   );

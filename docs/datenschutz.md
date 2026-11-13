@@ -84,6 +84,8 @@ bzw. im Passwort-Manager und erreichen den Server nie.
 - **GitHub (nur mit der Notenbibliothek, standardmässig aus):** Der Server holt die Liste und die
   gewählten Dateien der MuseTrainer-Sammlung; GitHub sieht dabei die Adresse des Servers, keine
   Angaben zu Nutzern.
+- **Mutopia Project (nur mit dieser Notenbibliothek, standardmässig aus):** Der Server holt die
+  Liste und die Dateien; Mutopia sieht die Adresse des Servers, keine Angaben zu Nutzern.
 - Synchronisierte Passkeys laufen über den Passwort-Manager des Nutzers (z. B. Apple, Google) –
   ausserhalb von Klavio.
 

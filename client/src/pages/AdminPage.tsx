@@ -68,6 +68,14 @@ export function AdminPage() {
             onChange={(e) => void update({ pieceLibrary: e.currentTarget.checked })}
             data-testid="admin-piece-library"
           />
+          <Switch
+            label={t('admin.mutopiaLibrary')}
+            description={t('admin.mutopiaLibraryHint')}
+            checked={settings?.mutopiaLibrary ?? false}
+            disabled={!settings}
+            onChange={(e) => void update({ mutopiaLibrary: e.currentTarget.checked })}
+            data-testid="admin-mutopia-library"
+          />
         </Stack>
       </Card>
       <WorldsCard

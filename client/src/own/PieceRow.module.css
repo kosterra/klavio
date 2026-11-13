@@ -111,3 +111,9 @@
     transition: none;
   }
 }
+
+/* in the library: where a piece comes from and its licence, on a line of its own */
+.origin {
+  display: block;
+  font-size: var(--mantine-font-size-xs);
+}

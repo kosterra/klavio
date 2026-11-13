@@ -17,6 +17,7 @@ type Doc = {
   composer?: string | null;
   exercise: unknown;
   keyboard?: { from?: number | null; to?: number | null } | null;
+  source?: string | null;
   createdAt: Date;
 };
 
@@ -27,6 +28,7 @@ function toDto(p: Doc): OwnPieceDto {
     composer: p.composer ?? null,
     exercise: p.exercise as OwnPieceDto['exercise'],
     keyboard: { from: p.keyboard?.from ?? 48, to: p.keyboard?.to ?? 72 },
+    source: p.source ?? null,
     createdAt: p.createdAt.toISOString(),
   };
 }

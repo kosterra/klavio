@@ -1698,6 +1698,17 @@
                       "from",
                       "to"
                     ]
+                  },
+                  "source": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   }
                 },
                 "required": [
@@ -1834,7 +1845,7 @@
               "type": "string",
               "minLength": 5,
               "maxLength": 200,
-              "pattern": "^[\\w.\\-() ',&]+\\.mxl$"
+              "pattern": "^(?:[\\w.\\-() ',&]+\\.mxl|mutopia-\\d{1,7}\\.mid)$"
             },
             "in": "path",
             "name": "id",
@@ -2005,6 +2016,9 @@
                     "type": "boolean"
                   },
                   "pieceLibrary": {
+                    "type": "boolean"
+                  },
+                  "mutopiaLibrary": {
                     "type": "boolean"
                   },
                   "operatorName": {

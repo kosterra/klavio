@@ -364,7 +364,9 @@
       }
     },
     "pieceLibrary": "Notenbibliothek MuseTrainer",
-    "pieceLibraryHint": "Eingeschaltet können alle bei «Eigene Stücke» Klavierstücke aus der MuseTrainer-Bibliothek (github.com/musetrainer/library) suchen und übernehmen – Klavio holt die Datei über diesen Server, der Browser spricht mit niemand anderem. Die Sammlung bezeichnet ihre Dateien als gemeinfrei; Klavio prüft die Rechte nicht einzeln."
+    "pieceLibraryHint": "Eingeschaltet können alle bei «Eigene Stücke» Klavierstücke aus der MuseTrainer-Bibliothek (github.com/musetrainer/library) suchen und übernehmen – Klavio holt die Datei über diesen Server, der Browser spricht mit niemand anderem. Die Sammlung bezeichnet ihre Dateien als gemeinfrei; Klavio prüft die Rechte nicht einzeln.",
+    "mutopiaLibrary": "Notenbibliothek Mutopia Project",
+    "mutopiaLibraryHint": "Eingeschaltet können alle bei «Eigene Stücke» Klavierstücke des Mutopia Project (mutopiaproject.org, rund 750 Stücke für Klavier allein) suchen und übernehmen – als MIDI-Datei, über diesen Server geholt. Die Stücke sind gemeinfrei oder unter Creative Commons; die Lizenz wird beim Stück gespeichert und beim Drucken genannt."
   },
   "errors": {
     "EMAIL_CODE_INVALID": "Der Code stimmt nicht oder ist abgelaufen.",
@@ -1517,7 +1519,10 @@
     "libraryNone": "Nichts gefunden – versuch ein anderes Wort.",
     "libraryAdd": "Übernehmen",
     "libraryAddLabel": "«{{title}}» übernehmen",
-    "librarySource": "Aus der Sammlung von {{name}} – als gemeinfrei veröffentlicht. Klavio liest das Stück wie eine eigene Datei; du siehst es, bevor du es speicherst.",
+    "librarySource": {
+      "musetrainer": "{{name}}: Die Sammlung bezeichnet ihre Stücke als gemeinfrei.",
+      "mutopia": "{{name}}: gemeinfrei oder Creative Commons – die Lizenz steht bei jedem Stück und wird mit ihm gespeichert."
+    },
     "libraryCannotRead": "«{{title}}» kann Klavio nicht lesen: {{reason}}",
     "libraryUnreachable": "Die Bibliothek ist gerade nicht erreichbar – versuch es später nochmals.",
     "bars_one": "{{count}} Takt",
@@ -1527,7 +1532,12 @@
     "librarySortLevel": "Leicht zuerst",
     "librarySortTitle": "A–Z",
     "librarySort": "Sortieren",
-    "libraryLooking": "Klavio schätzt die Schwierigkeit noch ein …"
+    "libraryLooking": "Klavio schätzt die Schwierigkeit noch ein …",
+    "sourceLine": "Noten: {{source}}",
+    "libraryHow": "Klavio liest das Stück wie eine eigene Datei; du siehst es, bevor du es speicherst.",
+    "publicDomain": "gemeinfrei",
+    "libraryAll": "Alle",
+    "librarySources": "Sammlung"
   },
   "folk": {
     "title": "Schweizer Volkslieder",

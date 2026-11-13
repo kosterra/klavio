@@ -116,6 +116,15 @@ Ebenfalls unter «Verwaltung»:
   gewählte Datei von `musetrainer.github.io` – ohne Angaben zu Nutzern; der Browser spricht mit
   niemand anderem. Die Sammlung bezeichnet ihre Dateien als gemeinfrei, prüft das aber nicht
   einzeln; wer sie einschaltet, übernimmt diese Einschätzung.
+- **Notenbibliothek Mutopia Project:** standardmässig aus, eigener Schalter. Eingeschaltet können
+  alle die rund 600 Stücke für Klavier allein aus [mutopiaproject.org](https://www.mutopiaproject.org)
+  suchen und übernehmen, die es als einzelne MIDI-Datei gibt (Stücke aus mehreren Sätzen in einem
+  Zip fehlen). Der Server liest einmal in der Woche die Liste (rund 80 Seiten nacheinander) und holt
+  die gewählte Datei – ohne Angaben zu Nutzern. Die Stücke sind gemeinfrei oder unter Creative
+  Commons; die Lizenz steht beim Stück, wird mit ihm gespeichert und beim Drucken genannt.
+- **Schwierigkeit:** Klavio schaut sich jedes Stück der eingeschalteten Bibliotheken einmal an
+  (im Hintergrund, drei Dateien gleichzeitig) und merkt sich Stufe, Länge und Hände in der Datenbank
+  (`librarycaches`); geänderte Dateien werden neu angeschaut.
 - **Welten:** ab welchem Alter (aus dem Geburtsjahr des Profils) neben den bunten Welten auch «Die
   Reise» wählbar ist (Standard 12). Jüngere Profile sehen immer die bunten Welten.
 - **Daten und Suchmaschinen:** ob Suchmaschinen die Instanz aufnehmen dürfen (aus: `noindex`,

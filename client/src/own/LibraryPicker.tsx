@@ -14,13 +14,14 @@ import { useDebouncedValue } from '@mantine/hooks';
 import { IconPlus, IconSearch } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import type { ImportedPiece, PieceLevel } from '@klavio/shared';
-import { endpoints, type LibraryResult } from '../api/endpoints';
+import { endpoints, type LibraryResult, type LibrarySource } from '../api/endpoints';
 import { previewParts, startPreview, stopPreview, usePreview } from '../audio/preview';
 import { ListenIcon } from '../components/PreviewButton';
 import { PieceReadError, readPieceFile } from '../import/readPiece';
 import { useProgress } from '../lesson/useProgress';
 import { LevelBadge } from './LevelBadge';
 import { PieceRow } from './PieceRow';
+import classes from './PieceRow.module.css';
 
 /** Files fetched for a «Hörprobe» – taking the piece over then needs no second download. */
 const fetched = new Map<string, { file: File; piece: ImportedPiece | PieceReadError }>();
@@ -106,15 +107,19 @@ export function LibraryPicker({
 }: {
   opened: boolean;
   onClose: () => void;
-  /** the chosen file, to read like an upload, and its title in the library */
-  onFile: (file: File, title: string) => Promise<void>;
+  /** the chosen file, to read like an upload, with its name and origin in the library */
+  onFile: (
+    file: File,
+    from: { title: string; composer: string | null; source: string },
+  ) => Promise<void>;
 }) {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [debounced] = useDebouncedValue(query, 300);
   const [results, setResults] = useState<LibraryResult[] | null>(null);
   const [pending, setPending] = useState(false);
-  const [source, setSource] = useState<string | null>(null);
+  const [sources, setSources] = useState<LibrarySource[]>([]);
+  const [only, setOnly] = useState<'all' | LibrarySource['key']>('all');
   const [problem, setProblem] = useState<string | null>(null);
   const [taking, setTaking] = useState<string | null>(null);
   const [sort, setSort] = useState<'level' | 'title'>('level');
@@ -130,7 +135,7 @@ export function LibraryPicker({
         if (cancelled) return;
         setResults(r.results);
         setPending(r.pending);
-        setSource(r.source.name);
+        setSources(r.sources);
         setProblem(null);
       },
       () => {
@@ -149,21 +154,37 @@ export function LibraryPicker({
     return () => clearTimeout(timer);
   }, [opened, pending, round]);
 
+  const sourceName = (key: LibrarySource['key']) => sources.find((s) => s.key === key)?.name ?? key;
+  /** "Mutopia Project · CC BY-SA 3.0" */
+  const origin = (r: LibraryResult) =>
+    [
+      sourceName(r.source),
+      r.licence && (r.licence === 'Public Domain' ? t('own.publicDomain') : r.licence),
+    ]
+      .filter(Boolean)
+      .join(' · ');
+
   const sorted = useMemo(
     () =>
-      [...(results ?? [])].sort((a, b) =>
-        sort === 'level'
-          ? levelOf(a) - levelOf(b) || a.title.localeCompare(b.title)
-          : a.title.localeCompare(b.title),
-      ),
-    [results, sort],
+      (results ?? [])
+        .filter((r) => only === 'all' || r.source === only)
+        .sort((a, b) =>
+          sort === 'level'
+            ? levelOf(a) - levelOf(b) || a.title.localeCompare(b.title)
+            : a.title.localeCompare(b.title),
+        ),
+    [results, sort, only],
   );
 
   const take = async (r: LibraryResult) => {
     setTaking(r.id);
     try {
       stopPreview();
-      await onFile((await load(r.id)).file, r.title);
+      await onFile((await load(r.id)).file, {
+        title: r.title,
+        composer: r.composer ?? null,
+        source: origin(r),
+      });
       onClose();
     } catch {
       setProblem(t('own.libraryUnreachable'));
@@ -201,6 +222,19 @@ export function LibraryPicker({
             { value: 'title', label: t('own.librarySortTitle') },
           ]}
         />
+        {sources.length > 1 && (
+          <SegmentedControl
+            fullWidth
+            size="sm"
+            value={only}
+            onChange={(v) => setOnly(v as typeof only)}
+            aria-label={t('own.librarySources')}
+            data={[
+              { value: 'all', label: t('own.libraryAll') },
+              ...sources.map((s) => ({ value: s.key, label: s.name })),
+            ]}
+          />
+        )}
         {pending && (
           <Group gap={6} wrap="nowrap">
             <Loader size="xs" aria-hidden />
@@ -222,15 +256,16 @@ export function LibraryPicker({
               <PieceRow
                 title={r.title}
                 meta={
-                  r.bars
-                    ? [
-                        r.composer,
-                        t(r.hands === 2 ? 'own.bothHands' : 'own.oneHand'),
-                        t('own.bars', { count: r.bars }),
-                      ]
-                        .filter(Boolean)
-                        .join(' · ')
-                    : undefined
+                  <>
+                    {[
+                      r.composer,
+                      r.hands && t(r.hands === 2 ? 'own.bothHands' : 'own.oneHand'),
+                      r.bars && t('own.bars', { count: r.bars }),
+                    ]
+                      .filter(Boolean)
+                      .join(' · ')}
+                    <span className={classes.origin}>{origin(r)}</span>
+                  </>
                 }
                 badge={
                   r.level ? (
@@ -259,9 +294,14 @@ export function LibraryPicker({
             </div>
           ))}
         </Stack>
-        {source && (
+        {sources.map((s) => (
+          <Text size="xs" c="dimmed" key={s.key}>
+            {t(`own.librarySource.${s.key}`, { name: s.name })}
+          </Text>
+        ))}
+        {sources.length > 0 && (
           <Text size="xs" c="dimmed">
-            {t('own.librarySource', { name: source })}
+            {t('own.libraryHow')}
           </Text>
         )}
       </Stack>

@@ -13,6 +13,7 @@ export async function getSettings(config: AppConfig) {
     registrationOpen: doc!.registrationOpen ?? config.REGISTRATION_OPEN_DEFAULT,
     publicPage: doc!.publicPage ?? false,
     pieceLibrary: doc!.pieceLibrary ?? false,
+    mutopiaLibrary: doc!.mutopiaLibrary ?? false,
     operatorName: doc!.operatorName ?? '',
     contactEmail: doc!.contactEmail ?? '',
     journeyMinAge: doc!.journeyMinAge ?? DEFAULT_JOURNEY_MIN_AGE,
