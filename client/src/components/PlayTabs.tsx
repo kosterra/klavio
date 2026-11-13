@@ -1,8 +1,10 @@
-import { Button, Group } from '@mantine/core';
+import type { ReactNode } from 'react';
+import { Button, Group, Title } from '@mantine/core';
 import { IconCloudRain, IconMetronome, IconMusic } from '@tabler/icons-react';
 import { Link, useLocation } from 'react-router';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
+import classes from './PlayTabs.module.css';
 
 /** «Spielen»: free play, the endless Notenregen and the metronome, one tap apart. */
 export function PlayTabs() {
@@ -47,5 +49,14 @@ export function PlayTabs() {
         );
       })}
     </Group>
+  );
+}
+
+/** The page's heading – on phones only for screen readers: the tab already names the page. */
+export function PlayTitle({ children }: { children: ReactNode }) {
+  return (
+    <Title order={1} className={classes.title}>
+      {children}
+    </Title>
   );
 }

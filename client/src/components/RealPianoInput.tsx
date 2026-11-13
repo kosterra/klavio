@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Alert, Badge, Button, Group, Stack } from '@mantine/core';
 import { IconMicrophone, IconPiano, IconPlayerStop } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
@@ -12,9 +13,19 @@ import classes from './RealPianoInput.module.css';
  * The real piano outside the lessons: a digital piano (MIDI) is simply
  * there, an acoustic one is heard through the microphone after a tap. The
  * microphone stops when the page is left. `prominent`: the real piano is the
- * learner's way to play – the button is the main thing to tap.
+ * learner's way to play – the button is the main thing to tap. `compact`: one
+ * small switch for a line next to other things (Notenregen). `onActive`: told
+ * whether the real piano is heard (then the screen keys only show the notes).
  */
-export function RealPianoInput({ prominent = false }: { prominent?: boolean }) {
+export function RealPianoInput({
+  prominent = false,
+  compact = false,
+  onActive,
+}: {
+  prominent?: boolean;
+  compact?: boolean;
+  onActive?: (active: boolean) => void;
+}) {
   const { t } = useTranslation();
   const { activeProfile } = useSession();
   const midi = useMidi();
@@ -24,6 +35,51 @@ export function RealPianoInput({ prominent = false }: { prominent?: boolean }) {
   });
   const micErrorText = useMicErrorText();
   const midiDevice = midi.devices[0]?.name ?? null;
+  const active = !!midiDevice || mic.status === 'running';
+  useEffect(() => {
+    onActive?.(active);
+  }, [active, onActive]);
+
+  if (compact) {
+    return (
+      <Stack gap={4} align="center">
+        {midiDevice ? (
+          <Badge size="lg" color="teal" variant="light" leftSection={<IconPiano size={16} />}>
+            MIDI
+          </Badge>
+        ) : (
+          microphoneSupported() && (
+            // one switch: on = it listens (the microphone pulses), off = the screen keys
+            <Button
+              size="compact-md"
+              h={44}
+              radius="xl"
+              variant={active ? 'light' : 'default'}
+              color={active ? 'teal' : undefined}
+              leftSection={
+                <IconMicrophone
+                  size={18}
+                  aria-hidden
+                  className={active ? classes.listening : undefined}
+                />
+              }
+              loading={mic.status === 'starting'}
+              aria-pressed={active}
+              onClick={() => void (active ? mic.stop() : mic.start())}
+              data-testid="real-piano-mic"
+            >
+              {t('freePlay.mic')}
+            </Button>
+          )
+        )}
+        {mic.status === 'error' && (
+          <Alert color="red" variant="light" p="xs">
+            {micErrorText(mic.error)}
+          </Alert>
+        )}
+      </Stack>
+    );
+  }
 
   return (
     <Stack gap="xs" align="center">

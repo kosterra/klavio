@@ -5,6 +5,7 @@ import {
   Card,
   Checkbox,
   Group,
+  SimpleGrid,
   Stack,
   Text,
   TextInput,
@@ -82,7 +83,8 @@ export function TestimonialCard() {
           minRows={3}
           size="md"
         />
-        <Group grow wrap="wrap" align="flex-start">
+        {/* side by side only where both fit; on phones one below the other */}
+        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
           <TextInput
             label={t('testimonial.author')}
             description={t('testimonial.authorHint')}
@@ -99,7 +101,7 @@ export function TestimonialCard() {
             maxLength={60}
             size="md"
           />
-        </Group>
+        </SimpleGrid>
         <Checkbox
           checked={consent}
           onChange={(e) => setConsent(e.currentTarget.checked)}

@@ -398,7 +398,9 @@
   },
   "keyboard": {
     "label": "Klaviatur",
-    "showing": "Klaviatur, erkannt: {{notes}}"
+    "showing": "Klaviatur, erkannt: {{notes}}",
+    "lower": "Tasten eine Oktave tiefer",
+    "higher": "Tasten eine Oktave höher"
   },
   "mic": {
     "title": "Mikrofon-Test",
@@ -1192,6 +1194,7 @@
     "startMic": "Auf meinem Klavier spielen",
     "listening": "Ich höre dir zu",
     "stopMic": "Mikrofon aus",
+    "mic": "Mein Klavier",
     "midi": "Digitalpiano: {{device}}",
     "staffLabel": "Die Note {{note}} im Notensystem",
     "staffEmpty": "Leeres Notensystem – spiel eine Taste",
@@ -1678,5 +1681,9 @@
     "defaultName": "Klavier",
     "setUpHint": "Richte das Gerät ein, auf dem die Kinder üben – du wirst dabei abgemeldet. Anmelden kannst du dich dort jederzeit wieder über «Eltern: hier anmelden».",
     "setUp": "Dieses Gerät einrichten"
+  },
+  "pageError": {
+    "title": "Diese Seite lässt sich gerade nicht zeigen",
+    "text": "Lade Klavio neu. Wenn es wieder passiert: Schick uns die Zeile unten – sie sagt, was nicht ging."
   }
 }

@@ -8,7 +8,6 @@ import {
   Slider,
   Stack,
   Text,
-  Title,
   VisuallyHidden,
 } from '@mantine/core';
 import {
@@ -18,7 +17,7 @@ import {
   IconPlayerStopFilled,
   IconPlus,
 } from '@tabler/icons-react';
-import { PlayTabs } from '../components/PlayTabs';
+import { PlayTabs, PlayTitle } from '../components/PlayTabs';
 import { useTranslation } from 'react-i18next';
 import { runMetronome, type MetronomeRun } from '../audio/metronome';
 import { usePageTitle } from '../components/usePageTitle';
@@ -120,9 +119,7 @@ export function MetronomePage() {
 
   return (
     <Stack gap="lg" maw={720} mx="auto">
-      <div>
-        <Title order={1}>{t('metronome.title')}</Title>
-      </div>
+      <PlayTitle>{t('metronome.title')}</PlayTitle>
       <PlayTabs />
       <Text c="dimmed" fz={{ base: 'md', sm: 'lg' }} mt={-8}>
         {t('metronome.intro')}

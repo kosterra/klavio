@@ -14,18 +14,30 @@
   background: var(--mantine-color-dark-6);
 }
 
-/* … and over a playable one vertically; a touch that moves is a scroll (see PianoKeyboard) */
+/* … and over a playable one vertically; a touch that moves is a scroll (see PianoKeyboard).
+   Not sideways: there is nothing to scroll that way, and a tap that slid a little
+   sideways was taken over by the browser – the note did not sound */
 .keyboard[data-interactive] {
-  touch-action: pan-x pan-y;
+  touch-action: pan-y;
 }
 
-/* phones: a playable keyboard wider than the screen scrolls sideways */
-.scroller {
+.wrap {
   width: 100%;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scrollbar-width: thin;
-  border-radius: var(--mantine-radius-md);
+}
+
+/* phones: only the keys that fit, moved by an octave */
+.shift {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mantine-spacing-md);
+  margin-bottom: 6px;
+}
+
+.shiftRange {
+  min-width: 5.5em;
+  font-weight: 700;
+  text-align: center;
 }
 
 .white {

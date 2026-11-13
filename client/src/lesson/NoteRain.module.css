@@ -90,6 +90,7 @@
   align-content: center;
   gap: var(--mantine-spacing-md);
   padding: var(--mantine-spacing-md);
+  overflow-y: auto;
   background: color-mix(in srgb, var(--klavio-surface) 40%, transparent);
 }
 

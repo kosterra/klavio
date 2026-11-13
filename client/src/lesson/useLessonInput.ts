@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useMidi } from '../input/useMidi';
 import { usePitchDetection } from '../audio/usePitchDetection';
 import { microphoneSupported } from '../audio/microphone';
@@ -17,6 +18,11 @@ export function useLessonInput() {
     noiseFloorDb: activeProfile?.calibration.noiseFloorDb ?? null,
   });
   const midiActive = midi.devices.length > 0;
+  // stable: the lesson stops the microphone when it goes away (an effect cleanup) –
+  // a new function on every render would stop it at every render
+  const { start, stop } = mic;
+  const startMicrophone = useCallback(() => void start(), [start]);
+  const stopMicrophone = useCallback(() => void stop(), [stop]);
   const mode: LessonInputMode = midiActive
     ? 'midi'
     : mic.status === 'running'
@@ -31,9 +37,9 @@ export function useLessonInput() {
     micSupported: microphoneSupported(),
     /** Call from a user gesture (iOS starts audio only then). */
     startPreferred: () => {
-      if (!midiActive && microphoneSupported() && mic.status === 'idle') void mic.start();
+      if (!midiActive && microphoneSupported() && mic.status === 'idle') startMicrophone();
     },
-    startMicrophone: () => void mic.start(),
-    stopMicrophone: () => void mic.stop(),
+    startMicrophone,
+    stopMicrophone,
   };
 }

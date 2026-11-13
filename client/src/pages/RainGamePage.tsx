@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Group, SegmentedControl, Stack, Text, Title } from '@mantine/core';
+import { useCallback, useState } from 'react';
+import { Group, SegmentedControl, Stack, Text } from '@mantine/core';
 import { IconTrophy } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useSession } from '../auth/session';
-import { PlayTabs } from '../components/PlayTabs';
+import { PlayTabs, PlayTitle } from '../components/PlayTabs';
 import { RealPianoInput } from '../components/RealPianoInput';
 import { usePageTitle } from '../components/usePageTitle';
 import { NoteRainGame, type RainClef } from '../lesson/NoteRainGame';
@@ -55,6 +55,9 @@ export function RainGamePage() {
   const [range, setRange] = useState<Range>('few');
   const [best, setBest] = useState<Best>(() => readBest(activeProfile?.id));
   const [record, setRecord] = useState(false);
+  // the real piano heard: the screen keys only show what it plays
+  const [real, setReal] = useState(false);
+  const onReal = useCallback((on: boolean) => setReal(on), []);
   const mode = `${clef}-${range}` as const;
   const notes = NOTES[clef][range];
   const from = Math.floor(Math.min(...notes) / 12) * 12; // from the C below
@@ -63,30 +66,8 @@ export function RainGamePage() {
 
   return (
     <Stack gap="md" maw={1100} mx="auto">
-      <Title order={1}>{t('rainGame.title')}</Title>
+      <PlayTitle>{t('rainGame.title')}</PlayTitle>
       <PlayTabs />
-      <Text size="sm">{t('rainGame.intro')}</Text>
-      <Group gap="sm" justify="center">
-        <SegmentedControl
-          value={clef}
-          onChange={(v) => setClef(v as RainClef)}
-          aria-label={t('rainGame.clef')}
-          data={(['treble', 'bass', 'both'] as const).map((c) => ({
-            value: c,
-            label: t(`rainGame.clefs.${c}`),
-          }))}
-        />
-        <SegmentedControl
-          value={range}
-          onChange={(v) => setRange(v as Range)}
-          aria-label={t('rainGame.range')}
-          data={(['few', 'more'] as const).map((r) => ({
-            value: r,
-            label: t(`rainGame.ranges.${r}`),
-          }))}
-        />
-        <RealPianoInput />
-      </Group>
       <NoteRainGame
         // a new choice: a new game
         key={mode}
@@ -97,8 +78,39 @@ export function RainGamePage() {
         kids={kids}
         keyboard={{ from, to }}
         labels={kids ? 'all' : 'c'}
-        interactive
+        interactive={!real}
         compact
+        // what it is and how it rains: on the field, before it starts – the notes get the room
+        setup={
+          <Stack gap="xs" align="center" maw={460}>
+            <Text size="sm" ta="center" fw={600}>
+              {t('rainGame.intro')}
+            </Text>
+            <Group gap="xs" justify="center">
+              <SegmentedControl
+                size="sm"
+                value={clef}
+                onChange={(v) => setClef(v as RainClef)}
+                aria-label={t('rainGame.clef')}
+                data={(['treble', 'bass', 'both'] as const).map((c) => ({
+                  value: c,
+                  label: t(`rainGame.clefs.${c}`),
+                }))}
+              />
+              <SegmentedControl
+                size="sm"
+                value={range}
+                onChange={(v) => setRange(v as Range)}
+                aria-label={t('rainGame.range')}
+                data={(['few', 'more'] as const).map((r) => ({
+                  value: r,
+                  label: t(`rainGame.ranges.${r}`),
+                }))}
+              />
+            </Group>
+          </Stack>
+        }
+        tools={<RealPianoInput compact onActive={onReal} />}
         status={(caught) => (
           <>
             {t('rainGame.caught', { count: caught })}

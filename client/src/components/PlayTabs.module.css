@@ -1,0 +1,11 @@
+/* phones: the tabs name the page – the heading only for screen readers, the game gets the room */
+@media (max-width: 36em) {
+  .title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
