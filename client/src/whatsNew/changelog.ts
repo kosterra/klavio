@@ -20,7 +20,7 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
-    version: UPCOMING,
+    version: '2026.11.5',
     changes: [
       L(
         'Deine Notenbibliothek: «Eigene Stücke» fasst jetzt bis 200 Stücke, lässt sich durchsuchen, und Titel und Komponist kannst du ändern. «Noten ansehen» zeigt ein Stück einfach als Noten – gross für den Notenständer, mit oder ohne Notennamen; auch bei der Klassik und den Volksliedern.',
