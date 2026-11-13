@@ -110,6 +110,12 @@ Ebenfalls unter «Verwaltung»:
 - **Startseite:** Standardmässig zeigt `/welcome` Besuchern nur die Anmeldung. «Ausführliche
   Startseite zeigen» schaltet die ganze Seite frei: was Klavio kann, die Welten, das Lied zum
   Ausprobieren, Fragen und Antworten.
+- **Notenbibliothek MuseTrainer:** standardmässig aus. Eingeschaltet können alle unter «Eigene
+  Stücke» Klavierstücke aus [github.com/musetrainer/library](https://github.com/musetrainer/library)
+  suchen und übernehmen. Der Server holt dafür einmal am Tag die Liste von `api.github.com` und die
+  gewählte Datei von `musetrainer.github.io` – ohne Angaben zu Nutzern; der Browser spricht mit
+  niemand anderem. Die Sammlung bezeichnet ihre Dateien als gemeinfrei, prüft das aber nicht
+  einzeln; wer sie einschaltet, übernimmt diese Einschätzung.
 - **Welten:** ab welchem Alter (aus dem Geburtsjahr des Profils) neben den bunten Welten auch «Die
   Reise» wählbar ist (Standard 12). Jüngere Profile sehen immer die bunten Welten.
 - **Daten und Suchmaschinen:** ob Suchmaschinen die Instanz aufnehmen dürfen (aus: `noindex`,

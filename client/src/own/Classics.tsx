@@ -1,5 +1,11 @@
 import { ActionIcon, Card, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core';
-import { IconFeather, IconMountain, IconPlayerPlay, IconPrinter } from '@tabler/icons-react';
+import {
+  IconFeather,
+  IconMountain,
+  IconNotes,
+  IconPlayerPlay,
+  IconPrinter,
+} from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { CLASSICS, FOLK_SONGS, type ClassicPiece } from '@klavio/shared';
@@ -68,6 +74,17 @@ function Shelf({
               </Group>
             </Card>
             <PreviewButton exercise={c.exercise} title={loc(c.title)} testId={`preview-${c.id}`} />
+            <ActionIcon
+              component={Link}
+              to={`/classics/${c.id}/notes`}
+              variant="default"
+              radius="lg"
+              size="auto"
+              w={52}
+              aria-label={t('notes.openLabel', { title: loc(c.title) })}
+            >
+              <IconNotes size={22} />
+            </ActionIcon>
             <ActionIcon
               component={Link}
               to={`/classics/${c.id}/print`}

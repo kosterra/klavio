@@ -48,3 +48,10 @@
 :global([data-mantine-color-scheme='dark']) .readyLine[data-ready] {
   color: var(--mantine-color-teal-2);
 }
+
+/* «Noten ansehen»: the lines of music on a calm surface */
+.notes {
+  background: var(--klavio-surface);
+  border-radius: var(--mantine-radius-lg);
+  padding: var(--mantine-spacing-sm);
+}

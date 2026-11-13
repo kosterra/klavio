@@ -50,6 +50,9 @@ export type ImportedPiece =
 
 export const MAX_IMPORT_BARS = MAX_PIECE_BARS;
 
+/** the title of a file that names none */
+export const UNTITLED = 'Mein Stück';
+
 const STEP: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 /** Klavio's note values, longest first (a length is split into as few as possible). */
 const NOTE_VALUES: [number, NoteValue][] = (
@@ -157,8 +160,7 @@ export function importMusicXml(source: string): ImportedPiece {
   const root = parseXml(source);
   const score = child(root, 'score-partwise');
   if (!score) throw new MusicXmlImportError('NOT_MUSICXML');
-  const title =
-    textOf(score, 'work', 'work-title') || textOf(score, 'movement-title') || 'Mein Stück';
+  const title = textOf(score, 'work', 'work-title') || textOf(score, 'movement-title') || UNTITLED;
   const composer =
     children(child(score, 'identification'), 'creator')
       .find((c) => c.attrs.type === 'composer')

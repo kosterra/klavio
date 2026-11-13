@@ -23,6 +23,14 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Deine Notenbibliothek: «Eigene Stücke» fasst jetzt bis 200 Stücke, lässt sich durchsuchen, und Titel und Komponist kannst du ändern. «Noten ansehen» zeigt ein Stück einfach als Noten – gross für den Notenständer, mit oder ohne Notennamen; auch bei der Klassik und den Volksliedern.',
+        'Your sheet music library: «Own pieces» now holds up to 200 pieces, can be searched, and you can change title and composer. «View notes» shows a piece simply as sheet music – large for the music stand, with or without note names; also for the classics and the folk songs.',
+      ),
+      L(
+        'Notenbibliothek MuseTrainer: Wenn die Verwaltung sie einschaltet, holst du unter «Eigene Stücke» Klavierstücke aus der gemeinfreien MuseTrainer-Sammlung – von «Für Elise» bis zum Menuett in G.',
+        'MuseTrainer sheet music library: when the admin switches it on, you fetch piano pieces from the public-domain MuseTrainer collection under «Own pieces» – from «Für Elise» to the Minuet in G.',
+      ),
+      L(
         'Lernpfad für Fortgeschrittene: Im Elternbereich unter «Lernpfad» lassen sich ganze Stufen überspringen – oder der Lernpfad ausschalten. Dann sind alle Lektionen frei wählbar, und der Start zeigt deine Stücke, Lieder und Werkzeuge statt der Karte.',
         'Learning path for advanced players: in the parent area under «Learning path» whole stages can be skipped – or the learning path switched off. Then every lesson can be picked freely, and the start page shows your pieces, songs and tools instead of the map.',
       ),

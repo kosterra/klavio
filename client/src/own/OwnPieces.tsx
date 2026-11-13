@@ -6,21 +6,28 @@ import {
   Card,
   FileButton,
   Group,
+  Menu,
   Stack,
   Text,
+  TextInput,
   ThemeIcon,
   Title,
 } from '@mantine/core';
 import {
+  IconBooks,
+  IconDots,
   IconFileMusic,
+  IconNotes,
+  IconPencil,
   IconPlayerPlay,
   IconPrinter,
+  IconSearch,
   IconTrash,
   IconUpload,
 } from '@tabler/icons-react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { MAX_OWN_PIECES, type ImportedPiece, type OwnPieceDto } from '@klavio/shared';
+import { MAX_OWN_PIECES, UNTITLED, type ImportedPiece, type OwnPieceDto } from '@klavio/shared';
 import { endpoints } from '../api/endpoints';
 import { useErrorText } from '../auth/useErrorText';
 import { ConfirmModal } from '../components/ConfirmModal';
@@ -29,6 +36,12 @@ import { PieceReadError, readPieceFile } from '../import/readPiece';
 import { PreviewButton } from '../components/PreviewButton';
 import { useProgress } from '../lesson/useProgress';
 import { ReadinessNote } from './ReadinessNote';
+import { RenamePiece } from './RenamePiece';
+import { LibraryPicker } from './LibraryPicker';
+import { useSession } from '../auth/session';
+
+/** from this many pieces on, the library can be searched */
+const SEARCH_FROM = 6;
 
 /**
  * «Eigene Stücke»: a family brings its own notes (MusicXML from MuseScore,
@@ -44,6 +57,10 @@ export function OwnPieces() {
   const [problem, setProblem] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [removing, setRemoving] = useState<OwnPieceDto | null>(null);
+  const [renaming, setRenaming] = useState<OwnPieceDto | null>(null);
+  const [query, setQuery] = useState('');
+  const [library, setLibrary] = useState(false);
+  const { config } = useSession();
   // the lessons done: from when on a piece is playable
   const { played, progress } = useProgress();
   const done = progress ? played : null;
@@ -52,12 +69,14 @@ export function OwnPieces() {
     endpoints.pieces().then(setPieces, () => setPieces([]));
   }, []);
 
-  const read = async (file: File | null) => {
+  /** `title`: the name it has where it comes from, for a file without a title of its own */
+  const read = async (file: File | null, title?: string) => {
     setDraft(null);
     setProblem(null);
     if (!file) return;
     try {
-      setDraft(await readPieceFile(file));
+      const piece = await readPieceFile(file);
+      setDraft(title && piece.title === UNTITLED ? { ...piece, title } : piece);
     } catch (err) {
       setProblem(
         err instanceof PieceReadError ? t(`own.errors.${err.key}`, err.params) : errorText(err),
@@ -98,6 +117,11 @@ export function OwnPieces() {
   };
 
   const full = (pieces?.length ?? 0) >= MAX_OWN_PIECES;
+  // the library: searched by title and composer
+  const q = query.trim().toLowerCase();
+  const shown = (pieces ?? []).filter(
+    (p) => !q || `${p.title} ${p.composer ?? ''}`.toLowerCase().includes(q),
+  );
 
   return (
     <section aria-labelledby="own-title" data-testid="own-pieces">
@@ -108,7 +132,17 @@ export function OwnPieces() {
         {t('own.intro')}
       </Text>
       <Stack gap="xs">
-        {pieces?.map((p) => (
+        {(pieces?.length ?? 0) >= SEARCH_FROM && (
+          <TextInput
+            leftSection={<IconSearch size={18} />}
+            placeholder={t('own.search')}
+            aria-label={t('own.search')}
+            value={query}
+            onChange={(e) => setQuery(e.currentTarget.value)}
+            data-testid="own-search"
+          />
+        )}
+        {shown.map((p) => (
           <Group key={p.id} gap="xs" wrap="nowrap" align="stretch">
             <Card
               component={Link}
@@ -139,27 +173,54 @@ export function OwnPieces() {
             <PreviewButton exercise={p.exercise} title={p.title} />
             <ActionIcon
               component={Link}
-              to={`/own/${p.id}/print`}
+              to={`/own/${p.id}/notes`}
               variant="default"
               radius="lg"
               size="auto"
               w={52}
-              aria-label={t('sheet.printSong', { title: p.title })}
+              aria-label={t('notes.openLabel', { title: p.title })}
             >
-              <IconPrinter size={22} />
+              <IconNotes size={22} />
             </ActionIcon>
-            <ActionIcon
-              variant="default"
-              radius="lg"
-              size="auto"
-              w={52}
-              aria-label={t('own.remove', { title: p.title })}
-              onClick={() => setRemoving(p)}
-            >
-              <IconTrash size={22} />
-            </ActionIcon>
+            <Menu position="bottom-end" withinPortal>
+              <Menu.Target>
+                <ActionIcon
+                  variant="default"
+                  radius="lg"
+                  size="auto"
+                  w={52}
+                  aria-label={t('own.more', { title: p.title })}
+                >
+                  <IconDots size={22} />
+                </ActionIcon>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item
+                  component={Link}
+                  to={`/own/${p.id}/print`}
+                  leftSection={<IconPrinter size={18} />}
+                >
+                  {t('sheet.printSong', { title: p.title })}
+                </Menu.Item>
+                <Menu.Item leftSection={<IconPencil size={18} />} onClick={() => setRenaming(p)}>
+                  {t('own.rename', { title: p.title })}
+                </Menu.Item>
+                <Menu.Item
+                  color="red"
+                  leftSection={<IconTrash size={18} />}
+                  onClick={() => setRemoving(p)}
+                >
+                  {t('own.remove', { title: p.title })}
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
           </Group>
         ))}
+        {query && shown.length === 0 && (
+          <Text size="sm" c="dimmed">
+            {t('own.noMatch')}
+          </Text>
+        )}
 
         {draft && (
           <Alert color="grape" variant="light" data-testid="own-draft">
@@ -189,24 +250,45 @@ export function OwnPieces() {
           </Alert>
         )}
 
-        <FileButton onChange={(f) => void read(f)} accept=".musicxml,.xml,.mxl,.mid,.midi">
-          {(props) => (
+        <Group gap="sm">
+          <FileButton onChange={(f) => void read(f)} accept=".musicxml,.xml,.mxl,.mid,.midi">
+            {(props) => (
+              <Button
+                {...props}
+                variant="light"
+                leftSection={<IconUpload size={18} />}
+                disabled={full}
+                w="fit-content"
+                data-testid="own-import"
+              >
+                {t('own.import')}
+              </Button>
+            )}
+          </FileButton>
+          {config?.pieceLibrary && (
             <Button
-              {...props}
-              variant="light"
-              leftSection={<IconUpload size={18} />}
+              variant="default"
+              leftSection={<IconBooks size={18} />}
               disabled={full}
-              w="fit-content"
-              data-testid="own-import"
+              onClick={() => setLibrary(true)}
+              data-testid="own-library"
             >
-              {t('own.import')}
+              {t('own.library')}
             </Button>
           )}
-        </FileButton>
+        </Group>
+        <LibraryPicker opened={library} onClose={() => setLibrary(false)} onFile={read} />
         <Text size="xs" c="dimmed">
           {full ? t('own.full', { count: MAX_OWN_PIECES }) : t('own.how')}
         </Text>
       </Stack>
+      <RenamePiece
+        piece={renaming}
+        onClose={() => setRenaming(null)}
+        onSaved={(saved) =>
+          setPieces((list) => (list ?? []).map((x) => (x.id === saved.id ? saved : x)))
+        }
+      />
       <ConfirmModal
         opened={!!removing}
         title={t('own.removeTitle', { title: removing?.title ?? '' })}

@@ -48,6 +48,12 @@ const ClassicPage = lazy(() =>
 const ClassicSheetPage = lazy(() =>
   import('./own/OwnPiecePage').then((m) => ({ default: m.ClassicSheetPage })),
 );
+const OwnNotesPage = lazy(() =>
+  import('./own/OwnPiecePage').then((m) => ({ default: m.OwnNotesPage })),
+);
+const ClassicNotesPage = lazy(() =>
+  import('./own/OwnPiecePage').then((m) => ({ default: m.ClassicNotesPage })),
+);
 const OwnSheetPage = lazy(() =>
   import('./own/OwnPiecePage').then((m) => ({ default: m.OwnSheetPage })),
 );
@@ -184,8 +190,10 @@ export function App() {
                   {/* own pieces (imported MusicXML): to practise and to print */}
                   <Route path="/own/:pieceId" element={<OwnPiecePage />} />
                   <Route path="/own/:pieceId/print" element={<OwnSheetPage />} />
+                  <Route path="/own/:pieceId/notes" element={<OwnNotesPage />} />
                   <Route path="/classics/:classicId" element={<ClassicPage />} />
                   <Route path="/classics/:classicId/print" element={<ClassicSheetPage />} />
+                  <Route path="/classics/:classicId/notes" element={<ClassicNotesPage />} />
                   <Route path="/quick" element={<QuickRoundPage />} />
                   <Route path="/start" element={<OnboardingPage />} />
                 </Route>

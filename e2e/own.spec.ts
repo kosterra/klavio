@@ -39,9 +39,26 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
   await expect(page.getByTestId('own-done')).toBeVisible();
   await audit(page);
 
-  // on paper
+  // just the notes, on the music stand
   await page.goto('/songs');
-  await own.getByRole('link', { name: 'Noten von «Mein erstes Lied» drucken' }).click();
+  await own.getByRole('link', { name: 'Noten von «Mein erstes Lied» ansehen' }).click();
+  const notes = page.getByTestId('notes-view');
+  await expect(notes.getByRole('heading', { name: 'Mein erstes Lied' })).toBeVisible();
+  await expect(notes.locator('svg .vf-stavenote').first()).toBeVisible();
+  await notes.getByText('Gross').click();
+  await audit(page);
+
+  // renamed in the library
+  await page.goto('/songs');
+  await own.getByRole('button', { name: 'Mehr zu «Mein erstes Lied»' }).click();
+  await page.getByRole('menuitem', { name: '«Mein erstes Lied» umbenennen' }).click();
+  await page.getByRole('dialog').getByLabel('Komponist oder Herkunft').fill('Lina und Papa');
+  await page.getByTestId('rename-save').click();
+  await expect(own.getByText('Lina und Papa', { exact: true })).toBeVisible();
+
+  // on paper
+  await own.getByRole('button', { name: 'Mehr zu «Mein erstes Lied»' }).click();
+  await page.getByRole('menuitem', { name: 'Noten von «Mein erstes Lied» drucken' }).click();
   await expect(page.getByTestId('sheet')).toContainText('Eigenes Stück');
   await expect(page.getByTestId('sheet')).toContainText('Lina');
 
@@ -90,12 +107,14 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
     await keys.getByRole('button', { name: k, exact: true }).click();
   await expect(page.getByTestId('own-done')).toBeVisible();
   await page.goto('/songs');
-  await own.getByRole('button', { name: '«Mit Pause» löschen' }).click();
+  await own.getByRole('button', { name: 'Mehr zu «Mit Pause»' }).click();
+  await page.getByRole('menuitem', { name: '«Mit Pause» löschen' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Löschen' }).click();
   await expect(own.getByRole('link', { name: /Mit Pause/ })).toHaveCount(0);
 
   // gone again
-  await own.getByRole('button', { name: '«Mein erstes Lied» löschen' }).click();
+  await own.getByRole('button', { name: 'Mehr zu «Mein erstes Lied»' }).click();
+  await page.getByRole('menuitem', { name: '«Mein erstes Lied» löschen' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Löschen' }).click();
   await expect(own.getByRole('link', { name: /Mein erstes Lied/ })).toHaveCount(0);
 
@@ -107,6 +126,8 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
   await page.getByTestId('own-start').click();
   await expect(page.getByTestId('piece-practice')).toBeVisible();
   await audit(page);
+  await page.goto('/classics/schumann-melodie/notes');
+  await expect(page.getByTestId('notes-view')).toContainText('Robert Schumann');
   await page.goto('/classics/schumann-melodie/print');
   await expect(page.getByTestId('sheet')).toContainText('Robert Schumann');
   await expect(page.getByTestId('sheet')).toContainText('CC BY-SA 2.5');

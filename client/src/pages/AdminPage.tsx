@@ -60,6 +60,14 @@ export function AdminPage() {
             disabled={!settings}
             onChange={(e) => void update({ publicPage: e.currentTarget.checked })}
           />
+          <Switch
+            label={t('admin.pieceLibrary')}
+            description={t('admin.pieceLibraryHint')}
+            checked={settings?.pieceLibrary ?? false}
+            disabled={!settings}
+            onChange={(e) => void update({ pieceLibrary: e.currentTarget.checked })}
+            data-testid="admin-piece-library"
+          />
         </Stack>
       </Card>
       <WorldsCard

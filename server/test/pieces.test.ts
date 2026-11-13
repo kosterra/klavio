@@ -10,7 +10,7 @@ beforeEach(async () => ctx.reset());
 
 const call = async (
   jar: CookieJar,
-  method: 'GET' | 'POST' | 'DELETE',
+  method: 'GET' | 'POST' | 'DELETE' | 'PATCH',
   url: string,
   payload?: unknown,
 ) => {
@@ -60,6 +60,17 @@ describe('own pieces', () => {
     const id = created.json().id as string;
     expect((await call(jar, 'GET', '/api/pieces')).json()).toHaveLength(1);
     expect((await call(jar, 'GET', `/api/pieces/${id}`)).json().title).toBe('Mein Lied');
+
+    // renamed in the library: title and composer
+    const renamed = await call(jar, 'PATCH', `/api/pieces/${id}`, {
+      title: 'Unser Lied',
+      composer: 'Lina',
+    });
+    expect(renamed.json()).toMatchObject({ title: 'Unser Lied', composer: 'Lina' });
+    expect(
+      (await call(jar, 'PATCH', `/api/pieces/${id}`, { title: '', composer: null })).statusCode,
+    ).toBe(400);
+    await call(jar, 'PATCH', `/api/pieces/${id}`, { title: 'Mein Lied', composer: null });
 
     // notes the app cannot draw are refused
     const bad = { ...song, exercise: { ...song.exercise, bars: [[{ midi: 200, value: 'q' }]] } };

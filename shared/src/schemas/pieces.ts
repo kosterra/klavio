@@ -100,7 +100,8 @@ export const pieceExerciseSchema = z.object({
     .max(MAX_PIECE_BARS),
 }) satisfies z.ZodType<PieceExercise>;
 
-export const MAX_OWN_PIECES = 30;
+/** pieces per account: a library, not just a few */
+export const MAX_OWN_PIECES = 200;
 
 export const ownPieceInputSchema = z.object({
   title: z.string().trim().min(1).max(120),
@@ -111,6 +112,9 @@ export const ownPieceInputSchema = z.object({
     .refine((k) => k.to - k.from >= 12, 'At least an octave'),
 });
 export type OwnPieceInput = z.infer<typeof ownPieceInputSchema>;
+
+/** Renaming a piece of the library: title and composer. */
+export const ownPieceMetaSchema = ownPieceInputSchema.pick({ title: true, composer: true });
 
 export interface OwnPieceDto extends OwnPieceInput {
   id: string;

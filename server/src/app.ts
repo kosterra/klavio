@@ -14,6 +14,7 @@ import { scheduleWeeklyReports } from './lib/weeklyReport.js';
 import { scheduleReminders } from './lib/reminders.js';
 import reminderRoutes from './routes/reminders.js';
 import pieceRoutes from './routes/pieces.js';
+import libraryRoutes from './routes/library.js';
 import testimonialRoutes from './routes/testimonials.js';
 import { registerWeb } from './plugins/web.js';
 import { HttpError } from './lib/errors.js';
@@ -152,6 +153,7 @@ export async function buildApp({
       await api.register(progressRoutes, { prefix: '/progress' });
       await api.register(reminderRoutes, { prefix: '/reminders', config });
       await api.register(pieceRoutes, { prefix: '/pieces' });
+      await api.register(libraryRoutes, { prefix: '/library', config });
       await api.register(testimonialRoutes, { prefix: '/testimonials' });
       await api.register(adminRoutes, { prefix: '/admin', config, mailer: resolvedMailer });
     },

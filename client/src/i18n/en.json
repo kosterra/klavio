@@ -362,7 +362,9 @@
         "newYearsEve": "New Year’s Eve",
         "newYear": "New Year’s Day"
       }
-    }
+    },
+    "pieceLibrary": "MuseTrainer sheet music library",
+    "pieceLibraryHint": "When switched on, everyone can search piano pieces from the MuseTrainer library (github.com/musetrainer/library) under «Own pieces» and take them over – Klavio fetches the file through this server, the browser talks to no one else. The collection calls its files public domain; Klavio does not check the rights one by one."
   },
   "errors": {
     "EMAIL_CODE_INVALID": "The code is wrong or has expired.",
@@ -1493,7 +1495,23 @@
       "RANGE": "The notes are outside the keyboard.",
       "TOO_BIG": "The file is too big (at most 5 MB).",
       "NOT_MIDI": "Klavio cannot read this MIDI file."
-    }
+    },
+    "search": "Search your pieces",
+    "noMatch": "No piece matches your search.",
+    "more": "More for «{{title}}»",
+    "rename": "Rename «{{title}}»",
+    "renameTitle": "Rename piece",
+    "renamed": "Saved.",
+    "fieldTitle": "Title",
+    "fieldComposer": "Composer or origin",
+    "library": "From the library",
+    "libraryTitle": "A piece from the library",
+    "librarySearch": "Title or composer",
+    "libraryNone": "Nothing found – try another word.",
+    "libraryAdd": "Take over",
+    "libraryAddLabel": "Take over «{{title}}»",
+    "librarySource": "From the collection of {{name}} – published as public domain. Klavio reads the piece like your own file; you see it before you save it.",
+    "libraryUnreachable": "The library cannot be reached right now – try again later."
   },
   "folk": {
     "title": "Swiss folk songs",
@@ -1576,5 +1594,16 @@
     "rain": "Note rain",
     "metronome": "Metronome",
     "lessons": "All lessons – pick any"
+  },
+  "notes": {
+    "open": "View notes",
+    "openLabel": "View the notes of «{{title}}»",
+    "practice": "Practise",
+    "size": "Size of the notes",
+    "sizes": {
+      "s": "Small",
+      "m": "Medium",
+      "l": "Large"
+    }
   }
 }

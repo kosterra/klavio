@@ -362,7 +362,9 @@
         "newYearsEve": "Silvester",
         "newYear": "Neujahr"
       }
-    }
+    },
+    "pieceLibrary": "Notenbibliothek MuseTrainer",
+    "pieceLibraryHint": "Eingeschaltet können alle bei «Eigene Stücke» Klavierstücke aus der MuseTrainer-Bibliothek (github.com/musetrainer/library) suchen und übernehmen – Klavio holt die Datei über diesen Server, der Browser spricht mit niemand anderem. Die Sammlung bezeichnet ihre Dateien als gemeinfrei; Klavio prüft die Rechte nicht einzeln."
   },
   "errors": {
     "EMAIL_CODE_INVALID": "Der Code stimmt nicht oder ist abgelaufen.",
@@ -1493,7 +1495,23 @@
       "RANGE": "Die Noten liegen ausserhalb der Klaviatur.",
       "TOO_BIG": "Die Datei ist zu gross (höchstens 5 MB).",
       "NOT_MIDI": "Diese MIDI-Datei kann Klavio nicht lesen."
-    }
+    },
+    "search": "In deinen Stücken suchen",
+    "noMatch": "Kein Stück passt zu deiner Suche.",
+    "more": "Mehr zu «{{title}}»",
+    "rename": "«{{title}}» umbenennen",
+    "renameTitle": "Stück umbenennen",
+    "renamed": "Gespeichert.",
+    "fieldTitle": "Titel",
+    "fieldComposer": "Komponist oder Herkunft",
+    "library": "Aus der Bibliothek",
+    "libraryTitle": "Stück aus der Bibliothek",
+    "librarySearch": "Titel oder Komponist",
+    "libraryNone": "Nichts gefunden – versuch ein anderes Wort.",
+    "libraryAdd": "Übernehmen",
+    "libraryAddLabel": "«{{title}}» übernehmen",
+    "librarySource": "Aus der Sammlung von {{name}} – als gemeinfrei veröffentlicht. Klavio liest das Stück wie eine eigene Datei; du siehst es, bevor du es speicherst.",
+    "libraryUnreachable": "Die Bibliothek ist gerade nicht erreichbar – versuch es später nochmals."
   },
   "folk": {
     "title": "Schweizer Volkslieder",
@@ -1576,5 +1594,16 @@
     "rain": "Notenregen",
     "metronome": "Metronom",
     "lessons": "Alle Lektionen – frei wählbar"
+  },
+  "notes": {
+    "open": "Noten ansehen",
+    "openLabel": "Noten von «{{title}}» ansehen",
+    "practice": "Üben",
+    "size": "Grösse der Noten",
+    "sizes": {
+      "s": "Klein",
+      "m": "Mittel",
+      "l": "Gross"
+    }
   }
 }

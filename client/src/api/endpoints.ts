@@ -28,7 +28,7 @@ import type {
   RegistrationResponseJSON,
   AuthenticationResponseJSON,
 } from '@simplewebauthn/browser';
-import { api } from './client';
+import { ApiError, api } from './client';
 
 /** Code mails are written in the language the app is shown in. */
 const lang = () => mailLangOf(i18n.language);
@@ -77,6 +77,29 @@ export const endpoints = {
   piece: (id: string) => api<OwnPieceDto>('GET', `/pieces/${encodeURIComponent(id)}`),
   addPiece: (input: OwnPieceInput) => api<OwnPieceDto>('POST', '/pieces', input),
   deletePiece: (id: string) => api('DELETE', `/pieces/${encodeURIComponent(id)}`),
+  library: (q: string) =>
+    api<{ source: { name: string; url: string }; results: { id: string; title: string }[] }>(
+      'GET',
+      `/library?q=${encodeURIComponent(q)}`,
+    ),
+  /** a file of the library, passed on by Klavio's server (the browser talks to no one else) */
+  libraryFile: async (id: string): Promise<File> => {
+    let res: Response;
+    try {
+      res = await fetch(`/api/library/${encodeURIComponent(id)}/file`, {
+        credentials: 'same-origin',
+      });
+    } catch {
+      throw new ApiError(0, 'NETWORK');
+    }
+    if (!res.ok) {
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      throw new ApiError(res.status, data.error ?? 'UNKNOWN');
+    }
+    return new File([await res.blob()], id);
+  },
+  renamePiece: (id: string, body: { title: string; composer: string | null }) =>
+    api<OwnPieceDto>('PATCH', `/pieces/${encodeURIComponent(id)}`, body),
   publicTestimonials: () => api<PublicTestimonialDto[]>('GET', '/testimonials/public'),
   myTestimonials: () => api<TestimonialDto[]>('GET', '/testimonials/mine'),
   addTestimonial: (input: TestimonialInput) => api<TestimonialDto>('POST', '/testimonials', input),

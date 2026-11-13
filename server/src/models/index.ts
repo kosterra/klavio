@@ -294,6 +294,8 @@ const appSettingsSchema = new Schema(
     registrationOpen: { type: Boolean, required: true },
     /** true: visitors get the full start page with the tour; unset/false: only the login */
     publicPage: { type: Boolean },
+    /** true: pieces can be fetched from the MuseTrainer library; unset/false: off */
+    pieceLibrary: { type: Boolean },
     /** who runs this instance (footer, privacy page); empty until an admin fills it in */
     operatorName: { type: String, default: '' },
     contactEmail: { type: String, default: '' },

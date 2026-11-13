@@ -29,6 +29,7 @@ import { HeardNote, InputSwitch } from '../pages/LessonPage';
 import { SheetView } from '../print/SongSheetPage';
 import { useProgress } from '../lesson/useProgress';
 import { ReadinessNote } from './ReadinessNote';
+import { NotesView } from './NotesView';
 
 /** An own piece fetched by its id (shared by playing and printing). */
 function useOwnPiece() {
@@ -255,6 +256,41 @@ export function OwnSheetPage() {
       chip={{ text: t('own.chip'), color: 'grape' }}
       note={piece.composer ?? t('own.yours')}
       backTo={`/own/${piece.id}`}
+    />
+  );
+}
+
+/** An own piece on the music stand: just the notes. */
+export function OwnNotesPage() {
+  const { t } = useTranslation();
+  const { piece, error, retry } = useOwnPiece();
+  usePageTitle(piece?.title ?? t('own.title'));
+  if (!piece) return <ProgressPending fullPage error={error} onRetry={retry} />;
+  return (
+    <NotesView
+      title={piece.title}
+      composer={piece.composer}
+      exercise={piece.exercise}
+      practiceTo={`/own/${piece.id}`}
+      printTo={`/own/${piece.id}/print`}
+    />
+  );
+}
+
+/** A classical piece on the music stand. */
+export function ClassicNotesPage() {
+  const { classicId = '' } = useParams();
+  const loc = useLocalized();
+  const c = findClassic(classicId);
+  usePageTitle(c ? loc(c.title) : null);
+  if (!c) return <Navigate to="/songs" replace />;
+  return (
+    <NotesView
+      title={loc(c.title)}
+      composer={loc(c.composer)}
+      exercise={c.exercise}
+      practiceTo={`/classics/${c.id}`}
+      printTo={`/classics/${c.id}/print`}
     />
   );
 }
