@@ -75,10 +75,15 @@ export function SideNav({ onNavigate }: { onNavigate: () => void }) {
           {item('/play/metronome', t('metronome.title'), <IconMetronome size={20} />)}
         </>
       )}
-      {heading(t('nav.parentGroup'))}
-      {item('/family', t('family.title'), <IconChartBar size={20} />, lock)}
-      {activeProfile && item('/input', t('nav.input'), <IconPiano size={20} />, lock)}
-      {me?.user.role === 'admin' && (
+      {/* the parent area and the administration: not in a child's PIN session */}
+      {!me?.childLogin && (
+        <>
+          {heading(t('nav.parentGroup'))}
+          {item('/family', t('family.title'), <IconChartBar size={20} />, lock)}
+          {activeProfile && item('/input', t('nav.input'), <IconPiano size={20} />, lock)}
+        </>
+      )}
+      {me?.user.role === 'admin' && !me.childLogin && (
         <>
           {heading(t('nav.adminGroup'))}
           {item('/admin', t('nav.admin'), <IconShield size={20} />)}

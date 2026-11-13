@@ -89,6 +89,7 @@
 
 /* the big play button: a stepping stone like on the path */
 .playStone {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--mantine-spacing-md);
@@ -106,6 +107,17 @@
   box-shadow:
     0 7px 0 #a63a09,
     0 12px 18px rgb(0 0 0 / 20%);
+}
+
+/*
+ * the hover lift must not bounce: a strip below the stone (its 3D edge) still
+ * counts as the button, so the pointer stays on it while it lifts
+ */
+.playStone::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 -8px;
+  border-radius: inherit;
 }
 
 .playStone:focus-visible {

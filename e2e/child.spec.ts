@@ -38,11 +38,12 @@ test('children log in on their own with a PIN on a device set up for them', asyn
   await expect(page.getByRole('heading', { name: /Lina/ }).first()).toBeVisible();
   await page.getByRole('button', { name: 'Menü' }).click();
   await expect(page.getByRole('menuitem', { name: 'Profil wechseln' })).toHaveCount(0);
+  // the account and the parent area belong to the parents: not here
+  await expect(page.getByRole('menuitem', { name: 'Konto' })).toHaveCount(0);
   await page.keyboard.press('Escape');
-
-  // the parent area stays closed: there is no parent PIN to open it with
+  await expect(page.getByText('Familie und Fortschritt')).toHaveCount(0);
   await page.goto('/account');
-  await expect(page.getByTestId('parent-gate-child')).toBeVisible();
+  await expect(page).toHaveURL(/\/$/);
 
   // signing out goes back to «Wer spielt?»; the parents can still sign in there
   await page.getByRole('button', { name: 'Menü' }).click();

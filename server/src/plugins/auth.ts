@@ -60,9 +60,9 @@ export default fp<{ config: AppConfig }>(async (app, { config }) => {
       sessionId: session._id,
       activeProfileId: session.activeProfileId ?? null,
       parentUnlockedUntil: until,
-      // a child's login never opens the parent area by itself – not even without a parent PIN
+      // a child's PIN login never opens the parent area – parents sign in as themselves
       parentUnlocked:
-        (!user.parentPinHash && !childLogin) || (!!until && until.getTime() > Date.now()),
+        !childLogin && (!user.parentPinHash || (!!until && until.getTime() > Date.now())),
       childLogin,
     };
   });

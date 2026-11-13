@@ -814,8 +814,7 @@
     "passkeySettingNeedsPasskey": "Richte dafür zuerst oben einen Passkey ein.",
     "resetSent": "Wir haben einen Code an {{email}} geschickt. Gib ihn hier ein – die PIN wird dann entfernt und der Elternbereich öffnet sich.",
     "resetCode": "Code aus der E-Mail",
-    "resetHint": "Danach kannst du unter «Konto» eine neue PIN festlegen.",
-    "childLogin": "Hier ist ein Kind mit seiner PIN angemeldet. Den Elternbereich öffnet nur die Eltern-PIN – es ist keine festgelegt. Melde dich ab und als Elternteil an."
+    "resetHint": "Danach kannst du unter «Konto» eine neue PIN festlegen."
   },
   "profileSettings": {
     "title": "Mein Profil",
@@ -1666,7 +1665,7 @@
   },
   "devices": {
     "title": "Geräte für die Kinder",
-    "intro": "Auf einem Gerät für die Kinder zeigt Klavio «Wer spielt?»: Jedes Kind tippt auf seine Figur und gibt seine eigene PIN ein. Ein Kind bleibt dann in seinem Profil; den Elternbereich öffnet nur die Eltern-PIN.",
+    "intro": "Auf einem Gerät für die Kinder zeigt Klavio «Wer spielt?»: Jedes Kind tippt auf seine Figur und gibt seine eigene PIN ein. Ein Kind bleibt dann in seinem Profil; Konto und Elternbereich gibt es dort nicht – du meldest dich über «Eltern: hier anmelden» an.",
     "noPins": "Lege zuerst für jedes Kind eine PIN fest: Profil wählen → «Mein Profil» → «Anmelden mit PIN».",
     "whoCan": "Mit PIN: {{names}}",
     "this": "dieses Gerät",

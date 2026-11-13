@@ -76,6 +76,8 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
     },
     async (req) => {
       const { user, sessionId } = req.auth!;
+      // a child's session: the parent area is not opened here at all
+      if (req.auth!.childLogin) throw new HttpError(403, 'CHILD_LOGIN');
       if (!user.parentPinHash) return { unlockedUntil: null };
       // besides the quick limit above: a lock that grows and survives restarts
       const key = `pin:${user._id.toString()}`;

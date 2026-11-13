@@ -181,12 +181,15 @@ export function AppLayout() {
                     {t('nav.profile')}
                   </Menu.Item>
                 )}
-                <Menu.Item
-                  leftSection={<IconSettings size={18} />}
-                  onClick={() => navigate('/account')}
-                >
-                  {t('nav.account')}
-                </Menu.Item>
+                {/* the account belongs to the parents: not in a child's PIN session */}
+                {!me?.childLogin && (
+                  <Menu.Item
+                    leftSection={<IconSettings size={18} />}
+                    onClick={() => navigate('/account')}
+                  >
+                    {t('nav.account')}
+                  </Menu.Item>
+                )}
                 <Menu.Divider />
                 <Menu.Label>{t('nav.colorScheme')}</Menu.Label>
                 {(['auto', 'light', 'dark'] as const).map((scheme) => (

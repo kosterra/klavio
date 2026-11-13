@@ -12,7 +12,7 @@ import {
   Title,
 } from '@mantine/core';
 import { IconArrowLeft, IconFingerprint, IconLock } from '@tabler/icons-react';
-import { useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { endpoints } from '../api/endpoints';
 import { useSession } from './session';
@@ -196,6 +196,8 @@ export function ParentGate({ children }: { children: ReactNode }) {
   const { me } = useSession();
   const unlocked = useParentUnlocked();
   if (unlocked) return <>{children}</>;
+  // a child's PIN session: the parent pages don't exist here
+  if (me?.childLogin) return <Navigate to="/" replace />;
   // a child who got here is never stuck: back to where they were
   const back = () => {
     const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0;
@@ -210,19 +212,10 @@ export function ParentGate({ children }: { children: ReactNode }) {
           <Title order={1} size="h2" ta="center">
             {t('parent.title')}
           </Title>
-          {me?.childLogin && !me.user.parentPin.set ? (
-            // a child logged in with their PIN, and there is no parent PIN to open it with
-            <Text ta="center" data-testid="parent-gate-child">
-              {t('parent.childLogin')}
-            </Text>
-          ) : (
-            <>
-              <ParentPinForm />
-              <Text size="sm" c="dimmed" ta="center">
-                {t('parent.gateHint')}
-              </Text>
-            </>
-          )}
+          <ParentPinForm />
+          <Text size="sm" c="dimmed" ta="center">
+            {t('parent.gateHint')}
+          </Text>
           <Button
             variant="subtle"
             leftSection={<IconArrowLeft size={18} />}

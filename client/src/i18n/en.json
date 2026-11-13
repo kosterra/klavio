@@ -814,8 +814,7 @@
     "passkeySettingNeedsPasskey": "Set up a passkey above first.",
     "resetSent": "We sent a code to {{email}}. Enter it here – the PIN is then removed and the parent area opens.",
     "resetCode": "Code from the e-mail",
-    "resetHint": "Afterwards you can set a new PIN under «Konto».",
-    "childLogin": "A child is signed in here with their PIN. Only the parent PIN opens the parent area – none is set. Sign out and sign in as a parent."
+    "resetHint": "Afterwards you can set a new PIN under «Konto»."
   },
   "profileSettings": {
     "title": "My profile",
@@ -1666,7 +1665,7 @@
   },
   "devices": {
     "title": "Devices for the children",
-    "intro": "On a device for the children Klavio shows «Who’s playing?»: every child taps their figure and enters their own PIN. A child then stays in their profile; only the parent PIN opens the parent area.",
+    "intro": "On a device for the children Klavio shows «Who’s playing?»: every child taps their figure and enters their own PIN. A child then stays in their profile; the account and the parent area are not there – you sign in with «Parents: sign in here».",
     "noPins": "First set a PIN for each child: choose the profile → «My profile» → «Sign in with a PIN».",
     "whoCan": "With a PIN: {{names}}",
     "this": "this device",
