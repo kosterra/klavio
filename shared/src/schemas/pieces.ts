@@ -18,7 +18,7 @@ export const songExerciseSchema = z.object({
   tempo,
   showNames: z.boolean(),
   pickup: z.number().positive().max(8).optional(),
-  keySignature: z.enum(['C', 'G', 'F']).optional(),
+  keySignature: z.enum(['C', 'G', 'D', 'F']).optional(),
   bars: z
     .array(
       z

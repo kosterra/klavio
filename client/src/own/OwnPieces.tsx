@@ -34,6 +34,7 @@ import { useErrorText } from '../auth/useErrorText';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { notify } from '../components/notify';
 import { musicXmlText } from '../import/mxl';
+import { PreviewButton } from '../components/PreviewButton';
 
 /**
  * «Eigene Stücke»: a family brings its own notes (MusicXML from MuseScore,
@@ -152,6 +153,7 @@ export function OwnPieces() {
                 <IconPlayerPlay size={22} aria-hidden />
               </Group>
             </Card>
+            <PreviewButton exercise={p.exercise} title={p.title} />
             <ActionIcon
               component={Link}
               to={`/own/${p.id}/print`}

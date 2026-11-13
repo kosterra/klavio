@@ -216,7 +216,7 @@ export function importMusicXml(source: string): ImportedPiece {
 
   const time = `${beats}/${beatType}`;
   const keySignature: KeySignature | undefined =
-    fifths === 1 ? 'G' : fifths === -1 ? 'F' : fifths === 0 ? undefined : undefined;
+    fifths === 1 ? 'G' : fifths === 2 ? 'D' : fifths === -1 ? 'F' : undefined;
   const bars = measures.length;
   const keyboard = {
     from: Math.max(21, lowest - (((lowest % 12) + 12) % 12)),

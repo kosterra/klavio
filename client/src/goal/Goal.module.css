@@ -146,6 +146,24 @@ li[data-state='later'] .skill {
   background: color-mix(in srgb, var(--mantine-color-pink-5) 14%, var(--klavio-surface));
 }
 
+/* the card: the pick itself, and beside it «anhören» and «Noten» for pieces with a snippet */
+.pickMain {
+  display: flex;
+  flex: 1;
+  gap: var(--mantine-spacing-sm);
+  align-items: flex-start;
+  min-width: 0;
+  text-align: left;
+  border-radius: var(--mantine-radius-md);
+}
+
+.pickActions {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .pickIcon {
   display: grid;
   flex: none;

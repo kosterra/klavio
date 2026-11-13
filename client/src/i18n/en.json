@@ -1064,7 +1064,14 @@
     "picks": {
       "title": "Popular dream songs",
       "skills_one": "Needs {{count}} skill",
-      "skills_other": "Needs {{count}} skills"
+      "skills_other": "Needs {{count}} skills",
+      "listen": "Listen to «{{title}}»",
+      "stop": "Stop «{{title}}»",
+      "sheet": "Sheet music of «{{title}}»",
+      "sheetHint": "Just the opening and just the melody – to get a taste. You will get the full sheet music yourself later on.",
+      "sheetLabel": "Line {{line}} of {{lines}}",
+      "play": "Listen",
+      "stopShort": "Stop"
     },
     "skillsStart": "{{total}} skills to your dream song – you’ll learn the first one in your next lesson.",
     "unfold": "Show more about the dream song",
@@ -1422,6 +1429,10 @@
     "denied": "Notifications are not allowed for Klavio. You can allow them in the browser settings.",
     "unsupported": "This browser cannot show reminders. On an iPhone or iPad it works when Klavio is installed on the home screen.",
     "forOther": "This device currently reminds another profile. Switching on reminds you instead."
+  },
+  "preview": {
+    "listen": "Preview: «{{title}}»",
+    "stop": "Stop preview: «{{title}}»"
   },
   "own": {
     "title": "Own pieces",

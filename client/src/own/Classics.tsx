@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { CLASSICS, FOLK_SONGS, type ClassicPiece } from '@klavio/shared';
 import { useLocalized } from '../lesson/useLocalized';
+import { PreviewButton } from '../components/PreviewButton';
 
 /** «Klassik zum Üben»: pieces of the great composers, simplified, to practise and print. */
 export function Classics() {
@@ -66,6 +67,7 @@ function Shelf({
                 <IconPlayerPlay size={22} aria-hidden />
               </Group>
             </Card>
+            <PreviewButton exercise={c.exercise} title={loc(c.title)} testId={`preview-${c.id}`} />
             <ActionIcon
               component={Link}
               to={`/classics/${c.id}/print`}

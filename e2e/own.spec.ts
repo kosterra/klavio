@@ -70,6 +70,13 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
 
   // a Swiss folk song from the print of 1826
   await page.goto('/songs');
+  // «Hörprobe»: the first bars play; a second tap stops them
+  const preview = page.getByTestId('preview-volk-guggisberg');
+  await expect(preview).toHaveAccessibleName('Hörprobe: «S’Vreneli ab em Guggisberg»');
+  await preview.click();
+  await expect(preview).toHaveAccessibleName('Hörprobe stoppen: «S’Vreneli ab em Guggisberg»');
+  await preview.click();
+  await expect(preview).toHaveAccessibleName('Hörprobe: «S’Vreneli ab em Guggisberg»');
   await page.getByTestId('classic-volk-guggisberg').click();
   await expect(page.getByTestId('classic-source')).toContainText('Bern 1826, Nr. 31');
   await page.getByTestId('own-start').click();

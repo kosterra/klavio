@@ -19,6 +19,22 @@ test('dream song: set it in the profile, see progress and the next step on the d
 
   // adults are invited to set a dream song
   await page.getByTestId('goal-prompt').getByRole('link', { name: 'Traumlied festlegen' }).click();
+  // popular picks: the opening of a public-domain piece can be heard and seen on the staff
+  await page.getByRole('button', { name: '«Für Elise» anhören' }).click();
+  await expect(page.getByRole('button', { name: '«Für Elise» stoppen' })).toBeVisible();
+  await page.getByRole('button', { name: 'Noten von «Für Elise»' }).click();
+  const sheet = page.getByRole('dialog', { name: /Für Elise/ });
+  await expect(sheet.getByTestId('snippet-staff')).toHaveCount(3);
+  await sheet.getByRole('button', { name: 'Anhören' }).click();
+  await expect(sheet.getByRole('button', { name: 'Stopp' })).toBeVisible();
+  await audit(page);
+  await page.screenshot({
+    path: `${process.env.E2E_SCREENSHOTS ?? 'test-results'}/goal-snippet-sheet.png`,
+  });
+  await sheet.getByRole('button', { name: 'Schliessen' }).click();
+  await expect(sheet).toBeHidden();
+  // a song under copyright stays a title
+  await expect(page.getByRole('button', { name: '«Let It Be» anhören' })).toHaveCount(0);
   const titleInput = page.getByRole('combobox', { name: 'Titel' });
   // a typo is recognised and can be corrected with one tap
   await titleInput.fill('Nothing Else Matter');

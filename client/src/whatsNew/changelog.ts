@@ -23,6 +23,14 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Traumlied: Bei «Für Elise», «Ode to Joy», «Canon in D» und «Minuet in G» kannst du den Anfang anhören und die Noten der Melodie anschauen, bevor du dich entscheidest. Lieder, die noch urheberrechtlich geschützt sind, bleiben ein Titel.',
+        'Dream song: for «Für Elise», «Ode to Joy», «Canon in D» and «Minuet in G» you can listen to the opening and see the melody on the staff before you decide. Songs still under copyright stay a title.',
+      ),
+      L(
+        'Hörprobe: Bei den Volksliedern, der Klassik und deinen eigenen Stücken spielt ein Tipp aufs Ohr die ersten Takte – so weisst du, wie es klingt, bevor du es öffnest.',
+        'Preview: for the folk songs, the classics and your own pieces, a tap on the ear plays the first bars – so you know how it sounds before opening it.',
+      ),
+      L(
         'Startseite: Admins entscheiden unter «Verwaltung», ob Besucher die ausführliche Startseite sehen oder nur die Anmeldung. Neu zeigt eine Instanz von sich aus nur die Anmeldung.',
         'Start page: under «Admin», admins decide whether visitors see the full start page or just the login. By default an instance now shows only the login.',
       ),

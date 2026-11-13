@@ -1064,7 +1064,14 @@
     "picks": {
       "title": "Beliebte Traumlieder",
       "skills_one": "Braucht {{count}} Fähigkeit",
-      "skills_other": "Braucht {{count}} Fähigkeiten"
+      "skills_other": "Braucht {{count}} Fähigkeiten",
+      "listen": "«{{title}}» anhören",
+      "stop": "«{{title}}» stoppen",
+      "sheet": "Noten von «{{title}}»",
+      "sheetHint": "Nur der Anfang und nur die Melodie – zum Reinhören. Die ganzen Noten besorgst du dir später selbst.",
+      "sheetLabel": "Zeile {{line}} von {{lines}}",
+      "play": "Anhören",
+      "stopShort": "Stopp"
     },
     "skillsStart": "{{total}} Fähigkeiten bis zu deinem Traumlied – die erste lernst du gleich in der nächsten Lektion.",
     "unfold": "Mehr zum Traumlied zeigen",
@@ -1422,6 +1429,10 @@
     "denied": "Mitteilungen sind für Klavio nicht erlaubt. Du kannst sie in den Einstellungen des Browsers erlauben.",
     "unsupported": "Dieser Browser kann keine Erinnerungen zeigen. Auf dem iPhone oder iPad geht es, wenn Klavio auf dem Home-Bildschirm installiert ist.",
     "forOther": "Dieses Gerät erinnert gerade ein anderes Profil. Einschalten erinnert stattdessen dich."
+  },
+  "preview": {
+    "listen": "Hörprobe: «{{title}}»",
+    "stop": "Hörprobe stoppen: «{{title}}»"
   },
   "own": {
     "title": "Eigene Stücke",
