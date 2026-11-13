@@ -20,6 +20,19 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: UPCOMING,
+    changes: [
+      L(
+        'Geräte für die Kinder: Wer sich mit seiner PIN anmeldet, sieht weder Konto noch Elternbereich – Eltern melden sich auf dem Gerät über «Eltern: hier anmelden» an.',
+        'Devices for the children: who signs in with their PIN sees neither the account nor the parent area – parents sign in on the device with «Parents: sign in here».',
+      ),
+      L(
+        'Korrektur: Der Knopf «Lektion starten», die Lektionen im Lernpfad und die Profilkacheln zappeln nicht mehr, wenn die Maus genau auf ihrem Rand steht.',
+        'Fix: the «Start lesson» button, the lessons on the path and the profile tiles no longer jitter when the mouse rests right on their edge.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.5',
     changes: [
       L(
@@ -31,8 +44,8 @@ export const CHANGELOG: Release[] = [
         'MuseTrainer sheet music library: when the admin switches it on, you fetch piano pieces from the public-domain MuseTrainer collection under «Own pieces» – from «Für Elise» to the Minuet in G. The «Hörprobe» lets you hear each piece before you take it over; each shows how hard it is, the easy ones first.',
       ),
       L(
-        'Kinder melden sich selbst an: Im Elternbereich bekommt jedes Kind eine eigene PIN, und unter «Konto» richtest du ein Gerät für die Kinder ein. Dort zeigt Klavio «Wer spielt?» – Figur antippen, PIN eingeben, los. Ein Kind bleibt in seinem Profil und sieht weder Konto noch Elternbereich.',
-        'Children sign in on their own: in the parent area every child gets a PIN of their own, and under «Account» you set up a device for the children. There Klavio shows «Who’s playing?» – tap the figure, enter the PIN, off you go. A child stays in their profile and sees neither the account nor the parent area.',
+        'Kinder melden sich selbst an: Im Elternbereich bekommt jedes Kind eine eigene PIN, und unter «Konto» richtest du ein Gerät für die Kinder ein. Dort zeigt Klavio «Wer spielt?» – Figur antippen, PIN eingeben, los. Ein Kind bleibt in seinem Profil; den Elternbereich öffnet nur die Eltern-PIN.',
+        'Children sign in on their own: in the parent area every child gets a PIN of their own, and under «Account» you set up a device for the children. There Klavio shows «Who’s playing?» – tap the figure, enter the PIN, off you go. A child stays in their profile; only the parent PIN opens the parent area.',
       ),
       L(
         'Notenbibliothek Mutopia Project: Wenn die Verwaltung sie einschaltet, findest du rund 600 Klavierstücke des Mutopia Project – von Bach bis Burgmüller, jedes mit seiner Lizenz, die mit dem Stück gespeichert und beim Drucken genannt wird.',
@@ -45,10 +58,6 @@ export const CHANGELOG: Release[] = [
       L(
         'Lieder in drei Teilen: «Lernpfad», «Meine Stücke» und «Sammlung». Jedes Stück zeigt seine Schwierigkeit – Stufe 1 bis 3 des Lernpfads, «Fortgeschritten» oder «Anspruchsvoll» – und «Passt jetzt», wenn du die nötigen Lektionen gemacht hast. Anhören geht mit einem Tipp, Noten, Drucken und Umbenennen sind im Menü des Stücks.',
         'Songs in three parts: «Learning path», «My pieces» and «Collection». Every piece shows how hard it is – stage 1 to 3 of the learning path, «Advanced» or «Demanding» – and «Ready now» once you have done the lessons it needs. Listening takes one tap; notes, printing and renaming are in the piece’s menu.',
-      ),
-      L(
-        'Korrektur: Der Knopf «Lektion starten», die Lektionen im Lernpfad und die Profilkacheln zappeln nicht mehr, wenn die Maus genau auf ihrem Rand steht.',
-        'Fix: the «Start lesson» button, the lessons on the path and the profile tiles no longer jitter when the mouse rests right on their edge.',
       ),
       L(
         'Korrektur: Jede Hörprobe dauert jetzt etwa 15 Sekunden – vorher waren es immer acht Takte, bei schnellen Stücken nur ein paar Sekunden.',
