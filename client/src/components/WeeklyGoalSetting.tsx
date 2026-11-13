@@ -46,6 +46,8 @@ export function WeeklyGoalSetting() {
           // four choices side by side, also on the narrowest phone
           size="md"
           fullWidth
+          // «2 Tage» on one line: wrapped, the numbers and «Keins» sat at different heights
+          styles={{ label: { whiteSpace: 'nowrap', paddingInline: 4 } }}
           disabled={busy}
           value={value}
           onChange={(v) => void change(v)}

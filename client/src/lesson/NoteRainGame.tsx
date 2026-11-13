@@ -98,6 +98,10 @@ interface Props {
   status?: (caught: number) => ReactNode;
   /** without Klavi's bubble (the page says what to do); the end of a round shows in the field */
   compact?: boolean;
+  /** shown on the field before a round (and after one): what to know and choose before it rains */
+  setup?: ReactNode;
+  /** on the line with the hearts, e.g. the switch for the real piano */
+  tools?: ReactNode;
 }
 
 /**
@@ -122,6 +126,8 @@ export function NoteRainGame({
   overText,
   status,
   compact = false,
+  setup,
+  tools,
 }: Props) {
   const { t } = useTranslation();
   const field = useRef<HTMLDivElement>(null);
@@ -290,19 +296,24 @@ export function NoteRainGame({
         </BuddySays>
       )}
 
-      <Group gap="lg" aria-live="polite" data-testid="rain-status">
-        <Text fw={800}>
-          {status ? status(caught) : t('lesson.rain.caught', { n: caught, total: goal ?? caught })}
-        </Text>
-        <Group gap={2} aria-label={t('lesson.rain.lives', { count: lives })} role="img">
-          {Array.from({ length: RAIN_LIVES }, (_, i) =>
-            i < lives ? (
-              <IconHeart key={i} size={22} className={classes.heart} aria-hidden />
-            ) : (
-              <IconHeartBroken key={i} size={22} className={classes.heartLost} aria-hidden />
-            ),
-          )}
+      <Group gap="sm" justify="center" w="100%">
+        <Group gap="lg" aria-live="polite" data-testid="rain-status">
+          <Text fw={800}>
+            {status
+              ? status(caught)
+              : t('lesson.rain.caught', { n: caught, total: goal ?? caught })}
+          </Text>
+          <Group gap={2} aria-label={t('lesson.rain.lives', { count: lives })} role="img">
+            {Array.from({ length: RAIN_LIVES }, (_, i) =>
+              i < lives ? (
+                <IconHeart key={i} size={22} className={classes.heart} aria-hidden />
+              ) : (
+                <IconHeartBroken key={i} size={22} className={classes.heartLost} aria-hidden />
+              ),
+            )}
+          </Group>
         </Group>
+        {tools}
       </Group>
 
       <div
@@ -339,6 +350,7 @@ export function NoteRainGame({
         <div className={classes.ground} aria-hidden />
         {phase !== 'play' && phase !== 'done' && (
           <div className={classes.overlay}>
+            {phase === 'ready' && setup}
             {phase === 'ready' && (
               <Button
                 size="lg"
@@ -354,6 +366,7 @@ export function NoteRainGame({
                 {overText?.(result) ?? t('lesson.rain.over')}
               </Text>
             )}
+            {phase === 'over' && setup}
             {phase === 'over' && (
               <Group justify="center">
                 <Button

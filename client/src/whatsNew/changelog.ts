@@ -20,6 +20,43 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: '2026.11.6',
+    changes: [
+      L(
+        'Geräte für die Kinder: Wer sich mit seiner PIN anmeldet, sieht weder Konto noch Elternbereich – Eltern melden sich auf dem Gerät über «Eltern: hier anmelden» an.',
+        'Devices for the children: who signs in with their PIN sees neither the account nor the parent area – parents sign in on the device with «Parents: sign in here».',
+      ),
+      L(
+        'Korrektur: Der Knopf «Lektion starten», die Lektionen im Lernpfad und die Profilkacheln zappeln nicht mehr, wenn die Maus genau auf ihrem Rand steht.',
+        'Fix: the «Start lesson» button, the lessons on the path and the profile tiles no longer jitter when the mouse rests right on their edge.',
+      ),
+      L(
+        'Korrektur: In den Lektionen hört das Mikrofon wieder zu, wenn du auf deinem Klavier spielst – es ging gleich nach dem Start wieder aus, und die Bildschirm-Tasten blieben aktiv.',
+        'Fix: in the lessons the microphone listens again when you play on your piano – it switched off right after the start, and the screen keys stayed active.',
+      ),
+      L(
+        'Auf dem Handy: Die Bildschirm-Klaviatur zeigt so viele Tasten, wie gut Platz haben, und rückt mit ‹ › um eine Oktave weiter – kein seitliches Wischen mehr. Ein Tippen, das leicht verrutscht, spielt den Ton trotzdem.',
+        'On phones: the on-screen keyboard shows as many keys as fit comfortably and moves by an octave with ‹ › – no more swiping sideways. A tap that slips a little still plays the note.',
+      ),
+      L(
+        'Notenregen und Freies Spielen auf dem Handy: gleich spielbereit. Die Einstellungen stehen vor dem Start im Spielfeld, «Mein Klavier» neben den Herzen; spielst du auf deinem Klavier, zeigen die Bildschirm-Tasten nur noch, was sie hören.',
+        'Note rain and free play on phones: ready to play right away. The settings sit on the field before the start, «My piano» next to the hearts; when you play on your piano, the screen keys only show what they hear.',
+      ),
+      L(
+        'Handy quer: In den Lektionen bekommt die Klaviatur mehr Platz neben der Aufgabe.',
+        'Phone held sideways: in the lessons the keyboard gets more room beside the task.',
+      ),
+      L(
+        'Auf dem Handy aufgeräumt: «Mein Wochenziel» in einer Zeile, und «Erzähl anderen von Klavio» mit den Feldern untereinander.',
+        'Tidied up on phones: «My weekly goal» on one line, and «Tell others about Klavio» with the fields one below the other.',
+      ),
+      L(
+        'Lässt sich eine Seite nicht zeigen, steht statt einer leeren Seite, was los ist – mit «Neu laden».',
+        'When a page cannot be shown, you see what happened instead of an empty page – with «Reload».',
+      ),
+    ],
+  },
+  {
     version: '2026.11.5',
     changes: [
       L(

@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, type ReactNode } from 'react';
+import { PageErrorBoundary } from './components/PageErrorBoundary';
 import {
   Button,
   Center,
@@ -175,85 +176,90 @@ export function App() {
     <SessionProvider>
       <ThemedApp>
         <BrowserRouter>
-          <Suspense fallback={<FullPageLoader />}>
-            <Routes>
-              <Route element={<AnonymousOnly />}>
-                <Route path="/welcome" element={<WelcomePage />} />
-                <Route path="/login/email" element={<EmailLoginPage intent="login" />} />
-                <Route path="/register" element={<EmailLoginPage intent="register" />} />
-              </Route>
-              <Route element={<RequireAuth />}>
-                <Route path="/profiles" element={<ProfilesPage />} />
-                <Route element={<RequireProfile />}>
-                  <Route path="/lesson/:lessonId" element={<LessonPage />} />
-                  {/* a song to print: a page of its own, without the app around it */}
-                  <Route path="/songs/:lessonId/print" element={<SongSheetPage />} />
-                  {/* own pieces (imported MusicXML): to practise and to print */}
-                  <Route path="/own/:pieceId" element={<OwnPiecePage />} />
-                  <Route path="/own/:pieceId/print" element={<OwnSheetPage />} />
-                  <Route path="/own/:pieceId/notes" element={<OwnNotesPage />} />
-                  <Route path="/classics/:classicId" element={<ClassicPage />} />
-                  <Route path="/classics/:classicId/print" element={<ClassicSheetPage />} />
-                  <Route path="/classics/:classicId/notes" element={<ClassicNotesPage />} />
-                  <Route path="/quick" element={<QuickRoundPage />} />
-                  <Route path="/start" element={<OnboardingPage />} />
+          <PageErrorBoundary>
+            <Suspense fallback={<FullPageLoader />}>
+              <Routes>
+                <Route element={<AnonymousOnly />}>
+                  <Route path="/welcome" element={<WelcomePage />} />
+                  <Route path="/login/email" element={<EmailLoginPage intent="login" />} />
+                  <Route path="/register" element={<EmailLoginPage intent="register" />} />
                 </Route>
-                <Route element={<AppLayout />}>
-                  <Route
-                    path="/account"
-                    element={
-                      <ParentGate>
-                        <AccountPage />
-                      </ParentGate>
-                    }
-                  />
-                  <Route
-                    path="/family"
-                    element={
-                      <ParentGate>
-                        <FamilyPage />
-                      </ParentGate>
-                    }
-                  />
-                  <Route element={<RequireAdmin />}>
-                    <Route
-                      path="/admin"
-                      element={
-                        <ParentGate>
-                          <AdminPage />
-                        </ParentGate>
-                      }
-                    />
-                  </Route>
+                <Route element={<RequireAuth />}>
+                  <Route path="/profiles" element={<ProfilesPage />} />
                   <Route element={<RequireProfile />}>
-                    <Route path="/" element={<DashboardPage />} />
-                    {/* learning and the microphone setup need no PIN */}
-                    <Route path="/mic-test" element={<MicTestPage />} />
-                    <Route path="/mic-setup" element={<MicSetupPage />} />
+                    <Route path="/lesson/:lessonId" element={<LessonPage />} />
+                    {/* a song to print: a page of its own, without the app around it */}
+                    <Route path="/songs/:lessonId/print" element={<SongSheetPage />} />
+                    {/* own pieces (imported MusicXML): to practise and to print */}
+                    <Route path="/own/:pieceId" element={<OwnPiecePage />} />
+                    <Route path="/own/:pieceId/print" element={<OwnSheetPage />} />
+                    <Route path="/own/:pieceId/notes" element={<OwnNotesPage />} />
+                    <Route path="/classics/:classicId" element={<ClassicPage />} />
+                    <Route path="/classics/:classicId/print" element={<ClassicSheetPage />} />
+                    <Route path="/classics/:classicId/notes" element={<ClassicNotesPage />} />
+                    <Route path="/quick" element={<QuickRoundPage />} />
+                    <Route path="/start" element={<OnboardingPage />} />
+                  </Route>
+                  <Route element={<AppLayout />}>
                     <Route
-                      path="/input"
+                      path="/account"
                       element={
                         <ParentGate>
-                          <InputPage />
+                          <AccountPage />
                         </ParentGate>
                       }
                     />
-                    <Route path="/profile" element={<ProfileSettingsPage />} />
-                    <Route path="/knowledge" element={<KnowledgePage />} />
-                    <Route path="/songs" element={<SongsPage />} />
-                    <Route path="/play" element={<FreePlayPage />} />
-                    <Route path="/play/rain" element={<RainGamePage />} />
-                    <Route path="/play/metronome" element={<MetronomePage />} />
-                    <Route path="/metronome" element={<Navigate to="/play/metronome" replace />} />
+                    <Route
+                      path="/family"
+                      element={
+                        <ParentGate>
+                          <FamilyPage />
+                        </ParentGate>
+                      }
+                    />
+                    <Route element={<RequireAdmin />}>
+                      <Route
+                        path="/admin"
+                        element={
+                          <ParentGate>
+                            <AdminPage />
+                          </ParentGate>
+                        }
+                      />
+                    </Route>
+                    <Route element={<RequireProfile />}>
+                      <Route path="/" element={<DashboardPage />} />
+                      {/* learning and the microphone setup need no PIN */}
+                      <Route path="/mic-test" element={<MicTestPage />} />
+                      <Route path="/mic-setup" element={<MicSetupPage />} />
+                      <Route
+                        path="/input"
+                        element={
+                          <ParentGate>
+                            <InputPage />
+                          </ParentGate>
+                        }
+                      />
+                      <Route path="/profile" element={<ProfileSettingsPage />} />
+                      <Route path="/knowledge" element={<KnowledgePage />} />
+                      <Route path="/songs" element={<SongsPage />} />
+                      <Route path="/play" element={<FreePlayPage />} />
+                      <Route path="/play/rain" element={<RainGamePage />} />
+                      <Route path="/play/metronome" element={<MetronomePage />} />
+                      <Route
+                        path="/metronome"
+                        element={<Navigate to="/play/metronome" replace />}
+                      />
+                    </Route>
                   </Route>
                 </Route>
-              </Route>
-              {/* for visitors and learners alike */}
-              <Route path="/whats-new" element={<WhatsNewPage />} />
-              <Route path="/privacy" element={<PrivacyPage />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </Suspense>
+                {/* for visitors and learners alike */}
+                <Route path="/whats-new" element={<WhatsNewPage />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Suspense>
+          </PageErrorBoundary>
         </BrowserRouter>
       </ThemedApp>
     </SessionProvider>

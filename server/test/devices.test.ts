@@ -89,6 +89,10 @@ describe("children log in with their own PIN on a child's device", () => {
       (await call(jar, 'POST', '/api/profiles/select', { profileId: tim.id })).statusCode,
     ).toBe(403);
     expect((await call(jar, 'GET', '/api/devices')).statusCode).toBe(403);
+    // not even the parent PIN opens the parent area in a child's session
+    expect((await call(jar, 'POST', '/api/account/pin/verify', { pin: '1234' })).statusCode).toBe(
+      403,
+    );
     expect(
       (await call(jar, 'PUT', `/api/profiles/${lina.id}/pin`, { pin: '1111' })).statusCode,
     ).toBe(403);

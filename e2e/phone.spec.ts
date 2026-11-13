@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { signUpWithEmail, skipTheory, uniqueEmail, skipSetup } from './helpers';
+import { audit } from './audit';
 
 // a phone: narrow, touch only
 test.use({
@@ -10,7 +11,7 @@ test.use({
     'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Mobile Safari/537.36',
 });
 
-test('on a phone the keys are big enough, a swipe scrolls and only a tap plays', async ({
+test('on a phone the keys are big enough, move by an octave, a swipe scrolls and only a tap plays', async ({
   page,
 }) => {
   test.setTimeout(90_000);
@@ -34,11 +35,19 @@ test('on a phone the keys are big enough, a swipe scrolls and only a tap plays',
   const c4 = page.getByRole('button', { name: 'C4', exact: true });
   await expect(c4).toBeVisible();
 
-  // finger-sized keys: the keyboard is wider than the screen and scrolls sideways
+  // finger-sized keys: only those that fit, nothing to swipe sideways …
   const box = (await c4.boundingBox())!;
   expect(box.width).toBeGreaterThanOrEqual(34);
   // the keyboard stays in reach at the bottom of the screen
   expect(box.y + box.height).toBeLessThanOrEqual(844);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+  // … the others an octave away
+  await expect(page.getByRole('button', { name: 'C5', exact: true })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Tasten eine Oktave höher' }).click();
+  await expect(page.getByRole('button', { name: 'C5', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Tasten eine Oktave tiefer' }).click();
+  await expect(c4).toBeVisible();
+  await audit(page);
 
   // a swipe that starts on a key is a scroll, not a note
   const d4 = (await page.getByRole('button', { name: 'D4', exact: true }).boundingBox())!;
@@ -61,7 +70,6 @@ test('on a phone the keys are big enough, a swipe scrolls and only a tap plays',
   // a tap plays
   const asked = /Finde das (\S+)/.exec((await page.getByTestId('prompt').textContent()) ?? '')![1]!;
   const target = page.getByRole('button', { name: `${asked}4`, exact: true });
-  await target.scrollIntoViewIfNeeded();
   const t = (await target.boundingBox())!;
   await page.touchscreen.tap(t.x + t.width / 2, t.y + t.height * 0.85);
   await expect(page.getByText(/^Aufgabe 2 von/)).toBeVisible();

@@ -1,4 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { ActionIcon } from '@mantine/core';
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { isBlackKey, midiToName, midiToPitchName } from '@klavio/shared';
 import classes from './PianoKeyboard.module.css';
@@ -31,13 +33,14 @@ export interface PianoKeyboardProps {
 }
 
 /**
- * A playable key is at least this wide: on phones the keyboard gets wider than
- * the screen and scrolls sideways (swipe; a tap plays), following the hints.
+ * A playable key is at least this wide: on phones only the keys that fit are
+ * shown – with buttons to move by an octave, following the hints – instead of
+ * a keyboard to swipe sideways.
  */
 const MIN_WHITE_PX = 36;
 
 /** A touch only becomes a note when the finger stays put … */
-const TAP_SLOP_PX = 10;
+const TAP_SLOP_PX = 14;
 /** … until it lifts, or for this long (then it is held, e.g. a long note). */
 const TOUCH_HOLD_MS = 90;
 
@@ -51,11 +54,100 @@ interface PendingTouch {
   sounding: boolean;
 }
 
+const whiteKeys = (from: number, to: number) => {
+  const whites: number[] = [];
+  for (let m = from; m <= to; m++) if (!isBlackKey(m)) whites.push(m);
+  return whites;
+};
+
+/** What matters most to keep in view: the hinted keys, else middle C, else the middle. */
+const focusOf = (from: number, to: number, hints: readonly number[]) =>
+  hints.length
+    ? [...hints].sort((a, b) => a - b)[Math.floor((hints.length - 1) / 2)]!
+    : from <= 60 && 60 <= to
+      ? 60
+      : Math.round((from + to) / 2);
+
 /**
  * Piano keyboard drawn with plain elements. Display-only by default; with
  * `onPress` it doubles as the on-screen keyboard input (same NoteEvent path).
+ * A playable keyboard too wide for the screen shows the keys that fit, with
+ * ‹ › to move it by an octave; it follows the hinted keys by itself.
  */
-export function PianoKeyboard({
+export function PianoKeyboard(props: PianoKeyboardProps) {
+  const { from, to, hints = [], onPress } = props;
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language.startsWith('de') ? 'de' : 'en';
+  const interactive = !!onPress;
+  const wrap = useRef<HTMLDivElement>(null);
+  const [room, setRoom] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    const el = wrap.current;
+    if (!interactive || !el) return;
+    setRoom(el.clientWidth);
+    const ro = new ResizeObserver(() => setRoom(el.clientWidth));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [interactive]);
+
+  const whites = whiteKeys(from, to);
+  const fits = room === null ? whites.length : Math.max(7, Math.floor(room / MIN_WHITE_PX));
+  const windowed = interactive && fits < whites.length;
+  const last = Math.max(0, whites.length - fits);
+  const clamp = (i: number) => Math.min(last, Math.max(0, i));
+  const focus = focusOf(from, to, hints);
+  const focusIndex = Math.max(
+    0,
+    whites.findIndex((w) => w >= focus),
+  );
+  const centred = clamp(focusIndex - Math.floor((fits - 1) / 2));
+  const [start, setStart] = useState<number | null>(null);
+  // a new hint outside the keys shown: the keys follow it
+  const [seen, setSeen] = useState(focus);
+  if (seen !== focus) {
+    setSeen(focus);
+    const s = start ?? centred;
+    if (focusIndex < s || focusIndex >= s + fits) setStart(centred);
+  }
+  const s = clamp(start ?? centred);
+  const shown = windowed ? { from: whites[s]!, to: whites[s + fits - 1]! } : { from, to };
+  const name = (m: number) => midiToName(m, lang);
+
+  return (
+    <div ref={wrap} className={classes.wrap}>
+      {windowed && (
+        <div className={classes.shift} data-testid="keyboard-shift">
+          <ActionIcon
+            variant="default"
+            size={44}
+            radius="xl"
+            aria-label={t('keyboard.lower')}
+            disabled={s <= 0}
+            onClick={() => setStart(clamp(s - 7))}
+          >
+            <IconChevronLeft size={22} aria-hidden />
+          </ActionIcon>
+          <span className={classes.shiftRange}>
+            {name(shown.from)} – {name(shown.to)}
+          </span>
+          <ActionIcon
+            variant="default"
+            size={44}
+            radius="xl"
+            aria-label={t('keyboard.higher')}
+            disabled={s >= last}
+            onClick={() => setStart(clamp(s + 7))}
+          >
+            <IconChevronRight size={22} aria-hidden />
+          </ActionIcon>
+        </div>
+      )}
+      <Keys {...props} from={shown.from} to={shown.to} />
+    </div>
+  );
+}
+
+function Keys({
   from,
   to,
   active = [],
@@ -75,30 +167,6 @@ export function PianoKeyboard({
   for (let m = from; m <= to; m++) if (!isBlackKey(m)) whites.push(m);
   const keyWidth = 100 / whites.length;
   const interactive = !!onPress;
-  const scroller = useRef<HTMLDivElement>(null);
-
-  // Keep what matters in view when the keyboard is wider than the screen: the
-  // hinted keys, else middle C, else the middle of the range.
-  const focusKey = hints.length
-    ? [...hints].sort((a, b) => a - b)[Math.floor((hints.length - 1) / 2)]!
-    : from <= 60 && 60 <= to
-      ? 60
-      : Math.round((from + to) / 2);
-  const firstFocus = useRef(true);
-  useEffect(() => {
-    const el = scroller.current;
-    if (!el || el.scrollWidth <= el.clientWidth) return;
-    const index = whites.findIndex((w) => w >= focusKey);
-    const keyPx = el.scrollWidth / whites.length;
-    const left = (Math.max(0, index) + 0.5) * keyPx - el.clientWidth / 2;
-    // only move when the key is not comfortably visible (no jumping around)
-    const x = (Math.max(0, index) + 0.5) * keyPx - el.scrollLeft;
-    if (!firstFocus.current && x > keyPx && x < el.clientWidth - keyPx) return;
-    el.scrollTo({ left, behavior: firstFocus.current ? 'auto' : 'smooth' });
-    firstFocus.current = false;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focusKey, from, to]);
-
   // Touch: the page must stay scrollable over the keys (phones!). A touch that
   // starts moving is a scroll, not a key press – so a touch plays only once
   // the finger lifts or rests for a moment, with the time it touched down.
@@ -202,14 +270,13 @@ export function PianoKeyboard({
 
   const activeNames = active.map((m) => midiToName(m, lang)).join(', ');
 
-  const board = (
+  return (
     <div
       className={classes.keyboard}
       data-interactive={interactive || undefined}
       style={{
         // never taller than about a third of the screen (phones held sideways)
         height: `max(96px, min(${height}px, 36svh))`,
-        minWidth: interactive ? whites.length * MIN_WHITE_PX : undefined,
       }}
       role={interactive ? 'group' : 'img'}
       aria-label={
@@ -260,13 +327,6 @@ export function PianoKeyboard({
           </Tag>
         );
       })}
-    </div>
-  );
-
-  if (!interactive) return board;
-  return (
-    <div ref={scroller} className={classes.scroller}>
-      {board}
     </div>
   );
 }

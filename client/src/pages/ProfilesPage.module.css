@@ -1,10 +1,18 @@
 .tile {
+  position: relative;
   width: 190px;
   border-radius: var(--mantine-radius-xl);
   transition: transform 120ms ease;
 
   &:hover {
     transform: translateY(-3px);
+  }
+
+  /* the hover lift must not bounce: the pointer stays on the tile while it lifts */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 -5px;
   }
 
   &:focus-visible {

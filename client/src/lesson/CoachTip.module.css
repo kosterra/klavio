@@ -15,3 +15,14 @@
   color: var(--klavio-comic-line);
   background: var(--mantine-color-yellow-4);
 }
+
+/* phones held sideways: one slim line, the keys need the height */
+@media (max-height: 32em) and (orientation: landscape) {
+  .tip {
+    padding-block: 4px;
+  }
+
+  .tip :global(.mantine-Text-root) {
+    font-size: var(--mantine-font-size-sm);
+  }
+}

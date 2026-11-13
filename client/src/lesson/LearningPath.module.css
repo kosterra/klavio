@@ -127,6 +127,14 @@
   pointer-events: none;
 }
 
+/* the hover lift must not bounce: the pointer stays on the node while it lifts */
+a.node::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 -4px;
+  border-radius: inherit;
+}
+
 .node:focus-visible {
   outline: 3px solid var(--mantine-color-orange-6);
   outline-offset: 6px;

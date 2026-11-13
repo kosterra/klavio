@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ActionIcon, Button, Group, SegmentedControl, Stack, Text, Title } from '@mantine/core';
+import { ActionIcon, Button, Group, SegmentedControl, Stack, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconChevronLeft, IconChevronRight, IconKeyboard } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
@@ -7,7 +7,7 @@ import { midiToPitchName } from '@klavio/shared';
 import type { Timbre } from '../audio/synth';
 import { useSession } from '../auth/session';
 import { BuddySays } from '../components/BuddySays';
-import { PlayTabs } from '../components/PlayTabs';
+import { PlayTabs, PlayTitle } from '../components/PlayTabs';
 import { RealPianoInput } from '../components/RealPianoInput';
 import { Recorder } from '../components/Recorder';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
@@ -67,10 +67,11 @@ export function FreePlayPage() {
   const name = (m: number) => midiToPitchName(m, lang);
 
   return (
-    <Stack gap="lg" maw={1100} mx="auto" className={classes.page}>
-      <Title order={1}>{t('freePlay.title')}</Title>
+    <Stack gap={phone ? 'md' : 'lg'} maw={1100} mx="auto" className={classes.page}>
+      <PlayTitle>{t('freePlay.title')}</PlayTitle>
       <PlayTabs />
-      {!(phone && screenKeys) && (
+      {/* phones: straight to playing – the tab says where you are */}
+      {!phone && (
         <BuddySays
           mood={last ? 'cheer' : 'happy'}
           size={kids ? 96 : 64}

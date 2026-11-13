@@ -243,3 +243,21 @@ test('loud and soft and the pedal are checked with a digital piano', async ({ pa
   await expect(page.getByText('Spiel das G mit Pedal').first()).toBeVisible();
   await audit(page);
 });
+
+test('the microphone started with the lesson keeps listening', async ({ page }) => {
+  test.setTimeout(90_000);
+  await signUpWithEmail(page, uniqueEmail('miclesson'), 'Familie');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Lina');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('2016');
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
+  await page.goto('/lesson/keys-c');
+  await skipTheory(page);
+  await page.getByTestId('lesson-start').click();
+  // it used to stop again at the next render of the lesson
+  await expect(page.getByRole('button', { name: 'Mikrofon an' })).toBeVisible();
+  await page.waitForTimeout(1500);
+  await expect(page.getByRole('button', { name: 'Mikrofon an' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Mikrofon verwenden' })).toHaveCount(0);
+});
