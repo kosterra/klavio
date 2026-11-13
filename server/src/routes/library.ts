@@ -3,7 +3,15 @@ import { z } from 'zod';
 import type { AppConfig } from '../config.js';
 import { HttpError, notFound } from '../lib/errors.js';
 import { getSettings } from '../lib/settings.js';
-import { LIBRARY_SOURCE, libraryEntries, libraryFile, searchLibrary } from '../lib/pieceLibrary.js';
+import {
+  LIBRARY_SOURCE,
+  analyseLibrary,
+  libraryEntries,
+  libraryFile,
+  libraryInfo,
+  libraryPending,
+  searchLibrary,
+} from '../lib/pieceLibrary.js';
 
 const idParams = z.object({
   id: z
@@ -31,7 +39,18 @@ const libraryRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
         req.log.warn({ err }, 'library list not reachable');
         throw new HttpError(502, 'LIBRARY_UNREACHABLE');
       }
-      return { source: LIBRARY_SOURCE, results: searchLibrary(entries, req.query.q) };
+      // levels and sizes come in the background; the list says when some are missing
+      analyseLibrary(entries).catch((err: unknown) => req.log.warn({ err }, 'library analysis'));
+      const results = searchLibrary(entries, req.query.q).flatMap(({ id, title, ...entry }) => {
+        const info = libraryInfo({ id, title, ...entry });
+        if (info && !info.readable) return []; // Klavio can't read it: not offered
+        return [{ id, title, ...(info ?? {}) }];
+      });
+      return {
+        source: LIBRARY_SOURCE,
+        results,
+        pending: entries.some(libraryPending),
+      };
     },
   );
 

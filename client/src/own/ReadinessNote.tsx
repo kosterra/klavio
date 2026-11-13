@@ -21,13 +21,10 @@ import classes from './Own.module.css';
 export function ReadinessNote({
   exercise,
   completed,
-  compact = false,
 }: {
   exercise: SongExercise | PieceExercise;
   /** the lessons this profile has done (null while loading) */
   completed: ReadonlySet<string> | null;
-  /** one line, for lists */
-  compact?: boolean;
 }) {
   const { t } = useTranslation();
   const loc = useLocalized();
@@ -40,14 +37,6 @@ export function ReadinessNote({
   const chapter = CURRICULUM.findIndex((c) => c.lessons.some((l) => l.id === r.lesson.id)) + 1;
   const beyond = r.beyond.map((b) => t(`readiness.beyond.${b}`)).join(', ');
 
-  if (compact) {
-    return (
-      <Text size="sm" className={classes.readyLine} data-ready={ready || undefined} truncate>
-        {ready ? t('readiness.readyShort') : t('readiness.afterShort', { lesson: title })}
-        {beyond && ` · ${t('readiness.beyondShort', { list: beyond })}`}
-      </Text>
-    );
-  }
   return (
     <div className={classes.ready} data-ready={ready || undefined} data-testid="readiness">
       {ready ? (

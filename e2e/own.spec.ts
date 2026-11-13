@@ -19,6 +19,13 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
   await skipSetup(page);
 
   await page.goto('/songs');
+  // the songs page in three parts: the path first, then «Meine Stücke»
+  await expect(page.getByRole('tab', { name: 'Lernpfad' })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  );
+  await page.getByRole('tab', { name: 'Meine Stücke' }).click();
+  await expect(page).toHaveURL(/tab=own/);
   const own = page.getByTestId('own-pieces');
   await own.locator('input[type=file]').setInputFiles(file);
   await expect(page.getByTestId('own-draft')).toContainText('Mein erstes Lied');
@@ -40,8 +47,9 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
   await audit(page);
 
   // just the notes, on the music stand
-  await page.goto('/songs');
-  await own.getByRole('link', { name: 'Noten von «Mein erstes Lied» ansehen' }).click();
+  await page.goto('/songs?tab=own');
+  await own.getByRole('button', { name: 'Mehr zu «Mein erstes Lied»' }).click();
+  await page.getByRole('menuitem', { name: 'Noten von «Mein erstes Lied» ansehen' }).click();
   const notes = page.getByTestId('notes-view');
   await expect(notes.getByRole('heading', { name: 'Mein erstes Lied' })).toBeVisible();
   await expect(notes.locator('svg .vf-stavenote').first()).toBeVisible();
@@ -49,12 +57,12 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
   await audit(page);
 
   // renamed in the library
-  await page.goto('/songs');
+  await page.goto('/songs?tab=own');
   await own.getByRole('button', { name: 'Mehr zu «Mein erstes Lied»' }).click();
   await page.getByRole('menuitem', { name: '«Mein erstes Lied» umbenennen' }).click();
   await page.getByRole('dialog').getByLabel('Komponist oder Herkunft').fill('Lina und Papa');
   await page.getByTestId('rename-save').click();
-  await expect(own.getByText('Lina und Papa', { exact: true })).toBeVisible();
+  await expect(own.getByText(/^Lina und Papa · /)).toBeVisible();
 
   // on paper
   await own.getByRole('button', { name: 'Mehr zu «Mein erstes Lied»' }).click();
@@ -63,7 +71,7 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
   await expect(page.getByTestId('sheet')).toContainText('Lina');
 
   // a file that is not MusicXML is refused with a reason
-  await page.goto('/songs');
+  await page.goto('/songs?tab=own');
   await own.locator('input[type=file]').setInputFiles({
     name: 'brief.xml',
     mimeType: 'text/xml',
@@ -106,7 +114,7 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
   for (const k of ['C4', 'E4', 'G4'])
     await keys.getByRole('button', { name: k, exact: true }).click();
   await expect(page.getByTestId('own-done')).toBeVisible();
-  await page.goto('/songs');
+  await page.goto('/songs?tab=own');
   await own.getByRole('button', { name: 'Mehr zu «Mit Pause»' }).click();
   await page.getByRole('menuitem', { name: '«Mit Pause» löschen' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Löschen' }).click();
@@ -119,7 +127,11 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
   await expect(own.getByRole('link', { name: /Mein erstes Lied/ })).toHaveCount(0);
 
   // classics: a piece by Schumann, with its source and licence
-  await page.goto('/songs');
+  await page.goto('/songs?tab=collection');
+  await expect(page.getByTestId('classic-schumann-melodie').getByTestId('level')).toHaveText(
+    'Stufe 2',
+  );
+  await audit(page);
   await page.getByTestId('classic-schumann-melodie').click();
   await expect(page.getByTestId('classic-source')).toContainText('Mutopia Project');
   await expect(page.getByTestId('classic-source')).toContainText('CC BY-SA');
@@ -133,7 +145,7 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
   await expect(page.getByTestId('sheet')).toContainText('CC BY-SA 2.5');
 
   // a Swiss folk song from the print of 1826
-  await page.goto('/songs');
+  await page.goto('/songs?tab=collection');
   // «Hörprobe»: the first bars play; a second tap stops them
   const preview = page.getByTestId('preview-volk-guggisberg');
   await expect(preview).toHaveAccessibleName('Hörprobe: «S’Vreneli ab em Guggisberg»');

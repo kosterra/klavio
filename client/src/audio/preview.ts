@@ -24,10 +24,34 @@ export function melodyNotes(bars: SongNote[][]): PreviewNote[] {
   return out;
 }
 
-/** The first bars of a song or a piece (both hands), as lines to play together. */
-export function previewParts(exercise: SongExercise | PieceExercise, maxBars = 8): PreviewNote[][] {
-  if (exercise.type === 'song') return [melodyNotes(exercise.bars.slice(0, maxBars))];
-  const bars = exercise.bars.slice(0, maxBars);
+/** How long a «Hörprobe» plays, about: whole bars until this many seconds are reached. */
+export const PREVIEW_SECONDS = 15;
+
+/**
+ * The bars of a «Hörprobe»: from the first bar with a note, whole bars for
+ * about `seconds` at the piece's tempo – a slow waltz and a fast march sound
+ * about as long (not eight bars of either).
+ */
+export function previewBars(exercise: SongExercise | PieceExercise, seconds = PREVIEW_SECONDS) {
+  const [n, d] = exercise.time.split('/').map(Number) as [number, number];
+  const barSeconds = (((n * 4) / d) * 60) / Math.max(20, exercise.tempo);
+  const count = Math.max(2, Math.round(seconds / barSeconds));
+  const sounds = (i: number) => {
+    const bar = exercise.bars[i]!;
+    return Array.isArray(bar)
+      ? bar.some((x) => !x.rest && x.midi >= 0)
+      : [...bar.rh, ...bar.lh].some((x) => x.midi !== null);
+  };
+  let from = 0;
+  while (from < exercise.bars.length - 1 && !sounds(from)) from++;
+  return { from, to: Math.min(exercise.bars.length, from + count) };
+}
+
+/** The first bars of a song or piece (both hands), as lines to play together. */
+export function previewParts(exercise: SongExercise | PieceExercise): PreviewNote[][] {
+  const { from, to } = previewBars(exercise);
+  if (exercise.type === 'song') return [melodyNotes(exercise.bars.slice(from, to))];
+  const bars = exercise.bars.slice(from, to);
   return (['rh', 'lh'] as const).map((hand) =>
     bars.flatMap((b) => b[hand].map((n) => ({ midi: n.midi ?? -1, beats: beatsOf(n.value) }))),
   );

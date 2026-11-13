@@ -44,7 +44,7 @@ export function ConfirmModal({
     >
       <Stack>
         {typeof children === 'string' ? <Text>{children}</Text> : children}
-        <Group grow wrap="wrap">
+        <Group grow wrap="wrap" preventGrowOverflow={false}>
           <Button onClick={onStay} data-autofocus>
             {stay}
           </Button>

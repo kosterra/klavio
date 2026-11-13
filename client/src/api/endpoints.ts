@@ -20,7 +20,7 @@ import type {
   MailTemplateId,
   MailTemplateTexts,
 } from '@klavio/shared';
-import { mailLangOf } from '@klavio/shared';
+import { mailLangOf, type PieceLevel } from '@klavio/shared';
 import i18n from '../i18n';
 import type {
   PublicKeyCredentialCreationOptionsJSON,
@@ -78,7 +78,7 @@ export const endpoints = {
   addPiece: (input: OwnPieceInput) => api<OwnPieceDto>('POST', '/pieces', input),
   deletePiece: (id: string) => api('DELETE', `/pieces/${encodeURIComponent(id)}`),
   library: (q: string) =>
-    api<{ source: { name: string; url: string }; results: { id: string; title: string }[] }>(
+    api<{ source: { name: string; url: string }; results: LibraryResult[]; pending: boolean }>(
       'GET',
       `/library?q=${encodeURIComponent(q)}`,
     ),
@@ -162,3 +162,15 @@ export const endpoints = {
   testMailTemplate: (id: MailTemplateId, mailLang: MailLang) =>
     api('POST', `/admin/mail-templates/${id}/test`, { lang: mailLang }),
 };
+
+/** A piece of the library; level and size once the server has looked at it. */
+export interface LibraryResult {
+  id: string;
+  title: string;
+  composer?: string | null;
+  level?: PieceLevel;
+  /** the lesson after which it can be played */
+  lessonId?: string;
+  bars?: number;
+  hands?: 1 | 2;
+}

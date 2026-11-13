@@ -1363,10 +1363,17 @@
   },
   "songs": {
     "title": "Songs",
-    "intro_one": "{{count}} song is open – play it as often as you like.",
-    "intro_other": "{{count}} songs are open – play them as often as you like.",
+    "intro_one": "{{count}} of {{total}} songs is open – play it as often as you like.",
+    "intro_other": "{{count}} of {{total}} songs are open – play them as often as you like.",
     "new": "New – not played yet",
-    "locked": "Comes in chapter {{n}}"
+    "locked": "Comes in chapter {{n}}",
+    "introNone": "The songs come with the lessons – the first one in chapter {{n}}.",
+    "tabs": {
+      "path": "Learning path",
+      "own": "My pieces",
+      "collection": "Collection"
+    },
+    "collectionIntro": "Folk songs and little classical pieces, simplified for Klavio – to practise, listen to and print, without stars."
   },
   "duet": {
     "label": "Klavi plays along",
@@ -1464,7 +1471,7 @@
   },
   "own": {
     "title": "Own pieces",
-    "intro": "Bring your own notes: a MusicXML or MIDI file from MuseScore, Finale, Sibelius or Dorico. Klavio reads it on your device; only the notes are stored, for all profiles of your account.",
+    "intro": "Your sheet music collection: import a file or fetch a piece from the library. Only the notes are stored, for all profiles of your account.",
     "import": "Import a piece",
     "how": "Files .musicxml, .xml, .mxl or MIDI (.mid), up to 1000 bars. Klavio takes the main voice (with two staves both hands) – from whole notes to sixty-fourths, with dots and triplets.",
     "full": "At most {{count}} own pieces – delete one first.",
@@ -1512,15 +1519,23 @@
     "libraryAddLabel": "Take over «{{title}}»",
     "librarySource": "From the collection of {{name}} – published as public domain. Klavio reads the piece like your own file; you see it before you save it.",
     "libraryCannotRead": "Klavio cannot read «{{title}}»: {{reason}}",
-    "libraryUnreachable": "The library cannot be reached right now – try again later."
+    "libraryUnreachable": "The library cannot be reached right now – try again later.",
+    "bars_one": "{{count}} bar",
+    "bars_other": "{{count}} bars",
+    "oneHand": "One hand",
+    "bothHands": "Both hands",
+    "librarySortLevel": "Easy first",
+    "librarySortTitle": "A–Z",
+    "librarySort": "Sort",
+    "libraryLooking": "Klavio is still estimating the difficulty …"
   },
   "folk": {
     "title": "Swiss folk songs",
-    "intro": "Old songs from Switzerland, taken from a collection printed in 1826 and simplified for Klavio: the melody to practise with listening, and to print – without stars."
+    "intro": "Old songs from Switzerland, taken from a collection printed in 1826."
   },
   "classics": {
     "title": "Classics to practise",
-    "intro": "Little pieces by great composers, simplified for Klavio: to practise with listening and one hand alone, and to print – without stars.",
+    "intro": "Little pieces by great composers – also to practise with one hand alone.",
     "credit": "Notes: {{by}}, {{license}}",
     "license": "Licence"
   },
@@ -1550,9 +1565,7 @@
   },
   "readiness": {
     "ready": "Right for you: everything it needs comes in the learning path up to «{{lesson}}» – and you have done that.",
-    "readyShort": "Right for your level",
     "after": "Recommended after the lesson «{{lesson}}» (chapter {{chapter}}).",
-    "afterShort": "Recommended after «{{lesson}}»",
     "missing": "Still to learn for it: {{list}}.",
     "go": "Go on with «{{lesson}}»",
     "beyondText": "Goes beyond the learning path: {{list}} – still possible with patience and a slow tempo.",
@@ -1587,8 +1600,7 @@
       "sixteenths": "sixteenths",
       "dotted-eighths": "dotted eighths",
       "triplets": "triplets"
-    },
-    "beyondShort": "plus {{list}}"
+    }
   },
   "freeHome": {
     "intro": "The learning path is switched off – play what you like: your pieces, songs, note rain or freely.",
@@ -1606,5 +1618,13 @@
       "m": "Medium",
       "l": "Large"
     }
+  },
+  "level": {
+    "1": "Stage 1",
+    "2": "Stage 2",
+    "3": "Stage 3",
+    "4": "Advanced",
+    "5": "Demanding",
+    "ready": "Ready now"
   }
 }

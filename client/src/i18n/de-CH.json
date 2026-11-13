@@ -1363,10 +1363,17 @@
   },
   "songs": {
     "title": "Lieder",
-    "intro_one": "{{count}} Lied ist offen – spiel es, so oft du willst.",
-    "intro_other": "{{count}} Lieder sind offen – spiel sie, so oft du willst.",
+    "intro_one": "{{count}} von {{total}} Liedern ist offen – spiel es, so oft du willst.",
+    "intro_other": "{{count}} von {{total}} Liedern sind offen – spiel sie, so oft du willst.",
     "new": "Neu – noch nicht gespielt",
-    "locked": "Kommt in Kapitel {{n}}"
+    "locked": "Kommt in Kapitel {{n}}",
+    "introNone": "Die Lieder kommen mit den Lektionen – das erste in Kapitel {{n}}.",
+    "tabs": {
+      "path": "Lernpfad",
+      "own": "Meine Stücke",
+      "collection": "Sammlung"
+    },
+    "collectionIntro": "Volkslieder und kleine Klassikstücke, für Klavio vereinfacht – zum Üben, Anhören und Drucken, ohne Sterne."
   },
   "duet": {
     "label": "Klavi spielt mit",
@@ -1464,7 +1471,7 @@
   },
   "own": {
     "title": "Eigene Stücke",
-    "intro": "Bring deine eigenen Noten mit: eine MusicXML- oder MIDI-Datei aus MuseScore, Finale, Sibelius oder Dorico. Klavio liest sie auf deinem Gerät; gespeichert werden nur die Noten, für alle Profile deines Kontos.",
+    "intro": "Deine Notensammlung: Importiere eine Datei oder hol ein Stück aus der Bibliothek. Gespeichert werden nur die Noten, für alle Profile deines Kontos.",
     "import": "Stück importieren",
     "how": "Dateien .musicxml, .xml, .mxl oder MIDI (.mid), bis 1000 Takte. Klavio nimmt die Hauptstimme (bei zwei Systemen beide Hände) – von Ganzen bis zu Vierundsechzigsteln, mit Punkten und Triolen.",
     "full": "Höchstens {{count}} eigene Stücke – lösche zuerst eines.",
@@ -1512,15 +1519,23 @@
     "libraryAddLabel": "«{{title}}» übernehmen",
     "librarySource": "Aus der Sammlung von {{name}} – als gemeinfrei veröffentlicht. Klavio liest das Stück wie eine eigene Datei; du siehst es, bevor du es speicherst.",
     "libraryCannotRead": "«{{title}}» kann Klavio nicht lesen: {{reason}}",
-    "libraryUnreachable": "Die Bibliothek ist gerade nicht erreichbar – versuch es später nochmals."
+    "libraryUnreachable": "Die Bibliothek ist gerade nicht erreichbar – versuch es später nochmals.",
+    "bars_one": "{{count}} Takt",
+    "bars_other": "{{count}} Takte",
+    "oneHand": "Eine Hand",
+    "bothHands": "Beide Hände",
+    "librarySortLevel": "Leicht zuerst",
+    "librarySortTitle": "A–Z",
+    "librarySort": "Sortieren",
+    "libraryLooking": "Klavio schätzt die Schwierigkeit noch ein …"
   },
   "folk": {
     "title": "Schweizer Volkslieder",
-    "intro": "Alte Lieder aus der Schweiz, abgeschrieben aus einer Sammlung von 1826 und für Klavio vereinfacht: die Melodie zum Üben mit Anhören, und zum Drucken – ohne Sterne."
+    "intro": "Alte Lieder aus der Schweiz, abgeschrieben aus einer Sammlung von 1826."
   },
   "classics": {
     "title": "Klassik zum Üben",
-    "intro": "Kleine Stücke grosser Komponisten, für Klavio vereinfacht: zum Üben mit Anhören und einer Hand allein, und zum Drucken – ohne Sterne.",
+    "intro": "Kleine Stücke grosser Komponisten – auch mit einer Hand allein zu üben.",
     "credit": "Noten: {{by}}, {{license}}",
     "license": "Lizenz"
   },
@@ -1550,9 +1565,7 @@
   },
   "readiness": {
     "ready": "Passt zu deinem Stand: Alles dafür kommt im Lernpfad bis «{{lesson}}» vor – und das hast du geschafft.",
-    "readyShort": "Passt zu deinem Stand",
     "after": "Empfohlen nach der Lektion «{{lesson}}» (Kapitel {{chapter}}).",
-    "afterShort": "Empfohlen nach «{{lesson}}»",
     "missing": "Dafür lernst du noch: {{list}}.",
     "go": "Weiter mit «{{lesson}}»",
     "beyondText": "Geht über den Lernpfad hinaus: {{list}} – mit Geduld und langsamem Tempo trotzdem machbar.",
@@ -1587,8 +1600,7 @@
       "sixteenths": "Sechzehntel",
       "dotted-eighths": "punktierte Achtel",
       "triplets": "Triolen"
-    },
-    "beyondShort": "dazu {{list}}"
+    }
   },
   "freeHome": {
     "intro": "Der Lernpfad ist ausgeschaltet – spiel, was du willst: deine Stücke, Lieder, Notenregen oder frei.",
@@ -1606,5 +1618,13 @@
       "m": "Mittel",
       "l": "Gross"
     }
+  },
+  "level": {
+    "1": "Stufe 1",
+    "2": "Stufe 2",
+    "3": "Stufe 3",
+    "4": "Fortgeschritten",
+    "5": "Anspruchsvoll",
+    "ready": "Passt jetzt"
   }
 }

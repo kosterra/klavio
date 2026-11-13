@@ -67,14 +67,14 @@ export function LoginCard({ onMascotTap }: { onMascotTap?: () => void }) {
               <Button
                 fullWidth
                 className={landing.wrapButton}
-                size="xl"
+                size="lg"
                 leftSection={<IconFingerprint />}
                 onClick={onPasskeyLogin}
                 loading={busy}
               >
                 {t('welcome.passkeyLogin')}
               </Button>
-              <Text ta="center" size="sm" c="dimmed">
+              <Text ta="center" size="sm" c="dimmed" mt={-4}>
                 {t('welcome.passkeyHint')}
               </Text>
             </>
@@ -82,7 +82,7 @@ export function LoginCard({ onMascotTap }: { onMascotTap?: () => void }) {
           <Button
             fullWidth
             className={landing.wrapButton}
-            size={passkeysSupported ? 'lg' : 'xl'}
+            size="lg"
             variant={passkeysSupported ? 'light' : 'filled'}
             leftSection={<IconMail />}
             component={Link}

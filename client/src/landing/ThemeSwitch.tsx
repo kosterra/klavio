@@ -14,7 +14,7 @@ export function ThemeSwitch() {
     <Menu position="bottom-end" shadow="md" withinPortal>
       <Menu.Target>
         <ActionIcon
-          size="xl"
+          size={44}
           variant="white"
           className={classes.themeSwitch}
           aria-label={`${t('nav.colorScheme')}: ${t(`nav.scheme.${colorScheme}`)}`}

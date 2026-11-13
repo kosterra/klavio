@@ -32,23 +32,6 @@
   color: var(--mantine-color-teal-3);
 }
 
-.readyLine {
-  color: var(--mantine-color-indigo-8);
-  font-weight: 600;
-}
-
-.readyLine[data-ready] {
-  color: var(--mantine-color-teal-9);
-}
-
-:global([data-mantine-color-scheme='dark']) .readyLine {
-  color: var(--mantine-color-indigo-2);
-}
-
-:global([data-mantine-color-scheme='dark']) .readyLine[data-ready] {
-  color: var(--mantine-color-teal-2);
-}
-
 /* «Noten ansehen»: the lines of music on a calm surface */
 .notes {
   background: var(--klavio-surface);

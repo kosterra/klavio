@@ -1,24 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ActionIcon,
   Alert,
-  Button,
   Group,
   Loader,
   Modal,
+  SegmentedControl,
   Stack,
   Text,
   TextInput,
 } from '@mantine/core';
-import { IconDownload, IconEar, IconPlayerStop, IconSearch } from '@tabler/icons-react';
 import { useDebouncedValue } from '@mantine/hooks';
+import { IconPlus, IconSearch } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { endpoints } from '../api/endpoints';
+import type { ImportedPiece, PieceLevel } from '@klavio/shared';
+import { endpoints, type LibraryResult } from '../api/endpoints';
 import { previewParts, startPreview, stopPreview, usePreview } from '../audio/preview';
+import { ListenIcon } from '../components/PreviewButton';
 import { PieceReadError, readPieceFile } from '../import/readPiece';
-import type { ImportedPiece } from '@klavio/shared';
-
-type Result = { id: string; title: string };
+import { useProgress } from '../lesson/useProgress';
+import { LevelBadge } from './LevelBadge';
+import { PieceRow } from './PieceRow';
 
 /** Files fetched for a «Hörprobe» – taking the piece over then needs no second download. */
 const fetched = new Map<string, { file: File; piece: ImportedPiece | PieceReadError }>();
@@ -49,7 +51,7 @@ function LibraryPreview({
   result,
   onProblem,
 }: {
-  result: Result;
+  result: LibraryResult;
   onProblem: (text: string | null) => void;
 }) {
   const { t } = useTranslation();
@@ -78,24 +80,24 @@ function LibraryPreview({
     }
   };
   return (
-    <ActionIcon
-      variant={playing ? 'filled' : 'default'}
-      size="xl"
+    <ListenIcon
+      playing={playing}
       loading={loading}
-      aria-label={t(playing ? 'preview.stop' : 'preview.listen', { title: result.title })}
-      aria-pressed={playing}
+      title={result.title}
       onClick={() => void listen()}
-      data-testid="library-listen"
-    >
-      {playing ? <IconPlayerStop size={22} /> : <IconEar size={22} />}
-    </ActionIcon>
+      testId="library-listen"
+    />
   );
 }
+
+/** pieces whose level is not known yet go last */
+const levelOf = (r: LibraryResult): PieceLevel | 6 => r.level ?? 6;
 
 /**
  * «Aus der Bibliothek»: search the sheet music library the admin switched on
  * and take a piece over – it is read like an uploaded file and shown before
- * it is saved.
+ * it is saved. Every piece shows its level (estimated on the server), the
+ * easiest first.
  */
 export function LibraryPicker({
   opened,
@@ -110,10 +112,15 @@ export function LibraryPicker({
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [debounced] = useDebouncedValue(query, 300);
-  const [results, setResults] = useState<Result[] | null>(null);
+  const [results, setResults] = useState<LibraryResult[] | null>(null);
+  const [pending, setPending] = useState(false);
   const [source, setSource] = useState<string | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
   const [taking, setTaking] = useState<string | null>(null);
+  const [sort, setSort] = useState<'level' | 'title'>('level');
+  const [round, setRound] = useState(0);
+  const { played, progress } = useProgress();
+  const done = progress ? played : null;
 
   useEffect(() => {
     if (!opened) return;
@@ -122,6 +129,7 @@ export function LibraryPicker({
       (r) => {
         if (cancelled) return;
         setResults(r.results);
+        setPending(r.pending);
         setSource(r.source.name);
         setProblem(null);
       },
@@ -132,9 +140,26 @@ export function LibraryPicker({
     return () => {
       cancelled = true;
     };
-  }, [opened, debounced, t]);
+  }, [opened, debounced, t, round]);
 
-  const take = async (r: Result) => {
+  // the server is still estimating levels: ask again in a moment (a few times)
+  useEffect(() => {
+    if (!opened || !pending || round >= 20) return;
+    const timer = setTimeout(() => setRound((n) => n + 1), 3000);
+    return () => clearTimeout(timer);
+  }, [opened, pending, round]);
+
+  const sorted = useMemo(
+    () =>
+      [...(results ?? [])].sort((a, b) =>
+        sort === 'level'
+          ? levelOf(a) - levelOf(b) || a.title.localeCompare(b.title)
+          : a.title.localeCompare(b.title),
+      ),
+    [results, sort],
+  );
+
+  const take = async (r: LibraryResult) => {
     setTaking(r.id);
     try {
       stopPreview();
@@ -165,10 +190,24 @@ export function LibraryPicker({
           data-autofocus
           data-testid="library-search"
         />
-        {source && (
-          <Text size="xs" c="dimmed">
-            {t('own.librarySource', { name: source })}
-          </Text>
+        <SegmentedControl
+          fullWidth
+          size="sm"
+          value={sort}
+          onChange={(v) => setSort(v as 'level' | 'title')}
+          aria-label={t('own.librarySort')}
+          data={[
+            { value: 'level', label: t('own.librarySortLevel') },
+            { value: 'title', label: t('own.librarySortTitle') },
+          ]}
+        />
+        {pending && (
+          <Group gap={6} wrap="nowrap">
+            <Loader size="xs" aria-hidden />
+            <Text size="xs" c="dimmed">
+              {t('own.libraryLooking')}
+            </Text>
+          </Group>
         )}
         {problem && (
           <Alert color="red" variant="light" role="status">
@@ -177,29 +216,54 @@ export function LibraryPicker({
         )}
         {results === null && !problem && <Loader size="sm" aria-label={t('common.loading')} />}
         {results?.length === 0 && <Text size="sm">{t('own.libraryNone')}</Text>}
-        <Stack gap={4} role="list">
-          {results?.map((r) => (
-            <Group key={r.id} justify="space-between" wrap="nowrap" gap="sm" role="listitem">
-              <Text size="sm" fw={600} style={{ minWidth: 0 }} truncate>
-                {r.title}
-              </Text>
-              <Group gap="xs" wrap="nowrap">
-                <LibraryPreview result={r} onProblem={setProblem} />
-                <Button
-                  size="sm"
-                  variant="default"
-                  leftSection={<IconDownload size={16} />}
-                  loading={taking === r.id}
-                  disabled={!!taking}
-                  onClick={() => void take(r)}
-                  aria-label={t('own.libraryAddLabel', { title: r.title })}
-                >
-                  {t('own.libraryAdd')}
-                </Button>
-              </Group>
-            </Group>
+        <Stack gap="xs" role="list">
+          {sorted.map((r) => (
+            <div key={r.id} role="listitem">
+              <PieceRow
+                title={r.title}
+                meta={
+                  r.bars
+                    ? [
+                        r.composer,
+                        t(r.hands === 2 ? 'own.bothHands' : 'own.oneHand'),
+                        t('own.bars', { count: r.bars }),
+                      ]
+                        .filter(Boolean)
+                        .join(' · ')
+                    : undefined
+                }
+                badge={
+                  r.level ? (
+                    <LevelBadge
+                      level={r.level}
+                      ready={r.level <= 3 && !!r.lessonId && !!done?.has(r.lessonId)}
+                    />
+                  ) : undefined
+                }
+                listen={<LibraryPreview result={r} onProblem={setProblem} />}
+                trailing={
+                  <ActionIcon
+                    variant="light"
+                    radius="xl"
+                    size={48}
+                    loading={taking === r.id}
+                    disabled={!!taking && taking !== r.id}
+                    onClick={() => void take(r)}
+                    aria-label={t('own.libraryAddLabel', { title: r.title })}
+                    data-testid="library-add"
+                  >
+                    <IconPlus size={24} />
+                  </ActionIcon>
+                }
+              />
+            </div>
           ))}
         </Stack>
+        {source && (
+          <Text size="xs" c="dimmed">
+            {t('own.librarySource', { name: source })}
+          </Text>
+        )}
       </Stack>
     </Modal>
   );

@@ -1,31 +1,15 @@
 import { useEffect, useState } from 'react';
-import {
-  ActionIcon,
-  Alert,
-  Button,
-  Card,
-  FileButton,
-  Group,
-  Menu,
-  Stack,
-  Text,
-  TextInput,
-  ThemeIcon,
-  Title,
-} from '@mantine/core';
+import { Alert, Button, FileButton, Group, Stack, Text, TextInput, Title } from '@mantine/core';
 import {
   IconBooks,
-  IconDots,
   IconFileMusic,
   IconNotes,
   IconPencil,
-  IconPlayerPlay,
   IconPrinter,
   IconSearch,
   IconTrash,
   IconUpload,
 } from '@tabler/icons-react';
-import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { MAX_OWN_PIECES, UNTITLED, type ImportedPiece, type OwnPieceDto } from '@klavio/shared';
 import { endpoints } from '../api/endpoints';
@@ -37,6 +21,9 @@ import { PreviewButton } from '../components/PreviewButton';
 import { useProgress } from '../lesson/useProgress';
 import { ReadinessNote } from './ReadinessNote';
 import { RenamePiece } from './RenamePiece';
+import { LevelBadge } from './LevelBadge';
+import { PieceRow } from './PieceRow';
+import { levelFor } from './level';
 import { LibraryPicker } from './LibraryPicker';
 import { useSession } from '../auth/session';
 
@@ -49,7 +36,7 @@ const SEARCH_FROM = 6;
  * stars) and to print. The file is read on the device; only the notes are
  * stored with the account.
  */
-export function OwnPieces() {
+export function OwnPieces({ heading = true }: { heading?: boolean } = {}) {
   const { t } = useTranslation();
   const errorText = useErrorText();
   const [pieces, setPieces] = useState<OwnPieceDto[] | null>(null);
@@ -124,10 +111,16 @@ export function OwnPieces() {
   );
 
   return (
-    <section aria-labelledby="own-title" data-testid="own-pieces">
-      <Title order={2} size="h4" mb={4} id="own-title">
-        {t('own.title')}
-      </Title>
+    <section
+      aria-labelledby={heading ? 'own-title' : undefined}
+      aria-label={heading ? undefined : t('own.title')}
+      data-testid="own-pieces"
+    >
+      {heading && (
+        <Title order={2} size="h4" mb={4} id="own-title">
+          {t('own.title')}
+        </Title>
+      )}
       <Text size="sm" c="dimmed" mb="xs">
         {t('own.intro')}
       </Text>
@@ -142,80 +135,51 @@ export function OwnPieces() {
             data-testid="own-search"
           />
         )}
-        {shown.map((p) => (
-          <Group key={p.id} gap="xs" wrap="nowrap" align="stretch">
-            <Card
-              component={Link}
+        {shown.map((p) => {
+          const { level, ready } = levelFor(p.exercise, done);
+          return (
+            <PieceRow
+              key={p.id}
               to={`/own/${p.id}`}
-              withBorder
-              radius="lg"
-              padding="sm"
-              style={{ flex: 1, minWidth: 0 }}
-              data-testid={`own-${p.id}`}
-            >
-              <Group wrap="nowrap" gap="sm">
-                <ThemeIcon size={44} radius="xl" color="grape.7" aria-hidden>
-                  <IconFileMusic size={24} />
-                </ThemeIcon>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <Text fw={800} lh={1.25} truncate>
-                    {p.title}
-                  </Text>
-                  <Text size="sm" c="dimmed" truncate>
-                    {p.composer ??
-                      t(p.exercise.type === 'piece' ? 'own.kindPiece' : 'own.kindSong')}
-                  </Text>
-                  <ReadinessNote exercise={p.exercise} completed={done} compact />
-                </div>
-                <IconPlayerPlay size={22} aria-hidden />
-              </Group>
-            </Card>
-            <PreviewButton exercise={p.exercise} title={p.title} />
-            <ActionIcon
-              component={Link}
-              to={`/own/${p.id}/notes`}
-              variant="default"
-              radius="lg"
-              size="auto"
-              w={52}
-              aria-label={t('notes.openLabel', { title: p.title })}
-            >
-              <IconNotes size={22} />
-            </ActionIcon>
-            <Menu position="bottom-end" withinPortal>
-              <Menu.Target>
-                <ActionIcon
-                  variant="default"
-                  radius="lg"
-                  size="auto"
-                  w={52}
-                  aria-label={t('own.more', { title: p.title })}
-                >
-                  <IconDots size={22} />
-                </ActionIcon>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Item
-                  component={Link}
-                  to={`/own/${p.id}/print`}
-                  leftSection={<IconPrinter size={18} />}
-                >
-                  {t('sheet.printSong', { title: p.title })}
-                </Menu.Item>
-                <Menu.Item leftSection={<IconPencil size={18} />} onClick={() => setRenaming(p)}>
-                  {t('own.rename', { title: p.title })}
-                </Menu.Item>
-                <Menu.Item
-                  color="red"
-                  leftSection={<IconTrash size={18} />}
-                  onClick={() => setRemoving(p)}
-                >
-                  {t('own.remove', { title: p.title })}
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          </Group>
-        ))}
+              testId={`own-${p.id}`}
+              icon={<IconFileMusic size={24} />}
+              color="grape.7"
+              title={p.title}
+              meta={[
+                p.composer,
+                t(p.exercise.type === 'piece' ? 'own.bothHands' : 'own.oneHand'),
+                t('own.bars', { count: p.exercise.bars.length }),
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+              badge={<LevelBadge level={level} ready={ready} />}
+              listen={<PreviewButton exercise={p.exercise} title={p.title} />}
+              actions={[
+                {
+                  label: t('notes.openLabel', { title: p.title }),
+                  icon: <IconNotes size={18} />,
+                  to: `/own/${p.id}/notes`,
+                },
+                {
+                  label: t('sheet.printSong', { title: p.title }),
+                  icon: <IconPrinter size={18} />,
+                  to: `/own/${p.id}/print`,
+                },
+                {
+                  label: t('own.rename', { title: p.title }),
+                  icon: <IconPencil size={18} />,
+                  onClick: () => setRenaming(p),
+                },
+                {
+                  label: t('own.remove', { title: p.title }),
+                  icon: <IconTrash size={18} />,
+                  onClick: () => setRemoving(p),
+                  danger: true,
+                },
+              ]}
+            />
+          );
+        })}
         {query && shown.length === 0 && (
           <Text size="sm" c="dimmed">
             {t('own.noMatch')}

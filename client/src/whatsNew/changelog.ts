@@ -27,8 +27,20 @@ export const CHANGELOG: Release[] = [
         'Your sheet music library: «Own pieces» now holds up to 200 pieces, can be searched, and you can change title and composer. «View notes» shows a piece simply as sheet music – large for the music stand, with or without note names; also for the classics and the folk songs.',
       ),
       L(
-        'Notenbibliothek MuseTrainer: Wenn die Verwaltung sie einschaltet, holst du unter «Eigene Stücke» Klavierstücke aus der gemeinfreien MuseTrainer-Sammlung – von «Für Elise» bis zum Menuett in G. Mit der Hörprobe hörst du jedes Stück an, bevor du es übernimmst.',
-        'MuseTrainer sheet music library: when the admin switches it on, you fetch piano pieces from the public-domain MuseTrainer collection under «Own pieces» – from «Für Elise» to the Minuet in G. The «Hörprobe» lets you hear each piece before you take it over.',
+        'Notenbibliothek MuseTrainer: Wenn die Verwaltung sie einschaltet, holst du unter «Eigene Stücke» Klavierstücke aus der gemeinfreien MuseTrainer-Sammlung – von «Für Elise» bis zum Menuett in G. Mit der Hörprobe hörst du jedes Stück an, bevor du es übernimmst; jedes zeigt, wie schwer es ist, die leichten zuerst.',
+        'MuseTrainer sheet music library: when the admin switches it on, you fetch piano pieces from the public-domain MuseTrainer collection under «Own pieces» – from «Für Elise» to the Minuet in G. The «Hörprobe» lets you hear each piece before you take it over; each shows how hard it is, the easy ones first.',
+      ),
+      L(
+        'Lieder in drei Teilen: «Lernpfad», «Meine Stücke» und «Sammlung». Jedes Stück zeigt seine Schwierigkeit – Stufe 1 bis 3 des Lernpfads, «Fortgeschritten» oder «Anspruchsvoll» – und «Passt jetzt», wenn du die nötigen Lektionen gemacht hast. Anhören geht mit einem Tipp, Noten, Drucken und Umbenennen sind im Menü des Stücks.',
+        'Songs in three parts: «Learning path», «My pieces» and «Collection». Every piece shows how hard it is – stage 1 to 3 of the learning path, «Advanced» or «Demanding» – and «Ready now» once you have done the lessons it needs. Listening takes one tap; notes, printing and renaming are in the piece’s menu.',
+      ),
+      L(
+        'Korrektur: Jede Hörprobe dauert jetzt etwa 15 Sekunden – vorher waren es immer acht Takte, bei schnellen Stücken nur ein paar Sekunden.',
+        'Fix: every «Hörprobe» now lasts about 15 seconds – before it was always eight bars, only a few seconds for fast pieces.',
+      ),
+      L(
+        'Korrektur: Im Fenster «Abmelden?» ist «Angemeldet bleiben» auf dem Handy nicht mehr abgeschnitten, und auf der Anmeldeseite sind die Knöpfe gleich gross.',
+        'Fix: in the «Sign out?» window, «Stay signed in» is no longer cut off on phones, and on the login page the buttons are the same size.',
       ),
       L(
         'Lernpfad für Fortgeschrittene: Im Elternbereich unter «Lernpfad» lassen sich ganze Stufen überspringen – oder der Lernpfad ausschalten. Dann sind alle Lektionen frei wählbar, und der Start zeigt deine Stücke, Lieder und Werkzeuge statt der Karte.',

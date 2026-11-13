@@ -1,16 +1,13 @@
-import { ActionIcon, Card, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core';
-import {
-  IconFeather,
-  IconMountain,
-  IconNotes,
-  IconPlayerPlay,
-  IconPrinter,
-} from '@tabler/icons-react';
-import { Link } from 'react-router';
+import { Stack, Text, Title } from '@mantine/core';
+import { IconFeather, IconMountain, IconNotes, IconPrinter } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { CLASSICS, FOLK_SONGS, type ClassicPiece } from '@klavio/shared';
 import { useLocalized } from '../lesson/useLocalized';
 import { PreviewButton } from '../components/PreviewButton';
+import { useProgress } from '../lesson/useProgress';
+import { LevelBadge } from './LevelBadge';
+import { PieceRow } from './PieceRow';
+import { levelFor } from './level';
 
 /** «Klassik zum Üben»: pieces of the great composers, simplified, to practise and print. */
 export function Classics() {
@@ -37,6 +34,8 @@ function Shelf({
 }) {
   const { t } = useTranslation();
   const loc = useLocalized();
+  const { played, progress } = useProgress();
+  const done = progress ? played : null;
   if (!pieces.length) return null;
   return (
     <section aria-labelledby={`${name}-title`} data-testid={name}>
@@ -47,57 +46,37 @@ function Shelf({
         {t(`${name}.intro`)}
       </Text>
       <Stack gap="xs">
-        {pieces.map((c) => (
-          <Group key={c.id} gap="xs" wrap="nowrap" align="stretch">
-            <Card
-              component={Link}
+        {pieces.map((c) => {
+          const title = loc(c.title);
+          const { level, ready } = levelFor(c.exercise, done);
+          return (
+            <PieceRow
+              key={c.id}
               to={`/classics/${c.id}`}
-              withBorder
-              radius="lg"
-              padding="sm"
-              style={{ flex: 1, minWidth: 0 }}
-              data-testid={`classic-${c.id}`}
-            >
-              <Group wrap="nowrap" gap="sm">
-                <ThemeIcon size={44} radius="xl" color={color} aria-hidden>
-                  {icon}
-                </ThemeIcon>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <Text fw={800} lh={1.25}>
-                    {loc(c.title)}
-                  </Text>
-                  <Text size="sm" c="dimmed">
-                    {loc(c.composer)}
-                  </Text>
-                </div>
-                <IconPlayerPlay size={22} aria-hidden />
-              </Group>
-            </Card>
-            <PreviewButton exercise={c.exercise} title={loc(c.title)} testId={`preview-${c.id}`} />
-            <ActionIcon
-              component={Link}
-              to={`/classics/${c.id}/notes`}
-              variant="default"
-              radius="lg"
-              size="auto"
-              w={52}
-              aria-label={t('notes.openLabel', { title: loc(c.title) })}
-            >
-              <IconNotes size={22} />
-            </ActionIcon>
-            <ActionIcon
-              component={Link}
-              to={`/classics/${c.id}/print`}
-              variant="default"
-              radius="lg"
-              size="auto"
-              w={52}
-              aria-label={t('sheet.printSong', { title: loc(c.title) })}
-            >
-              <IconPrinter size={22} />
-            </ActionIcon>
-          </Group>
-        ))}
+              testId={`classic-${c.id}`}
+              icon={icon}
+              color={color}
+              title={title}
+              meta={`${loc(c.composer)} · ${t('own.bars', { count: c.exercise.bars.length })}`}
+              badge={<LevelBadge level={level} ready={ready} />}
+              listen={
+                <PreviewButton exercise={c.exercise} title={title} testId={`preview-${c.id}`} />
+              }
+              actions={[
+                {
+                  label: t('notes.openLabel', { title }),
+                  icon: <IconNotes size={18} />,
+                  to: `/classics/${c.id}/notes`,
+                },
+                {
+                  label: t('sheet.printSong', { title }),
+                  icon: <IconPrinter size={18} />,
+                  to: `/classics/${c.id}/print`,
+                },
+              ]}
+            />
+          );
+        })}
       </Stack>
     </section>
   );
