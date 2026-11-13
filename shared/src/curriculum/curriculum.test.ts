@@ -43,7 +43,7 @@ describe('curriculum data', () => {
           e.type === 'play-along'
             ? e.sequences.flat()
             : e.type === 'song' || e.type === 'song-timed'
-              ? e.bars.flat().map((n) => n.midi)
+              ? e.bars.flat().flatMap((n) => (n.rest ? [] : [n.midi]))
               : e.type === 'rhythm'
                 ? [e.midi]
                 : e.type === 'piece'

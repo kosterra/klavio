@@ -64,6 +64,26 @@ const REST_VALUES: [number, RhythmValue][] = [
   [1, 'qr'],
 ];
 
+/** Rests in a melody: whole to eighth (a dotted rest becomes two). */
+const SONG_REST_VALUES: [number, NoteValue][] = [
+  [4, 'w'],
+  [2, 'h'],
+  [1, 'q'],
+  [0.5, '8'],
+];
+
+function splitSongRests(beats: number, bar: number): NoteValue[] {
+  const out: NoteValue[] = [];
+  let left = Math.round(beats * 1000) / 1000;
+  while (left > 0.001) {
+    const fit = SONG_REST_VALUES.find(([b]) => b <= left + 0.001);
+    if (!fit) throw new MusicXmlImportError('DURATION', bar);
+    out.push(fit[1]);
+    left = Math.round((left - fit[0]) * 1000) / 1000;
+  }
+  return out;
+}
+
 interface RawNote {
   bar: number;
   staff: number;
@@ -226,9 +246,7 @@ export function importMusicXml(source: string): ImportedPiece {
     ),
   };
   const finalTempo = tempo && tempo >= 30 && tempo <= 220 ? Math.round(tempo) : 90;
-  const melodyHasRests = rh.some((n) => n.midi === null);
-
-  if (lh.some((n) => n.midi !== null) || melodyHasRests) {
+  if (lh.some((n) => n.midi !== null)) {
     // a piece: right hand over left hand, rests allowed
     const toHand = (src: RawNote[]) =>
       Array.from({ length: bars }, (_, b) =>
@@ -261,11 +279,17 @@ export function importMusicXml(source: string): ImportedPiece {
     };
   }
 
-  // a melody: one staff, no rests
+  // a melody: one staff, with its rests
   const songBars: SongNote[][] = Array.from({ length: bars }, (_, b) =>
     rh
       .filter((n) => n.bar === b)
       .flatMap((n) => {
+        if (n.midi === null)
+          return splitSongRests(n.beats, b + 1).map((value): SongNote => ({
+            midi: -1,
+            value,
+            rest: true,
+          }));
         const parts = splitNotes(n.beats, b + 1);
         return parts.map((value, i): SongNote => ({
           midi: n.midi!,

@@ -8,6 +8,8 @@ import {
   barBeats,
   beatsOf,
   isHeldNote,
+  isStruck,
+  staffDuration,
   type NoteEvent,
   type TimedSongExercise as Spec,
   songFingers,
@@ -76,9 +78,9 @@ export function TimedSongExercise({
   // an upbeat starts before the first «one»: the count-in bar ends with it
   const pickup = exercise.pickup ?? 0;
   const totalBeats = notes.reduce((n, x) => n + beatsOf(x.value), 0) - pickup;
-  // the notes that are played (a tied note is only held)
+  // the notes that are played (a tied note is only held, a rest is silent)
   const playedIdx = useMemo(
-    () => notes.flatMap((n, i) => (isHeldNote(notes, i) ? [] : [i])),
+    () => notes.flatMap((_, i) => (isStruck(notes, i) ? [i] : [])),
     [notes],
   );
 
@@ -194,7 +196,7 @@ export function TimedSongExercise({
         const verdict = k >= 0 ? score?.perNote[k] : undefined;
         return {
           midi: n.midi,
-          duration: n.value,
+          duration: staffDuration(n),
           // a held note keeps its finger – no number again
           finger: isHeldNote(notes, i) ? undefined : fingers[i],
           tie: n.tie,
@@ -210,7 +212,7 @@ export function TimedSongExercise({
     );
   const countBeat =
     now !== null && now < 0 ? Math.floor(now - pickup + beatsPerBar) % beatsPerBar : null;
-  const hint = kids && phase === 'play' ? [notes[current]!.midi] : [];
+  const hint = kids && phase === 'play' && !notes[current]!.rest ? [notes[current]!.midi] : [];
 
   return (
     <Stack

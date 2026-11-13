@@ -2,7 +2,7 @@ import { noteNameToMidi } from '../music/notes.ts';
 import type { Chapter, Lesson } from './types.ts';
 import {
   fingerInPosition,
-  isHeldNote,
+  isStruck,
   piece,
   pieceSteps,
   rhythm,
@@ -1575,7 +1575,7 @@ export function lessonTargetCount(lesson: Lesson): number {
       (e.type === 'play-along'
         ? e.sequences.reduce((m, s) => m + s.length, 0)
         : e.type === 'song' || e.type === 'song-timed'
-          ? e.bars.flat().filter((n, i, all) => !isHeldNote(all, i)).length
+          ? e.bars.flat().filter((_, i, all) => isStruck(all, i)).length
           : e.type === 'rhythm'
             ? e.patterns.reduce((m, p) => m + rhythmOnsets(p).length, 0)
             : e.type === 'piece'

@@ -51,6 +51,29 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
   });
   await expect(page.getByTestId('own-problem')).toContainText('keine MusicXML-Datei');
 
+  // a melody with a rest stays a song: the rest is simply waited out
+  const n = (step: string, d: number) =>
+    `<note><pitch><step>${step}</step><octave>4</octave></pitch><duration>${d}</duration></note>`;
+  const pause = `<note><rest/><duration>1</duration></note>`;
+  await own.locator('input[type=file]').setInputFiles({
+    name: 'mit-pause.musicxml',
+    mimeType: 'application/vnd.recordare.musicxml+xml',
+    buffer: Buffer.from(
+      `<?xml version="1.0" encoding="UTF-8"?><score-partwise version="4.0"><work><work-title>Mit Pause</work-title></work><part-list><score-part id="P1"><part-name>Klavier</part-name></score-part></part-list><part id="P1"><measure number="1"><attributes><divisions>1</divisions><time><beats>4</beats><beat-type>4</beat-type></time><clef><sign>G</sign><line>2</line></clef></attributes>${n('C', 1)}${pause}${n('E', 2)}</measure><measure number="2">${n('G', 4)}</measure></part></score-partwise>`,
+    ),
+  });
+  await expect(page.getByTestId('own-draft')).toContainText('Lied mit einer Notenzeile');
+  await page.getByTestId('own-save').click();
+  await own.getByRole('link', { name: /^Mit Pause/ }).click();
+  await page.getByTestId('own-start').click();
+  for (const k of ['C4', 'E4', 'G4'])
+    await keys.getByRole('button', { name: k, exact: true }).click();
+  await expect(page.getByTestId('own-done')).toBeVisible();
+  await page.goto('/songs');
+  await own.getByRole('button', { name: '«Mit Pause» löschen' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Löschen' }).click();
+  await expect(own.getByRole('link', { name: /Mit Pause/ })).toHaveCount(0);
+
   // gone again
   await own.getByRole('button', { name: '«Mein erstes Lied» löschen' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Löschen' }).click();

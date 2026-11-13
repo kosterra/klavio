@@ -71,7 +71,7 @@ export function fingerInPosition(midi: number, position: HandPosition): number |
 
 /**
  * Compact melody notation: notes as "pitch/value", bars separated by "|",
- * an optional finger after a colon ("E4/q:3").
+ * an optional finger after a colon ("E4/q:3"), rests as "r/<value>" (w, h, q, 8).
  *   "C4/q D4/q E4/q F4/q | G4/h G4/h"
  * German "H" is accepted. Every bar must be full (checked against `time`).
  */
@@ -82,10 +82,16 @@ export function parseSong(melody: string, time: string, pickup = 0): SongNote[][
     .map((bar) => bar.trim())
     .filter(Boolean)
     .map((bar, i) => {
-      const notes = bar.split(/\s+/).map((token) => {
+      const notes = bar.split(/\s+/).map((token): SongNote => {
         const tie = token.endsWith('~');
         const [note, fingerText] = (tie ? token.slice(0, -1) : token).split(':');
         const [pitch, value = 'q'] = note!.split('/');
+        if (pitch === 'r') {
+          if (!SONG_RESTS.includes(value) || tie || fingerText !== undefined) {
+            throw new Error(`Unknown rest "${token}" in bar ${i + 1}`);
+          }
+          return { midi: -1, value: value as NoteValue, rest: true };
+        }
         if (!(value in VALUES) || value.endsWith('r')) {
           throw new Error(`Unknown note value "${value}" in bar ${i + 1}`);
         }
@@ -125,9 +131,22 @@ export function parseSong(melody: string, time: string, pickup = 0): SongNote[][
   return bars;
 }
 
+/** The rests a song can have (dotted rests are written as two). */
+const SONG_RESTS = ['w', 'h', 'q', '8'];
+
 /** Whether the i-th note of a song is only held (the tied continuation of the one before). */
 export function isHeldNote(notes: SongNote[], i: number): boolean {
   return i > 0 && !!notes[i - 1]!.tie;
+}
+
+/** Whether the i-th note of a song is struck: neither a rest nor the held part of a tie. */
+export function isStruck(notes: SongNote[], i: number): boolean {
+  return !notes[i]!.rest && !isHeldNote(notes, i);
+}
+
+/** The duration as the staff draws it: a rest gets its «r». */
+export function staffDuration(n: SongNote): string {
+  return n.rest ? `${n.value}r` : n.value;
 }
 
 export function song(

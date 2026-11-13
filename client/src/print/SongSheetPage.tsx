@@ -12,6 +12,7 @@ import {
   midiToPitchName,
   pieceFingers,
   songFingers,
+  staffDuration,
   type Exercise,
   type PieceExercise,
   type SongExercise,
@@ -162,8 +163,8 @@ export function SheetView({
         previousTied = !!n.tie;
         return {
           midi: n.midi,
-          duration: n.value,
-          label: name(n.midi),
+          duration: staffDuration(n),
+          label: n.rest ? undefined : name(n.midi),
           finger: fingers && !held ? finger : undefined,
           tie: n.tie,
         };

@@ -23,12 +23,20 @@ export const songExerciseSchema = z.object({
     .array(
       z
         .array(
-          z.object({
-            midi,
-            value: noteValue,
-            finger: z.number().int().min(1).max(5).optional(),
-            tie: z.boolean().optional(),
-          }),
+          z.union([
+            z.object({
+              midi,
+              value: noteValue,
+              finger: z.number().int().min(1).max(5).optional(),
+              tie: z.boolean().optional(),
+            }),
+            // a rest: no key, no finger, no tie
+            z.object({
+              midi: z.literal(-1),
+              value: z.enum(['w', 'h', 'q', '8']),
+              rest: z.literal(true),
+            }),
+          ]),
         )
         .min(1)
         .max(32),

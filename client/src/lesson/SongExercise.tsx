@@ -8,6 +8,8 @@ import {
   beatsOf,
   blockChords,
   isHeldNote,
+  isStruck,
+  staffDuration,
   midiToPitchName,
   type SongExercise as Spec,
   songFingers,
@@ -61,14 +63,22 @@ export function SongExercise({
     });
     const map = new Map<number, number[]>();
     for (const c of blockChords(exercise)) {
-      const i = notes.findIndex((n, k) => n.bar === c.bar && offsets[k]! >= c.at - 1e-9);
+      // the first note struck at or after the chord's place (not a rest)
+      const i = notes.findIndex(
+        (n, k) => n.bar === c.bar && offsets[k]! >= c.at - 1e-9 && isStruck(notes, k),
+      );
       if (i >= 0) map.set(i, c.midis);
     }
     return map;
   }, [exercise, notes]);
   const chord = useRef<Accompaniment | null>(null);
   const backing = useRef<Accompaniment | null>(null);
-  const [pos, setPos] = useState(0);
+  // a song may begin with a rest: start at the first note that is struck
+  const [pos, setPos] = useState(() => {
+    let i = 0;
+    while (i < notes.length && !isStruck(notes, i)) i++;
+    return i;
+  });
   const [wrong, setWrong] = useState<number | null>(null);
   const [missedHere, setMissedHere] = useState(false);
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
@@ -98,9 +108,9 @@ export function SongExercise({
       onCorrect();
       setWrong(null);
       setMissedHere(false);
-      // a tied note is only held: go on to the next one that is played
+      // a tied note is only held, a rest not played: go on to the next one that is struck
       let next = pos + 1;
-      while (next < notes.length && isHeldNote(notes, next)) next++;
+      while (next < notes.length && !isStruck(notes, next)) next++;
       setPos(next);
       if (next >= notes.length) timer.current = setTimeout(onDone, FEEDBACK_MS * 1.5);
     } else {
@@ -150,8 +160,8 @@ export function SongExercise({
         const i = index++;
         return {
           midi: n.midi,
-          duration: n.value,
-          label: exercise.showNames ? midiToPitchName(n.midi, lang) : undefined,
+          duration: staffDuration(n),
+          label: exercise.showNames && !n.rest ? midiToPitchName(n.midi, lang) : undefined,
           // a held note keeps its finger – no number again
           finger: isHeldNote(notes, i) ? undefined : fingers[i],
           tie: n.tie,

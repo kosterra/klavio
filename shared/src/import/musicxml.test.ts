@@ -52,6 +52,28 @@ describe('MusicXML import', () => {
     expect(r.keyboard.from).toBe(60);
   });
 
+  it('a melody with rests stays a song and keeps its rests (a dotted rest becomes two)', () => {
+    const r = importMusicXml(
+      score([
+        note('C', 4, 2) + rest(2) + note('E', 4, 4),
+        rest(3) + note('G', 4, 1) + note('G', 4, 4),
+      ]),
+    );
+    expect(r.kind).toBe('song');
+    if (r.kind !== 'song') return;
+    expect(r.exercise.bars[0]!.map((n) => [n.midi, n.value, !!n.rest])).toEqual([
+      [60, 'q', false],
+      [-1, 'q', true],
+      [64, 'h', false],
+    ]);
+    expect(r.exercise.bars[1]!.map((n) => (n.rest ? `r/${n.value}` : n.value))).toEqual([
+      'r/q',
+      'r/8',
+      '8',
+      'h',
+    ]);
+  });
+
   it('two staves become a piece: top note of a chord right, bottom left, rests kept', () => {
     const r = importMusicXml(
       score(

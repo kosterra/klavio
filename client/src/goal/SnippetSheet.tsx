@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Modal, Stack, Text } from '@mantine/core';
 import { IconPlayerPlay, IconPlayerStop } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { isHeldNote, type CatalogSong, type DreamSnippet } from '@klavio/shared';
+import { isHeldNote, staffDuration, type CatalogSong, type DreamSnippet } from '@klavio/shared';
 import { melodyNotes, startPreview, stopPreview, usePreview } from '../audio/preview';
 import { Staff, type StaffNote } from '../notation/Staff';
 
@@ -48,7 +48,7 @@ export function SnippetSheet({
           const i = index++;
           return {
             midi: n.midi,
-            duration: n.value,
+            duration: staffDuration(n),
             tie: n.tie,
             state: playing && i === current ? 'current' : undefined,
           };

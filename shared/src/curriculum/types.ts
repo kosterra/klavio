@@ -58,8 +58,11 @@ export interface NoteRainExercise {
 export type NoteValue = 'w' | 'h' | 'hd' | 'q' | 'qd' | '8';
 
 export interface SongNote {
+  /** the key; -1 for a rest */
   midi: number;
   value: NoteValue;
+  /** a rest: nothing is played for this long (midi is -1) */
+  rest?: boolean;
   /** finger (1 = thumb … 5 = little finger), shown above the note */
   finger?: number;
   /** tied to the next note (same pitch): that one is held, not played again */

@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Pausen in Liedern: Lieder dürfen jetzt Pausen haben – Klavio zeichnet sie, überspringt sie beim Üben und lässt sie «Im Takt» einfach verstreichen. Eigene Melodien mit Pausen bleiben dadurch ein Lied, statt zu einem Stück für zwei Hände mit leerer linker Hand zu werden.',
+        'Rests in songs: songs can now have rests – Klavio draws them, skips them while practising and lets them pass «In time». Your own melodies with rests stay a song instead of becoming a two-hand piece with an empty left hand.',
+      ),
+      L(
         'Lernpfad: «Im Takt» kommt jetzt vor den ersten Liedern – mit Achteln und der punktierten Viertel, damit «Freude» und «Bruder Jakob» keine Überraschung mehr sind. Die linke Hand probiert schon im ersten Kapitel mit, und jedes neue Thema bekommt gleich ein Lied: «London Bridge» im Zweivierteltakt, «Row, Row, Row Your Boat» im Sechsachteltakt, «Bruder Jakob in Moll». Bei den Akkorden kommen zuerst die Akkorde selbst, dann gebrochen, dann der Wechselbass – und das Abschlusskonzert ganz am Schluss.',
         'Learning path: «In time» now comes before the first songs – with eighths and the dotted quarter, so «Ode to Joy» and «Brother John» are no surprise any more. The left hand has a go in the very first chapter, and every new topic gets a song right away: «London Bridge» in two-four, «Row, Row, Row Your Boat» in six-eight, «Brother John in minor». With chords, the chords themselves come first, then broken, then the alternating bass – and the final concert at the very end.',
       ),

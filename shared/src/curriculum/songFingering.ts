@@ -11,12 +11,16 @@ import { fingeringMarks } from '../music/fingering.ts';
 export function songFingers(e: SongExercise | TimedSongExercise): (number | undefined)[] {
   const notes = e.bars.flat();
   if (notes.some((n) => n.finger)) return notes.map((n) => n.finger);
+  // rests are left out of the plan and get no number
+  const sounding = notes.filter((n) => !n.rest);
   const marks = fingeringMarks(
-    notes.map((n) => ({ midi: n.midi, beats: beatsOf(n.value) })),
+    sounding.map((n) => ({ midi: n.midi, beats: beatsOf(n.value) })),
     e.clef === 'bass' ? 'lh' : 'rh',
   );
   const moves = marks.filter((m) => m !== undefined).length;
-  return moves > 1 ? marks : notes.map(() => undefined);
+  if (moves <= 1) return notes.map(() => undefined);
+  let k = 0;
+  return notes.map((n) => (n.rest ? undefined : marks[k++]));
 }
 
 /**

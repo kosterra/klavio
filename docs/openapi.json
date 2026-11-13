@@ -1414,36 +1414,71 @@
                               "maxItems": 32,
                               "type": "array",
                               "items": {
-                                "type": "object",
-                                "properties": {
-                                  "midi": {
-                                    "type": "integer",
-                                    "minimum": 21,
-                                    "maximum": 108
-                                  },
-                                  "value": {
-                                    "type": "string",
-                                    "enum": [
-                                      "8",
-                                      "w",
-                                      "h",
-                                      "hd",
-                                      "q",
-                                      "qd"
+                                "anyOf": [
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "midi": {
+                                        "type": "integer",
+                                        "minimum": 21,
+                                        "maximum": 108
+                                      },
+                                      "value": {
+                                        "type": "string",
+                                        "enum": [
+                                          "8",
+                                          "w",
+                                          "h",
+                                          "hd",
+                                          "q",
+                                          "qd"
+                                        ]
+                                      },
+                                      "finger": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 5
+                                      },
+                                      "tie": {
+                                        "type": "boolean"
+                                      }
+                                    },
+                                    "required": [
+                                      "midi",
+                                      "value"
                                     ]
                                   },
-                                  "finger": {
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "maximum": 5
-                                  },
-                                  "tie": {
-                                    "type": "boolean"
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "midi": {
+                                        "type": "number",
+                                        "enum": [
+                                          -1
+                                        ]
+                                      },
+                                      "value": {
+                                        "type": "string",
+                                        "enum": [
+                                          "8",
+                                          "w",
+                                          "h",
+                                          "q"
+                                        ]
+                                      },
+                                      "rest": {
+                                        "type": "boolean",
+                                        "enum": [
+                                          true
+                                        ]
+                                      }
+                                    },
+                                    "required": [
+                                      "midi",
+                                      "value",
+                                      "rest"
+                                    ]
                                   }
-                                },
-                                "required": [
-                                  "midi",
-                                  "value"
                                 ]
                               }
                             }

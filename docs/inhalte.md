@@ -76,7 +76,8 @@ song('C4/q D4/q E4/q F4/q | G4/h G4/h | A4/q A4/q A4/q A4/q | G4/w', {
 ```
 
 Notenwerte: `w` ganze, `hd` punktierte halbe, `h` halbe, `qd` punktierte Viertel, `q` Viertel,
-`8` Achtel. Jeder Takt muss genau voll sein, sonst wirft `song()` beim Laden einen Fehler (und die
+`8` Achtel. Pausen: `r/w`, `r/h`, `r/q`, `r/8` (eine punktierte Pause als zwei schreiben); im Modus
+«Warte auf mich» wird eine Pause übersprungen, «Im Takt» läuft die Zeit einfach weiter. Jeder Takt muss genau voll sein, sonst wirft `song()` beim Laden einen Fehler (und die
 Tests schlagen fehl) – Tippfehler fallen so sofort auf.
 
 **Notenlesen im grossen Notensystem** – `clef: 'grand'`: ab dem mittleren C oben (rechte Hand),
