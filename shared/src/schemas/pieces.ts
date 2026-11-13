@@ -6,7 +6,7 @@ import type { PieceExercise, SongExercise } from '../curriculum/types.ts';
  * the account. The notes are checked strictly – the app draws and plays them.
  */
 /** The longest own piece, in bars (a sonata movement fits). */
-export const MAX_PIECE_BARS = 300;
+export const MAX_PIECE_BARS = 1000;
 
 const midi = z.number().int().min(21).max(108);
 const NOTE_VALUES = [

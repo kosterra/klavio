@@ -48,7 +48,7 @@ const pieceRoutes: FastifyPluginAsyncZod = async (app) => {
 
   app.post(
     '/',
-    { schema: { body: ownPieceInputSchema }, bodyLimit: 512 * 1024 },
+    { schema: { body: ownPieceInputSchema }, bodyLimit: 2 * 1024 * 1024 },
     async (req, reply): Promise<OwnPieceDto> => {
       const userId = req.auth!.user._id;
       if ((await OwnPiece.countDocuments({ userId })) >= MAX_OWN_PIECES)

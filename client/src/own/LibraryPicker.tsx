@@ -1,11 +1,96 @@
 import { useEffect, useState } from 'react';
-import { Alert, Button, Group, Loader, Modal, Stack, Text, TextInput } from '@mantine/core';
-import { IconDownload, IconSearch } from '@tabler/icons-react';
+import {
+  ActionIcon,
+  Alert,
+  Button,
+  Group,
+  Loader,
+  Modal,
+  Stack,
+  Text,
+  TextInput,
+} from '@mantine/core';
+import { IconDownload, IconEar, IconPlayerStop, IconSearch } from '@tabler/icons-react';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { endpoints } from '../api/endpoints';
+import { previewParts, startPreview, stopPreview, usePreview } from '../audio/preview';
+import { PieceReadError, readPieceFile } from '../import/readPiece';
+import type { ImportedPiece } from '@klavio/shared';
 
 type Result = { id: string; title: string };
+
+/** Files fetched for a «Hörprobe» – taking the piece over then needs no second download. */
+const fetched = new Map<string, { file: File; piece: ImportedPiece | PieceReadError }>();
+
+async function load(id: string) {
+  let hit = fetched.get(id);
+  if (!hit) {
+    const file = await endpoints.libraryFile(id);
+    let piece: ImportedPiece | PieceReadError;
+    try {
+      piece = await readPieceFile(file);
+    } catch (err) {
+      if (!(err instanceof PieceReadError)) throw err;
+      piece = err;
+    }
+    hit = { file, piece };
+    fetched.set(id, hit);
+  }
+  return hit;
+}
+
+/**
+ * «Hörprobe» of a library piece: fetched and read on the first tap, then the
+ * first bars are played like any other preview. A piece Klavio cannot read
+ * says why instead.
+ */
+function LibraryPreview({
+  result,
+  onProblem,
+}: {
+  result: Result;
+  onProblem: (text: string | null) => void;
+}) {
+  const { t } = useTranslation();
+  const { playing, me } = usePreview();
+  const [loading, setLoading] = useState(false);
+  const listen = async () => {
+    if (playing) return stopPreview();
+    setLoading(true);
+    try {
+      const { piece } = await load(result.id);
+      if (piece instanceof PieceReadError) {
+        onProblem(
+          t('own.libraryCannotRead', {
+            title: result.title,
+            reason: t(`own.errors.${piece.key}`, piece.params),
+          }),
+        );
+        return;
+      }
+      onProblem(null);
+      startPreview(me, previewParts(piece.exercise), piece.exercise.tempo);
+    } catch {
+      onProblem(t('own.libraryUnreachable'));
+    } finally {
+      setLoading(false);
+    }
+  };
+  return (
+    <ActionIcon
+      variant={playing ? 'filled' : 'default'}
+      size="xl"
+      loading={loading}
+      aria-label={t(playing ? 'preview.stop' : 'preview.listen', { title: result.title })}
+      aria-pressed={playing}
+      onClick={() => void listen()}
+      data-testid="library-listen"
+    >
+      {playing ? <IconPlayerStop size={22} /> : <IconEar size={22} />}
+    </ActionIcon>
+  );
+}
 
 /**
  * «Aus der Bibliothek»: search the sheet music library the admin switched on
@@ -52,7 +137,8 @@ export function LibraryPicker({
   const take = async (r: Result) => {
     setTaking(r.id);
     try {
-      await onFile(await endpoints.libraryFile(r.id), r.title);
+      stopPreview();
+      await onFile((await load(r.id)).file, r.title);
       onClose();
     } catch {
       setProblem(t('own.libraryUnreachable'));
@@ -85,7 +171,7 @@ export function LibraryPicker({
           </Text>
         )}
         {problem && (
-          <Alert color="red" variant="light">
+          <Alert color="red" variant="light" role="status">
             {problem}
           </Alert>
         )}
@@ -97,17 +183,20 @@ export function LibraryPicker({
               <Text size="sm" fw={600} style={{ minWidth: 0 }} truncate>
                 {r.title}
               </Text>
-              <Button
-                size="sm"
-                variant="default"
-                leftSection={<IconDownload size={16} />}
-                loading={taking === r.id}
-                disabled={!!taking}
-                onClick={() => void take(r)}
-                aria-label={t('own.libraryAddLabel', { title: r.title })}
-              >
-                {t('own.libraryAdd')}
-              </Button>
+              <Group gap="xs" wrap="nowrap">
+                <LibraryPreview result={r} onProblem={setProblem} />
+                <Button
+                  size="sm"
+                  variant="default"
+                  leftSection={<IconDownload size={16} />}
+                  loading={taking === r.id}
+                  disabled={!!taking}
+                  onClick={() => void take(r)}
+                  aria-label={t('own.libraryAddLabel', { title: r.title })}
+                >
+                  {t('own.libraryAdd')}
+                </Button>
+              </Group>
             </Group>
           ))}
         </Stack>

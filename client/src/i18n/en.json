@@ -1466,7 +1466,7 @@
     "title": "Own pieces",
     "intro": "Bring your own notes: a MusicXML or MIDI file from MuseScore, Finale, Sibelius or Dorico. Klavio reads it on your device; only the notes are stored, for all profiles of your account.",
     "import": "Import a piece",
-    "how": "Files .musicxml, .xml, .mxl or MIDI (.mid), up to 300 bars. Klavio takes the main voice (with two staves both hands) – from whole notes to sixty-fourths, with dots and triplets.",
+    "how": "Files .musicxml, .xml, .mxl or MIDI (.mid), up to 1000 bars. Klavio takes the main voice (with two staves both hands) – from whole notes to sixty-fourths, with dots and triplets.",
     "full": "At most {{count}} own pieces – delete one first.",
     "previewSong_one": "Song on one staff · {{count}} bar · {{time}} time",
     "previewSong_other": "Song on one staff · {{count}} bars · {{time}} time",
@@ -1489,7 +1489,7 @@
     "errors": {
       "NOT_MUSICXML": "This is not a MusicXML file. Export the piece from your notation program as MusicXML (.musicxml or .mxl).",
       "NO_NOTES": "There are no notes in the file.",
-      "TOO_LONG": "The piece is too long – at most 300 bars.",
+      "TOO_LONG": "The piece is too long – at most 1000 bars.",
       "DURATION": "Bar {{bar}} has note values Klavio cannot do yet (e.g. sixty-fourth triplets).",
       "TUPLET": "Bar {{bar}} has quintuplets or similar groups – triplets work, these not yet.",
       "RANGE": "The notes are outside the keyboard.",
@@ -1511,6 +1511,7 @@
     "libraryAdd": "Take over",
     "libraryAddLabel": "Take over «{{title}}»",
     "librarySource": "From the collection of {{name}} – published as public domain. Klavio reads the piece like your own file; you see it before you save it.",
+    "libraryCannotRead": "Klavio cannot read «{{title}}»: {{reason}}",
     "libraryUnreachable": "The library cannot be reached right now – try again later."
   },
   "folk": {

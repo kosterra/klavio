@@ -27,16 +27,16 @@ export const CHANGELOG: Release[] = [
         'Your sheet music library: «Own pieces» now holds up to 200 pieces, can be searched, and you can change title and composer. «View notes» shows a piece simply as sheet music – large for the music stand, with or without note names; also for the classics and the folk songs.',
       ),
       L(
-        'Notenbibliothek MuseTrainer: Wenn die Verwaltung sie einschaltet, holst du unter «Eigene Stücke» Klavierstücke aus der gemeinfreien MuseTrainer-Sammlung – von «Für Elise» bis zum Menuett in G.',
-        'MuseTrainer sheet music library: when the admin switches it on, you fetch piano pieces from the public-domain MuseTrainer collection under «Own pieces» – from «Für Elise» to the Minuet in G.',
+        'Notenbibliothek MuseTrainer: Wenn die Verwaltung sie einschaltet, holst du unter «Eigene Stücke» Klavierstücke aus der gemeinfreien MuseTrainer-Sammlung – von «Für Elise» bis zum Menuett in G. Mit der Hörprobe hörst du jedes Stück an, bevor du es übernimmst.',
+        'MuseTrainer sheet music library: when the admin switches it on, you fetch piano pieces from the public-domain MuseTrainer collection under «Own pieces» – from «Für Elise» to the Minuet in G. The «Hörprobe» lets you hear each piece before you take it over.',
       ),
       L(
         'Lernpfad für Fortgeschrittene: Im Elternbereich unter «Lernpfad» lassen sich ganze Stufen überspringen – oder der Lernpfad ausschalten. Dann sind alle Lektionen frei wählbar, und der Start zeigt deine Stücke, Lieder und Werkzeuge statt der Karte.',
         'Learning path for advanced players: in the parent area under «Learning path» whole stages can be skipped – or the learning path switched off. Then every lesson can be picked freely, and the start page shows your pieces, songs and tools instead of the map.',
       ),
       L(
-        'Eigene Stücke: Klavio liest jetzt auch Sechzehntel, Zweiunddreissigstel, punktierte Achtel und Triolen – und Stücke bis 300 Takte statt 64. Damit gehen viele echte Klavierstücke wie «Für Elise» ganz.',
-        'Own pieces: Klavio now also reads sixteenths, thirty-seconds, dotted eighths and triplets – and pieces up to 300 bars instead of 64. So many real piano pieces like «Für Elise» work in full.',
+        'Eigene Stücke: Klavio liest jetzt auch Sechzehntel, Zweiunddreissigstel, punktierte Achtel und Triolen – und Stücke bis 1000 Takte statt 64. Damit gehen viele echte Klavierstücke wie «Für Elise» ganz.',
+        'Own pieces: Klavio now also reads sixteenths, thirty-seconds, dotted eighths and triplets – and pieces up to 1000 bars instead of 64. So many real piano pieces like «Für Elise» work in full.',
       ),
       L(
         'Ab wann spielbar? Bei jedem hochgeladenen Stück – auch beim Traumlied – und bei den Klassik-Stücken steht, nach welcher Lektion es passt und was dir dafür noch fehlt. Es ist eine Empfehlung: Ausprobieren kannst du jedes Stück jederzeit.',

@@ -1466,7 +1466,7 @@
     "title": "Eigene Stücke",
     "intro": "Bring deine eigenen Noten mit: eine MusicXML- oder MIDI-Datei aus MuseScore, Finale, Sibelius oder Dorico. Klavio liest sie auf deinem Gerät; gespeichert werden nur die Noten, für alle Profile deines Kontos.",
     "import": "Stück importieren",
-    "how": "Dateien .musicxml, .xml, .mxl oder MIDI (.mid), bis 300 Takte. Klavio nimmt die Hauptstimme (bei zwei Systemen beide Hände) – von Ganzen bis zu Vierundsechzigsteln, mit Punkten und Triolen.",
+    "how": "Dateien .musicxml, .xml, .mxl oder MIDI (.mid), bis 1000 Takte. Klavio nimmt die Hauptstimme (bei zwei Systemen beide Hände) – von Ganzen bis zu Vierundsechzigsteln, mit Punkten und Triolen.",
     "full": "Höchstens {{count}} eigene Stücke – lösche zuerst eines.",
     "previewSong_one": "Lied mit einer Notenzeile · {{count}} Takt · {{time}}-Takt",
     "previewSong_other": "Lied mit einer Notenzeile · {{count}} Takte · {{time}}-Takt",
@@ -1489,7 +1489,7 @@
     "errors": {
       "NOT_MUSICXML": "Das ist keine MusicXML-Datei. Exportiere das Stück im Notenprogramm als MusicXML (.musicxml oder .mxl).",
       "NO_NOTES": "In der Datei sind keine Noten.",
-      "TOO_LONG": "Das Stück ist zu lang – höchstens 300 Takte.",
+      "TOO_LONG": "Das Stück ist zu lang – höchstens 1000 Takte.",
       "DURATION": "Takt {{bar}} hat Notenwerte, die Klavio noch nicht kann (z. B. Vierundsechzigstel-Triolen).",
       "TUPLET": "Takt {{bar}} hat Quintolen oder ähnliche Gruppen – Triolen gehen, diese noch nicht.",
       "RANGE": "Die Noten liegen ausserhalb der Klaviatur.",
@@ -1511,6 +1511,7 @@
     "libraryAdd": "Übernehmen",
     "libraryAddLabel": "«{{title}}» übernehmen",
     "librarySource": "Aus der Sammlung von {{name}} – als gemeinfrei veröffentlicht. Klavio liest das Stück wie eine eigene Datei; du siehst es, bevor du es speicherst.",
+    "libraryCannotRead": "«{{title}}» kann Klavio nicht lesen: {{reason}}",
     "libraryUnreachable": "Die Bibliothek ist gerade nicht erreichbar – versuch es später nochmals."
   },
   "folk": {
