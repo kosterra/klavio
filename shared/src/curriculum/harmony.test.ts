@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CURRICULUM } from './curriculum.ts';
 import { accompaniment, harmonize, melodyKey } from './harmony.ts';
-import { song } from './song.ts';
+import { beatsOf, song } from './song.ts';
 import type { SongExercise } from './types.ts';
 
 const songs = CURRICULUM.flatMap((c) =>
@@ -31,9 +31,7 @@ describe('Klavi plays along', () => {
   it('plays in time with the melody and stays below a right-hand tune', () => {
     for (const { id, e } of songs) {
       const events = accompaniment(e);
-      const total = e.bars
-        .flat()
-        .reduce((n, x) => n + { w: 4, hd: 3, h: 2, qd: 1.5, q: 1, '8': 0.5 }[x.value], 0);
+      const total = e.bars.flat().reduce((n, x) => n + beatsOf(x.value), 0);
       expect(events.length, id).toBeGreaterThan(0);
       for (const ev of events) {
         expect(ev.at + ev.beats, id).toBeLessThanOrEqual(total + 1e-9);

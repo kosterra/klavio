@@ -1,4 +1,5 @@
 import type { KeySignature } from '../music/notes.ts';
+import { MAX_PIECE_BARS } from '../schemas/pieces.ts';
 import type {
   NoteValue,
   PieceExercise,
@@ -47,30 +48,61 @@ export type ImportedPiece =
       keyboard: { from: number; to: number };
     };
 
-export const MAX_IMPORT_BARS = 64;
+export const MAX_IMPORT_BARS = MAX_PIECE_BARS;
 
 const STEP: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
-const NOTE_VALUES: [number, NoteValue][] = [
-  [4, 'w'],
-  [3, 'hd'],
-  [2, 'h'],
-  [1.5, 'qd'],
-  [1, 'q'],
-  [0.5, '8'],
-];
-const REST_VALUES: [number, RhythmValue][] = [
-  [4, 'wr'],
-  [2, 'hr'],
-  [1, 'qr'],
-];
+/** Klavio's note values, longest first (a length is split into as few as possible). */
+const NOTE_VALUES: [number, NoteValue][] = (
+  [
+    [4, 'w'],
+    [3, 'hd'],
+    [2, 'h'],
+    [1.5, 'qd'],
+    [1, 'q'],
+    [0.75, '8d'],
+    [2 / 3, 'qt'],
+    [0.5, '8'],
+    [1 / 3, '8t'],
+    [0.375, '16d'],
+    [0.25, '16'],
+    [1 / 6, '16t'],
+    [0.125, '32'],
+    [1 / 12, '32t'],
+    [0.0625, '64'],
+  ] as [number, NoteValue][]
+).sort((a, b) => b[0] - a[0]);
+const REST_VALUES: [number, RhythmValue][] = (
+  [
+    [4, 'wr'],
+    [2, 'hr'],
+    [1, 'qr'],
+    [2 / 3, 'qtr'],
+    [0.5, '8r'],
+    [1 / 3, '8tr'],
+    [0.25, '16r'],
+    [1 / 6, '16tr'],
+    [0.125, '32r'],
+    [1 / 12, '32tr'],
+    [0.0625, '64r'],
+  ] as [number, RhythmValue][]
+).sort((a, b) => b[0] - a[0]);
 
-/** Rests in a melody: whole to eighth (a dotted rest becomes two). */
-const SONG_REST_VALUES: [number, NoteValue][] = [
-  [4, 'w'],
-  [2, 'h'],
-  [1, 'q'],
-  [0.5, '8'],
-];
+/** Rests in a melody (a dotted rest becomes two). */
+const SONG_REST_VALUES: [number, NoteValue][] = (
+  [
+    [4, 'w'],
+    [2, 'h'],
+    [1, 'q'],
+    [2 / 3, 'qt'],
+    [0.5, '8'],
+    [1 / 3, '8t'],
+    [0.25, '16'],
+    [1 / 6, '16t'],
+    [0.125, '32'],
+    [1 / 12, '32t'],
+    [0.0625, '64'],
+  ] as [number, NoteValue][]
+).sort((a, b) => b[0] - a[0]);
 
 function splitSongRests(beats: number, bar: number): NoteValue[] {
   const out: NoteValue[] = [];
@@ -172,7 +204,14 @@ export function importMusicXml(source: string): ImportedPiece {
       }
       if (el.name !== 'note') continue;
       if (child(el, 'grace') || child(el, 'cue')) continue;
-      if (child(el, 'time-modification')) throw new MusicXmlImportError('TUPLET', bar);
+      // triplets (three in the time of two, or six in the time of four) are fine,
+      // other tuplets not (yet)
+      const tm = child(el, 'time-modification');
+      if (tm) {
+        const actual = Number(textOf(tm, 'actual-notes'));
+        const normal = Number(textOf(tm, 'normal-notes'));
+        if (actual * 2 !== normal * 3) throw new MusicXmlImportError('TUPLET', bar);
+      }
       const rest = child(el, 'rest');
       const pitch = child(el, 'pitch');
       const duration = Number(textOf(el, 'duration'));

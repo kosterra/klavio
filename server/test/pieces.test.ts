@@ -64,11 +64,27 @@ describe('own pieces', () => {
     // notes the app cannot draw are refused
     const bad = { ...song, exercise: { ...song.exercise, bars: [[{ midi: 200, value: 'q' }]] } };
     expect((await call(jar, 'POST', '/api/pieces', bad)).statusCode).toBe(400);
-    const sixteenth = {
+    const unknownValue = {
       ...song,
-      exercise: { ...song.exercise, bars: [[{ midi: 60, value: '16' }]] },
+      exercise: { ...song.exercise, bars: [[{ midi: 60, value: '128' }]] },
     };
-    expect((await call(jar, 'POST', '/api/pieces', sixteenth)).statusCode).toBe(400);
+    expect((await call(jar, 'POST', '/api/pieces', unknownValue)).statusCode).toBe(400);
+    // sixteenths and triplets are fine
+    const quick = {
+      ...song,
+      exercise: {
+        ...song.exercise,
+        bars: [
+          [
+            { midi: 60, value: '16' },
+            { midi: 62, value: '8t' },
+          ],
+        ],
+      },
+    };
+    const ok = await call(jar, 'POST', '/api/pieces', quick);
+    expect(ok.statusCode).toBe(201);
+    await call(jar, 'DELETE', `/api/pieces/${ok.json().id as string}`);
 
     // another family sees nothing and cannot delete
     const other = await account('other@example.ch');

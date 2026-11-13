@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { fitBarsPerLine } from '../notation/lineLength';
 import { Box, Button, Group, SegmentedControl, Stack, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconMetronome, IconRefresh } from '@tabler/icons-react';
@@ -67,7 +68,10 @@ export function TimedSongExercise({
 }) {
   const { t } = useTranslation();
   const wide = useMediaQuery('(min-width: 900px)', true);
-  const barsPerLine = wide ? 4 : 2;
+  const barsPerLine = fitBarsPerLine(
+    wide ? 4 : 2,
+    exercise.bars.map((b) => b.length),
+  );
   // the tempo ladder, like a teacher would: slow first, then faster, then as written
   const [level, setLevel] = useState<TempoLevel>(sight ? 'original' : 'medium');
   const tempo = Math.round(exercise.tempo * TEMPO_LEVELS[level]);

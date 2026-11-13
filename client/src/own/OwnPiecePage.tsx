@@ -27,6 +27,8 @@ import { PieceExercise } from '../lesson/PieceExercise';
 import { useLessonInput } from '../lesson/useLessonInput';
 import { HeardNote, InputSwitch } from '../pages/LessonPage';
 import { SheetView } from '../print/SongSheetPage';
+import { useProgress } from '../lesson/useProgress';
+import { ReadinessNote } from './ReadinessNote';
 
 /** An own piece fetched by its id (shared by playing and printing). */
 function useOwnPiece() {
@@ -124,6 +126,7 @@ function PracticePiece({
   const { stopMicrophone } = input;
   const [phase, setPhase] = useState<'intro' | 'play' | 'done'>('intro');
   const [run, setRun] = useState(0);
+  const { completed, progress } = useProgress();
   useEffect(() => () => stopMicrophone(), [stopMicrophone]);
 
   // what the exercises need of a lesson: the keys shown
@@ -163,6 +166,10 @@ function PracticePiece({
               <Alert color="blue" variant="light" w="100%">
                 {t('own.practiceOnly')}
               </Alert>
+              {/* a recommendation, never a lock: any piece can be tried */}
+              <Box w="100%">
+                <ReadinessNote exercise={piece.exercise} completed={progress ? completed : null} />
+              </Box>
               <Button
                 size="lg"
                 onClick={() => {

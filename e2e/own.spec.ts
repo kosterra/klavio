@@ -23,12 +23,15 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
   await own.locator('input[type=file]').setInputFiles(file);
   await expect(page.getByTestId('own-draft')).toContainText('Mein erstes Lied');
   await expect(page.getByTestId('own-draft')).toContainText('2 Takte');
+  // when it can be played: a recommendation from the learning path
+  await expect(page.getByTestId('readiness')).toContainText('Empfohlen nach der Lektion');
   await audit(page);
   await page.getByTestId('own-save').click();
   await expect(own.getByRole('link', { name: /Mein erstes Lied/ }).first()).toBeVisible();
 
-  // play it like a song – no stars
+  // play it like a song – no stars; the intro names the lesson it fits after
   await own.getByRole('link', { name: /Mein erstes Lied.*Lina/ }).click();
+  await expect(page.getByTestId('readiness')).toContainText('Empfohlen nach');
   await page.getByTestId('own-start').click();
   const keys = page.getByRole('group', { name: 'Klaviatur' });
   for (const k of ['C4', 'D4', 'E4', 'G4'])
@@ -50,6 +53,23 @@ test('own pieces: import a MusicXML file, play it, print it, delete it', async (
     buffer: Buffer.from('<letter>Hallo</letter>'),
   });
   await expect(page.getByTestId('own-problem')).toContainText('keine MusicXML-Datei');
+
+  // sixteenths and triplets are read; the path does not teach them – that is said
+  const tri =
+    '<time-modification><actual-notes>3</actual-notes><normal-notes>2</normal-notes></time-modification>';
+  const nd = (step: string, d: number, extra = '') =>
+    `<note><pitch><step>${step}</step><octave>4</octave></pitch><duration>${d}</duration>${extra}</note>`;
+  await own.locator('input[type=file]').setInputFiles({
+    name: 'schnell.musicxml',
+    mimeType: 'application/vnd.recordare.musicxml+xml',
+    buffer: Buffer.from(
+      `<?xml version="1.0" encoding="UTF-8"?><score-partwise version="4.0"><work><work-title>Schnell</work-title></work><part-list><score-part id="P1"><part-name>Klavier</part-name></score-part></part-list><part id="P1"><measure number="1"><attributes><divisions>12</divisions><time><beats>4</beats><beat-type>4</beat-type></time><clef><sign>G</sign><line>2</line></clef></attributes>${nd('C', 3)}${nd('D', 3)}${nd('E', 6)}${nd('F', 4, tri)}${nd('G', 4, tri)}${nd('A', 4, tri)}${nd('G', 24)}</measure></part></score-partwise>`,
+    ),
+  });
+  await expect(page.getByTestId('own-draft')).toContainText('Schnell');
+  await expect(page.getByTestId('readiness')).toContainText('Sechzehntel');
+  await expect(page.getByTestId('readiness')).toContainText('Triolen');
+  await page.getByRole('button', { name: 'Abbrechen' }).click();
 
   // a melody with a rest stays a song: the rest is simply waited out
   const n = (step: string, d: number) =>

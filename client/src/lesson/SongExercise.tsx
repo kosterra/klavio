@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { fitBarsPerLine } from '../notation/lineLength';
 import { Button, Stack, Text, VisuallyHidden } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconPlayerPlay, IconPlayerStop } from '@tabler/icons-react';
@@ -41,7 +42,10 @@ export function SongExercise({
   const { t } = useTranslation();
   const lang = useNoteLang();
   const wide = useMediaQuery('(min-width: 900px)', true);
-  const barsPerLine = wide ? 4 : 2;
+  const barsPerLine = fitBarsPerLine(
+    wide ? 4 : 2,
+    exercise.bars.map((b) => b.length),
+  );
 
   // flat list of notes, each knowing its bar
   const notes = useMemo(

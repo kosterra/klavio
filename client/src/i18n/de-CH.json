@@ -1460,7 +1460,7 @@
     "title": "Eigene Stücke",
     "intro": "Bring deine eigenen Noten mit: eine MusicXML- oder MIDI-Datei aus MuseScore, Finale, Sibelius oder Dorico. Klavio liest sie auf deinem Gerät; gespeichert werden nur die Noten, für alle Profile deines Kontos.",
     "import": "Stück importieren",
-    "how": "Dateien .musicxml, .xml, .mxl oder MIDI (.mid). Klavio nimmt die Hauptstimme (bei zwei Systemen beide Hände) – Ganze bis Achtel, punktierte Halbe und Viertel.",
+    "how": "Dateien .musicxml, .xml, .mxl oder MIDI (.mid), bis 300 Takte. Klavio nimmt die Hauptstimme (bei zwei Systemen beide Hände) – von Ganzen bis zu Vierundsechzigsteln, mit Punkten und Triolen.",
     "full": "Höchstens {{count}} eigene Stücke – lösche zuerst eines.",
     "previewSong_one": "Lied mit einer Notenzeile · {{count}} Takt · {{time}}-Takt",
     "previewSong_other": "Lied mit einer Notenzeile · {{count}} Takte · {{time}}-Takt",
@@ -1483,9 +1483,9 @@
     "errors": {
       "NOT_MUSICXML": "Das ist keine MusicXML-Datei. Exportiere das Stück im Notenprogramm als MusicXML (.musicxml oder .mxl).",
       "NO_NOTES": "In der Datei sind keine Noten.",
-      "TOO_LONG": "Das Stück ist zu lang – höchstens 64 Takte.",
-      "DURATION": "Takt {{bar}} hat Notenwerte, die Klavio noch nicht kann (z. B. Sechzehntel oder punktierte Achtel).",
-      "TUPLET": "Takt {{bar}} hat Triolen – die kann Klavio noch nicht.",
+      "TOO_LONG": "Das Stück ist zu lang – höchstens 300 Takte.",
+      "DURATION": "Takt {{bar}} hat Notenwerte, die Klavio noch nicht kann (z. B. Vierundsechzigstel-Triolen).",
+      "TUPLET": "Takt {{bar}} hat Quintolen oder ähnliche Gruppen – Triolen gehen, diese noch nicht.",
       "RANGE": "Die Noten liegen ausserhalb der Klaviatur.",
       "TOO_BIG": "Die Datei ist zu gross (höchstens 5 MB).",
       "NOT_MIDI": "Diese MIDI-Datei kann Klavio nicht lesen."
@@ -1524,5 +1524,47 @@
     "approve": "Freigeben",
     "reject": "Nicht zeigen",
     "publicTitle": "Das sagen Familien"
+  },
+  "readiness": {
+    "ready": "Passt zu deinem Stand: Alles dafür kommt im Lernpfad bis «{{lesson}}» vor – und das hast du geschafft.",
+    "readyShort": "Passt zu deinem Stand",
+    "after": "Empfohlen nach der Lektion «{{lesson}}» (Kapitel {{chapter}}).",
+    "afterShort": "Empfohlen nach «{{lesson}}»",
+    "missing": "Dafür lernst du noch: {{list}}.",
+    "go": "Weiter mit «{{lesson}}»",
+    "beyondText": "Geht über den Lernpfad hinaus: {{list}} – mit Geduld und langsamem Tempo trotzdem machbar.",
+    "needs": {
+      "keys": "fünf Töne",
+      "read-cde": "Noten C, D, E lesen",
+      "read-fg": "Noten bis G lesen",
+      "read-octave": "Noten bis zum hohen C lesen",
+      "wide": "Daumen drunter (mehr als fünf Töne)",
+      "read-high": "Noten mit Hilfslinien",
+      "rests": "Pausen",
+      "eighths": "Achtelnoten",
+      "dotted": "punktierte Viertel",
+      "two-four": "Zweivierteltakt",
+      "bass": "Bassschlüssel",
+      "bass-low": "tiefe Töne im Bass",
+      "both": "beide Hände zusammen",
+      "sharps": "Kreuze (♯) und schwarze Tasten",
+      "three-four": "Dreivierteltakt",
+      "upbeat": "Auftakt",
+      "ties": "Haltebögen",
+      "six-eight": "Sechsachteltakt",
+      "flats": "Be (♭)",
+      "key-g": "G-Dur",
+      "key-f": "F-Dur"
+    },
+    "beyond": {
+      "very-high": "sehr hohe Töne",
+      "very-low": "sehr tiefe Töne",
+      "other-time": "eine besondere Taktart",
+      "key-d": "D-Dur",
+      "sixteenths": "Sechzehntel",
+      "dotted-eighths": "punktierte Achtel",
+      "triplets": "Triolen"
+    },
+    "beyondShort": "dazu {{list}}"
   }
 }

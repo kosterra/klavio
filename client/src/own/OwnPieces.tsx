@@ -27,6 +27,8 @@ import { ConfirmModal } from '../components/ConfirmModal';
 import { notify } from '../components/notify';
 import { PieceReadError, readPieceFile } from '../import/readPiece';
 import { PreviewButton } from '../components/PreviewButton';
+import { useProgress } from '../lesson/useProgress';
+import { ReadinessNote } from './ReadinessNote';
 
 /**
  * «Eigene Stücke»: a family brings its own notes (MusicXML from MuseScore,
@@ -42,6 +44,9 @@ export function OwnPieces() {
   const [problem, setProblem] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [removing, setRemoving] = useState<OwnPieceDto | null>(null);
+  // the lessons done: from when on a piece is playable
+  const { completed, progress } = useProgress();
+  const done = progress ? completed : null;
 
   useEffect(() => {
     endpoints.pieces().then(setPieces, () => setPieces([]));
@@ -126,6 +131,7 @@ export function OwnPieces() {
                     {p.composer ??
                       t(p.exercise.type === 'piece' ? 'own.kindPiece' : 'own.kindSong')}
                   </Text>
+                  <ReadinessNote exercise={p.exercise} completed={done} compact />
                 </div>
                 <IconPlayerPlay size={22} aria-hidden />
               </Group>
@@ -165,6 +171,7 @@ export function OwnPieces() {
                   time: draft.exercise.time,
                 })}
               </Text>
+              <ReadinessNote exercise={draft.exercise} completed={done} />
               <Group gap="xs">
                 <Button onClick={() => void save()} loading={busy} data-testid="own-save">
                   {t('own.save')}

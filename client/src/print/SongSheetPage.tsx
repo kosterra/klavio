@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { fitBarsPerLine } from '../notation/lineLength';
 import { Button, Group, Switch, Text } from '@mantine/core';
 import { IconArrowLeft, IconPrinter } from '@tabler/icons-react';
 import { Link, Navigate, useParams } from 'react-router';
@@ -116,7 +117,12 @@ export function SheetView({
   const [names, setNames] = useState(() => !!exercise.showNames);
   const [fingers, setFingers] = useState(true);
   const narrow = useMediaQuery('(max-width: 36em)') ?? false;
-  const per = narrow ? BARS_PER_LINE_NARROW : BARS_PER_LINE;
+  const per = fitBarsPerLine(
+    narrow ? BARS_PER_LINE_NARROW : BARS_PER_LINE,
+    exercise.type === 'piece'
+      ? exercise.bars.map((b) => Math.max(b.rh.length, b.lh.length))
+      : exercise.bars.map((b) => b.length),
+  );
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
   const kids = activeProfile?.uiMode !== 'classic';
   const name = (midi: number) => (names ? midiToPitchName(midi, lang) : undefined);

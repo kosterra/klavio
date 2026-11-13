@@ -23,6 +23,14 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Eigene Stücke: Klavio liest jetzt auch Sechzehntel, Zweiunddreissigstel, punktierte Achtel und Triolen – und Stücke bis 300 Takte statt 64. Damit gehen viele echte Klavierstücke wie «Für Elise» ganz.',
+        'Own pieces: Klavio now also reads sixteenths, thirty-seconds, dotted eighths and triplets – and pieces up to 300 bars instead of 64. So many real piano pieces like «Für Elise» work in full.',
+      ),
+      L(
+        'Ab wann spielbar? Bei jedem hochgeladenen Stück – auch beim Traumlied – und bei den Klassik-Stücken steht, nach welcher Lektion es passt und was dir dafür noch fehlt. Es ist eine Empfehlung: Ausprobieren kannst du jedes Stück jederzeit.',
+        'When can I play it? Every uploaded piece – including your dream song – and every classical piece says after which lesson it fits and what you still need for it. It is a recommendation: you can try any piece at any time.',
+      ),
+      L(
         'Technik: «Fingerturnen» macht jeden Finger selbständig, «Daumen drunter» übt den Trick für die Tonleiter, «Fünf Töne in neuen Tonarten» legt die Hand auf G, D, A und E – und in Stufe 3 spielen beide Hände die Tonleiter gespiegelt.',
         'Technique: «Finger gym» makes every finger independent, «Thumb under» practises the trick for scales, «Five notes in new keys» puts the hand on G, D, A and E – and in stage 3 both hands play the scale in mirror image.',
       ),

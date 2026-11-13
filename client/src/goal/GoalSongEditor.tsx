@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  Box,
   Alert,
   Anchor,
   Autocomplete,
@@ -35,6 +36,8 @@ import { endpoints } from '../api/endpoints';
 import { useErrorText } from '../auth/useErrorText';
 import { PieceReadError, readPieceFile } from '../import/readPiece';
 import { useLocalized } from '../lesson/useLocalized';
+import { ReadinessNote } from '../own/ReadinessNote';
+import { useProgress } from '../lesson/useProgress';
 import { GoalSongPicks } from './GoalSongPicks';
 
 /**
@@ -60,6 +63,8 @@ export function GoalSongEditor({
     initial?.pieceId ? { id: initial.pieceId, title: initial.title } : null,
   );
   const [uploaded, setUploaded] = useState<OwnPieceDto | null>(null);
+  // from which lesson on the uploaded piece is playable
+  const { completed, progress } = useProgress();
   const [uploadProblem, setUploadProblem] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [style, setStyle] = useState<GoalStyle>(initial?.style ?? 'ballad');
@@ -218,6 +223,12 @@ export function GoalSongEditor({
                 <Anchor component={Link} to={`/own/${uploaded.id}`} fw={700}>
                   {t('goal.upload.open')}
                 </Anchor>
+                <Box mt="xs">
+                  <ReadinessNote
+                    exercise={uploaded.exercise}
+                    completed={progress ? completed : null}
+                  />
+                </Box>
               </Alert>
             )}
             {uploadProblem && (

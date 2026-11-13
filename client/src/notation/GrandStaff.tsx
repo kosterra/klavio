@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { tripletGroups, vexDuration } from './duration';
 import { Box, Loader, useComputedColorScheme } from '@mantine/core';
 import { loadVexFlow, midiToVexKey } from './vexflow';
 import type { StaffNote } from './Staff';
@@ -73,12 +74,11 @@ export function GrandStaff({ bars, time, height = 240, label, paper = false }: P
 
       const makeNotes = (notes: StaffNote[], clef: 'treble' | 'bass') =>
         notes.map((n) => {
-          const duration = n.duration ?? 'w';
-          const rest = duration.endsWith('r');
+          const { duration, rest, dotted } = vexDuration(n.duration ?? 'w');
           const vexKey = rest ? (clef === 'bass' ? 'd/3' : 'b/4') : midiToVexKey(n.midi);
           const note = new VF.StaveNote({ keys: [vexKey], duration, clef });
           if (!rest && vexKey.includes('#')) note.addModifier(new VF.Accidental('#'), 0);
-          if (/^\w+d$/.test(duration) && !rest) VF.Dot.buildAndAttach([note], { all: true });
+          if (dotted) VF.Dot.buildAndAttach([note], { all: true });
           if (n.label) {
             note.addModifier(
               new VF.Annotation(n.label)
@@ -124,6 +124,7 @@ export function GrandStaff({ bars, time, height = 240, label, paper = false }: P
         const voices: {
           voice: InstanceType<typeof VF.Voice>;
           stave: InstanceType<typeof VF.Stave>;
+          tuplets: InstanceType<typeof VF.Tuplet>[];
         }[] = [];
         for (const [notes, clef, stave] of [
           [bar.rh, 'treble', treble],
@@ -131,10 +132,14 @@ export function GrandStaff({ bars, time, height = 240, label, paper = false }: P
         ] as const) {
           if (!notes.length) continue;
           const staveNotes = makeNotes(notes, clef);
+          // triplets: bracketed «3», and only two thirds as long
+          const tuplets = tripletGroups(notes.map((n) => n.duration ?? 'w')).map(
+            (g) => new VF.Tuplet(g.map((k) => staveNotes[k]!)),
+          );
           const voice = new VF.Voice({ numBeats: num, beatValue: den })
             .setMode(VF.Voice.Mode.SOFT)
             .addTickables(staveNotes);
-          voices.push({ voice, stave });
+          voices.push({ voice, stave, tuplets });
         }
         if (!voices.length) return;
         // align both hands: format the voices together on the same width
@@ -144,12 +149,13 @@ export function GrandStaff({ bars, time, height = 240, label, paper = false }: P
           voices.map((v) => v.voice),
           treble,
         );
-        for (const { voice, stave } of voices) {
+        for (const { voice, stave, tuplets } of voices) {
           const beams = VF.Beam.generateBeams(
             voice.getTickables() as InstanceType<typeof VF.StaveNote>[],
           );
           voice.draw(ctx, stave);
           beams.forEach((b) => b.setContext(ctx).draw());
+          tuplets.forEach((tp) => tp.setContext(ctx).draw());
         }
       });
       el.querySelector('svg')?.setAttribute('aria-hidden', 'true');

@@ -108,24 +108,50 @@ describe('MusicXML import', () => {
     ]);
   });
 
+  it('reads sixteenths, dotted eighths and triplets', () => {
+    const tri =
+      '<time-modification><actual-notes>3</actual-notes><normal-notes>2</normal-notes></time-modification>';
+    const third = String(2 / 3);
+    const p = importMusicXml(
+      score([
+        note('C', 4, 0.5) +
+          note('D', 4, 0.5) +
+          note('E', 4, 1) +
+          note('F', 4, Number(third), tri) +
+          note('G', 4, Number(third), tri) +
+          note('A', 4, Number(third), tri) +
+          note('G', 4, 4),
+        note('C', 4, 1.5) + note('D', 4, 0.5) + note('E', 4, 6),
+      ]),
+    );
+    expect(p.kind).toBe('song');
+    if (p.kind !== 'song') return;
+    expect(p.exercise.bars.map((b) => b.map((n) => n.value))).toEqual([
+      ['16', '16', '8', '8t', '8t', '8t', 'h'],
+      ['8d', '16', 'hd'],
+    ]);
+  });
+
   it('says what it cannot do, and where', () => {
-    const triplet = score([
+    // five in the time of four: not yet
+    const quintuplet = score([
       note('C', 4, 2) + note('D', 4, 2) + note('E', 4, 2) + note('F', 4, 2),
       note(
         'C',
         4,
         1,
-        '<time-modification><actual-notes>3</actual-notes><normal-notes>2</normal-notes></time-modification>',
+        '<time-modification><actual-notes>5</actual-notes><normal-notes>4</normal-notes></time-modification>',
       ),
     ]);
-    expect(() => importMusicXml(triplet)).toThrow(MusicXmlImportError);
+    expect(() => importMusicXml(quintuplet)).toThrow(MusicXmlImportError);
     try {
-      importMusicXml(triplet);
+      importMusicXml(quintuplet);
     } catch (e) {
       expect(e).toMatchObject({ code: 'TUPLET', bar: 2 });
     }
-    const sixteenth = score([note('C', 4, 1) + note('D', 4, 0.5) + note('E', 4, 2)]);
-    expect(() => importMusicXml(sixteenth)).toThrow(/DURATION/);
+    // shorter than a sixty-fourth
+    const tiny = score([note('C', 4, 0.05) + note('D', 4, 7.95)]);
+    expect(() => importMusicXml(tiny)).toThrow(/DURATION/);
     expect(() => importMusicXml('<html></html>')).toThrow(/NOT_MUSICXML/);
   });
 });

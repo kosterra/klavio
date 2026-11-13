@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { tripletGroups, vexDuration } from './duration';
 import { Box, Loader, useComputedColorScheme } from '@mantine/core';
 import { spellingOf, type KeySignature, type Spelling } from '@klavio/shared';
 import { accidentalFor, loadVexFlow, midiToVexKey } from './vexflow';
@@ -129,14 +130,13 @@ export function Staff({
         x += w;
 
         const staveNotes = bar.map((n) => {
-          const duration = n.duration ?? 'w';
-          const rest = duration.endsWith('r');
+          const { duration, rest, dotted } = vexDuration(n.duration ?? 'w');
           // rests sit in the middle of the staff, whatever the pitch
           const vexKey = rest ? (clef === 'bass' ? 'd/3' : 'b/4') : midiToVexKey(n.midi, spelling);
           const note = new VF.StaveNote({ keys: [vexKey], duration, clef });
           const sign = rest ? null : accidentalFor(n.midi, spelling, keySignature);
           if (sign) note.addModifier(new VF.Accidental(sign), 0);
-          if (/^\w+d$/.test(duration) && !rest) VF.Dot.buildAndAttach([note], { all: true });
+          if (dotted) VF.Dot.buildAndAttach([note], { all: true });
           if (n.label) {
             note.addModifier(
               new VF.Annotation(n.label)
@@ -158,6 +158,10 @@ export function Staff({
           return note;
         });
         if (!staveNotes.length) return;
+        // triplets: bracketed «3», and only two thirds as long
+        const tuplets = tripletGroups(bar.map((n) => n.duration ?? 'w')).map(
+          (g) => new VF.Tuplet(g.map((k) => staveNotes[k]!)),
+        );
         const voice = new VF.Voice({ numBeats: num, beatValue: den })
           .setMode(VF.Voice.Mode.SOFT)
           .addTickables(staveNotes);
@@ -165,6 +169,7 @@ export function Staff({
         new VF.Formatter().joinVoices([voice]).formatToStave([voice], stave);
         voice.draw(ctx, stave);
         beams.forEach((b) => b.setContext(ctx).draw());
+        tuplets.forEach((tp) => tp.setContext(ctx).draw());
       });
       drawn.forEach(({ note, tie }, i) => {
         const next = drawn[i + 1];

@@ -61,8 +61,27 @@ export interface NoteRainExercise {
   intervals?: number[];
 }
 
-/** Note values (VexFlow notation): whole, half, quarter, eighth; "d" = dotted. */
-export type NoteValue = 'w' | 'h' | 'hd' | 'q' | 'qd' | '8';
+/**
+ * Note values (VexFlow notation): whole, half, quarter, eighth, sixteenth,
+ * thirty-second; "d" = dotted, "t" = triplet (three in the time of two).
+ * The course uses whole to eighth; own pieces may use all of them.
+ */
+export type NoteValue =
+  | 'w'
+  | 'h'
+  | 'hd'
+  | 'q'
+  | 'qd'
+  | '8'
+  | '8d'
+  | '16'
+  | '16d'
+  | '32'
+  | '64'
+  | 'qt'
+  | '8t'
+  | '16t'
+  | '32t';
 
 export interface SongNote {
   /** the key; -1 for a rest */
@@ -190,7 +209,8 @@ export interface SightReadExercise {
 }
 
 /** Rhythm values: note values plus rests ("qr" = quarter rest, …). */
-export type RhythmValue = NoteValue | 'qr' | 'hr' | 'wr';
+export type RhythmValue =
+  NoteValue | 'qr' | 'hr' | 'wr' | '8r' | '16r' | '32r' | '64r' | 'qtr' | '8tr' | '16tr' | '32tr';
 
 /**
  * "Rhythmus": play one bar in time with a metronome (after a count-in).

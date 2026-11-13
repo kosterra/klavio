@@ -1460,7 +1460,7 @@
     "title": "Own pieces",
     "intro": "Bring your own notes: a MusicXML or MIDI file from MuseScore, Finale, Sibelius or Dorico. Klavio reads it on your device; only the notes are stored, for all profiles of your account.",
     "import": "Import a piece",
-    "how": "Files .musicxml, .xml, .mxl or MIDI (.mid). Klavio takes the main voice (with two staves both hands) – whole to eighth notes, dotted halves and quarters.",
+    "how": "Files .musicxml, .xml, .mxl or MIDI (.mid), up to 300 bars. Klavio takes the main voice (with two staves both hands) – from whole notes to sixty-fourths, with dots and triplets.",
     "full": "At most {{count}} own pieces – delete one first.",
     "previewSong_one": "Song on one staff · {{count}} bar · {{time}} time",
     "previewSong_other": "Song on one staff · {{count}} bars · {{time}} time",
@@ -1483,9 +1483,9 @@
     "errors": {
       "NOT_MUSICXML": "This is not a MusicXML file. Export the piece from your notation program as MusicXML (.musicxml or .mxl).",
       "NO_NOTES": "There are no notes in the file.",
-      "TOO_LONG": "The piece is too long – at most 64 bars.",
-      "DURATION": "Bar {{bar}} has note values Klavio cannot do yet (e.g. sixteenths or dotted eighths).",
-      "TUPLET": "Bar {{bar}} has triplets – Klavio cannot do them yet.",
+      "TOO_LONG": "The piece is too long – at most 300 bars.",
+      "DURATION": "Bar {{bar}} has note values Klavio cannot do yet (e.g. sixty-fourth triplets).",
+      "TUPLET": "Bar {{bar}} has quintuplets or similar groups – triplets work, these not yet.",
       "RANGE": "The notes are outside the keyboard.",
       "TOO_BIG": "The file is too big (at most 5 MB).",
       "NOT_MIDI": "Klavio cannot read this MIDI file."
@@ -1524,5 +1524,47 @@
     "approve": "Approve",
     "reject": "Do not show",
     "publicTitle": "What families say"
+  },
+  "readiness": {
+    "ready": "Right for you: everything it needs comes in the learning path up to «{{lesson}}» – and you have done that.",
+    "readyShort": "Right for your level",
+    "after": "Recommended after the lesson «{{lesson}}» (chapter {{chapter}}).",
+    "afterShort": "Recommended after «{{lesson}}»",
+    "missing": "Still to learn for it: {{list}}.",
+    "go": "Go on with «{{lesson}}»",
+    "beyondText": "Goes beyond the learning path: {{list}} – still possible with patience and a slow tempo.",
+    "needs": {
+      "keys": "five notes",
+      "read-cde": "reading C, D, E",
+      "read-fg": "reading up to G",
+      "read-octave": "reading up to high C",
+      "wide": "thumb under (more than five notes)",
+      "read-high": "notes on ledger lines",
+      "rests": "rests",
+      "eighths": "eighth notes",
+      "dotted": "dotted quarters",
+      "two-four": "two-four time",
+      "bass": "bass clef",
+      "bass-low": "low notes in the bass",
+      "both": "both hands together",
+      "sharps": "sharps (♯) and black keys",
+      "three-four": "three-four time",
+      "upbeat": "upbeat",
+      "ties": "ties",
+      "six-eight": "six-eight time",
+      "flats": "flats (♭)",
+      "key-g": "G major",
+      "key-f": "F major"
+    },
+    "beyond": {
+      "very-high": "very high notes",
+      "very-low": "very low notes",
+      "other-time": "an unusual time signature",
+      "key-d": "D major",
+      "sixteenths": "sixteenths",
+      "dotted-eighths": "dotted eighths",
+      "triplets": "triplets"
+    },
+    "beyondShort": "plus {{list}}"
   }
 }

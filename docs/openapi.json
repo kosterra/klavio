@@ -1407,11 +1407,11 @@
                           },
                           "bars": {
                             "minItems": 1,
-                            "maxItems": 64,
+                            "maxItems": 300,
                             "type": "array",
                             "items": {
                               "minItems": 1,
-                              "maxItems": 32,
+                              "maxItems": 64,
                               "type": "array",
                               "items": {
                                 "anyOf": [
@@ -1427,11 +1427,20 @@
                                         "type": "string",
                                         "enum": [
                                           "8",
+                                          "16",
+                                          "32",
+                                          "64",
                                           "w",
                                           "h",
                                           "hd",
                                           "q",
-                                          "qd"
+                                          "qd",
+                                          "8d",
+                                          "16d",
+                                          "qt",
+                                          "8t",
+                                          "16t",
+                                          "32t"
                                         ]
                                       },
                                       "finger": {
@@ -1461,9 +1470,16 @@
                                         "type": "string",
                                         "enum": [
                                           "8",
+                                          "16",
+                                          "32",
+                                          "64",
                                           "w",
                                           "h",
-                                          "q"
+                                          "q",
+                                          "qt",
+                                          "8t",
+                                          "16t",
+                                          "32t"
                                         ]
                                       },
                                       "rest": {
@@ -1516,13 +1532,13 @@
                           },
                           "bars": {
                             "minItems": 1,
-                            "maxItems": 64,
+                            "maxItems": 300,
                             "type": "array",
                             "items": {
                               "type": "object",
                               "properties": {
                                 "rh": {
-                                  "maxItems": 32,
+                                  "maxItems": 64,
                                   "type": "array",
                                   "items": {
                                     "type": "object",
@@ -1543,14 +1559,31 @@
                                         "type": "string",
                                         "enum": [
                                           "8",
+                                          "16",
+                                          "32",
+                                          "64",
                                           "w",
                                           "h",
                                           "hd",
                                           "q",
                                           "qd",
-                                          "qr",
+                                          "8d",
+                                          "16d",
+                                          "qt",
+                                          "8t",
+                                          "16t",
+                                          "32t",
+                                          "wr",
                                           "hr",
-                                          "wr"
+                                          "qr",
+                                          "8r",
+                                          "16r",
+                                          "32r",
+                                          "64r",
+                                          "qtr",
+                                          "8tr",
+                                          "16tr",
+                                          "32tr"
                                         ]
                                       },
                                       "finger": {
@@ -1566,7 +1599,7 @@
                                   }
                                 },
                                 "lh": {
-                                  "maxItems": 32,
+                                  "maxItems": 64,
                                   "type": "array",
                                   "items": {
                                     "type": "object",
@@ -1587,14 +1620,31 @@
                                         "type": "string",
                                         "enum": [
                                           "8",
+                                          "16",
+                                          "32",
+                                          "64",
                                           "w",
                                           "h",
                                           "hd",
                                           "q",
                                           "qd",
-                                          "qr",
+                                          "8d",
+                                          "16d",
+                                          "qt",
+                                          "8t",
+                                          "16t",
+                                          "32t",
+                                          "wr",
                                           "hr",
-                                          "wr"
+                                          "qr",
+                                          "8r",
+                                          "16r",
+                                          "32r",
+                                          "64r",
+                                          "qtr",
+                                          "8tr",
+                                          "16tr",
+                                          "32tr"
                                         ]
                                       },
                                       "finger": {

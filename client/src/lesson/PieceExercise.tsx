@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { fitBarsPerLine } from '../notation/lineLength';
 import {
   Button,
   Group,
@@ -50,7 +51,10 @@ export function PieceExercise({
   const { t } = useTranslation();
   const lang = useNoteLang();
   const wide = useMediaQuery('(min-width: 900px)', true);
-  const barsPerLine = wide ? 3 : 2;
+  const barsPerLine = fitBarsPerLine(
+    wide ? 3 : 2,
+    exercise.bars.map((b) => Math.max(b.rh.length, b.lh.length)),
+  );
   const steps = useMemo(() => pieceSteps(exercise), [exercise]);
   const fingers = useMemo(() => pieceFingers(exercise), [exercise]);
   // which step each note belongs to (for highlighting)
