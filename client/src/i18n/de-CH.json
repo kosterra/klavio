@@ -1350,7 +1350,7 @@
   },
   "playOn": {
     "title": "Wo spielst du?",
-    "hint": "Das bietet dir der Start jeder Lektion zuerst an – auf diesem Gerät. Wechseln kannst du dort jederzeit.",
+    "hint": "Das bietet dir der Start jeder Lektion zuerst an. Dort kannst du für eine Lektion auch anders spielen – die Einstellung hier bleibt.",
     "piano": "Auf meinem Klavier",
     "screen": "Auf dem Bildschirm"
   },

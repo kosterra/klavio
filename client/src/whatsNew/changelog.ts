@@ -30,6 +30,10 @@ export const CHANGELOG: Release[] = [
         'Freies Spielen: Hört Klavio dein Klavier, spielen die Bildschirm-Tasten nicht mehr mit – sie zeigen nur, was du spielst.',
         'Free play: while Klavio hears your piano, the screen keys no longer play along – they only show what you play.',
       ),
+      L(
+        'Korrektur: «Lieber auf dem Bildschirm spielen» beim Start einer Lektion gilt nur für diese Lektion. Vorher stellte es «Wo spielst du?» im Profil um, und alle weiteren Lektionen boten den Bildschirm zuerst an.',
+        'Fix: «Rather play on the screen» at the start of a lesson counts for that lesson only. Before, it changed «Where do you play?» in the profile, and every later lesson offered the screen first.',
+      ),
     ],
   },
   {

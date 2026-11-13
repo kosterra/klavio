@@ -1350,7 +1350,7 @@
   },
   "playOn": {
     "title": "Where do you play?",
-    "hint": "What every lesson start offers you first – on this device. You can switch there at any time.",
+    "hint": "Every lesson start offers this first. There you can also play the other way for one lesson – the setting here stays.",
     "piano": "On my piano",
     "screen": "On the screen"
   },

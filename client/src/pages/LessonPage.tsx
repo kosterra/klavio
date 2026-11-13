@@ -190,15 +190,14 @@ function LessonRun({
   // the bar counts «Entdecken» too: its steps fill the first quarter
   const [theoryAt, setTheoryAt] = useState(0);
   const theoryShare = discoverFirst && steps.length ? THEORY_SHARE : 0;
-  // how the learner played last time on this device: shown first
-  // what the learner chose (start-up questions, «Mein Profil», last time) – fixed for this visit
-  const [savedPlayOn, setPlayOn] = usePlayOn();
+  // where the learner plays (start-up questions, «Mein Profil»): offered first.
+  // The other way at the start counts for this lesson only – it does not
+  // change the setting (one tap on «Bildschirm» used to switch every lesson after it)
+  const [savedPlayOn] = usePlayOn();
   const [playOn] = useState(savedPlayOn);
   const startLesson = (choice: 'piano' | 'screen' = 'piano') => {
     // the real piano: the microphone starts with this tap (iOS needs a gesture)
     if (choice === 'piano') input.startPreferred();
-    // the other way chosen: from now on the first one offered
-    void setPlayOn(choice).catch(() => undefined);
     startedAt.current = performance.now();
     setPhase('play');
   };

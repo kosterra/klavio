@@ -81,4 +81,11 @@ test('a new profile starts with a few questions: instrument, goal, dream song, w
   await page.goto(`/lesson/${firstOfBoth.id}`);
   await skipTheory(page);
   await expect(page.getByTestId('lesson-start')).toContainText('auf meinem Klavier');
+  // the screen for one lesson does not change the setting
+  await page.getByTestId('lesson-start-screen').click();
+  await page.goto(`/lesson/${firstOfBoth.id}`);
+  await skipTheory(page);
+  await expect(page.getByTestId('lesson-start')).toContainText('auf meinem Klavier');
+  await page.goto('/profile');
+  await expect(playOn.getByRole('radio', { name: 'Auf meinem Klavier' })).toBeChecked();
 });
