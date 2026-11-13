@@ -20,7 +20,7 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
-    version: UPCOMING,
+    version: '2026.11.7',
     changes: [
       L(
         'Notenregen: Spielst du auf deinem Klavier, hört Klavio ab «Los, lass es regnen» gleich zu, und die Bildschirm-Tasten zeigen nur noch, was sie hören. Nach einer Runde ist das Feld leer – nur das Ergebnis, die Auswahl und «Nochmals».',
