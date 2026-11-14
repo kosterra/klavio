@@ -7,7 +7,7 @@ import { inputHub, useNoteEvents } from '../input/noteBus';
 import { playMelody, type Playback } from '../audio/synth';
 import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
-import { FEEDBACK_MS, type ExerciseProps } from './exercises';
+import { FEEDBACK_MS, octaveOff, type ExerciseProps } from './exercises';
 import { useNoteLang } from './useLocalized';
 
 /**
@@ -30,6 +30,8 @@ export function EchoExercise({
   const [pos, setPos] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [wrong, setWrong] = useState<number | null>(null);
+  // what was asked when it went wrong (the motif starts again from its first note)
+  const [wrongFor, setWrongFor] = useState<number | null>(null);
   const playback = useRef<Playback | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const motif = exercise.motifs[index]!;
@@ -77,6 +79,7 @@ export function EchoExercise({
     } else {
       onMistake(motif[pos]);
       setWrong(e.midi);
+      setWrongFor(motif[pos] ?? null);
       setPos(0);
       clearTimeout(timer.current);
       timer.current = setTimeout(() => {
@@ -132,7 +135,12 @@ export function EchoExercise({
       </Group>
       <Text size="sm" c="dimmed" mih={22}>
         {wrong !== null
-          ? t('lesson.echo.wrong', { note: midiToPitchName(wrong, lang) })
+          ? t(
+              wrongFor !== null && octaveOff(wrong, wrongFor)
+                ? `lesson.echo.octave.${octaveOff(wrong, wrongFor)}`
+                : 'lesson.echo.wrong',
+              { note: midiToPitchName(wrong, lang) },
+            )
           : t('lesson.part', { n: index + 1, total: exercise.motifs.length })}
       </Text>
       <VirtualKeyboard

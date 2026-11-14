@@ -185,6 +185,11 @@ export interface ListenExercise {
     /** index into `answers` */
     answer: number;
   }[];
+  /**
+   * Higher / lower: each round may be played back to front (the answer flips),
+   * so the answers come in no fixed order – the rounds still get closer.
+   */
+  mirror?: true;
 }
 
 /**

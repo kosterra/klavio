@@ -29,6 +29,8 @@ export interface TrackerOptions {
   maxMidi?: number;
   /** Converts the frame's audio time (s) into the event time (ms). */
   toEventTime?: (audioTimeSec: number) => number;
+  /** While a note rings, a different note needs a new attack (not only octaves and twelfths). */
+  attackWhileRinging?: boolean;
 }
 
 /** Intervals (semitones) at which piano partials commonly fool pitch detection. */
@@ -74,6 +76,7 @@ export class NoteTracker {
       releaseFrames: 4,
       onsetDb: 6,
       restrikeRiseDb: 2,
+      attackWhileRinging: true,
       minMidi: 33, // A1
       maxMidi: 96, // C7
       toEventTime: (t) => t * 1000,
@@ -198,6 +201,12 @@ export class NoteTracker {
       related !== null &&
       HARMONIC_STEPS.includes(Math.abs(midi - related))
     ) {
+      return events;
+    }
+    // The same for any other pitch: while a string rings (or just stopped), its
+    // overtones and the strings ringing along can show a second or third note.
+    // Only a new attack makes it a key that was played.
+    if (o.attackWhileRinging && !this.pendingOnset && related !== null) {
       return events;
     }
     if (this.candidateCount < o.stableFrames) return events;

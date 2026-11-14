@@ -21,7 +21,7 @@ import { playAccompaniment, strikeChord, type Accompaniment } from '../audio/acc
 import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { Staff, type StaffNote } from '../notation/Staff';
-import { FEEDBACK_MS, type ExerciseProps } from './exercises';
+import { FEEDBACK_MS, octaveOff, type ExerciseProps } from './exercises';
 import { useNoteLang } from './useLocalized';
 import { useDuet } from './duet';
 import { DuetSwitch } from './DuetSwitch';
@@ -237,7 +237,12 @@ export function SongExercise({
       </div>
       <Text size="sm" c="dimmed" mih={22} data-testid="song-status">
         {wrong !== null
-          ? t('lesson.wrongPlay', { note: midiToPitchName(wrong, lang) })
+          ? t(
+              notes[pos] && octaveOff(wrong, notes[pos].midi)
+                ? `lesson.octave.${octaveOff(wrong, notes[pos].midi)}`
+                : 'lesson.wrongPlay',
+              { note: midiToPitchName(wrong, lang) },
+            )
           : !finished
             ? t('lesson.songProgress', { n: pos + 1, total: notes.length })
             : ' '}

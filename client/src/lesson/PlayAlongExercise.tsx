@@ -7,7 +7,7 @@ import { midiToPitchName, type PlayAlongExercise as Spec } from '@klavio/shared'
 import { useNoteEvents } from '../input/noteBus';
 import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
-import { FEEDBACK_MS, type ExerciseProps } from './exercises';
+import { FEEDBACK_MS, octaveOff, type ExerciseProps } from './exercises';
 import { useNoteLang } from './useLocalized';
 
 /** "Spiel nach": play the shown notes in order. The app waits for each note. */
@@ -126,7 +126,12 @@ export function PlayAlongExercise({
       </Group>
       <Text size="sm" c="dimmed" mih={22}>
         {wrong !== null
-          ? t('lesson.wrongPlay', { note: midiToPitchName(wrong, lang, exercise.spelling) })
+          ? t(
+              expected !== undefined && octaveOff(wrong, expected)
+                ? `lesson.octave.${octaveOff(wrong, expected)}`
+                : 'lesson.wrongPlay',
+              { note: midiToPitchName(wrong, lang, exercise.spelling) },
+            )
           : t('lesson.part', { n: seqIndex + 1, total: exercise.sequences.length })}
       </Text>
       <VirtualKeyboard

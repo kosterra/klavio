@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
-import { scoreRhythm } from './rhythmScore';
+import { inputLatency, scoreMelody, scoreRhythm } from './rhythmScore';
 
 describe('rhythm scoring', () => {
   const beats = [0, 500, 1000, 1500];
@@ -28,5 +28,42 @@ describe('rhythm scoring', () => {
 
   it('flags early notes', () => {
     expect(scoreRhythm([1000], [880], 150).perNote).toEqual(['early']);
+  });
+});
+
+describe('inputLatency', () => {
+  const song = [0, 500, 1000, 1500, 2000].map((ms, i) => ({ ms, midi: 60 + i }));
+
+  it('finds the delay that is the same for every note', () => {
+    const jitter = [-30, 10, 0, 20, -10];
+    const played = song.map((x, i) => ({ ms: x.ms + 230 + jitter[i]!, midi: x.midi }));
+    expect(inputLatency(song, played)).toBe(230);
+    // with it taken out, every note is in time
+    const shifted = played.map((p) => ({ ...p, ms: p.ms - inputLatency(song, played) }));
+    expect(scoreMelody(song, shifted, 160).perNote.every((v) => v === 'ok')).toBe(true);
+  });
+
+  it('takes nothing out without enough notes, and never more than the limit', () => {
+    expect(
+      inputLatency(
+        song,
+        song.slice(0, 2).map((x) => ({ ...x, ms: x.ms + 200 })),
+      ),
+    ).toBe(0);
+    expect(
+      inputLatency(
+        song,
+        song.map((x) => ({ ...x, ms: x.ms + 520 })),
+      ),
+    ).toBe(400);
+  });
+
+  it('does not reward playing early', () => {
+    expect(
+      inputLatency(
+        song,
+        song.map((x) => ({ ...x, ms: x.ms - 120 })),
+      ),
+    ).toBe(0);
   });
 });

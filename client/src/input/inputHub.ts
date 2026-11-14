@@ -28,7 +28,10 @@ export class InputHub {
       case 'midi':
         return true;
       case 'microphone':
-        if (this.midiConnected || event.time < this.micMutedUntil) return false;
+        if (this.midiConnected) return false;
+        // a note that already sounds always ends – else its key stayed lit while muted
+        if (event.type === 'note-off') return true;
+        if (event.time < this.micMutedUntil) return false;
         return event.time - this.lastScreenKeyAt > this.echoGuardMs;
     }
   }

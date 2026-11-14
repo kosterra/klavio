@@ -22,7 +22,7 @@ import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { Staff, type StaffNote } from '../notation/Staff';
 import type { ExerciseProps } from './exercises';
-import { INPUT_DELAY_MS, scoreMelody, type MelodyScore } from './rhythmScore';
+import { INPUT_DELAY_MS, inputLatency, scoreMelody, type MelodyScore } from './rhythmScore';
 import { useDuet } from './duet';
 import { DuetSwitch } from './DuetSwitch';
 
@@ -107,6 +107,8 @@ export function TimedSongExercise({
   const events = useMemo(() => accompaniment(exercise), [exercise]);
   const backing = useRef<Accompaniment | null>(null);
   const played = useRef<{ ms: number; midi: number }[]>([]);
+  // a note came through the microphone: its delay on this device is measured and taken out
+  const heardByMic = useRef(false);
   const window = useRef<{ from: number; to: number } | null>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const raf = useRef(0);
@@ -125,14 +127,17 @@ export function TimedSongExercise({
   useNoteEvents((e: NoteEvent) => {
     if (e.type !== 'note-on' || !window.current) return;
     const ms = e.time - INPUT_DELAY_MS[e.source];
-    if (ms >= window.current.from && ms <= window.current.to)
+    if (ms >= window.current.from && ms <= window.current.to) {
       played.current.push({ ms, midi: e.midi });
+      if (e.source === 'microphone') heardByMic.current = true;
+    }
   });
 
   const start = () => {
     clearAll();
     setScore(null);
     played.current = [];
+    heardByMic.current = false;
     const accents = Array.from({ length: exercise.bars.length + 1 }, (_, i) => i * beatsPerBar);
     const m = runMetronome(beatsPerBar + Math.ceil(totalBeats), tempo, accents);
     run.current = m;
@@ -160,7 +165,15 @@ export function TimedSongExercise({
           clearAll();
           window.current = null;
           setNow(null);
-          setScore(scoreMelody(expected, played.current, tolerance));
+          // the microphone's delay on this device is not the learner's rhythm: taken out
+          const shift = heardByMic.current ? inputLatency(expected, played.current) : 0;
+          setScore(
+            scoreMelody(
+              expected,
+              played.current.map((p) => ({ ...p, ms: p.ms - shift })),
+              tolerance,
+            ),
+          );
           setPhase('result');
         },
         end - performance.now() + 200,

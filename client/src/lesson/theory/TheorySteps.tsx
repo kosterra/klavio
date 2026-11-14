@@ -78,6 +78,8 @@ function TapKeys({ step, kids, onSolved, setFeedback }: StepProps<TapKeysStep>) 
       correct={found.flatMap((g) => step.targets[g]!)}
       wrong={wrong === null ? [] : [wrong]}
       onPress={press}
+      // «all of them»: every one in view, also on a phone
+      keep={step.need === 'one' ? undefined : step.targets.flat()}
     />
   );
 }
