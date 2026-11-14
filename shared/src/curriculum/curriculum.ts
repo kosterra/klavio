@@ -156,6 +156,7 @@ export const CURRICULUM: Chapter[] = [
               { 'de-CH': 'Tiefer', en: 'Lower' },
             ],
             tempo: 80,
+            mirror: true,
             rounds: [
               { notes: [[48], [72]], answer: 0 },
               { notes: [[72], [50]], answer: 1 },

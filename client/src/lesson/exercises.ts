@@ -17,6 +17,16 @@ export interface ExerciseProps<E> {
 /** Time the feedback stays visible before the next task (ms). */
 export const FEEDBACK_MS = 650;
 
+/**
+ * The right note name in the wrong octave (e.g. the low C instead of the high
+ * one): 'low' or 'high', so the feedback can say so – «Das war C» alone reads
+ * as if the app had not heard right.
+ */
+export function octaveOff(played: number, expected: number): 'low' | 'high' | null {
+  if (played === expected || (played - expected) % 12 !== 0) return null;
+  return played < expected ? 'low' : 'high';
+}
+
 /** Random order without the same note twice in a row. */
 export function shuffleRounds(notes: number[], rounds: number, random = Math.random): number[] {
   const out: number[] = [];

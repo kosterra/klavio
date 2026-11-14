@@ -212,6 +212,8 @@ function LessonRun({
   }, [phase]);
   // a phone held sideways has little height: smaller figures
   const short = useMediaQuery('(max-height: 32em)') ?? false;
+  // phones: the start card in one screen – «Los geht's» without scrolling
+  const compact = useMediaQuery('(max-width: 36em), (max-height: 50em)') ?? false;
   const [micDetails, setMicDetails] = useState(false);
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -421,18 +423,25 @@ function LessonRun({
 
           {/* -------------------------------------------------------- intro */}
           {phase === 'intro' && (
-            <Card withBorder radius="xl" padding="xl" maw={640} mx="auto" w="100%">
-              <Stack align="center" gap="md">
-                <Buddy mood="happy" size={short ? 56 : kids ? 120 : 80} />
+            <Card
+              withBorder
+              radius="xl"
+              padding={compact ? 'md' : 'xl'}
+              maw={640}
+              mx="auto"
+              w="100%"
+            >
+              <Stack align="center" gap={compact ? 'xs' : 'md'}>
+                <Buddy mood="happy" size={short ? 56 : compact ? 64 : kids ? 120 : 80} />
                 {chapter && (
                   <Text size="sm" fw={700} c="indigo.8" tt="uppercase">
                     {loc(chapter.title)}
                   </Text>
                 )}
-                <Title order={1} ta="center">
+                <Title order={1} ta="center" size={compact ? 'h2' : undefined}>
                   {loc(lesson.title)}
                 </Title>
-                <Text fz="lg" ta="center">
+                <Text fz={compact ? 'md' : 'lg'} ta="center">
                   {loc(lesson.intro)}
                 </Text>
                 {handShape && (
@@ -444,6 +453,7 @@ function LessonRun({
                 {theory.length > 0 && (
                   <Button
                     variant="subtle"
+                    size={compact ? 'compact-md' : undefined}
                     onClick={() => {
                       setSteps(theory);
                       setTheoryAt(0);

@@ -17,12 +17,15 @@ async function answerAll(page: Page, exercise: ListenExercise, wrongFirst: boole
   const box = page.getByTestId('listen');
   for (const [i, round] of exercise.rounds.entries()) {
     await expect(box).toHaveAttribute('data-round', String(i));
+    // «Hoch oder tief?» plays some rounds back to front: the other answer
+    const answer =
+      (await box.getAttribute('data-mirrored')) !== null ? 1 - round.answer : round.answer;
     if (wrongFirst && i === 0) {
-      const wrong = round.answer === 0 ? 1 : 0;
+      const wrong = answer === 0 ? 1 : 0;
       await page.getByTestId(`listen-answer-${wrong}`).click();
       await expect(page.getByTestId(`listen-answer-${wrong}`)).toBeDisabled();
     }
-    await page.getByTestId(`listen-answer-${round.answer}`).click();
+    await page.getByTestId(`listen-answer-${answer}`).click();
   }
 }
 

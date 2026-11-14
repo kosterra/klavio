@@ -29,6 +29,11 @@ export interface PianoKeyboardProps {
    * call for touch input.
    */
   onPress?: (midi: number, time: number) => void;
+  /**
+   * Keys the task needs all at once («Tippe alle A an»): a phone keeps every
+   * one of them in view – narrower keys rather than one hidden behind ›.
+   */
+  keep?: readonly number[];
   onRelease?: (midi: number) => void;
 }
 
@@ -38,6 +43,8 @@ export interface PianoKeyboardProps {
  * a keyboard to swipe sideways.
  */
 const MIN_WHITE_PX = 36;
+/** … unless the keys a task needs only fit narrower – never below this. */
+const SQUEEZED_WHITE_PX = 24;
 
 /** A touch only becomes a note when the finger stays put … */
 const TAP_SLOP_PX = 14;
@@ -75,7 +82,7 @@ const focusOf = (from: number, to: number, hints: readonly number[]) =>
  * ‹ › to move it by an octave; it follows the hinted keys by itself.
  */
 export function PianoKeyboard(props: PianoKeyboardProps) {
-  const { from, to, hints = [], onPress } = props;
+  const { from, to, hints = [], keep = [], onPress } = props;
   const { t, i18n } = useTranslation();
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
   const interactive = !!onPress;
@@ -91,15 +98,30 @@ export function PianoKeyboard(props: PianoKeyboardProps) {
   }, [interactive]);
 
   const whites = whiteKeys(from, to);
-  const fits = room === null ? whites.length : Math.max(7, Math.floor(room / MIN_WHITE_PX));
+  // the white key a note sits on (a black key: the white one left of it)
+  const indexOf = (m: number) =>
+    Math.max(
+      0,
+      whites.findLastIndex((w) => w <= m),
+    );
+  const keepIdx = keep.filter((m) => m >= from && m <= to).map(indexOf);
+  const keepSpan = keepIdx.length ? Math.max(...keepIdx) - Math.min(...keepIdx) + 1 : 0;
+  const roomFor = (px: number) => (room === null ? whites.length : Math.floor(room / px));
+  // as many full-size keys as fit – more, narrower ones when the task needs them all
+  const fits = Math.min(
+    whites.length,
+    Math.max(7, roomFor(MIN_WHITE_PX), Math.min(keepSpan, roomFor(SQUEEZED_WHITE_PX))),
+  );
   const windowed = interactive && fits < whites.length;
   const last = Math.max(0, whites.length - fits);
   const clamp = (i: number) => Math.min(last, Math.max(0, i));
   const focus = focusOf(from, to, hints);
-  const focusIndex = Math.max(
-    0,
-    whites.findIndex((w) => w >= focus),
-  );
+  const focusIndex = keepIdx.length
+    ? Math.round((Math.min(...keepIdx) + Math.max(...keepIdx)) / 2)
+    : Math.max(
+        0,
+        whites.findIndex((w) => w >= focus),
+      );
   const centred = clamp(focusIndex - Math.floor((fits - 1) / 2));
   const [start, setStart] = useState<number | null>(null);
   // a new hint outside the keys shown: the keys follow it

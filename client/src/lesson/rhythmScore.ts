@@ -100,3 +100,29 @@ export function scoreMelody(
     missed: perNote.filter((v) => v === 'missed').length,
   };
 }
+
+/**
+ * The delay of this input on this device, from the playing itself: the
+ * microphone hears a note some 100–250 ms after the key was struck (different
+ * on every phone). Each played note is compared with the nearest expected note
+ * of the same pitch; the median of those offsets (0 … `maxMs`) is the part that
+ * is the same for every note – the device, not the rhythm.
+ */
+export function inputLatency(expected: TimedNote[], played: TimedNote[], maxMs = 400): number {
+  const offsets: number[] = [];
+  for (const y of played) {
+    let best: number | null = null;
+    for (const x of expected) {
+      if (x.midi !== y.midi) continue;
+      const d = y.ms - x.ms;
+      if (d < -150 || d > maxMs + 150) continue;
+      if (best === null || Math.abs(d) < Math.abs(best)) best = d;
+    }
+    if (best !== null) offsets.push(best);
+  }
+  // too few notes to tell the device from the learner
+  if (offsets.length < 3) return 0;
+  offsets.sort((a, b) => a - b);
+  const median = offsets[Math.floor(offsets.length / 2)]!;
+  return Math.min(maxMs, Math.max(0, median));
+}

@@ -20,6 +20,35 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: '2026.11.8',
+    changes: [
+      L(
+        'Mikrofon: Ein nachklingender Ton gibt keine Zusatztöne mehr – ein neuer Ton zählt nur, wenn eine Taste wirklich angeschlagen wird. So gibt es keine Fehler mehr, die du gar nicht gespielt hast.',
+        'Microphone: a note dying away no longer adds extra notes – a new note only counts when a key is really struck. No more mistakes you never played.',
+      ),
+      L(
+        '«Im Takt» mit dem Mikrofon: Klavio misst, wie spät dein Handy die Töne hört, und rechnet das heraus. Bewertet wird dein Rhythmus, nicht das Gerät.',
+        '«In time» with the microphone: Klavio measures how late your phone hears the notes and takes that out. Your rhythm is judged, not the device.',
+      ),
+      L(
+        'Richtiger Ton in der falschen Oktave: Klavio sagt jetzt «eine Oktave zu tief» oder «zu hoch» und wo das richtige liegt.',
+        'The right note in the wrong octave: Klavio now says «one octave too low» or «too high» and where the right one is.',
+      ),
+      L(
+        '«Hoch oder tief?»: Höher und tiefer kommen jetzt in zufälliger Reihenfolge.',
+        '«High or low?»: higher and lower now come in random order.',
+      ),
+      L(
+        'Korrektur: Eine Taste blieb manchmal farbig, obwohl nichts mehr klang.',
+        'Fix: a key sometimes stayed coloured although nothing was sounding any more.',
+      ),
+      L(
+        'Auf dem Handy: «Tippe alle … an» zeigt alle gesuchten Tasten auf einmal. Der Start einer Lektion passt auf einen Bildschirm, und im Lernpfad schieben sich lange Kapiteltitel nicht mehr ins nächste Kapitel.',
+        'On phones: «Tap all …» shows every key you are looking for at once. The start of a lesson fits on one screen, and long chapter titles on the path no longer run into the next chapter.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.7',
     changes: [
       L(

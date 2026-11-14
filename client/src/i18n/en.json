@@ -708,7 +708,11 @@
       "listen": "Listen carefully …",
       "again": "Listen again",
       "unknown": "unknown note",
-      "wrong": "That was {{note}} – listen again."
+      "wrong": "That was {{note}} – listen again.",
+      "octave": {
+        "low": "That was {{note}}, but one octave too low – listen again.",
+        "high": "That was {{note}}, but one octave too high – listen again."
+      }
     },
     "rain": {
       "task": "Play every note before it lands!",
@@ -749,6 +753,10 @@
       "intro": "Look at the notes calmly first. Then I count in – and you play it through without stopping.",
       "tip": "Tip: always look ahead to the next note – and keep going, even after a mistake.",
       "round": "Melody {{n}} of {{total}}"
+    },
+    "octave": {
+      "low": "That was {{note}} – one octave too low. Take the {{note}} further right.",
+      "high": "That was {{note}} – one octave too high. Take the {{note}} further left."
     }
   },
   "badges": {

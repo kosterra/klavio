@@ -25,12 +25,29 @@ export function ListenExercise({
   const { t } = useTranslation();
   const loc = useLocalized();
   const [round, setRound] = useState(0);
+  // higher / lower: some rounds back to front, never the same answer three times running
+  const [rounds] = useState(() => {
+    if (!exercise.mirror) return exercise.rounds.map((r) => ({ ...r, mirrored: false }));
+    const out: ((typeof exercise.rounds)[number] & { mirrored: boolean })[] = [];
+    for (const r of exercise.rounds) {
+      let flip = Math.random() < 0.5;
+      const answerIf = (f: boolean) => (f ? 1 - r.answer : r.answer);
+      const [a, b] = out.slice(-2);
+      if (a && b && a.answer === b.answer && answerIf(flip) === a.answer) flip = !flip;
+      out.push(
+        flip
+          ? { notes: [...r.notes].reverse(), answer: 1 - r.answer, mirrored: true }
+          : { ...r, mirrored: false },
+      );
+    }
+    return out;
+  });
   const [playing, setPlaying] = useState(false);
   const [tried, setTried] = useState<number[]>([]);
   const [solved, setSolved] = useState(false);
   const playback = useRef<Playback | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const r = exercise.rounds[round]!;
+  const r = rounds[round]!;
 
   const play = () => {
     playback.current?.stop();
@@ -83,7 +100,15 @@ export function ListenExercise({
 
   const wrongNow = !solved && tried.length > 0;
   return (
-    <Stack align="center" gap="lg" w="100%" data-testid="listen" data-round={round}>
+    <Stack
+      align="center"
+      gap="lg"
+      w="100%"
+      data-testid="listen"
+      data-round={round}
+      // for automated tests: this round is played back to front
+      data-mirrored={r.mirrored || undefined}
+    >
       <BuddySays
         mood={solved ? 'cheer' : wrongNow ? 'think' : 'listen'}
         size={kids ? 96 : 64}

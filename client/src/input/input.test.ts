@@ -77,6 +77,14 @@ describe('input hub', () => {
     expect(hub.accept(ev('keyboard', 4000))).toBe(true);
     expect(hub.accept(ev('microphone', 6000))).toBe(true);
   });
+
+  it('lets a sounding microphone note end while muted (no key stays lit)', () => {
+    const hub = new InputHub();
+    expect(hub.accept(ev('microphone', 900))).toBe(true);
+    hub.muteMicrophoneUntil(5000);
+    expect(hub.accept(ev('microphone', 1200, 'note-off'))).toBe(true);
+    expect(hub.accept(ev('microphone', 1300))).toBe(false);
+  });
 });
 
 describe('sustain pedal', () => {

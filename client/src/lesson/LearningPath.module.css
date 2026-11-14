@@ -52,6 +52,12 @@
 
 .signpostMeta {
   margin-top: 2px;
+  row-gap: 6px;
+}
+
+/* a badge never breaks inside: it moves to the next line as a whole */
+.signpostMeta > * {
+  white-space: nowrap;
 }
 
 .chevron {

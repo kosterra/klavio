@@ -708,7 +708,11 @@
       "listen": "Hör gut zu …",
       "again": "Nochmals hören",
       "unknown": "unbekannter Ton",
-      "wrong": "Das war {{note}} – hör nochmals zu."
+      "wrong": "Das war {{note}} – hör nochmals zu.",
+      "octave": {
+        "low": "Das war {{note}}, aber eine Oktave zu tief – hör nochmals zu.",
+        "high": "Das war {{note}}, aber eine Oktave zu hoch – hör nochmals zu."
+      }
     },
     "rain": {
       "task": "Spiel jede Note, bevor sie landet!",
@@ -749,6 +753,10 @@
       "intro": "Schau die Noten zuerst in Ruhe an. Dann zähle ich ein – und du spielst durch, ohne anzuhalten.",
       "tip": "Tipp: Schau immer schon auf den nächsten Ton – und spiel weiter, auch nach einem Fehler.",
       "round": "Melodie {{n}} von {{total}}"
+    },
+    "octave": {
+      "low": "Das war {{note}} – eine Oktave zu tief. Nimm das {{note}} weiter rechts.",
+      "high": "Das war {{note}} – eine Oktave zu hoch. Nimm das {{note}} weiter links."
     }
   },
   "badges": {

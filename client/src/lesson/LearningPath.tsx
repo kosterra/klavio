@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Button,
@@ -8,7 +8,7 @@ import {
   UnstyledButton,
   VisuallyHidden,
 } from '@mantine/core';
-import { useElementSize } from '@mantine/hooks';
+import { useElementSize, useMergedRef } from '@mantine/hooks';
 import {
   IconChevronDown,
   IconLock,
@@ -266,6 +266,9 @@ export function LearningPath({
   const loc = useLocalized();
   const forMe = useLessonFor();
   const { ref, width } = useElementSize();
+  // the same element, to measure the signposts in it
+  const mapEl = useRef<HTMLDivElement>(null);
+  const mapRef = useMergedRef(ref, mapEl);
   const [toggled, setToggled] = useState<ReadonlySet<string>>(new Set());
   const toggle = (id: string) =>
     setToggled((prev) => {
@@ -291,6 +294,9 @@ export function LearningPath({
   const roomy = width >= 640;
   const rowHeight = narrow ? 172 : 156;
   const header = roomy ? HEADER_WIDE : HEADER;
+  // a signpost that needs more room (a long title wraps, the badges wrap): its
+  // row grows, so nothing reaches into the next chapter
+  const [signHeights, setSignHeights] = useState<Record<string, number>>({});
 
   // one map per level ("Stufe"): the level of the lesson to play next is shown first
   const stages = [...new Set(CURRICULUM.map((c) => c.stage))];
@@ -330,14 +336,15 @@ export function LearningPath({
         const cell = cols > 1 ? (width - 2 * markerX) / (cols - 1) : width;
         const currentIndex = chapter.lessons.findIndex((l) => l.id === currentLessonId);
         const figureSpace = currentIndex >= 0 && currentIndex < cols ? 58 : 6;
+        const rowTop = Math.max(header, (signHeights[chapter.id] ?? 0) + 12);
         const points = open
-          ? layout(count, width, cols, header + figureSpace + 50, rowHeight, markerX)
+          ? layout(count, width, cols, rowTop + figureSpace + 50, rowHeight, markerX)
           : [];
-        const markerY = header / 2;
+        const markerY = rowTop / 2;
         // open chapters end with room below the last titles for the bend to the next signpost
         const height = open
           ? points[points.length - 1]!.y + (narrow ? 160 : 140) + FOOT
-          : header + FOOT;
+          : rowTop + FOOT;
 
         // road through this chapter
         // the road always arrives in the signpost lane (chapters bend into it at their end)
@@ -396,6 +403,7 @@ export function LearningPath({
           height,
           markerX,
           markerY,
+          rowTop,
           road,
           travelled,
           lessons,
@@ -412,11 +420,29 @@ export function LearningPath({
     if (reachedIds) saveRevealed(profileId, reachedIds.split(','));
   }, [profileId, reachedIds]);
   const shown = sections.filter((s) => s.chapter.stage === stage);
+  // measure the signposts shown (titles wrap differently per screen, language and font size)
+  useEffect(() => {
+    const root = mapEl.current;
+    if (!root) return;
+    const measure = () => {
+      const next: Record<string, number> = {};
+      root.querySelectorAll<HTMLElement>('[data-sign]').forEach((el) => {
+        next[el.dataset.sign!] = Math.ceil(el.offsetHeight);
+      });
+      setSignHeights((prev) =>
+        Object.keys(next).every((k) => prev[k] === next[k]) ? prev : { ...prev, ...next },
+      );
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    root.querySelectorAll('[data-sign]').forEach((el) => ro.observe(el));
+    return () => ro.disconnect();
+  }, [width, stage, shown.length]);
   const totalHeight = shown.reduce((h, s) => h + s.height, 0);
   const nextStage = stages.find((s) => s > stage);
 
   return (
-    <div ref={ref} className={classes.map} id="learning-path">
+    <div ref={mapRef} className={classes.map} id="learning-path">
       {(title || stages.length > 1) && (
         <div
           className={`${classes.section} ${classes.mapTitle}`}
@@ -461,7 +487,8 @@ export function LearningPath({
         </div>
       )}
       {shown.map((sec) => {
-        const { chapter, world, ci, first, color, cell, points, height, markerX, markerY } = sec;
+        const { chapter, world, ci, first, color, cell, points, height, markerX, markerY, rowTop } =
+          sec;
         // stones at the edges sit one margin from the border: keep their titles inside
         const labelWidth = Math.min(cell, 2 * markerX + 24);
         const vars = chapterVars(color);
@@ -577,7 +604,13 @@ export function LearningPath({
             />
             <UnstyledButton
               className={classes.signpost}
-              style={{ left: markerX + 50, right: roomy ? 200 : 0, top: markerY - 40 }}
+              // centred in its row; a taller one starts near the top of its (grown) row
+              style={{
+                left: markerX + 50,
+                right: roomy ? 200 : 0,
+                top: rowTop > header ? 6 : markerY - 40,
+              }}
+              data-sign={chapter.id}
               aria-expanded={sec.open}
               aria-controls={sec.open ? `chapter-board-${chapter.id}` : undefined}
               onClick={() => toggle(chapter.id)}
@@ -603,7 +636,8 @@ export function LearningPath({
                 >
                   {loc(chapter.title)}
                 </Text>
-                <Group component="span" gap="xs" wrap="nowrap" className={classes.signpostMeta}>
+                {/* stars and badges wrap onto a second line on narrow screens – nothing is cut off */}
+                <Group component="span" gap={6} wrap="wrap" className={classes.signpostMeta}>
                   <Group
                     component="span"
                     gap={3}
@@ -615,6 +649,13 @@ export function LearningPath({
                     <Text component="span" fw={800} size="sm" aria-hidden>
                       {sec.earned}/{sec.total}
                     </Text>
+                    {/* the arrow stays with the stars – never alone on a line */}
+                    <IconChevronDown
+                      size={20}
+                      aria-hidden
+                      className={classes.chevron}
+                      data-open={sec.open || undefined}
+                    />
                   </Group>
                   {sec.finished && (
                     <Text component="span" size="sm" className={classes.doneBadge}>
@@ -637,12 +678,6 @@ export function LearningPath({
                       </Text>
                     </Group>
                   )}
-                  <IconChevronDown
-                    size={20}
-                    aria-hidden
-                    className={classes.chevron}
-                    data-open={sec.open || undefined}
-                  />
                 </Group>
               </Box>
             </UnstyledButton>
