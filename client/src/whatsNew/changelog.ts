@@ -20,7 +20,7 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
-    version: UPCOMING,
+    version: '2026.11.8',
     changes: [
       L(
         'Mikrofon: Ein nachklingender Ton gibt keine Zusatztöne mehr – ein neuer Ton zählt nur, wenn eine Taste wirklich angeschlagen wird. So gibt es keine Fehler mehr, die du gar nicht gespielt hast.',
