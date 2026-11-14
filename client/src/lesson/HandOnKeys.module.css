@@ -9,7 +9,7 @@
 /* phones: the picture leaves room for «Los geht's» on the same screen */
 @media (max-width: 36em), (max-height: 50em) {
   .svg {
-    max-height: 22svh;
+    max-height: 16svh;
   }
 }
 

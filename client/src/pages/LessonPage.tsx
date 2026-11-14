@@ -453,6 +453,7 @@ function LessonRun({
                 {theory.length > 0 && (
                   <Button
                     variant="subtle"
+                    size={compact ? 'compact-md' : undefined}
                     onClick={() => {
                       setSteps(theory);
                       setTheoryAt(0);
