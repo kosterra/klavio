@@ -238,8 +238,7 @@ describe('parent PIN', () => {
         ),
       ),
     );
-    expect(codes.filter((c) => c === 403)).toHaveLength(5);
-    expect(codes.filter((c) => c === 429)).toHaveLength(15);
+    expect(codes.sort()).toEqual([...Array<number>(5).fill(403), ...Array<number>(15).fill(429)]);
   });
 
   it('validates the PIN format and can be removed', async () => {

@@ -227,8 +227,7 @@ describe("children's sessions", () => {
         }).then((r) => r.statusCode),
       ),
     );
-    expect(codes.filter((c) => c === 403)).toHaveLength(5);
-    expect(codes.filter((c) => c === 429)).toHaveLength(15);
+    expect(codes.sort()).toEqual([...Array<number>(5).fill(403), ...Array<number>(15).fill(429)]);
     const { AuthThrottle } = await import('../src/models/index.js');
     expect((await AuthThrottle.findById(`child-pin:${lina}`).lean())!.failures).toBe(5);
     expect(

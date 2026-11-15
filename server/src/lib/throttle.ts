@@ -52,11 +52,20 @@ export async function claimAttempt(key: string, p: ThrottlePolicy): Promise<bool
   // cheap check first: a locked key doesn't touch the count
   if ((await lockedFor(key, p)) > 0) return false;
   const now = new Date();
-  const before = await AuthThrottle.findOneAndUpdate(
-    { _id: key },
-    { $inc: { failures: 1 }, $set: { lastFailureAt: now, expiresAt: new Date(+now + MEMORY_MS) } },
-    { upsert: true, returnDocument: 'before' },
-  ).lean();
+  const count = () =>
+    AuthThrottle.findOneAndUpdate(
+      { _id: key },
+      {
+        $inc: { failures: 1 },
+        $set: { lastFailureAt: now, expiresAt: new Date(+now + MEMORY_MS) },
+      },
+      { upsert: true, returnDocument: 'before' },
+    ).lean();
+  // two first guesses at once may both try to create the entry: the loser counts again
+  const before = await count().catch((err: unknown) => {
+    if ((err as { code?: number }).code === 11000) return count();
+    throw err;
+  });
   if (!before) return true;
   const until = before.lastFailureAt.getTime() + lockMs(before.failures, p);
   if (until <= now.getTime()) return true;
