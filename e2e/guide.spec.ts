@@ -52,7 +52,9 @@ test('Klavi explains in the exercise, the hand lies on the keys, songs and lesso
   await skipTheory(page);
   await expect(page.getByText('So liegt deine Hand')).toBeVisible();
   await expect(page.getByTestId('hand-on-keys')).toBeVisible();
-  await expect(page.getByTestId('hand-caption')).toHaveText(/^Rechte Hand: Finger 1 auf C/);
+  await expect(page.getByTestId('hand-caption')).toHaveText(
+    /^Rechte Hand: Finger 1 \(Daumen\) auf C/,
+  );
   await audit(page);
 
   // --- «Lieder»: open songs to play again, the others with their chapter

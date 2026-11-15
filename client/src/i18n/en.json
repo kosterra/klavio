@@ -1394,7 +1394,14 @@
     "title": "This is where your hand goes",
     "right": "Right hand: {{keys}}",
     "left": "Left hand: {{keys}}",
-    "finger": "finger {{n}} on {{note}}"
+    "finger": "finger {{n}} ({{name}}) on {{note}}",
+    "fingerName": {
+      "1": "thumb",
+      "2": "index finger",
+      "3": "middle finger",
+      "4": "ring finger",
+      "5": "little finger"
+    }
   },
   "songs": {
     "title": "Songs",

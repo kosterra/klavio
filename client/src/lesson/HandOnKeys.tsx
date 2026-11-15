@@ -58,7 +58,13 @@ export function HandOnKeys({ shape }: { shape: HandShape }) {
 
   const caption = t(shape.side === 'right' ? 'hand.right' : 'hand.left', {
     keys: known
-      .map((f) => t('hand.finger', { n: f, note: midiToPitchName(shape.keys[f]!, lang) }))
+      .map((f) =>
+        t('hand.finger', {
+          n: f,
+          name: t(`hand.fingerName.${f}`),
+          note: midiToPitchName(shape.keys[f]!, lang),
+        }),
+      )
       .join(', '),
   });
 

@@ -20,6 +20,19 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: UPCOMING,
+    changes: [
+      L(
+        'Unter dem Handbild steht jetzt auch, welcher Finger welcher ist: Finger 1 (Daumen), Finger 2 (Zeigefinger) und so weiter.',
+        'The caption under the hand picture now also names each finger: finger 1 (thumb), finger 2 (index finger) and so on.',
+      ),
+      L(
+        'Korrektur: Bei Notennamen unter tiefen Noten wurde das C unten abgeschnitten.',
+        'Fix: with note names below low notes, the C was cut off at the bottom.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.9',
     changes: [
       L(
