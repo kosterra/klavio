@@ -20,7 +20,7 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
-    version: UPCOMING,
+    version: '2026.11.9',
     changes: [
       L(
         'Neue Lektion «Das Notensystem» am Anfang von «Noten lesen»: wie man die Linien zählt, was der Notenschlüssel macht, Notenkopf und Hals, Takt und Taktstrich. Wer schon Noten lesen kann, beantwortet drei Fragen und überspringt sie.',
