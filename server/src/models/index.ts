@@ -192,8 +192,15 @@ export const AuthChallenge = model('AuthChallenge', authChallengeSchema);
 // ---------------------------------------------------------------------------
 const emailCodeSchema = new Schema({
   email: { type: String, required: true, index: true },
-  purpose: { type: String, enum: ['login', 'verify-email', 'pin-reset'], required: true },
-  /** verify-email: the account the address will be attached to; pin-reset: the account. */
+  purpose: {
+    type: String,
+    enum: ['login', 'verify-email', 'confirm-email-change', 'pin-reset'],
+    required: true,
+  },
+  /**
+   * verify-email: the account the address will be attached to;
+   * confirm-email-change (sent to the current address) and pin-reset: the account.
+   */
   userId: { type: Schema.Types.ObjectId, default: null },
   codeHash: { type: String, required: true },
   attempts: { type: Number, default: 0 },

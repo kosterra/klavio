@@ -221,6 +221,10 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
   });
 
   // -------------------------------------------- change the e-mail address
+  // Two codes: one to the new address (it is really yours) and one to the
+  // current address (its owner agrees). The request never tells whether the
+  // new address already has an account – that only comes out at verify, once
+  // the code sent there was proved (whoever reads that mailbox may know).
   app.post(
     '/email/request',
     {
@@ -228,18 +232,24 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
       config: { rateLimit: { max: 5, timeWindow: '10 minutes' } },
     },
     async (req, reply) => {
-      const userId = req.auth!.user._id;
-      const taken = await User.exists({ email: req.body.email, _id: { $ne: userId } });
-      if (taken) throw new HttpError(409, 'EMAIL_IN_USE');
+      const { user } = req.auth!;
+      const lang = req.body.lang ?? (user.locale === 'en' ? 'en' : 'de');
+      const current = await issueEmailCode(config, {
+        email: user.email,
+        purpose: 'confirm-email-change',
+        userId: user._id,
+      });
+      if (!current) throw new HttpError(429, 'TOO_MANY_CODES');
       const code = await issueEmailCode(config, {
         email: req.body.email,
         purpose: 'verify-email',
-        userId,
+        userId: user._id,
       });
       if (!code) throw new HttpError(429, 'TOO_MANY_CODES');
-      await mailer.send(
-        await codeMail(config, 'verify-email', req.body.email, code, req.body.lang),
-      );
+      await Promise.all([
+        mailer.send(await codeMail(config, 'confirm-email-change', user.email, current, lang)),
+        mailer.send(await codeMail(config, 'verify-email', req.body.email, code, req.body.lang)),
+      ]);
       return reply.code(204).send();
     },
   );
@@ -258,6 +268,19 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
         expiresAt: { $gt: new Date() },
       }).sort({ expiresAt: -1 });
       if (!pending) throw badRequest('EMAIL_CODE_INVALID');
+      // both codes count an attempt each; only when both are right are they used up
+      await checkEmailCode(config, {
+        email: req.auth!.user.email,
+        purpose: 'confirm-email-change',
+        code: req.body.currentCode,
+        consume: false,
+        userId,
+      }).catch((err: unknown) => {
+        // say which of the two codes is wrong
+        if (err instanceof HttpError && err.code === 'EMAIL_CODE_INVALID')
+          throw badRequest('CURRENT_EMAIL_CODE_INVALID');
+        throw err;
+      });
       await checkEmailCode(config, {
         email: pending.email,
         purpose: 'verify-email',
@@ -265,6 +288,9 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
         consume: true,
         userId,
       });
+      await EmailCode.deleteMany({ userId, purpose: 'confirm-email-change' });
+      if (await User.exists({ email: pending.email, _id: { $ne: userId } }))
+        throw new HttpError(409, 'EMAIL_IN_USE');
       const old = req.auth!.user.email;
       try {
         await User.updateOne({ _id: userId }, { email: pending.email });

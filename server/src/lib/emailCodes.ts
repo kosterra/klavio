@@ -20,7 +20,7 @@ export const CODE_THROTTLE: ThrottlePolicy = {
   maxLockMs: 24 * 60 * 60 * 1000,
 };
 
-type Purpose = 'login' | 'verify-email' | 'pin-reset';
+type Purpose = 'login' | 'verify-email' | 'confirm-email-change' | 'pin-reset';
 
 const hashCode = (config: AppConfig, email: string, code: string) =>
   hmac(config.AUTH_SECRET, `email:${email}:${code}`);

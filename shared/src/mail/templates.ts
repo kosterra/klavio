@@ -10,13 +10,19 @@ import { APP_CONFIG } from '../config/app.ts';
 export const MAIL_TEMPLATE_IDS = [
   'login-code',
   'verify-email',
+  'confirm-email-change',
   'pin-reset',
   'inactive-warning',
   'weekly-report',
 ] as const;
 
 /** Mails that carry a sign-in code (the others have a button instead). */
-export const CODE_MAILS: readonly MailTemplateId[] = ['login-code', 'verify-email', 'pin-reset'];
+export const CODE_MAILS: readonly MailTemplateId[] = [
+  'login-code',
+  'verify-email',
+  'confirm-email-change',
+  'pin-reset',
+];
 export type MailTemplateId = (typeof MAIL_TEMPLATE_IDS)[number];
 
 export const MAIL_LANGS = ['de', 'en'] as const;
@@ -80,6 +86,24 @@ export const DEFAULT_MAIL_TEMPLATES: Record<MailTemplateId, MailTemplateTexts> =
       intro: 'Hello!\n\nUse this code to confirm your new e-mail address at {{app}}:',
       outro:
         'The code is valid for {{minutes}} minutes. If you did not want to change your address, ignore this e-mail – nothing changes.',
+    },
+  },
+  'confirm-email-change': {
+    de: {
+      subject: '{{code}} – E-Mail-Adresse ändern?',
+      heading: 'E-Mail-Adresse ändern?',
+      intro:
+        'Hallo!\n\nJemand möchte die E-Mail-Adresse deines {{app}}-Kontos ändern. Warst du das, bestätigst du es mit diesem Code (zusammen mit dem Code an die neue Adresse):',
+      outro:
+        'Der Code ist {{minutes}} Minuten gültig. Wenn du deine Adresse nicht ändern wolltest, gib den Code niemandem weiter und ignoriere diese E-Mail – deine Adresse bleibt, wie sie ist.',
+    },
+    en: {
+      subject: '{{code}} – change your e-mail address?',
+      heading: 'Change your e-mail address?',
+      intro:
+        'Hello!\n\nSomeone wants to change the e-mail address of your {{app}} account. If that was you, confirm it with this code (together with the code sent to the new address):',
+      outro:
+        'The code is valid for {{minutes}} minutes. If you did not want to change your address, do not pass the code on and ignore this e-mail – your address stays as it is.',
     },
   },
   'pin-reset': {

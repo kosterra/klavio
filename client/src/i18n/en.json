@@ -262,7 +262,10 @@
     "noPasskeys": "No passkey set up yet. Until then you sign in with an e-mail code.",
     "emailChange": "Change",
     "emailNew": "New e-mail address",
-    "emailSendCode": "Send code",
+    "emailSendCode": "Send codes",
+    "emailCodesSent": "We've sent you two codes: one to your current address {{current}} and one to the new address {{next}}. Enter both so we know that both addresses are yours.",
+    "emailCodeCurrent": "Code sent to your current address",
+    "emailCodeNew": "Code sent to the new address",
     "emailChanged": "E-mail address changed.",
     "name": "Account name",
     "nameHint": "Only shown in the app, for example “The Smiths”.",
@@ -302,6 +305,7 @@
       "language": "Language",
       "loginCode": "Sign-in code",
       "verifyEmail": "Confirm new address",
+      "confirmEmailChange": "Confirm address change",
       "customized": "Customised",
       "builtIn": "Built-in texts",
       "fields": {
@@ -371,6 +375,7 @@
   },
   "errors": {
     "EMAIL_CODE_INVALID": "The code is wrong or has expired.",
+    "CURRENT_EMAIL_CODE_INVALID": "The code sent to your current address is wrong or has expired.",
     "EMAIL_IN_USE": "This e-mail address is already in use.",
     "TOO_MANY_CODES": "Too many codes requested. Please wait a few minutes.",
     "PASSKEY_UNKNOWN": "We don't know this passkey. Maybe it was deleted?",

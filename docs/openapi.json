@@ -615,10 +615,15 @@
                   "code": {
                     "type": "string",
                     "pattern": "^\\d{6}$"
+                  },
+                  "currentCode": {
+                    "type": "string",
+                    "pattern": "^\\d{6}$"
                   }
                 },
                 "required": [
-                  "code"
+                  "code",
+                  "currentCode"
                 ]
               }
             }
@@ -2331,6 +2336,7 @@
               "enum": [
                 "login-code",
                 "verify-email",
+                "confirm-email-change",
                 "pin-reset",
                 "inactive-warning",
                 "weekly-report"
@@ -2355,6 +2361,7 @@
               "enum": [
                 "login-code",
                 "verify-email",
+                "confirm-email-change",
                 "pin-reset",
                 "inactive-warning",
                 "weekly-report"
@@ -2403,6 +2410,7 @@
               "enum": [
                 "login-code",
                 "verify-email",
+                "confirm-email-change",
                 "pin-reset",
                 "inactive-warning",
                 "weekly-report"

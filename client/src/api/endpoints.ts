@@ -66,8 +66,8 @@ export const endpoints = {
 
   accountEmailRequest: (email: string) =>
     api('POST', '/account/email/request', { email, lang: lang() }),
-  accountEmailVerify: (code: string) =>
-    api<{ email: string }>('POST', '/account/email/verify', { code }),
+  accountEmailVerify: (code: string, currentCode: string) =>
+    api<{ email: string }>('POST', '/account/email/verify', { code, currentCode }),
   updateAccount: (displayName: string) =>
     api<{ displayName: string }>('PATCH', '/account', { displayName }),
   setWeeklyReport: (weeklyReport: boolean) => api('PATCH', '/account', { weeklyReport }),

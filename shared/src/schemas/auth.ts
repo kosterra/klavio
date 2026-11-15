@@ -46,7 +46,12 @@ export const emailVerifySchema = z.object({
 
 export const passkeyRenameSchema = z.object({ name: z.string().trim().min(1).max(60) });
 
-export const accountEmailVerifySchema = z.object({ code: emailCodeSchema });
+export const accountEmailVerifySchema = z.object({
+  /** the code sent to the new address */
+  code: emailCodeSchema,
+  /** the code sent to the current address: its owner agrees to the change */
+  currentCode: emailCodeSchema,
+});
 
 export const accountUpdateSchema = z
   .object({

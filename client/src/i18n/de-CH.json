@@ -262,7 +262,10 @@
     "noPasskeys": "Noch kein Passkey eingerichtet. Bis dahin meldest du dich mit einem E-Mail-Code an.",
     "emailChange": "Ändern",
     "emailNew": "Neue E-Mail-Adresse",
-    "emailSendCode": "Code senden",
+    "emailSendCode": "Codes senden",
+    "emailCodesSent": "Wir haben dir zwei Codes geschickt: einen an deine bisherige Adresse {{current}} und einen an die neue Adresse {{next}}. Gib beide ein, damit wir sicher sind, dass beide Adressen dir gehören.",
+    "emailCodeCurrent": "Code an die bisherige Adresse",
+    "emailCodeNew": "Code an die neue Adresse",
     "emailChanged": "E-Mail-Adresse geändert.",
     "name": "Name des Kontos",
     "nameHint": "Erscheint nur in der App, zum Beispiel «Familie Muster».",
@@ -302,6 +305,7 @@
       "language": "Sprache",
       "loginCode": "Anmelde-Code",
       "verifyEmail": "Neue Adresse bestätigen",
+      "confirmEmailChange": "Adresswechsel bestätigen",
       "customized": "Angepasst",
       "builtIn": "Standardtexte",
       "fields": {
@@ -371,6 +375,7 @@
   },
   "errors": {
     "EMAIL_CODE_INVALID": "Der Code stimmt nicht oder ist abgelaufen.",
+    "CURRENT_EMAIL_CODE_INVALID": "Der Code an deine bisherige Adresse stimmt nicht oder ist abgelaufen.",
     "EMAIL_IN_USE": "Diese E-Mail-Adresse wird bereits verwendet.",
     "TOO_MANY_CODES": "Zu viele Codes angefordert. Bitte warte ein paar Minuten.",
     "PASSKEY_UNKNOWN": "Dieser Passkey ist uns nicht bekannt. Vielleicht wurde er gelöscht?",
