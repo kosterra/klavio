@@ -180,10 +180,34 @@ describe('sign-up via e-mail code', () => {
     );
     const { EmailCode } = await import('../src/models/index.js');
     expect((await EmailCode.findOne({ email: 'p@y.ch' }).lean())!.attempts).toBe(5);
-    // the right code no longer works – and 12 failures have locked the address
+    // the right code no longer works (spent) – only the 5 real tries counted against the address
     expect(
       (await call(jar, 'POST', '/api/auth/email/verify', { email: 'p@y.ch', code })).json(),
-    ).toEqual({ error: 'RATE_LIMITED' });
+    ).toEqual({ error: 'EMAIL_CODE_INVALID' });
+    const { AuthThrottle } = await import('../src/models/index.js');
+    expect((await AuthThrottle.findById('code:p@y.ch').lean())!.failures).toBe(5);
+  });
+
+  it('wrong codes for an address without a code lock nothing', async () => {
+    const stranger = new CookieJar();
+    for (let i = 0; i < 30; i++) {
+      const res = await call(stranger, 'POST', '/api/auth/email/verify', {
+        email: 'victim@y.ch',
+        code: String(i).padStart(6, '0'),
+      });
+      expect(res.json()).toEqual({ error: 'EMAIL_CODE_INVALID' });
+    }
+    const { AuthThrottle } = await import('../src/models/index.js');
+    expect(await AuthThrottle.findById('code:victim@y.ch').lean()).toBeNull();
+    // the owner's fresh code still works
+    const owner = new CookieJar();
+    await call(owner, 'POST', '/api/auth/email/request', { email: 'victim@y.ch' });
+    const res = await call(owner, 'POST', '/api/auth/email/verify', {
+      email: 'victim@y.ch',
+      code: lastCode(),
+      displayName: 'V',
+    });
+    expect(res.json()).toEqual({ status: 'created' });
   });
 
   it('locks an address after 10 wrong codes, whatever the IP (also for the right code)', async () => {
