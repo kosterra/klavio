@@ -42,8 +42,12 @@ COPY package.json package-lock.json ./
 COPY shared/package.json shared/
 COPY server/package.json server/
 COPY client/package.json client/
+# afterwards npm, npx and corepack go: the app runs with `node` alone, and they
+# bring packages of their own with known vulnerabilities (undici, brace-expansion)
 RUN npm ci --ignore-scripts --omit=dev --workspace server --include-workspace-root=false --no-audit --no-fund \
-    && npm cache clean --force
+    && npm cache clean --force \
+    && rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \
+       /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack
 COPY --from=build /app/server/dist server/dist
 COPY --from=build /app/client/dist public
 USER node
