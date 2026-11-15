@@ -6,6 +6,8 @@ export interface Mail {
   subject: string;
   text: string;
   html?: string;
+  /** which mail it is (the template id) – the only thing logged in production without SMTP */
+  template?: string;
   /** pictures shown inside the HTML (referenced by `cid:`) */
   attachments?: { filename: string; content: Buffer; cid: string; contentType: string }[];
 }
@@ -24,10 +26,11 @@ export function createMailer(config: AppConfig, log: (msg: string) => void): Mai
     return {
       async send(mail) {
         // development: the whole mail (with its code) in the log; in production
-        // never – a code in a log file would be a way into the account
+        // never – a code in a log file would be a way into the account, and
+        // subjects carry codes too: only which mail it was
         log(
           config.NODE_ENV === 'production'
-            ? `[mail not sent — no SMTP_HOST configured] subject="${mail.subject}"`
+            ? `[mail not sent — no SMTP_HOST configured] template=${mail.template ?? 'other'}`
             : `[mail disabled — no SMTP_HOST] to=${mail.to} subject="${mail.subject}"\n${mail.text}`,
         );
       },
@@ -41,7 +44,7 @@ export function createMailer(config: AppConfig, log: (msg: string) => void): Mai
     auth: config.SMTP_USER ? { user: config.SMTP_USER, pass: config.SMTP_PASS } : undefined,
   });
   return {
-    async send(mail) {
+    async send({ template: _template, ...mail }) {
       await transport.sendMail({ from: config.MAIL_FROM, ...mail });
     },
   };

@@ -303,6 +303,7 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
       void mailer
         .send({
           to: old,
+          template: 'email-changed-notice',
           subject: en
             ? 'Klavio: your e-mail address was changed'
             : 'Klavio: Deine E-Mail-Adresse wurde geändert',

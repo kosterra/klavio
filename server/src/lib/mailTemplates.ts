@@ -81,7 +81,7 @@ export async function templateMail(
       ? { logo: `cid:${MAIL_IMAGES.logo.cid}`, klavi: `cid:${MAIL_IMAGES.klavi.cid}` }
       : undefined,
   });
-  return { to, subject, text, html, ...(attachments ? { attachments } : {}) };
+  return { to, template: id, subject, text, html, ...(attachments ? { attachments } : {}) };
 }
 
 /** A mail with a sign-in code. */
