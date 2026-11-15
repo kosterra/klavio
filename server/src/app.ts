@@ -107,6 +107,14 @@ export async function buildApp({
     if (req.headers.origin !== config.APP_ORIGIN) throw new HttpError(403, 'BAD_ORIGIN');
   });
 
+  // API answers are personal and change: no browser or proxy keeps them, unless
+  // a route says otherwise (also errors and unknown /api paths)
+  app.addHook('onSend', async (req, reply, payload) => {
+    if (req.url.startsWith('/api/') && !reply.hasHeader('cache-control'))
+      reply.header('cache-control', 'no-store');
+    return payload;
+  });
+
   app.setErrorHandler((err: FastifyError, req, reply) => {
     if (err instanceof HttpError) {
       return reply.code(err.statusCode).send({ error: err.code });
