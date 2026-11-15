@@ -165,6 +165,8 @@ export const endpoints = {
     ),
   completeLesson: (lessonId: string, body: LessonCompleteInput) =>
     api<LessonResultDto>('POST', `/progress/lessons/${lessonId}`, body),
+  /** «Ich kann schon»: the lesson's check was passed – it counts as done */
+  skipLesson: (lessonId: string) => api('POST', `/progress/lessons/${lessonId}/skip`),
 
   adminSettings: () => api<AdminSettingsDto>('GET', '/admin/settings'),
   updateAdminSettings: (body: Partial<AdminSettingsDto>) =>

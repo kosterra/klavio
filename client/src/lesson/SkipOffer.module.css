@@ -1,0 +1,30 @@
+.offer {
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-lg);
+  border: 2px solid var(--mantine-color-indigo-3);
+  background: color-mix(in srgb, var(--mantine-color-indigo-1) 50%, var(--klavio-surface));
+}
+
+.icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  color: var(--klavio-comic-line);
+  background: var(--mantine-color-indigo-2);
+}
+
+:global([data-mantine-color-scheme='dark']) .offer {
+  border-color: var(--mantine-color-indigo-7);
+  background: color-mix(in srgb, var(--mantine-color-indigo-9) 35%, var(--klavio-surface));
+}
+
+:global([data-mantine-color-scheme='dark']) .icon {
+  background: var(--mantine-color-indigo-8);
+  color: var(--mantine-color-white);
+}

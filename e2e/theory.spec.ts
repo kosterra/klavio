@@ -141,6 +141,10 @@ test('reading and rhythm theory: staff lines/spaces, pizza note values, clap gam
   await next.click();
   await page.getByRole('button', { name: 'Die Halbe' }).click();
   await next.click();
+  // the 4/4 at the start of the music, with bar lines
+  await expect(page.getByTestId('theory-text')).toContainText('4/4');
+  await expect(page.getByRole('img', { name: /Noten in 2 Takten/ })).toBeVisible();
+  await next.click();
   await next.click();
   await expect(page.getByTestId('theory-text')).toContainText('vier Viertel');
   await page.getByRole('button', { name: 'Start' }).click();

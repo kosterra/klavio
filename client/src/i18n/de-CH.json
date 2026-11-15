@@ -859,13 +859,13 @@
     "handNumbers": "Rechte Hand von oben: Daumen 1, Zeigefinger 2, Mittelfinger 3, Ringfinger 4, kleiner Finger 5",
     "handMarked": "Rechte Hand von oben, ein Finger ist markiert",
     "values": {
+      "8": "Achtel",
       "w": "Ganze",
       "h": "Halbe",
       "q": "Viertel",
       "qr": "Viertelpause",
       "qd": "punktierte Viertel",
       "hd": "punktierte Halbe",
-      "8": "Achtel",
       "hr": "halbe Pause",
       "wr": "ganze Pause"
     },
@@ -881,7 +881,23 @@
     "staffLines": "Notenlinien, die Linien sind markiert. Noten: {{notes}}",
     "staffSpaces": "Notenlinien, die Zwischenräume sind markiert. Noten: {{notes}}",
     "handNumbersLeft": "Linke Hand von oben: Daumen 1, Zeigefinger 2, Mittelfinger 3, Ringfinger 4, kleiner Finger 5",
-    "handMarkedLeft": "Linke Hand von oben, ein Finger ist markiert"
+    "handMarkedLeft": "Linke Hand von oben, ein Finger ist markiert",
+    "staffMarkLine": "Notenlinien, die {{n}}. Linie ist markiert",
+    "staffMarkSpace": "Notenlinien, der {{n}}. Zwischenraum ist markiert",
+    "staffNumberLines": "Notenlinien, von unten nummeriert: 1. bis 5. Linie",
+    "staffNumberSpaces": "Notenlinien, die Zwischenräume von unten nummeriert: 1. bis 4. Zwischenraum",
+    "musicBars_one": "Noten in {{count}} Takt: {{notes}}",
+    "musicBars_other": "Noten in {{count}} Takten: {{notes}}"
+  },
+  "skipCheck": {
+    "offer": "Kennst du das schon? Drei richtige Antworten, und du darfst die Lektion überspringen.",
+    "start": "Kurzer Check",
+    "title": "Kurzer Check",
+    "finish": "Fertig",
+    "cancel": "Abbrechen",
+    "failed": "Nicht ganz – kein Problem. Schauen wir es zusammen an.",
+    "done": "Super, das kannst du schon! Die Lektion zählt als bestanden.",
+    "link": "Kann ich schon – kurzer Check"
   },
   "knowledge": {
     "title": "Wissen",

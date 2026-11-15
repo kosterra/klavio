@@ -356,8 +356,20 @@ export type TheoryPicture =
       names?: boolean;
       /** colour the lines or the spaces of the staff */
       highlight?: 'lines' | 'spaces';
+      /** number the lines or the spaces, counted from the bottom (1 = lowest) */
+      numbers?: 'lines' | 'spaces';
+      /** colour one place: 0 = bottom line, 1 = first space, 2 = second line … 8 = top line */
+      mark?: number;
       keySignature?: KeySignature;
       spelling?: Spelling;
+    }
+  | {
+      /** a few bars of music with bar lines, written like a song ('E4/q D4/q C4/h | …') */
+      kind: 'music';
+      clef: 'treble' | 'bass';
+      melody: string;
+      /** draw the time signature at the start (e.g. '4/4') */
+      time?: string;
     }
   | {
       /** treble and bass staff together; notes from middle C up go into the treble */

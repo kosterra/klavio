@@ -20,6 +20,23 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: UPCOMING,
+    changes: [
+      L(
+        'Neue Lektion «Das Notensystem» am Anfang von «Noten lesen»: wie man die Linien zählt, was der Notenschlüssel macht, Notenkopf und Hals, Takt und Taktstrich. Wer schon Noten lesen kann, beantwortet drei Fragen und überspringt sie.',
+        'New lesson «The staff» at the start of «Reading notes»: how to count the lines, what the clef does, note head and stem, bars and bar lines. If you can already read music, answer three questions and skip it.',
+      ),
+      L(
+        'Schon bei den ersten Liedern erklärt Klavi kurz die Noten über den Tasten, und «Viertel und Halbe» erklärt das 4/4 am Anfang der Noten.',
+        'Already at the first songs Klavi briefly explains the music above the keys, and «Quarters and halves» explains the 4/4 at the start of the music.',
+      ),
+      L(
+        'Korrektur: Bei Fragen wie «Wie heisst diese Note?» erschien die Note nicht – nur ein Ladekreis.',
+        'Fix: in questions like «What is this note called?» the note did not appear – only a loading circle.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.8',
     changes: [
       L(

@@ -973,14 +973,120 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       answers: [L('Hinauf', 'Up'), L('Hinunter', 'Down')],
       rounds: [{ notes: [60, 62, 64, 65, 67, 67], answer: 0 }],
     },
+    {
+      type: 'explain',
+      text: L(
+        'Beim Spielen siehst du die Noten des Lieds. Lesen musst du sie noch nicht – bei jeder Note steht ihr Name. Hohle Noten klingen länger als ausgemalte. Wie man Noten liest, lernst du bald im Kapitel «Noten lesen».',
+        'While you play, you see the music of the song. You don’t have to read it yet – every note has its name next to it. Hollow notes sound longer than filled-in ones. You will learn how to read music soon, in the chapter «Reading notes».',
+      ),
+      picture: { kind: 'music', clef: 'treble', melody: 'C4/q D4/q E4/q F4/q | G4/h G4/h' },
+    },
   ],
   // ------------------------------------------------------------ chapter 3
+  'read-staff': [
+    {
+      type: 'explain',
+      text: L(
+        'Musik kann man aufschreiben – mit Noten. Oben und unten zeigt, wie hoch ein Ton klingt. Gelesen wird von links nach rechts, wie in einem Buch.',
+        'Music can be written down – with notes. Up and down shows how high a note sounds. You read from left to right, like a book.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [60, 62, 64, 65, 67, 69, 71, 72] },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Die Noten stehen auf fünf Linien, dem Notensystem. Die Linien zählt man von unten nach oben: Unten ist die 1. Linie, ganz oben die 5.',
+        'The notes sit on five lines, the staff. The lines are counted from the bottom up: the lowest is line 1, the top one line 5.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [], numbers: 'lines' },
+    },
+    {
+      type: 'quiz',
+      text: L('Welche Linie ist markiert?', 'Which line is marked?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [], mark: 2 },
+      answers: [
+        { text: L('Die 1. Linie', 'Line 1') },
+        { text: L('Die 2. Linie', 'Line 2'), correct: true },
+        { text: L('Die 3. Linie', 'Line 3') },
+      ],
+      hint: L('Zähl von unten: 1, 2 …', 'Count from the bottom: 1, 2 …'),
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Zwischen den Linien liegen vier Zwischenräume. Auch sie zählt man von unten.',
+        'Between the lines there are four spaces. They are counted from the bottom too.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [], numbers: 'spaces' },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Ganz vorne steht der Notenschlüssel. Er legt fest, welcher Ton auf welcher Linie liegt. Der G-Schlüssel rollt sich um die 2. Linie – dort liegt das G. Von ihm aus findest du alle anderen Noten.',
+        'Right at the start is the clef. It decides which note sits on which line. The G clef curls around line 2 – that is where G sits. From there you find every other note.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [67], names: true },
+    },
+    {
+      type: 'quiz',
+      text: L('Auf welcher Linie liegt das G?', 'On which line is G?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [67] },
+      answers: [
+        { text: L('Auf der 1. Linie', 'On line 1') },
+        { text: L('Auf der 2. Linie', 'On line 2'), correct: true },
+        { text: L('Auf der 3. Linie', 'On line 3') },
+      ],
+      hint: L('Um diese Linie rollt sich der G-Schlüssel.', 'The G clef curls around this line.'),
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Eine Note hat einen Kopf und meist einen Hals. Ein hohler Kopf klingt länger als ein ausgemalter. Wie lange genau, lernst du im Kapitel «Im Takt».',
+        'A note has a head and usually a stem. A hollow head sounds longer than a filled-in one. Exactly how long, you will learn in the chapter «In time».',
+      ),
+      picture: { kind: 'note-values', values: ['h', 'q'] },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Senkrechte Striche teilen die Musik in gleich lange Stücke, die Takte. Der Strich heisst Taktstrich. Erkennst du das Lied? Es ist «Hot Cross Buns».',
+        'Vertical lines divide the music into pieces of equal length, the bars. The line is called a bar line. Do you know the song? It is «Hot Cross Buns».',
+      ),
+      picture: { kind: 'music', clef: 'treble', melody: 'E4/q D4/q C4/h | E4/q D4/q C4/h' },
+    },
+    {
+      type: 'quiz',
+      text: L('Wie viele Takte siehst du?', 'How many bars do you see?'),
+      picture: {
+        kind: 'music',
+        clef: 'treble',
+        melody: 'E4/q D4/q C4/h | G4/h E4/h | C4/w',
+      },
+      answers: [{ text: L('2', '2') }, { text: L('3', '3'), correct: true }, { text: L('4', '4') }],
+      hint: L(
+        'Die Taktstriche trennen die Takte. Zähl die Stücke dazwischen.',
+        'The bar lines separate the bars. Count the pieces between them.',
+      ),
+    },
+  ],
+
+  'song-buns': [
+    {
+      type: 'explain',
+      text: L(
+        'Beim Spielen siehst du die Noten des Lieds. Lesen musst du sie noch nicht – bei jeder Note steht ihr Name. Hohle Noten klingen länger als ausgemalte. Wie man Noten liest, lernst du bald im Kapitel «Noten lesen».',
+        'While you play, you see the music of the song. You don’t have to read it yet – every note has its name next to it. Hollow notes sound longer than filled-in ones. You will learn how to read music soon, in the chapter «Reading notes».',
+      ),
+      picture: { kind: 'music', clef: 'treble', melody: 'E4/q D4/q C4/h | E4/q D4/q C4/h' },
+    },
+  ],
+
   'read-c-d-e': [
     {
       type: 'explain',
       text: L(
-        'Musik kann man aufschreiben – mit Noten. Sie stehen auf fünf Linien, dem Notensystem. Je höher eine Note steht, desto höher klingt sie und desto weiter rechts liegt ihre Taste.',
-        'Music can be written down – with notes. They sit on five lines, the staff. The higher a note sits, the higher it sounds and the further right its key is.',
+        'Jetzt liest du die ersten Noten. Je höher eine Note im Notensystem steht, desto höher klingt sie und desto weiter rechts liegt ihre Taste.',
+        'Now you read your first notes. The higher a note sits on the staff, the higher it sounds and the further right its key is.',
       ),
       picture: { kind: 'staff', clef: 'treble', notes: [60, 62, 64, 65, 67], names: true },
     },
@@ -1043,8 +1149,8 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     {
       type: 'explain',
       text: L(
-        'Über dem E geht es weiter: das F im ersten Zwischenraum, das G auf der zweiten Linie. Um diese Linie rollt sich der Notenschlüssel ein – darum heisst er G-Schlüssel oder Violinschlüssel.',
-        'Above E it goes on: F in the first space, G on the second line. The clef curls around this line – that is why it is called the G clef or treble clef.',
+        'Über dem E geht es weiter: das F im ersten Zwischenraum, das G auf der zweiten Linie. Erinnerst du dich? Um diese Linie rollt sich der G-Schlüssel – man nennt ihn auch Violinschlüssel.',
+        'Above E it goes on: F in the first space, G on the second line. Remember? The G clef curls around this line – it is also called the treble clef.',
       ),
       picture: { kind: 'staff', clef: 'treble', notes: [64, 65, 67], names: true },
     },
@@ -1268,6 +1374,19 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
         'Ein halbes Stück Pizza ist grösser als ein Viertel.',
         'Half a pizza is bigger than a quarter.',
       ),
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Am Anfang der Noten steht 4/4: Jeder Takt hat vier Viertel. Nach jedem Taktstrich zählst du wieder bei 1 los. Eine Halbe füllt zwei Schläge.',
+        'At the start of the music it says 4/4: every bar has four quarter notes. After each bar line you start counting at 1 again. A half note fills two beats.',
+      ),
+      picture: {
+        kind: 'music',
+        clef: 'treble',
+        time: '4/4',
+        melody: 'C4/q D4/q E4/q F4/q | G4/h G4/h',
+      },
     },
     {
       type: 'explain',
@@ -1880,6 +1999,18 @@ const ADULT_THEORY: Record<string, Record<number, TheoryStep>> = {
       answers: [L('Hinauf', 'Up'), L('Hinunter', 'Down')],
       rounds: [{ notes: [67, 64, 62, 60], answer: 1 }],
     },
+    5: {
+      type: 'explain',
+      text: L(
+        'Beim Spielen siehst du die Noten des Stücks. Lesen musst du sie noch nicht – bei jeder Note steht ihr Name. Hohle Noten klingen länger als ausgemalte. Wie man Noten liest, lernst du bald im Kapitel «Noten lesen».',
+        'While you play, you see the music of the piece. You don’t have to read it yet – every note has its name next to it. Hollow notes sound longer than filled-in ones. You will learn how to read music soon, in the chapter «Reading notes».',
+      ),
+      picture: {
+        kind: 'music',
+        clef: 'treble',
+        melody: 'G4/q E4/q D4/q C4/q | D4/q E4/q G4/q E4/q',
+      },
+    },
   },
   'song-haenschen': {
     0: {
@@ -1962,6 +2093,53 @@ export function theoryFor(lessonId: string, world: 'kids' | 'journey' = 'kids'):
 export const ADULT_THEORY_STEPS: Record<string, number[]> = Object.fromEntries(
   Object.entries(ADULT_THEORY).map(([id, p]) => [id, Object.keys(p).map(Number)]),
 );
+
+/**
+ * «Ich kann schon Noten lesen»: a lesson with a check may be skipped by whoever
+ * answers every question right at the first try – it then counts as passed,
+ * like the placement at the start (1 star, no XP).
+ */
+export const SKIP_CHECKS: Record<string, QuizStep[]> = {
+  'read-staff': [
+    {
+      type: 'quiz',
+      text: L('Wie heisst dieser Notenschlüssel?', 'What is this clef called?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [] },
+      answers: [
+        { text: L('G-Schlüssel', 'G clef'), correct: true },
+        { text: L('F-Schlüssel', 'F clef') },
+        { text: L('C-Schlüssel', 'C clef') },
+      ],
+    },
+    {
+      type: 'quiz',
+      text: L('Wie heisst diese Note?', 'What is this note called?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [65] },
+      answers: [
+        { text: L('E', 'E') },
+        { text: L('F', 'F'), correct: true },
+        { text: L('G', 'G') },
+        { text: L('A', 'A') },
+      ],
+    },
+    {
+      type: 'quiz',
+      text: L('Und diese?', 'And this one?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [71] },
+      answers: [
+        { text: L('G', 'G') },
+        { text: L('A', 'A') },
+        { text: L('H', 'B'), correct: true },
+        { text: L('C', 'C') },
+      ],
+    },
+  ],
+};
+
+/** The questions that let a learner skip this lesson (none: it can't be skipped). */
+export function skipCheckFor(lessonId: string): QuizStep[] {
+  return SKIP_CHECKS[lessonId] ?? [];
+}
 
 /** How many questions the recap at the start of a chapter asks. */
 const RECAP_QUESTIONS = 3;

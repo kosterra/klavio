@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { LESSONS } from './curriculum.ts';
 import { CURRICULUM } from './curriculum.ts';
-import { LESSON_THEORY, recapFor } from './theory.ts';
+import { LESSON_THEORY, SKIP_CHECKS, recapFor } from './theory.ts';
 import type { Localized, TheoryStep } from './types.ts';
 
 const texts = (s: TheoryStep): Localized[] => {
@@ -51,6 +51,26 @@ describe('lesson theory', () => {
           for (const r of s.rounds) expect(r.notes.length, id).toBeGreaterThan(1);
         }
         if (s.type === 'clap') expect(s.pattern.length, id).toBeGreaterThan(0);
+      }
+    }
+  });
+});
+
+describe('skip checks («Ich kann schon»)', () => {
+  it('belong to existing lessons, are translated and have one right answer each', () => {
+    const ids = new Set(LESSONS.map((l) => l.id));
+    for (const [id, steps] of Object.entries(SKIP_CHECKS)) {
+      expect(ids.has(id), id).toBe(true);
+      expect(steps.length, id).toBeGreaterThanOrEqual(3);
+      for (const s of steps) {
+        expect(s.answers.filter((a) => a.correct).length, id).toBe(1);
+        // guessing should not get through: at least three answers per question
+        expect(s.answers.length, id).toBeGreaterThanOrEqual(3);
+        for (const t of texts(s)) {
+          expect(t['de-CH'].trim()).not.toBe('');
+          expect(t.en.trim()).not.toBe('');
+          expect(t['de-CH']).not.toContain('ß');
+        }
       }
     }
   });
