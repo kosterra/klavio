@@ -67,8 +67,10 @@ export async function claimAttempt(key: string, p: ThrottlePolicy): Promise<bool
     throw err;
   });
   if (!before) return true;
-  const until = before.lastFailureAt.getTime() + lockMs(before.failures, p);
-  if (until <= now.getTime()) return true;
+  // below the threshold there is no lock at all (a parallel guess may have
+  // written a time a few ms later than this one's `now` – that is no lock)
+  const lock = lockMs(before.failures, p);
+  if (lock === 0 || before.lastFailureAt.getTime() + lock <= now.getTime()) return true;
   // a parallel guess got there first and locked the key: this one doesn't count
   await AuthThrottle.updateOne({ _id: key, failures: { $gt: 0 } }, { $inc: { failures: -1 } });
   return false;
