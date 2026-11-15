@@ -65,7 +65,9 @@ const sessionSchema = new Schema(
     /** Parent area (PIN-protected) open until then; set by entering the PIN (or resetting it by e-mail). */
     parentUnlockedUntil: { type: Date, default: null },
     /** a child logged in with their PIN on a child's device: only this profile */
-    childProfileId: { type: Schema.Types.ObjectId, ref: 'Profile', default: null },
+    childProfileId: { type: Schema.Types.ObjectId, ref: 'Profile', default: null, index: true },
+    /** the child's device the child logged in on (removing the device ends the session) */
+    deviceId: { type: Schema.Types.ObjectId, ref: 'Device', default: null, index: true },
     expiresAt: { type: Date, required: true },
   },
   { timestamps: true },

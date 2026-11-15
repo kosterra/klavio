@@ -1,4 +1,4 @@
-import { clearFailures, lockedFor, recordFailure, type ThrottlePolicy } from '../lib/throttle.js';
+import { claimAttempt, clearFailures, type ThrottlePolicy } from '../lib/throttle.js';
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
 import type { Types } from 'mongoose';
 import {
@@ -81,9 +81,9 @@ const accountRoutes: FastifyPluginAsyncZod<{ config: AppConfig; mailer: Mailer }
       if (!user.parentPinHash) return { unlockedUntil: null };
       // besides the quick limit above: a lock that grows and survives restarts
       const key = `pin:${user._id.toString()}`;
-      if ((await lockedFor(key, PIN_THROTTLE)) > 0) throw new HttpError(429, 'RATE_LIMITED');
+      // counted before comparing (atomically), so parallel guesses can't share one
+      if (!(await claimAttempt(key, PIN_THROTTLE))) throw new HttpError(429, 'RATE_LIMITED');
       if (!safeEqualHex(user.parentPinHash, pinHash(user._id, req.body.pin))) {
-        await recordFailure(key);
         throw new HttpError(403, 'PIN_WRONG');
       }
       await clearFailures(key);

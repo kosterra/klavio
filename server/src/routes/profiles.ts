@@ -242,6 +242,8 @@ const profileRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
         LessonReceipt.deleteMany({ profileId: req.params.id }),
         PushReminder.deleteMany({ profileId: req.params.id }),
       ]);
+      // the child's own sessions (PIN login) end; others just lose the profile
+      await Session.deleteMany({ childProfileId: req.params.id });
       await Session.updateMany({ activeProfileId: req.params.id }, { activeProfileId: null });
       return reply.code(204).send();
     },

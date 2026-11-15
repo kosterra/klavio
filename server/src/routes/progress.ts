@@ -66,11 +66,15 @@ const RECEIPT_DAYS = MAX_LATE_DAYS + 7;
 
 /**
  * The profile a request is about: the one named (it must be the account's) or
- * the session's active profile. Never one that has been deleted meanwhile.
+ * the session's active profile. Never one that has been deleted meanwhile,
+ * and in a child's session (PIN login) never another profile than the child's.
  */
 async function profileOf(req: FastifyRequest, named?: string): Promise<Types.ObjectId> {
   const id = named ?? req.auth!.activeProfileId;
   if (!id) throw new HttpError(409, 'NO_ACTIVE_PROFILE');
+  // a child who logged in with their PIN sees and writes only their own profile
+  if (named && req.auth!.childLogin && req.auth!.activeProfileId?.toString() !== named)
+    throw notFound();
   const found = await Profile.exists({ _id: id, userId: req.auth!.user._id });
   if (!found) throw named ? notFound() : new HttpError(409, 'NO_ACTIVE_PROFILE');
   return found._id;

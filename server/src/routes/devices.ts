@@ -10,11 +10,11 @@ import {
   type ProfileDto,
 } from '@klavio/shared';
 import type { AppConfig } from '../config.js';
-import { Device, Profile, User } from '../models/index.js';
+import { Device, Profile, Session, User } from '../models/index.js';
 import { HttpError, notFound } from '../lib/errors.js';
 import { cookieBase, createSession } from '../lib/session.js';
 import { hmac, randomToken, safeEqualHex, sha256 } from '../lib/crypto.js';
-import { clearFailures, lockedFor, recordFailure, type ThrottlePolicy } from '../lib/throttle.js';
+import { claimAttempt, clearFailures, type ThrottlePolicy } from '../lib/throttle.js';
 
 export const DEVICE_COOKIE = 'klavio_device';
 /** a child's device stays one for a year after it was last used */
@@ -55,6 +55,8 @@ const deviceRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, {
       );
       if (res.matchedCount === 0) throw notFound();
       await clearFailures(`child-pin:${req.params.id}`);
+      // a new PIN logs the child out everywhere: who knew the old one is out
+      await Session.deleteMany({ childProfileId: req.params.id });
       return reply.code(204).send();
     },
   );
@@ -68,6 +70,8 @@ const deviceRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, {
         { pinHash: null },
       );
       if (res.matchedCount === 0) throw notFound();
+      // without a PIN the child can't log in – and is logged out where they still were
+      await Session.deleteMany({ childProfileId: req.params.id });
       return reply.code(204).send();
     },
   );
@@ -115,6 +119,8 @@ const deviceRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, {
     async (req, reply) => {
       const res = await Device.deleteOne({ _id: req.params.id, userId: req.auth!.user._id });
       if (res.deletedCount === 0) throw notFound();
+      // the children logged in on that device are logged out
+      await Session.deleteMany({ deviceId: req.params.id, childProfileId: { $ne: null } });
       return reply.code(204).send();
     },
   );
@@ -157,13 +163,16 @@ const deviceRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, {
       const profile = await Profile.findOne({ _id: req.body.profileId, userId: device.userId });
       if (!profile?.pinHash) throw notFound();
       const key = `child-pin:${profile._id.toString()}`;
-      if ((await lockedFor(key, CHILD_PIN_THROTTLE)) > 0) throw new HttpError(429, 'RATE_LIMITED');
+      // counted before comparing (atomically), so parallel guesses can't share one
+      if (!(await claimAttempt(key, CHILD_PIN_THROTTLE))) throw new HttpError(429, 'RATE_LIMITED');
       if (!safeEqualHex(profile.pinHash, pinHash(profile._id, req.body.pin))) {
-        await recordFailure(key);
         throw new HttpError(403, 'PIN_WRONG');
       }
       await clearFailures(key);
-      await createSession(config, req, reply, device.userId, { profileId: profile._id });
+      await createSession(config, req, reply, device.userId, {
+        profileId: profile._id,
+        deviceId: device._id,
+      });
       // used: the device stays one for another year
       await Device.updateOne({ _id: device._id }, { lastUsedAt: new Date() });
       reply.setCookie(DEVICE_COOKIE, token!, { ...cookieBase(config), maxAge: DEVICE_MAX_AGE_S });
