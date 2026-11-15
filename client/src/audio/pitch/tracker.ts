@@ -31,10 +31,23 @@ export interface TrackerOptions {
   toEventTime?: (audioTimeSec: number) => number;
   /** While a note rings, a different note needs a new attack (not only octaves and twelfths). */
   attackWhileRinging?: boolean;
+  /**
+   * How long an attack lets a different note start (ms): right after the hammer the
+   * detector may still hear the old string for a few frames before the new one wins.
+   */
+  attackWindowMs?: number;
+  /**
+   * While the old and the new string sound together, the detector may hear a common
+   * bass note an overtone interval below the old one. Such a note only counts this
+   * long after the attack (ms) – the mix is over by then.
+   */
+  lowerPartialHoldMs?: number;
 }
 
 /** Intervals (semitones) at which piano partials commonly fool pitch detection. */
 const HARMONIC_STEPS = [12, 19, 24];
+/** The ringing note as the 2nd … 8th partial of a lower one (semitones below it). */
+const SUBHARMONIC_STEPS = [12, 19, 24, 28, 31, 34, 36];
 
 /**
  * Gate a little above the measured room noise (−60 dBFS without calibration).
@@ -56,6 +69,8 @@ export class NoteTracker {
   private silentCount = 0;
   private unclearCount = 0;
   private pendingOnset = false;
+  /** Time of the latest attack that hasn't started a note yet. */
+  private attackAt: number | null = null;
   private peakDb = -120;
   /** Levels of the last few frames, and the loudest of them before the latest attack. */
   private readonly recentLevels: number[] = [];
@@ -77,6 +92,8 @@ export class NoteTracker {
       onsetDb: 6,
       restrikeRiseDb: 2,
       attackWhileRinging: true,
+      attackWindowMs: 250,
+      lowerPartialHoldMs: 150,
       minMidi: 33, // A1
       maxMidi: 96, // C7
       toEventTime: (t) => t * 1000,
@@ -100,6 +117,7 @@ export class NoteTracker {
     this.silentCount = 0;
     this.unclearCount = 0;
     this.pendingOnset = false;
+    this.attackAt = null;
     this.lastReleased = null;
   }
 
@@ -128,6 +146,7 @@ export class NoteTracker {
     if (frame.onsetDb >= o.onsetDb) {
       // New attack: require fresh stability before reporting (also for the same key).
       this.pendingOnset = true;
+      this.attackAt = time;
       this.candidate = null;
       this.candidateCount = 0;
       this.peakDb = frame.levelDb;
@@ -188,6 +207,9 @@ export class NoteTracker {
       if (!this.pendingOnset || this.peakDb < recent.levelDb + o.restrikeRiseDb) return events;
     }
 
+    // A recent attack counts even if the old string was still heard for a moment after it.
+    const attacked =
+      this.pendingOnset || (this.attackAt !== null && time - this.attackAt <= o.attackWindowMs);
     // Without a new attack, a jump to an octave / twelfth of the sounding note
     // (or of the note that just ended) is a detection slip while the string
     // decays — every real key press has a hammer attack.
@@ -196,17 +218,21 @@ export class NoteTracker {
       (this.lastReleased && time - this.lastReleased.time < o.retriggerGuardMs
         ? this.lastReleased.midi
         : null);
-    if (
-      !this.pendingOnset &&
-      related !== null &&
-      HARMONIC_STEPS.includes(Math.abs(midi - related))
-    ) {
+    if (!attacked && related !== null && HARMONIC_STEPS.includes(Math.abs(midi - related))) {
       return events;
     }
     // The same for any other pitch: while a string rings (or just stopped), its
     // overtones and the strings ringing along can show a second or third note.
     // Only a new attack makes it a key that was played.
-    if (o.attackWhileRinging && !this.pendingOnset && related !== null) {
+    if (o.attackWhileRinging && !attacked && related !== null) {
+      return events;
+    }
+    if (
+      related !== null &&
+      this.attackAt !== null &&
+      time - this.attackAt < o.lowerPartialHoldMs &&
+      SUBHARMONIC_STEPS.includes(related - midi)
+    ) {
       return events;
     }
     if (this.candidateCount < o.stableFrames) return events;
@@ -214,6 +240,7 @@ export class NoteTracker {
     if (this.current !== null) events.push(this.off(time));
     this.current = midi;
     this.pendingOnset = false;
+    this.attackAt = null;
     events.push({
       type: 'note-on',
       midi,

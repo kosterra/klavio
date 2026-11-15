@@ -27,6 +27,10 @@ export const CHANGELOG: Release[] = [
         'The caption under the hand picture now also names each finger: finger 1 (thumb), finger 2 (index finger) and so on.',
       ),
       L(
+        'Korrektur: Am Klavier wurde ein Ton manchmal nicht erkannt, wenn der vorherige noch kurz nachklang – vor allem beim gebundenen Spielen. Jetzt zählt er beim ersten Mal.',
+        'Fix: on the piano, a note was sometimes missed while the previous one was still ringing for a moment – especially when playing smoothly (legato). Now it counts the first time.',
+      ),
+      L(
         'Korrektur: Bei Notennamen unter tiefen Noten wurde das C unten abgeschnitten.',
         'Fix: with note names below low notes, the C was cut off at the bottom.',
       ),
