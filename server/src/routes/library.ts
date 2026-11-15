@@ -69,21 +69,38 @@ const libraryRoutes: FastifyPluginAsyncZod<{ config: AppConfig }> = async (app, 
     },
   );
 
-  app.get('/:id/file', { schema: { params: idParams } }, async (req, reply) => {
-    const keys = await enabled();
-    if (!keys.length) throw new HttpError(404, 'LIBRARY_OFF');
-    let found;
-    try {
-      found = await libraryFile(req.params.id, keys);
-    } catch (err) {
-      req.log.warn({ err }, 'library file not reachable');
-      throw new HttpError(502, 'LIBRARY_UNREACHABLE');
-    }
-    if (!found) throw notFound();
-    return reply
-      .type(found.entry.source === 'mutopia' ? 'audio/midi' : 'application/vnd.recordare.musicxml')
-      .send(Buffer.from(found.bytes));
-  });
+  app.get(
+    '/:id/file',
+    {
+      schema: { params: idParams },
+      config: {
+        // fetching files costs the sources and the server: not too many per account
+        rateLimit: {
+          max: 20,
+          timeWindow: '1 minute',
+          hook: 'preHandler', // after the session is known → per account, not per IP
+          keyGenerator: (req) => `library-file:${req.auth?.user._id.toString() ?? req.ip}`,
+        },
+      },
+    },
+    async (req, reply) => {
+      const keys = await enabled();
+      if (!keys.length) throw new HttpError(404, 'LIBRARY_OFF');
+      let found;
+      try {
+        found = await libraryFile(req.params.id, keys);
+      } catch (err) {
+        req.log.warn({ err }, 'library file not reachable');
+        throw new HttpError(502, 'LIBRARY_UNREACHABLE');
+      }
+      if (!found) throw notFound();
+      return reply
+        .type(
+          found.entry.source === 'mutopia' ? 'audio/midi' : 'application/vnd.recordare.musicxml',
+        )
+        .send(Buffer.from(found.bytes));
+    },
+  );
 };
 
 export default libraryRoutes;
