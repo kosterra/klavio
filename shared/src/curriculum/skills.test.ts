@@ -53,11 +53,11 @@ describe('skills', () => {
   it('the next step is the earliest open lesson, never one further ahead', () => {
     // the lessons of the path (bonus lessons don't count)
     // everything before reading: rhythm and songs are still needed, but reading comes first
-    const reading = CORE_LESSONS.findIndex((l) => l.id === 'read-c-d-e');
+    const reading = CORE_LESSONS.findIndex((l) => l.id === 'read-staff');
     const before = done(CORE_LESSONS.slice(0, reading).map((l) => l.id));
     expect(goalProgress([], before).next).toEqual({
       skill: 'treble-clef',
-      lessonId: 'read-c-d-e',
+      lessonId: 'read-staff',
     });
   });
 

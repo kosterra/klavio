@@ -62,6 +62,11 @@ Hauptverzeichnis (`node scripts/version.mjs next` setzt die nächste). GitHub Ac
 - **develop** – jeder Push auf `develop`: Checks, dann das Image `kosterra/klavio:develop`.
 - **release** – jeder Merge nach `main`: Git-Tag der Version, Image `kosterra/klavio:<version>` und
   `:latest`, signiert (cosign) mit Provenienz und SBOM.
+- **security** – jeder Push auf `develop`, jeden Montag und von Hand: gitleaks (Secrets in der
+  ganzen Git-Geschichte), Semgrep (Code, Dockerfile, Workflows), Trivy (Fehlkonfigurationen und
+  Secrets in den Dateien, Schwachstellen HIGH/CRITICAL mit Fix im Produktions-Image) und
+  `npm audit --omit=dev --audit-level=high`. Die Scanner laufen als Docker-Images mit fester
+  Version; der Workflow ist keine Bedingung für Merges, ein Fehlschlag heisst: anschauen und beheben.
 
 Die Secrets `DOCKERHUB_USER` und `DOCKERHUB_PASSWORD` (Access Token) stehen in den
 Repository-Einstellungen. Ablauf und Regeln: `.claude/skills/versioning`, «Was ist neu»:

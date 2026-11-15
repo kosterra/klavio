@@ -262,7 +262,10 @@
     "noPasskeys": "No passkey set up yet. Until then you sign in with an e-mail code.",
     "emailChange": "Change",
     "emailNew": "New e-mail address",
-    "emailSendCode": "Send code",
+    "emailSendCode": "Send codes",
+    "emailCodesSent": "We've sent you two codes: one to your current address {{current}} and one to the new address {{next}}. Enter both so we know that both addresses are yours.",
+    "emailCodeCurrent": "Code sent to your current address",
+    "emailCodeNew": "Code sent to the new address",
     "emailChanged": "E-mail address changed.",
     "name": "Account name",
     "nameHint": "Only shown in the app, for example “The Smiths”.",
@@ -302,6 +305,7 @@
       "language": "Language",
       "loginCode": "Sign-in code",
       "verifyEmail": "Confirm new address",
+      "confirmEmailChange": "Confirm address change",
       "customized": "Customised",
       "builtIn": "Built-in texts",
       "fields": {
@@ -371,6 +375,7 @@
   },
   "errors": {
     "EMAIL_CODE_INVALID": "The code is wrong or has expired.",
+    "CURRENT_EMAIL_CODE_INVALID": "The code sent to your current address is wrong or has expired.",
     "EMAIL_IN_USE": "This e-mail address is already in use.",
     "TOO_MANY_CODES": "Too many codes requested. Please wait a few minutes.",
     "PASSKEY_UNKNOWN": "We don't know this passkey. Maybe it was deleted?",
@@ -859,13 +864,13 @@
     "handNumbers": "Right hand from above: thumb 1, index finger 2, middle finger 3, ring finger 4, little finger 5",
     "handMarked": "Right hand from above, one finger is marked",
     "values": {
+      "8": "eighth",
       "w": "Whole",
       "h": "Half",
       "q": "Quarter",
       "qr": "Quarter rest",
       "qd": "dotted quarter",
       "hd": "dotted half",
-      "8": "eighth",
       "hr": "half rest",
       "wr": "whole rest"
     },
@@ -881,7 +886,23 @@
     "staffLines": "Staff with the lines marked. Notes: {{notes}}",
     "staffSpaces": "Staff with the spaces marked. Notes: {{notes}}",
     "handNumbersLeft": "Left hand from above: thumb 1, index finger 2, middle finger 3, ring finger 4, little finger 5",
-    "handMarkedLeft": "Left hand from above, one finger is marked"
+    "handMarkedLeft": "Left hand from above, one finger is marked",
+    "staffMarkLine": "Staff, line {{n}} is marked",
+    "staffMarkSpace": "Staff, space {{n}} is marked",
+    "staffNumberLines": "Staff, lines numbered from the bottom: line 1 to 5",
+    "staffNumberSpaces": "Staff, spaces numbered from the bottom: space 1 to 4",
+    "musicBars_one": "Notes in {{count}} bar: {{notes}}",
+    "musicBars_other": "Notes in {{count}} bars: {{notes}}"
+  },
+  "skipCheck": {
+    "offer": "Do you know this already? Three right answers and you may skip the lesson.",
+    "start": "Quick check",
+    "title": "Quick check",
+    "finish": "Done",
+    "cancel": "Cancel",
+    "failed": "Not quite – no problem. Let’s look at it together.",
+    "done": "Great, you can do this already! The lesson counts as passed.",
+    "link": "I know this – quick check"
   },
   "knowledge": {
     "title": "Knowledge",

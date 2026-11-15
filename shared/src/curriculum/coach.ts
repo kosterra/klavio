@@ -20,6 +20,10 @@ export const LESSON_COACH: Record<string, Localized> = {
     'Rechter Daumen aufs mittlere C, Zeigefinger aufs D, Mittelfinger aufs E. Die Zahl über der Taste sagt dir den Finger.',
     'Right thumb on middle C, index finger on D, middle finger on E. The number above the key tells you the finger.',
   ),
+  'read-staff': L(
+    'Das G liegt auf der 2. Linie – genau dort, wo sich der G-Schlüssel einrollt.',
+    'G sits on line 2 – right where the G clef curls in.',
+  ),
   'read-c-d-e': L(
     'Das C hat eine kleine Hilfslinie mitten durch den Notenkopf. Spiel es mit dem Daumen.',
     'C has a little extra line right through the note head. Play it with your thumb.',

@@ -615,10 +615,15 @@
                   "code": {
                     "type": "string",
                     "pattern": "^\\d{6}$"
+                  },
+                  "currentCode": {
+                    "type": "string",
+                    "pattern": "^\\d{6}$"
                   }
                 },
                 "required": [
-                  "code"
+                  "code",
+                  "currentCode"
                 ]
               }
             }
@@ -1101,6 +1106,26 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
+    "/api/progress/lessons/{lessonId}/skip": {
+      "post": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]{1,64}$"
+            },
+            "in": "path",
+            "name": "lessonId",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Default Response"
@@ -2311,6 +2336,7 @@
               "enum": [
                 "login-code",
                 "verify-email",
+                "confirm-email-change",
                 "pin-reset",
                 "inactive-warning",
                 "weekly-report"
@@ -2335,6 +2361,7 @@
               "enum": [
                 "login-code",
                 "verify-email",
+                "confirm-email-change",
                 "pin-reset",
                 "inactive-warning",
                 "weekly-report"
@@ -2383,6 +2410,7 @@
               "enum": [
                 "login-code",
                 "verify-email",
+                "confirm-email-change",
                 "pin-reset",
                 "inactive-warning",
                 "weekly-report"

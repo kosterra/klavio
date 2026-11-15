@@ -5,8 +5,10 @@ import {
   isBlackKey,
   midiToName,
   midiToPitchName,
+  parseSong,
   type TheoryPicture as Picture,
   spellingOf,
+  staffDuration,
 } from '@klavio/shared';
 import { PianoKeyboard } from '../../components/PianoKeyboard';
 import { Staff } from '../../notation/Staff';
@@ -223,26 +225,53 @@ function diatonic(midi: number): number {
 }
 
 /**
- * A plain staff diagram (own drawing) that can colour its lines or its spaces –
- * used to explain "on a line" vs. "in a space". Treble clef positions.
+ * A plain staff diagram (own drawing): colours its lines or its spaces, one
+ * place of it, or numbers the lines or spaces from the bottom – to explain
+ * "on a line" vs. "in a space" and how they are counted. Treble clef positions.
  */
-function StaffDiagram({ notes, highlight }: { notes: number[]; highlight: 'lines' | 'spaces' }) {
+function StaffDiagram({
+  notes,
+  highlight,
+  numbers,
+  mark,
+}: {
+  notes: number[];
+  highlight?: 'lines' | 'spaces';
+  numbers?: 'lines' | 'spaces';
+  mark?: number;
+}) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
   const gap = 16;
   const bottom = 100; // y of the lowest line (E4)
   const lines = [0, 1, 2, 3, 4].map((i) => bottom - i * gap);
   const yOf = (m: number) => bottom - ((diatonic(m) - diatonic(64)) * gap) / 2;
-  const width = 360;
-  const step = (width - 80) / Math.max(1, notes.length);
+  // without notes (counting lines and spaces): a short staff, drawn bigger
+  const width = notes.length ? 360 : 220;
+  // room on the left for the numbers
+  const left = numbers ? 44 : 10;
+  const step = (width - left - 50) / Math.max(1, notes.length);
+  const accent = 'var(--mantine-color-orange-6)';
+  const marksLine = mark !== undefined && mark % 2 === 0;
+  const names = notes.map((m) => midiToName(m, lang)).join(', ');
+  const label =
+    mark !== undefined
+      ? t(marksLine ? 'theory.staffMarkLine' : 'theory.staffMarkSpace', {
+          n: Math.floor(mark / 2) + 1,
+        })
+      : numbers
+        ? t(numbers === 'lines' ? 'theory.staffNumberLines' : 'theory.staffNumberSpaces')
+        : t(highlight === 'spaces' ? 'theory.staffSpaces' : 'theory.staffLines', {
+            notes: names,
+          });
   return (
     <svg
-      viewBox={`0 0 ${width} 130`}
+      viewBox={notes.length ? `0 0 ${width} 130` : `0 24 ${width} 92`}
       className={classes.staffDiagram}
+      style={notes.length ? undefined : { maxWidth: 340 }}
       role="img"
-      aria-label={t(highlight === 'lines' ? 'theory.staffLines' : 'theory.staffSpaces', {
-        notes: notes.map((m) => midiToName(m, lang)).join(', '),
-      })}
+      aria-label={label}
+      data-testid="staff-diagram"
     >
       {highlight === 'spaces' &&
         lines
@@ -250,28 +279,55 @@ function StaffDiagram({ notes, highlight }: { notes: number[]; highlight: 'lines
           .map((y) => (
             <rect
               key={y}
-              x="10"
+              x={left}
               y={y - gap + 2}
-              width={width - 20}
+              width={width - left - 10}
               height={gap - 4}
               rx="3"
               fill="var(--mantine-color-orange-2)"
             />
           ))}
-      {lines.map((y) => (
-        <line
-          key={y}
-          x1="10"
-          x2={width - 10}
-          y1={y}
-          y2={y}
-          stroke={highlight === 'lines' ? 'var(--mantine-color-orange-6)' : 'var(--klavio-ink)'}
-          strokeWidth={highlight === 'lines' ? 4 : 1.5}
-          strokeLinecap="round"
+      {mark !== undefined && !marksLine && (
+        <rect
+          x={left}
+          y={bottom - ((mark + 1) * gap) / 2 + 2}
+          width={width - left - 10}
+          height={gap - 4}
+          rx="3"
+          fill="var(--mantine-color-orange-3)"
         />
-      ))}
+      )}
+      {lines.map((y, i) => {
+        const strong = highlight === 'lines' || (marksLine && mark === i * 2);
+        return (
+          <line
+            key={y}
+            x1={left}
+            x2={width - 10}
+            y1={y}
+            y2={y}
+            stroke={strong ? accent : 'var(--klavio-ink)'}
+            strokeWidth={strong ? 4 : 1.5}
+            strokeLinecap="round"
+          />
+        );
+      })}
+      {numbers &&
+        (numbers === 'lines' ? lines : lines.slice(0, 4).map((y) => y - gap / 2)).map((y, i) => (
+          <text
+            key={y}
+            x={left - 12}
+            y={y + 5}
+            textAnchor="middle"
+            fontSize="14"
+            fontWeight="800"
+            fill="var(--klavio-ink)"
+          >
+            {i + 1}
+          </text>
+        ))}
       {notes.map((m, i) => {
-        const x = 60 + i * step + step / 2;
+        const x = left + 40 + i * step + step / 2;
         const y = yOf(m);
         return (
           <g key={i}>
@@ -302,7 +358,7 @@ function StaffDiagram({ notes, highlight }: { notes: number[]; highlight: 'lines
 
 /** Draws a theory picture from its description. */
 export function TheoryPicture({ picture, kids }: { picture: Picture; kids: boolean }) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
   switch (picture.kind) {
     case 'keyboard':
@@ -343,8 +399,15 @@ export function TheoryPicture({ picture, kids }: { picture: Picture; kids: boole
         </div>
       );
     case 'staff':
-      if (picture.highlight) {
-        return <StaffDiagram notes={picture.notes} highlight={picture.highlight} />;
+      if (picture.highlight || picture.numbers || picture.mark !== undefined) {
+        return (
+          <StaffDiagram
+            notes={picture.notes}
+            highlight={picture.highlight}
+            numbers={picture.numbers}
+            mark={picture.mark}
+          />
+        );
       }
       return (
         <Box className={classes.staffPicture} data-highlight={picture.highlight}>
@@ -369,6 +432,29 @@ export function TheoryPicture({ picture, kids }: { picture: Picture; kids: boole
           />
         </Box>
       );
+    case 'music': {
+      const bars = parseSong(picture.melody, picture.time ?? '4/4');
+      return (
+        <Box className={classes.staffPicture}>
+          <Staff
+            clef={picture.clef}
+            time={picture.time}
+            bars={bars.map((bar) =>
+              bar.map((n) => ({ midi: n.midi, duration: staffDuration(n), tie: n.tie })),
+            )}
+            height={kids ? 170 : 150}
+            label={t('theory.musicBars', {
+              count: bars.length,
+              notes: bars
+                .flat()
+                .filter((n) => !n.rest)
+                .map((n) => midiToName(n.midi, lang))
+                .join(', '),
+            })}
+          />
+        </Box>
+      );
+    }
     case 'note-values':
       return <NoteValues values={picture.values} pizza={picture.pizza} />;
   }

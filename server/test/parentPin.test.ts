@@ -227,6 +227,20 @@ describe('parent PIN', () => {
     );
   });
 
+  it('counts parallel PIN guesses atomically – at most 5 get through', async () => {
+    const { jar, kid } = await family();
+    await call(jar, 'PUT', '/api/account/pin', { pin: '2468' });
+    await call(jar, 'POST', '/api/profiles/select', { profileId: kid.id });
+    const codes = await Promise.all(
+      Array.from({ length: 20 }, (_, i) =>
+        call(jar, 'POST', '/api/account/pin/verify', { pin: String(1000 + i) }).then(
+          (r) => r.statusCode,
+        ),
+      ),
+    );
+    expect(codes.sort()).toEqual([...Array<number>(5).fill(403), ...Array<number>(15).fill(429)]);
+  });
+
   it('validates the PIN format and can be removed', async () => {
     const { jar } = await family();
     for (const pin of ['123', '1234567', 'abcd']) {

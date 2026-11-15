@@ -262,7 +262,10 @@
     "noPasskeys": "Noch kein Passkey eingerichtet. Bis dahin meldest du dich mit einem E-Mail-Code an.",
     "emailChange": "Ändern",
     "emailNew": "Neue E-Mail-Adresse",
-    "emailSendCode": "Code senden",
+    "emailSendCode": "Codes senden",
+    "emailCodesSent": "Wir haben dir zwei Codes geschickt: einen an deine bisherige Adresse {{current}} und einen an die neue Adresse {{next}}. Gib beide ein, damit wir sicher sind, dass beide Adressen dir gehören.",
+    "emailCodeCurrent": "Code an die bisherige Adresse",
+    "emailCodeNew": "Code an die neue Adresse",
     "emailChanged": "E-Mail-Adresse geändert.",
     "name": "Name des Kontos",
     "nameHint": "Erscheint nur in der App, zum Beispiel «Familie Muster».",
@@ -302,6 +305,7 @@
       "language": "Sprache",
       "loginCode": "Anmelde-Code",
       "verifyEmail": "Neue Adresse bestätigen",
+      "confirmEmailChange": "Adresswechsel bestätigen",
       "customized": "Angepasst",
       "builtIn": "Standardtexte",
       "fields": {
@@ -371,6 +375,7 @@
   },
   "errors": {
     "EMAIL_CODE_INVALID": "Der Code stimmt nicht oder ist abgelaufen.",
+    "CURRENT_EMAIL_CODE_INVALID": "Der Code an deine bisherige Adresse stimmt nicht oder ist abgelaufen.",
     "EMAIL_IN_USE": "Diese E-Mail-Adresse wird bereits verwendet.",
     "TOO_MANY_CODES": "Zu viele Codes angefordert. Bitte warte ein paar Minuten.",
     "PASSKEY_UNKNOWN": "Dieser Passkey ist uns nicht bekannt. Vielleicht wurde er gelöscht?",
@@ -859,13 +864,13 @@
     "handNumbers": "Rechte Hand von oben: Daumen 1, Zeigefinger 2, Mittelfinger 3, Ringfinger 4, kleiner Finger 5",
     "handMarked": "Rechte Hand von oben, ein Finger ist markiert",
     "values": {
+      "8": "Achtel",
       "w": "Ganze",
       "h": "Halbe",
       "q": "Viertel",
       "qr": "Viertelpause",
       "qd": "punktierte Viertel",
       "hd": "punktierte Halbe",
-      "8": "Achtel",
       "hr": "halbe Pause",
       "wr": "ganze Pause"
     },
@@ -881,7 +886,23 @@
     "staffLines": "Notenlinien, die Linien sind markiert. Noten: {{notes}}",
     "staffSpaces": "Notenlinien, die Zwischenräume sind markiert. Noten: {{notes}}",
     "handNumbersLeft": "Linke Hand von oben: Daumen 1, Zeigefinger 2, Mittelfinger 3, Ringfinger 4, kleiner Finger 5",
-    "handMarkedLeft": "Linke Hand von oben, ein Finger ist markiert"
+    "handMarkedLeft": "Linke Hand von oben, ein Finger ist markiert",
+    "staffMarkLine": "Notenlinien, die {{n}}. Linie ist markiert",
+    "staffMarkSpace": "Notenlinien, der {{n}}. Zwischenraum ist markiert",
+    "staffNumberLines": "Notenlinien, von unten nummeriert: 1. bis 5. Linie",
+    "staffNumberSpaces": "Notenlinien, die Zwischenräume von unten nummeriert: 1. bis 4. Zwischenraum",
+    "musicBars_one": "Noten in {{count}} Takt: {{notes}}",
+    "musicBars_other": "Noten in {{count}} Takten: {{notes}}"
+  },
+  "skipCheck": {
+    "offer": "Kennst du das schon? Drei richtige Antworten, und du darfst die Lektion überspringen.",
+    "start": "Kurzer Check",
+    "title": "Kurzer Check",
+    "finish": "Fertig",
+    "cancel": "Abbrechen",
+    "failed": "Nicht ganz – kein Problem. Schauen wir es zusammen an.",
+    "done": "Super, das kannst du schon! Die Lektion zählt als bestanden.",
+    "link": "Kann ich schon – kurzer Check"
   },
   "knowledge": {
     "title": "Wissen",

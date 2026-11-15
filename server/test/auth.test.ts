@@ -180,10 +180,34 @@ describe('sign-up via e-mail code', () => {
     );
     const { EmailCode } = await import('../src/models/index.js');
     expect((await EmailCode.findOne({ email: 'p@y.ch' }).lean())!.attempts).toBe(5);
-    // the right code no longer works – and 12 failures have locked the address
+    // the right code no longer works (spent) – only the 5 real tries counted against the address
     expect(
       (await call(jar, 'POST', '/api/auth/email/verify', { email: 'p@y.ch', code })).json(),
-    ).toEqual({ error: 'RATE_LIMITED' });
+    ).toEqual({ error: 'EMAIL_CODE_INVALID' });
+    const { AuthThrottle } = await import('../src/models/index.js');
+    expect((await AuthThrottle.findById('code:p@y.ch').lean())!.failures).toBe(5);
+  });
+
+  it('wrong codes for an address without a code lock nothing', async () => {
+    const stranger = new CookieJar();
+    for (let i = 0; i < 30; i++) {
+      const res = await call(stranger, 'POST', '/api/auth/email/verify', {
+        email: 'victim@y.ch',
+        code: String(i).padStart(6, '0'),
+      });
+      expect(res.json()).toEqual({ error: 'EMAIL_CODE_INVALID' });
+    }
+    const { AuthThrottle } = await import('../src/models/index.js');
+    expect(await AuthThrottle.findById('code:victim@y.ch').lean()).toBeNull();
+    // the owner's fresh code still works
+    const owner = new CookieJar();
+    await call(owner, 'POST', '/api/auth/email/request', { email: 'victim@y.ch' });
+    const res = await call(owner, 'POST', '/api/auth/email/verify', {
+      email: 'victim@y.ch',
+      code: lastCode(),
+      displayName: 'V',
+    });
+    expect(res.json()).toEqual({ status: 'created' });
   });
 
   it('locks an address after 10 wrong codes, whatever the IP (also for the right code)', async () => {
@@ -438,15 +462,36 @@ describe('account name', () => {
 });
 
 describe('changing the e-mail address', () => {
-  it('verifies the new address with a code', async () => {
+  /** Asks for the change; returns the codes sent to the current and the new address. */
+  async function requestChange(jar: CookieJar, from: string, to: string) {
+    const res = await call(jar, 'POST', '/api/account/email/request', { email: to });
+    expect(res.statusCode).toBe(204);
+    const codeTo = (addr: string) => codeFrom(ctx.outbox.findLast((m) => m.to === addr)!.text);
+    return { currentCode: codeTo(from), code: codeTo(to) };
+  }
+
+  it('verifies the new address and the current one with a code each', async () => {
     const jar = new CookieJar();
     await signUp(jar, 'paul@example.ch', 'Paul');
-    await call(jar, 'POST', '/api/account/email/request', { email: 'paul@neu.ch' });
-    expect(ctx.outbox.at(-1)!.to).toBe('paul@neu.ch');
+    ctx.outbox.length = 0;
+    const { code, currentCode } = await requestChange(jar, 'paul@example.ch', 'paul@neu.ch');
+    expect(ctx.outbox.map((m) => m.to).sort()).toEqual(['paul@example.ch', 'paul@neu.ch']);
+    expect(ctx.outbox.find((m) => m.to === 'paul@example.ch')!.subject).toMatch(/ändern\?/);
+    // the new address alone is not enough
+    expect((await call(jar, 'POST', '/api/account/email/verify', { code })).statusCode).toBe(400);
+    const wrong = currentCode === '000000' ? '111111' : '000000';
     expect(
-      (await call(jar, 'POST', '/api/account/email/verify', { code: lastCode() })).json(),
+      (await call(jar, 'POST', '/api/account/email/verify', { code, currentCode: wrong })).json(),
+    ).toEqual({ error: 'CURRENT_EMAIL_CODE_INVALID' });
+    expect((await call(jar, 'GET', '/api/auth/me')).json().user.email).toBe('paul@example.ch');
+    expect(
+      (await call(jar, 'POST', '/api/account/email/verify', { code, currentCode })).json(),
     ).toEqual({ email: 'paul@neu.ch' });
     expect((await call(jar, 'GET', '/api/auth/me')).json().user.email).toBe('paul@neu.ch');
+    // both codes are used up
+    expect(
+      (await call(jar, 'POST', '/api/account/email/verify', { code, currentCode })).statusCode,
+    ).toBe(400);
   });
 
   it('logs out the other devices and tells the old address', async () => {
@@ -461,8 +506,8 @@ describe('changing the e-mail address', () => {
     });
     expect((await call(other, 'GET', '/api/auth/me')).statusCode).toBe(200);
 
-    await call(jar, 'POST', '/api/account/email/request', { email: 'eva@neu.ch' });
-    await call(jar, 'POST', '/api/account/email/verify', { code: lastCode() });
+    const codes = await requestChange(jar, 'eva@example.ch', 'eva@neu.ch');
+    await call(jar, 'POST', '/api/account/email/verify', codes);
     expect((await call(other, 'GET', '/api/auth/me')).statusCode).toBe(401);
     expect((await call(jar, 'GET', '/api/auth/me')).statusCode).toBe(200);
     const notice = ctx.outbox.find((m) => m.to === 'eva@example.ch' && /geändert/.test(m.subject));
@@ -485,13 +530,24 @@ describe('changing the e-mail address', () => {
     expect((await call(jar, 'GET', '/api/auth/me')).statusCode).toBe(200);
   });
 
-  it('refuses an address used by another account; the address cannot be removed', async () => {
+  it('tells about an address used by another account only once its code was proved', async () => {
     await signUp(new CookieJar(), 'taken@example.ch', 'T');
     const jar = new CookieJar();
     await signUp(jar);
+    // the request answers the same as for a free address
+    const codes = await requestChange(jar, 'mia@example.ch', 'taken@example.ch');
     expect(
-      (await call(jar, 'POST', '/api/account/email/request', { email: 'taken@example.ch' })).json(),
-    ).toEqual({ error: 'EMAIL_IN_USE' });
+      (
+        await call(jar, 'POST', '/api/account/email/verify', {
+          ...codes,
+          code: codes.code === '000000' ? '111111' : '000000',
+        })
+      ).json(),
+    ).toEqual({ error: 'EMAIL_CODE_INVALID' });
+    const res = await call(jar, 'POST', '/api/account/email/verify', codes);
+    expect(res.statusCode).toBe(409);
+    expect(res.json()).toEqual({ error: 'EMAIL_IN_USE' });
+    expect((await call(jar, 'GET', '/api/auth/me')).json().user.email).toBe('mia@example.ch');
     expect((await call(jar, 'DELETE', '/api/account/email')).statusCode).toBe(404);
   });
 });

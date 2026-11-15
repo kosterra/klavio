@@ -2,7 +2,9 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } 
 import { CookieJar, ORIGIN, setupTestApp } from './helpers.js';
 import { AppSettings } from '../src/models/index.js';
 import { readFileSync } from 'node:fs';
+import { deflateRawSync } from 'node:zlib';
 import {
+  analyseFile,
   analyseLibrary,
   cleanComposer,
   libraryEntries,
@@ -157,6 +159,13 @@ describe('piece library (MuseTrainer)', () => {
     expect(fetcher.mock.calls.filter(([u]) => String(u).includes('api.github.com'))).toHaveLength(
       1,
     );
+    // the file too: asked again, it comes from memory
+    const fileCalls = () =>
+      fetcher.mock.calls.filter(([u]) => String(u).endsWith('/scores/Fur_Elise.mxl')).length;
+    const before = fileCalls();
+    const again = await call(jar, 'GET', '/api/library/Fur_Elise.mxl/file');
+    expect(again.rawPayload.equals(SONG)).toBe(true);
+    expect(fileCalls()).toBe(before);
 
     // without an account: nothing
     expect((await call(new CookieJar(), 'GET', '/api/library?q=elise')).statusCode).toBe(401);
@@ -206,5 +215,41 @@ describe('piece library (MuseTrainer)', () => {
     const before = pages();
     await call(jar, 'GET', '/api/library?q=');
     expect(pages()).toBe(before);
+  });
+});
+
+describe('library files', () => {
+  it('a packed file that unpacks to more than 20 MB is not read (zip bomb)', async () => {
+    const zip = (name: string, data: Buffer) => {
+      const packed = deflateRawSync(data);
+      const nameBytes = Buffer.from(name);
+      const local = Buffer.alloc(30);
+      local.writeUInt32LE(0x04034b50, 0);
+      local.writeUInt16LE(8, 8);
+      local.writeUInt32LE(packed.length, 18);
+      local.writeUInt32LE(data.length, 22);
+      local.writeUInt16LE(nameBytes.length, 26);
+      const central = Buffer.alloc(46);
+      central.writeUInt32LE(0x02014b50, 0);
+      central.writeUInt16LE(8, 10);
+      central.writeUInt32LE(packed.length, 20);
+      central.writeUInt32LE(data.length, 24);
+      central.writeUInt16LE(nameBytes.length, 28);
+      central.writeUInt32LE(0, 42);
+      const dirAt = local.length + nameBytes.length + packed.length;
+      const end = Buffer.alloc(22);
+      end.writeUInt32LE(0x06054b50, 0);
+      end.writeUInt16LE(1, 8);
+      end.writeUInt16LE(1, 10);
+      end.writeUInt32LE(central.length + nameBytes.length, 12);
+      end.writeUInt32LE(dirAt, 16);
+      return new Uint8Array(Buffer.concat([local, nameBytes, packed, central, nameBytes, end]));
+    };
+    // a small, real one is read …
+    expect((await analyseFile(zip('score.musicxml', SONG))).readable).toBe(true);
+    // … 25 MB of spaces (a few KB packed) are not
+    const bomb = zip('score.musicxml', Buffer.alloc(25 * 1024 * 1024, 0x20));
+    expect(bomb.length).toBeLessThan(100_000);
+    expect(await analyseFile(bomb)).toEqual({ readable: false, problem: 'NOT_READABLE' });
   });
 });

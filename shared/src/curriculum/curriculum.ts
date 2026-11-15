@@ -448,6 +448,21 @@ CURRICULUM.push({
   stage: 1,
   lessons: [
     {
+      // the basics before the first notes: staff, clef, note, bar line
+      id: 'read-staff',
+      kind: 'read',
+      title: { 'de-CH': 'Das Notensystem', en: 'The staff' },
+      intro: {
+        'de-CH':
+          'Fünf Linien, ein Schlüssel, Noten und Taktstriche – damit schreibt man Musik auf. Den G-Schlüssel kennst du jetzt: Finde das G in den Noten und spiel es.',
+        en: 'Five lines, a clef, notes and bar lines – that is how music is written down. Now you know the G clef: find the G in the music and play it.',
+      },
+      xp: 15,
+      keyboard: C4_C5,
+      keyLabels: 'all',
+      exercises: [{ type: 'read-note', clef: 'treble', notes: seq('G4'), rounds: 4 }],
+    },
+    {
       id: 'read-c-d-e',
       kind: 'read',
       title: { 'de-CH': 'Noten: C, D, E', en: 'Notes: C, D, E' },

@@ -78,6 +78,7 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
   'hand-white-keys': ['white-keys'],
   'hand-scale': ['right-hand'],
   'hand-entchen': ['melodies'],
+  'read-staff': ['treble-clef'],
   'read-c-d-e': ['treble-clef'],
   'song-lune': ['treble-clef'],
   'read-f-g': ['treble-clef'],

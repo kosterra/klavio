@@ -148,6 +148,7 @@ export function MailTemplatesCard() {
             data={[
               { value: 'login-code', label: t('admin.mail.loginCode') },
               { value: 'verify-email', label: t('admin.mail.verifyEmail') },
+              { value: 'confirm-email-change', label: t('admin.mail.confirmEmailChange') },
               { value: 'pin-reset', label: t('admin.mail.pinReset') },
               { value: 'inactive-warning', label: t('admin.mail.inactiveWarning') },
               { value: 'weekly-report', label: t('admin.mail.weeklyReport') },

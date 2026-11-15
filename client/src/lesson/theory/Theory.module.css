@@ -117,6 +117,8 @@
 }
 
 .staffPicture {
+  /* full width also in a flex column (the quiz): the staff takes its size from it */
+  width: 100%;
   max-width: 520px;
   margin: 0 auto;
 }

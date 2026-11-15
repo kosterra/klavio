@@ -24,7 +24,7 @@ export async function createSession(
   reply: FastifyReply,
   userId: Types.ObjectId,
   /** a child's PIN login: the session starts with that profile and stays with it */
-  child?: { profileId: Types.ObjectId },
+  child?: { profileId: Types.ObjectId; deviceId: Types.ObjectId },
 ): Promise<void> {
   // Rotate: a login always replaces any session the browser already had.
   await destroySession(req, reply, config);
@@ -39,6 +39,7 @@ export async function createSession(
     parentUnlockedUntil: null,
     activeProfileId: child?.profileId ?? null,
     childProfileId: child?.profileId ?? null,
+    deviceId: child?.deviceId ?? null,
     expiresAt: new Date(Date.now() + maxAge * 1000),
   });
   reply.setCookie(SESSION_COOKIE, token, { ...cookieBase(config), maxAge });

@@ -12,6 +12,7 @@ import {
   isLessonUnlocked,
   lessonCompleteSchema,
   scoringTarget,
+  skipCheckFor,
   newlyEarnedBadges,
   levelForXp,
   nextStreak,
@@ -65,11 +66,15 @@ const RECEIPT_DAYS = MAX_LATE_DAYS + 7;
 
 /**
  * The profile a request is about: the one named (it must be the account's) or
- * the session's active profile. Never one that has been deleted meanwhile.
+ * the session's active profile. Never one that has been deleted meanwhile,
+ * and in a child's session (PIN login) never another profile than the child's.
  */
 async function profileOf(req: FastifyRequest, named?: string): Promise<Types.ObjectId> {
   const id = named ?? req.auth!.activeProfileId;
   if (!id) throw new HttpError(409, 'NO_ACTIVE_PROFILE');
+  // a child who logged in with their PIN sees and writes only their own profile
+  if (named && req.auth!.childLogin && req.auth!.activeProfileId?.toString() !== named)
+    throw notFound();
   const found = await Profile.exists({ _id: id, userId: req.auth!.user._id });
   if (!found) throw named ? notFound() : new HttpError(409, 'NO_ACTIVE_PROFILE');
   return found._id;
@@ -125,6 +130,39 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
       return { placed: add.length };
     },
   );
+
+  /**
+   * «Ich kann schon Noten lesen»: a lesson with a check (the questions are
+   * asked on the device) is skipped – it counts as passed like the placement
+   * (1 star, no XP, no reviews) and the next one opens. Only lessons that offer
+   * a check, only once they are open, never over a lesson already played.
+   */
+  app.post('/lessons/:lessonId/skip', { schema: { params: lessonParams } }, async (req, reply) => {
+    const profileId = await profileOf(req);
+    const lesson = findLesson(req.params.lessonId);
+    if (!lesson) throw notFound();
+    if (!skipCheckFor(lesson.id).length) throw new HttpError(400, 'NOT_SKIPPABLE');
+    const done = await LessonProgress.find({ profileId }, { lessonId: 1 }).lean();
+    const completed = new Set(done.map((d) => d.lessonId));
+    const pathOff = !!(await Profile.exists({ _id: profileId, pathOff: true }));
+    if (!pathOff && !isLessonUnlocked(lesson.id, completed))
+      throw new HttpError(403, 'LESSON_LOCKED');
+    if (!completed.has(lesson.id)) {
+      try {
+        await LessonProgress.create({
+          profileId,
+          lessonId: lesson.id,
+          bestStars: 1,
+          completions: 0,
+          placed: true,
+        });
+      } catch (err) {
+        // a second tap at the same time: already skipped
+        if (!isDuplicateKey(err)) throw err;
+      }
+    }
+    return reply.code(204).send();
+  });
 
   app.get(
     '/',

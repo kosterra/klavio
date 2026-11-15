@@ -54,6 +54,7 @@ export function AccountPage() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState<string | null>(null);
   const [emailCode, setEmailCode] = useState('');
+  const [currentCode, setCurrentCode] = useState('');
   const [emailStep, setEmailStep] = useState<'show' | 'edit' | 'code'>('show');
   const [confirmDelete, deleteModal] = useDisclosure(false);
 
@@ -269,26 +270,66 @@ export function AccountPage() {
               </Button>
             </Group>
           ) : (
-            <Stack gap="xs">
-              <Text size="sm">{t('email.codeSent')}</Text>
-              <Group wrap="nowrap">
-                <PinInput
-                  size="lg"
-                  length={6}
-                  type="number"
-                  oneTimeCode
-                  aria-label={t('email.code')}
-                  value={emailCode}
-                  onChange={setEmailCode}
-                />
+            <Stack gap="md" data-testid="email-change-codes">
+              <Text size="sm">
+                {t('account.emailCodesSent', { current: me.user.email, next: email.trim() })}
+              </Text>
+              {(
+                [
+                  ['current', me.user.email, currentCode, setCurrentCode],
+                  ['new', email.trim(), emailCode, setEmailCode],
+                ] as const
+              ).map(([which, address, value, set]) => (
+                <Stack gap={4} key={which}>
+                  <Text size="sm" fw={700}>
+                    {which === 'current'
+                      ? t('account.emailCodeCurrent')
+                      : t('account.emailCodeNew')}
+                  </Text>
+                  <Text size="sm" c="dimmed" style={{ overflowWrap: 'anywhere' }}>
+                    {address}
+                  </Text>
+                  <PinInput
+                    size="lg"
+                    length={6}
+                    type="number"
+                    oneTimeCode
+                    gap={6}
+                    // six boxes in a row also on a narrow phone
+                    styles={{
+                      root: { flexWrap: 'nowrap', maxWidth: '100%' },
+                      pinInput: { minWidth: 0, flexShrink: 1 },
+                    }}
+                    aria-label={
+                      which === 'current'
+                        ? t('account.emailCodeCurrent')
+                        : t('account.emailCodeNew')
+                    }
+                    value={value}
+                    onChange={set}
+                  />
+                </Stack>
+              ))}
+              <Group justify="flex-end">
+                <Button
+                  variant="default"
+                  onClick={() => {
+                    setEmailStep('show');
+                    setEmailCode('');
+                    setCurrentCode('');
+                  }}
+                >
+                  {t('common.cancel')}
+                </Button>
                 <Button
                   loading={busy === 'email-verify'}
-                  disabled={emailCode.length !== 6}
+                  disabled={emailCode.length !== 6 || currentCode.length !== 6}
                   onClick={() =>
                     run('email-verify', async () => {
-                      await endpoints.accountEmailVerify(emailCode);
+                      await endpoints.accountEmailVerify(emailCode, currentCode);
                       setEmailStep('show');
                       setEmailCode('');
+                      setCurrentCode('');
                       setEmail('');
                       await refresh();
                       notify(t('account.emailChanged'));

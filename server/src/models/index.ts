@@ -65,7 +65,9 @@ const sessionSchema = new Schema(
     /** Parent area (PIN-protected) open until then; set by entering the PIN (or resetting it by e-mail). */
     parentUnlockedUntil: { type: Date, default: null },
     /** a child logged in with their PIN on a child's device: only this profile */
-    childProfileId: { type: Schema.Types.ObjectId, ref: 'Profile', default: null },
+    childProfileId: { type: Schema.Types.ObjectId, ref: 'Profile', default: null, index: true },
+    /** the child's device the child logged in on (removing the device ends the session) */
+    deviceId: { type: Schema.Types.ObjectId, ref: 'Device', default: null, index: true },
     expiresAt: { type: Date, required: true },
   },
   { timestamps: true },
@@ -190,8 +192,15 @@ export const AuthChallenge = model('AuthChallenge', authChallengeSchema);
 // ---------------------------------------------------------------------------
 const emailCodeSchema = new Schema({
   email: { type: String, required: true, index: true },
-  purpose: { type: String, enum: ['login', 'verify-email', 'pin-reset'], required: true },
-  /** verify-email: the account the address will be attached to; pin-reset: the account. */
+  purpose: {
+    type: String,
+    enum: ['login', 'verify-email', 'confirm-email-change', 'pin-reset'],
+    required: true,
+  },
+  /**
+   * verify-email: the account the address will be attached to;
+   * confirm-email-change (sent to the current address) and pin-reset: the account.
+   */
   userId: { type: Schema.Types.ObjectId, default: null },
   codeHash: { type: String, required: true },
   attempts: { type: Number, default: 0 },

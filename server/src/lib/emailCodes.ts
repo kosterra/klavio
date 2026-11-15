@@ -20,7 +20,7 @@ export const CODE_THROTTLE: ThrottlePolicy = {
   maxLockMs: 24 * 60 * 60 * 1000,
 };
 
-type Purpose = 'login' | 'verify-email' | 'pin-reset';
+type Purpose = 'login' | 'verify-email' | 'confirm-email-change' | 'pin-reset';
 
 const hashCode = (config: AppConfig, email: string, code: string) =>
   hmac(config.AUTH_SECRET, `email:${email}:${code}`);
@@ -48,8 +48,8 @@ export async function issueEmailCode(
 /**
  * Verifies against the newest unexpired code that still has attempts left.
  * Every try counts against the code (spent codes stay until they expire, so
- * they still count towards MAX_ACTIVE_CODES); wrong ones also count against
- * the address (CODE_THROTTLE). Throws EMAIL_CODE_INVALID on any failure,
+ * they still count towards MAX_ACTIVE_CODES); wrong ones against an issued,
+ * unexpired code also count against the address (CODE_THROTTLE). Throws EMAIL_CODE_INVALID on any failure,
  * RATE_LIMITED while the address is locked.
  */
 export async function checkEmailCode(
@@ -76,7 +76,11 @@ export async function checkEmailCode(
     { $inc: { attempts: 1 } },
     { sort: { expiresAt: -1 }, returnDocument: 'after' },
   );
-  if (!doc || !safeEqualHex(doc.codeHash, hashCode(config, opts.email, opts.code))) {
+  // No issued code (none sent, all expired or spent): nothing to guess, so
+  // nothing counts against the address – otherwise anyone could lock any
+  // address just by sending wrong codes for it.
+  if (!doc) throw badRequest('EMAIL_CODE_INVALID');
+  if (!safeEqualHex(doc.codeHash, hashCode(config, opts.email, opts.code))) {
     await recordFailure(throttleKey);
     throw badRequest('EMAIL_CODE_INVALID');
   }

@@ -267,6 +267,43 @@ async function download(entry: LibraryEntry, fetcher: typeof fetch): Promise<Uin
   return bytes;
 }
 
+/** Downloaded files kept in memory: at most this many bytes together. */
+export const FILE_CACHE_BYTES = 50 * 1024 * 1024;
+
+/**
+ * Recently fetched files (key: id and version, so a changed file is fetched
+ * anew), the least recently used dropped first. Spares the sources – and
+ * keeps the server from being used to download the same file over and over.
+ */
+const files = new Map<string, Uint8Array>();
+let filesBytes = 0;
+
+function cachedFile(key: string): Uint8Array | undefined {
+  const bytes = files.get(key);
+  if (bytes) {
+    // used again: to the end of the line
+    files.delete(key);
+    files.set(key, bytes);
+  }
+  return bytes;
+}
+
+function cacheFile(key: string, bytes: Uint8Array) {
+  if (bytes.length > FILE_CACHE_BYTES) return;
+  const old = files.get(key);
+  if (old) {
+    files.delete(key);
+    filesBytes -= old.length;
+  }
+  files.set(key, bytes);
+  filesBytes += bytes.length;
+  for (const [k, b] of files) {
+    if (filesBytes <= FILE_CACHE_BYTES) break;
+    files.delete(k);
+    filesBytes -= b.length;
+  }
+}
+
 /** One file of the switched-on sources, as bytes (only files from their lists are fetched). */
 export async function libraryFile(
   id: string,
@@ -275,14 +312,21 @@ export async function libraryFile(
 ): Promise<{ bytes: Uint8Array; entry: LibraryEntry } | null> {
   const entry = (await libraryEntries(keys, fetcher)).find((e) => e.id === id);
   if (!entry) return null;
+  const key = `${entry.id}@${entry.version}`;
+  const cached = cachedFile(key);
+  if (cached) return { bytes: cached, entry };
   const bytes = await download(entry, fetcher);
+  cacheFile(key, bytes);
   if (!(await libraryInfo(entry))) await remember(entry, await analyseFile(bytes, entry.title));
   return { bytes, entry };
 }
 
+/** A packed MusicXML file larger than this when unpacked is not read (zip bombs). */
+export const MAX_UNPACKED_BYTES = 20 * 1024 * 1024;
+
 /** Unpacking on the server: zlib and Node's buffers. */
 const io: MxlIo = {
-  inflate: (raw) => new Uint8Array(inflateRawSync(raw)),
+  inflate: (raw) => new Uint8Array(inflateRawSync(raw, { maxOutputLength: MAX_UNPACKED_BYTES })),
   text: (bytes) => Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength).toString('utf8'),
 };
 
@@ -383,4 +427,6 @@ export function resetLibraryCache() {
   listing.clear();
   infos = null;
   failed.clear();
+  files.clear();
+  filesBytes = 0;
 }

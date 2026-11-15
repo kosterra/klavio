@@ -308,3 +308,33 @@ describe('lessons skipped at the start', () => {
     expect((await complete(jar, first!.id)).json().firstCompletion).toBe(false);
   });
 });
+
+describe('a lesson skipped by its check («Ich kann schon»)', () => {
+  it('counts as passed and opens the next lesson', async () => {
+    const { jar } = await learner();
+    // everything before «Noten lesen» done: the staff lesson is open
+    await call(jar, 'POST', '/api/progress/placement', { chapterId: 'read' });
+    expect((await complete(jar, 'read-c-d-e')).statusCode).toBe(403);
+    const res = await call(jar, 'POST', '/api/progress/lessons/read-staff/skip');
+    expect(res.statusCode).toBe(204);
+    const lessons = (await call(jar, 'GET', `/api/progress?date=${today}`)).json().lessons;
+    expect(lessons['read-staff']).toMatchObject({ bestStars: 1, completions: 0 });
+    expect((await complete(jar, 'read-c-d-e')).statusCode).toBe(200);
+    // twice: nothing changes
+    expect((await call(jar, 'POST', '/api/progress/lessons/read-staff/skip')).statusCode).toBe(204);
+  });
+
+  it('only for lessons with a check, once they are open, never over a played one', async () => {
+    const { jar } = await learner();
+    expect((await call(jar, 'POST', '/api/progress/lessons/read-staff/skip')).statusCode).toBe(403);
+    expect((await call(jar, 'POST', `/api/progress/lessons/${first!.id}/skip`)).json().error).toBe(
+      'NOT_SKIPPABLE',
+    );
+    expect((await call(jar, 'POST', '/api/progress/lessons/nope/skip')).statusCode).toBe(404);
+    await call(jar, 'POST', '/api/progress/placement', { chapterId: 'read' });
+    await complete(jar, 'read-staff');
+    await call(jar, 'POST', '/api/progress/lessons/read-staff/skip');
+    const lessons = (await call(jar, 'GET', `/api/progress?date=${today}`)).json().lessons;
+    expect(lessons['read-staff']).toMatchObject({ bestStars: 3, completions: 1 });
+  });
+});

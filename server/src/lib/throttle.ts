@@ -41,6 +41,41 @@ export async function recordFailure(key: string): Promise<void> {
   );
 }
 
+/**
+ * Starts a guess atomically: counts it as a failure right away (a success
+ * clears the count afterwards with `clearFailures`) and decides on the state
+ * the increment found – so parallel guesses can't all slip through before the
+ * first failure is written. Returns false while the key is locked (the guess
+ * is then not counted).
+ */
+export async function claimAttempt(key: string, p: ThrottlePolicy): Promise<boolean> {
+  // cheap check first: a locked key doesn't touch the count
+  if ((await lockedFor(key, p)) > 0) return false;
+  const now = new Date();
+  const count = () =>
+    AuthThrottle.findOneAndUpdate(
+      { _id: key },
+      {
+        $inc: { failures: 1 },
+        $set: { lastFailureAt: now, expiresAt: new Date(+now + MEMORY_MS) },
+      },
+      { upsert: true, returnDocument: 'before' },
+    ).lean();
+  // two first guesses at once may both try to create the entry: the loser counts again
+  const before = await count().catch((err: unknown) => {
+    if ((err as { code?: number }).code === 11000) return count();
+    throw err;
+  });
+  if (!before) return true;
+  // below the threshold there is no lock at all (a parallel guess may have
+  // written a time a few ms later than this one's `now` – that is no lock)
+  const lock = lockMs(before.failures, p);
+  if (lock === 0 || before.lastFailureAt.getTime() + lock <= now.getTime()) return true;
+  // a parallel guess got there first and locked the key: this one doesn't count
+  await AuthThrottle.updateOne({ _id: key, failures: { $gt: 0 } }, { $inc: { failures: -1 } });
+  return false;
+}
+
 /** A success clears the count. */
 export async function clearFailures(key: string): Promise<void> {
   await AuthThrottle.deleteOne({ _id: key });

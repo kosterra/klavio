@@ -32,6 +32,7 @@ import {
   scoringTarget,
   newlyReachedGoalSkills,
   recapFor,
+  skipCheckFor,
   theoryFor,
   xpFor,
   type Lesson,
@@ -44,6 +45,8 @@ import {
 import { enqueueResult } from '../offline/queue';
 import { flushQueue } from '../offline/sync';
 import { notify } from '../components/notify';
+import { endpoints } from '../api/endpoints';
+import { SkipOffer } from '../lesson/SkipOffer';
 import { useSession } from '../auth/session';
 import { useErrorText } from '../auth/useErrorText';
 import { useMicErrorText } from '../audio/micErrorText';
@@ -184,7 +187,7 @@ function LessonRun({
   const [steps, setSteps] = useState(() =>
     discoverFirst ? [...recapFor(lesson.id), ...theory] : theory,
   );
-  const [phase, setPhase] = useState<'theory' | 'intro' | 'play' | 'result'>(
+  const [phase, setPhase] = useState<'theory' | 'intro' | 'check' | 'play' | 'result'>(
     discoverFirst && steps.length ? 'theory' : 'intro',
   );
   // the bar counts «Entdecken» too: its steps fill the first quarter
@@ -193,6 +196,20 @@ function LessonRun({
   // where the learner plays (start-up questions, «Mein Profil»): offered first.
   // The other way at the start counts for this lesson only – it does not
   // change the setting (one tap on «Bildschirm» used to switch every lesson after it)
+  // «Ich kann schon Noten lesen»: a short check instead of the lesson – only
+  // offered until the lesson is done; every question right at the first try
+  const skipCheck = skipCheckFor(lesson.id);
+  const canSkip = skipCheck.length > 0 && !completedBefore.has(lesson.id);
+  // offered during «Weisst du's noch?» and on the lesson's first step
+  const offerUntil = discoverFirst ? recapFor(lesson.id).length : 0;
+  const checkAnswers = useRef({ asked: 0, right: 0 });
+  const [checkFailed, setCheckFailed] = useState(false);
+  const [skipping, setSkipping] = useState(false);
+  const startCheck = () => {
+    checkAnswers.current = { asked: 0, right: 0 };
+    setCheckFailed(false);
+    setPhase('check');
+  };
   const [savedPlayOn] = usePlayOn();
   const [playOn] = useState(savedPlayOn);
   const startLesson = (choice: 'piano' | 'screen' = 'piano') => {
@@ -410,6 +427,53 @@ function LessonRun({
             </Alert>
           )}
 
+          {/* ------------------------------- «Ich kann schon»: offer and check */}
+          {canSkip && phase === 'theory' && theoryAt <= offerUntil && (
+            <SkipOffer onStart={startCheck} failed={checkFailed} />
+          )}
+          {phase === 'check' && (
+            <TheorySteps
+              steps={skipCheck}
+              kids={kids}
+              title={t('skipCheck.title')}
+              lessonTitle={loc(lesson.title)}
+              doneLabel={t('skipCheck.finish')}
+              skipLabel={t('skipCheck.cancel')}
+              onAnswered={(firstTry) => {
+                checkAnswers.current.asked += 1;
+                if (firstTry) checkAnswers.current.right += 1;
+              }}
+              onDone={() => {
+                if (skipping) return;
+                const { asked, right } = checkAnswers.current;
+                if (asked < skipCheck.length) {
+                  // stopped before the end: back to where one came from
+                  setPhase(discoverFirst && steps.length ? 'theory' : 'intro');
+                  return;
+                }
+                if (right < skipCheck.length) {
+                  setCheckFailed(true);
+                  setSteps(theory);
+                  setTheoryAt(0);
+                  setPhase(theory.length ? 'theory' : 'intro');
+                  return;
+                }
+                setSkipping(true);
+                endpoints
+                  .skipLesson(lesson.id)
+                  .then(() => {
+                    notify(t('skipCheck.done'));
+                    navigate(next ? `/lesson/${next.id}` : '/');
+                  })
+                  .catch((err: unknown) => {
+                    notify(errorText(err), 'red');
+                    setSkipping(false);
+                    setPhase('intro');
+                  });
+              }}
+            />
+          )}
+
           {/* ------------------------------------------- theory ("Entdecken") */}
           {phase === 'theory' && (
             <TheorySteps
@@ -462,6 +526,16 @@ function LessonRun({
                     data-testid="theory-again"
                   >
                     {t('theory.again')}
+                  </Button>
+                )}
+                {canSkip && (
+                  <Button
+                    variant="subtle"
+                    size={compact ? 'compact-md' : undefined}
+                    onClick={startCheck}
+                    data-testid="skip-check"
+                  >
+                    {t('skipCheck.link')}
                   </Button>
                 )}
                 {/* how to play: a clear choice, the real piano first */}
