@@ -34,6 +34,18 @@ export const CHANGELOG: Release[] = [
         'Korrektur: Bei Fragen wie «Wie heisst diese Note?» erschien die Note nicht – nur ein Ladekreis.',
         'Fix: in questions like «What is this note called?» the note did not appear – only a loading circle.',
       ),
+      L(
+        'Sicherheit: Falsche Codes von Fremden sperren deine E-Mail-Adresse nicht mehr – dein eigener Code funktioniert immer.',
+        'Security: wrong codes sent by strangers no longer lock your e-mail address – your own code always works.',
+      ),
+      L(
+        'Sicherheit: Entfernst du ein Kindergerät, änderst oder entfernst die PIN eines Kindes oder löschst ein Profil, wird das Kind dort sofort abgemeldet.',
+        'Security: removing a child’s device, changing or removing a child’s PIN or deleting a profile now logs the child out there straight away.',
+      ),
+      L(
+        'E-Mail-Adresse ändern: Du bestätigst jetzt mit je einem Code an die bisherige und an die neue Adresse.',
+        'Changing your e-mail address: you now confirm it with one code sent to your current address and one to the new address.',
+      ),
     ],
   },
   {
