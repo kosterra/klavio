@@ -1394,7 +1394,14 @@
     "title": "So liegt deine Hand",
     "right": "Rechte Hand: {{keys}}",
     "left": "Linke Hand: {{keys}}",
-    "finger": "Finger {{n}} auf {{note}}"
+    "finger": "Finger {{n}} ({{name}}) auf {{note}}",
+    "fingerName": {
+      "1": "Daumen",
+      "2": "Zeigefinger",
+      "3": "Mittelfinger",
+      "4": "Ringfinger",
+      "5": "kleiner Finger"
+    }
   },
   "songs": {
     "title": "Lieder",

@@ -118,6 +118,50 @@ describe('note tracker', () => {
     expect(ons.map((e) => e.midi)).toEqual([69]);
   });
 
+  /** `first`, then `second` 0.4 s later; `first` is let go `overlap` s after `second` goes down. */
+  function legato(first: number, second: number, amplitude: number, overlap: number) {
+    const ring = pianoTone(first, { duration: 1.2, seed: 1 });
+    const next = pianoTone(second, { lead: 0.6, duration: 0.8, amplitude, seed: 2 });
+    // the damper stops the string within 40 ms
+    const up = 0.6 + overlap;
+    const damper = (i: number) => Math.min(1, Math.max(0, 1 - (i / SR - up) / 0.04));
+    const mix = ring.map((v, i) => v * damper(i) + (next[i] ?? 0));
+    return runPipeline(mix, SR)
+      .events.filter((e) => e.type === 'note-on')
+      .map((e) => e.midi);
+  }
+
+  it('reports a softer key played while the last one still rings for a moment (legato)', () => {
+    for (const overlap of [0.02, 0.06, 0.09]) {
+      for (const [first, second, amp] of [
+        [60, 62, 0.12],
+        [64, 65, 0.1],
+        [67, 64, 0.12],
+        [60, 67, 0.1],
+        [65, 60, 0.15],
+      ] as const) {
+        expect(legato(first, second, amp, overlap), `${first} → ${second}, ${overlap}`).toEqual([
+          first,
+          second,
+        ]);
+      }
+    }
+  });
+
+  it('still reports a key an octave below the one that rings', () => {
+    expect(legato(60, 48, 0.3, 0.06)).toEqual([60, 48]);
+  });
+
+  it('reports a soft key played right after the last one was released', () => {
+    const signal = concat(
+      pianoTone(64, { duration: 0.35, seed: 1 }),
+      new Float32Array(Math.round(0.15 * SR)),
+      pianoTone(62, { lead: 0, duration: 0.5, amplitude: 0.04, seed: 2 }),
+    );
+    const ons = runPipeline(signal, SR).events.filter((e) => e.type === 'note-on');
+    expect(ons.map((e) => e.midi)).toEqual([64, 62]);
+  });
+
   it('applies the A4 calibration', () => {
     // A piano tuned to A4 = 452 Hz is ~47 cents sharp: without calibration its
     // notes fall between two keys and are rejected; with it they are recognised.

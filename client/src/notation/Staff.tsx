@@ -185,6 +185,26 @@ export function Staff({
       });
       const svg = el.querySelector('svg');
       svg?.setAttribute('aria-hidden', 'true');
+      // names below low notes (C with its ledger line) or fingers above high ones can
+      // reach past the edge: move the visible area so the drawing fits, where there is room
+      try {
+        const box = svg?.getBBox();
+        const visible = height / scale;
+        if (box) {
+          const below = box.y + box.height + 2 - visible;
+          const above = 2 - box.y;
+          const room = (n: number) => Math.max(0, n);
+          const dy =
+            below > 0
+              ? Math.min(below, room(-above))
+              : above > 0
+                ? -Math.min(above, room(-below))
+                : 0;
+          if (dy) svg?.setAttribute('viewBox', `0 ${dy} ${width / scale} ${visible}`);
+        }
+      } catch {
+        // no layout (tests): keep the drawing as it is
+      }
       setReady(true);
     });
     return () => {
