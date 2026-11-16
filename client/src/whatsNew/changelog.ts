@@ -20,7 +20,7 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
-    version: UPCOMING,
+    version: '2026.11.10',
     changes: [
       L(
         'Unter dem Handbild steht jetzt auch, welcher Finger welcher ist: Finger 1 (Daumen), Finger 2 (Zeigefinger) und so weiter.',
