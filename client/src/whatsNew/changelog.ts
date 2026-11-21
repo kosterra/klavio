@@ -20,7 +20,7 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
-    version: UPCOMING,
+    version: '2026.11.11',
     changes: [
       L(
         'Für Erwachsene: Jedes Kapitel lässt sich mit einem kurzen Check überspringen, wenn du es schon kannst. Neue Bonus-Lektionen «Vier Akkorde» (C, G, Am, F) und «Klingen lassen: das Pedal» schon im zweiten Kapitel. Die Erklärungen zu Notenwerten und Tasten kommen ohne Pizza und kleines Haus aus.',
