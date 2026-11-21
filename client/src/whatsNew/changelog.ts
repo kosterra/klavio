@@ -20,6 +20,23 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: UPCOMING,
+    changes: [
+      L(
+        'Handy: Erklärungen, «Noten lesen» und die Lektions-Tipps sind kompakter und passen auf einen Bildschirm – die Sprechblase nutzt die ganze Breite, «Überspringen» und «Weiter» stehen immer nebeneinander.',
+        'Phone: explanations, «Reading notes» and the lesson tips are more compact and fit on one screen – the speech bubble uses the full width, «Skip» and «Next» always sit side by side.',
+      ),
+      L(
+        'Notenregen: Spielst du die richtige Note in der falschen Oktave, sagt Klavi das, statt es als Fehler zu zählen.',
+        'Note rain: if you play the right note in the wrong octave, Klavi tells you instead of counting a mistake.',
+      ),
+      L(
+        'Korrektur: Bei Noten auf Hilfslinien wurden Notennamen und die Kärtchen im Intervall-Regen unten abgeschnitten.',
+        'Fix: with notes on ledger lines, note names and the interval rain cards were cut off at the bottom.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.10',
     changes: [
       L(

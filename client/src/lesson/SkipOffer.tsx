@@ -12,17 +12,31 @@ export function SkipOffer({ onStart, failed }: { onStart: () => void; failed: bo
   const { t } = useTranslation();
   return (
     <Paper className={classes.offer} data-testid="skip-offer">
-      <Group gap="sm" wrap="wrap" justify="space-between">
-        <Group gap="sm" wrap="nowrap" style={{ flex: '1 1 16rem' }}>
+      <Group gap="sm" wrap="wrap" justify="space-between" className={classes.row}>
+        <Group gap="sm" wrap="nowrap" className={classes.text}>
           <span className={classes.icon} aria-hidden>
             <IconRocket size={24} />
           </span>
           <Text fw={600} role={failed ? 'status' : undefined}>
-            {t(failed ? 'skipCheck.failed' : 'skipCheck.offer')}
+            {failed ? (
+              t('skipCheck.failed')
+            ) : (
+              <>
+                <span className={classes.long}>{t('skipCheck.offer')}</span>
+                {/* phones: one short line, so the explanation below still fits */}
+                <span className={classes.short}>{t('skipCheck.offerShort')}</span>
+              </>
+            )}
           </Text>
         </Group>
         {!failed && (
-          <Button variant="light" size="md" onClick={onStart} data-testid="skip-check">
+          <Button
+            variant="light"
+            size="md"
+            onClick={onStart}
+            className={classes.button}
+            data-testid="skip-check"
+          >
             {t('skipCheck.start')}
           </Button>
         )}

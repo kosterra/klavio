@@ -5,6 +5,21 @@
   background: var(--klavio-locked-border);
 }
 
+/* phones: small dots, so the lesson title keeps its line */
+.dots {
+  flex: none;
+  padding-top: 4px;
+}
+
+.dots[data-small] .dot {
+  width: 7px;
+  height: 7px;
+}
+
+.dots[data-small] .dot[data-state='current'] {
+  width: 16px;
+}
+
 .dot[data-state='done'] {
   background: var(--mantine-color-teal-6);
 }
@@ -27,6 +42,26 @@
   padding: var(--mantine-spacing-sm) var(--mantine-spacing-md);
   border-radius: var(--mantine-radius-lg);
   background: var(--klavio-bubble);
+}
+
+/* phones: full width, the figure and the read-aloud button float inside */
+.bubble[data-wide] {
+  display: flow-root;
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+}
+
+.bubble[data-wide]::before {
+  content: none;
+}
+
+.buddyIn {
+  float: left;
+  margin: 2px 8px 0 0;
+}
+
+.readIn {
+  float: right;
+  margin: 0 0 4px 8px;
 }
 
 .bubble::before {
@@ -209,4 +244,23 @@
   width: 100%;
   max-width: 460px;
   margin: 0 auto;
+}
+
+/* the footer: «Überspringen» and «Weiter» always on one line */
+.skip {
+  flex: 0 1 auto;
+  min-width: 0;
+  height: auto;
+  min-height: 44px;
+  padding-inline: 6px;
+}
+
+.skip :global(.mantine-Button-label) {
+  white-space: normal;
+  line-height: 1.2;
+}
+
+.next {
+  flex: none;
+  padding-inline: var(--mantine-spacing-md);
 }

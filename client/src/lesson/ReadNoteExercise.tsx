@@ -1,4 +1,5 @@
 import { Stack, Text } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import {
   midiToName,
@@ -43,15 +44,17 @@ export function ReadNoteExercise({
   const spelling = exercise.spelling ?? spellingOf(exercise.keySignature ?? 'C');
   const noteState = feedback?.ok ? ('done' as const) : feedback ? ('wrong' as const) : undefined;
 
+  // phones: smaller staff and keys – the note must stay in sight above the docked keyboard
+  const narrow = useMediaQuery('(max-width: 36em)') ?? false;
   return (
-    <Stack align="center" gap="md" w="100%">
+    <Stack align="center" gap={narrow ? 'xs' : 'md'} w="100%">
       <BuddySays
         mood={feedback?.ok ? 'cheer' : feedback ? 'think' : 'listen'}
         size={kids ? 90 : 64}
         kids={kids}
         say={t('lesson.readNote')}
       >
-        <Text fz={kids ? 30 : 24} fw={800} ta="center">
+        <Text fz={narrow ? 22 : kids ? 30 : 24} fw={800} ta="center">
           {t('lesson.readNote')}
         </Text>
       </BuddySays>
@@ -73,7 +76,7 @@ export function ReadNoteExercise({
             keySignature={exercise.keySignature}
             spelling={spelling}
             notes={[{ midi: target, state: noteState }]}
-            height={kids ? 190 : 160}
+            height={narrow ? 130 : kids ? 190 : 160}
             label={t('lesson.staffLabel', { clef: clefName })}
           />
         )}
@@ -102,7 +105,7 @@ export function ReadNoteExercise({
         from={lesson.keyboard.from}
         to={lesson.keyboard.to}
         labels={lesson.keyLabels}
-        height={kids ? 190 : 160}
+        height={narrow ? 150 : kids ? 190 : 160}
         interactive={inputMode === 'screen'}
         hints={markKey ? [target] : []}
         correct={feedback?.ok ? [feedback.midi] : []}

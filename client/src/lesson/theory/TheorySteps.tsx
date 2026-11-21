@@ -413,7 +413,7 @@ export function TheorySteps({
       mx="auto"
       w="100%"
     >
-      <Stack gap="lg">
+      <Stack gap={narrow ? 'sm' : 'lg'}>
         <Group justify="space-between" wrap="nowrap" align="flex-start">
           <div>
             <Text size="sm" fw={800} tt="uppercase" c="dimmed">
@@ -425,37 +425,69 @@ export function TheorySteps({
               </Title>
             )}
           </div>
-          <Group
-            gap={6}
-            role="img"
-            aria-label={t('theory.stepOf', { n: index + 1, total: steps.length })}
-          >
-            {steps.map((_, i) => (
-              <span
-                key={i}
-                className={classes.dot}
-                data-state={i < index ? 'done' : i === index ? 'current' : undefined}
-              />
-            ))}
-          </Group>
+          {narrow && steps.length > 6 ? (
+            // phones with many steps: «3 / 13» instead of a long row of dots
+            <Text
+              size="sm"
+              fw={800}
+              c="dimmed"
+              className={classes.dots}
+              role="img"
+              aria-label={t('theory.stepOf', { n: index + 1, total: steps.length })}
+            >
+              {index + 1} / {steps.length}
+            </Text>
+          ) : (
+            <Group
+              gap={narrow ? 4 : 6}
+              wrap="nowrap"
+              className={classes.dots}
+              data-small={narrow || undefined}
+              role="img"
+              aria-label={t('theory.stepOf', { n: index + 1, total: steps.length })}
+            >
+              {steps.map((_, i) => (
+                <span
+                  key={i}
+                  className={classes.dot}
+                  data-state={i < index ? 'done' : i === index ? 'current' : undefined}
+                />
+              ))}
+            </Group>
+          )}
         </Group>
 
-        <Group wrap="nowrap" align="flex-start" gap="md">
-          <div className={classes.buddy}>
-            <Buddy mood={mood} size={narrow ? 52 : kids ? 96 : 72} />
-          </div>
-          <div className={classes.bubble}>
-            <Text
-              fz={kids && !narrow ? 'xl' : 'lg'}
-              fw={kids ? 600 : 500}
-              key={index}
-              data-testid="theory-text"
-            >
+        {narrow ? (
+          // phones: the bubble takes the whole width, Klavi and «Vorlesen» sit in it
+          <div className={classes.bubble} data-wide>
+            <div className={classes.buddyIn}>
+              <Buddy mood={mood} size={40} />
+            </div>
+            <div className={classes.readIn}>
+              <ReadAloudButton key={index} text={loc(step.text)} auto={autoRead} />
+            </div>
+            <Text fz="lg" fw={kids ? 600 : 500} key={index} data-testid="theory-text">
               {loc(step.text)}
             </Text>
           </div>
-          <ReadAloudButton key={index} text={loc(step.text)} auto={autoRead} />
-        </Group>
+        ) : (
+          <Group wrap="nowrap" align="flex-start" gap="md">
+            <div className={classes.buddy}>
+              <Buddy mood={mood} size={kids ? 96 : 72} />
+            </div>
+            <div className={classes.bubble}>
+              <Text
+                fz={kids ? 'xl' : 'lg'}
+                fw={kids ? 600 : 500}
+                key={index}
+                data-testid="theory-text"
+              >
+                {loc(step.text)}
+              </Text>
+            </div>
+            <ReadAloudButton key={index} text={loc(step.text)} auto={autoRead} />
+          </Group>
+        )}
 
         <div key={index}>
           {step.type === 'explain' ? (
@@ -483,14 +515,16 @@ export function TheorySteps({
           {feedback?.text ?? ''}
         </Text>
 
-        <Group justify="space-between">
-          <Button variant="subtle" color="gray" onClick={onDone}>
+        {/* always side by side: «Überspringen» gives way (less padding, wraps its text) */}
+        <Group justify="space-between" wrap="nowrap" gap="xs">
+          <Button variant="subtle" color="gray" onClick={onDone} className={classes.skip}>
             {skipLabel ?? t('theory.skip')}
           </Button>
           <Button
             size={kids ? 'xl' : 'lg'}
             disabled={!canGoOn}
             onClick={next}
+            className={classes.next}
             data-testid="theory-next"
           >
             {last ? (doneLabel ?? t('theory.toLesson')) : t('theory.next')}

@@ -117,9 +117,15 @@ export function Staff({
       let x = left;
       // every drawn note with its tie flag, to draw the tie arcs at the end
       const drawn: { note: InstanceType<typeof VF.StaveNote>; tie?: boolean }[] = [];
+      let topLine = top + 40;
+      let bottomLine = top + 80;
       bars.forEach((bar, i) => {
         const w = barWidth + (i === 0 ? extra : 0);
         const stave = new VF.Stave(x, top, w);
+        if (i === 0) {
+          topLine = stave.getYForLine(0);
+          bottomLine = stave.getYForLine(4);
+        }
         if (i === 0) {
           stave.addClef(clef);
           if (keySignature !== 'C') stave.addKeySignature(keySignature);
@@ -186,25 +192,50 @@ export function Staff({
       const svg = el.querySelector('svg');
       svg?.setAttribute('aria-hidden', 'true');
       // names below low notes (C with its ledger line) or fingers above high ones can
-      // reach past the edge: move the visible area so the drawing fits, where there is room
-      try {
-        const box = svg?.getBBox();
-        const visible = height / scale;
-        if (box) {
-          const below = box.y + box.height + 2 - visible;
-          const above = 2 - box.y;
-          const room = (n: number) => Math.max(0, n);
-          const dy =
-            below > 0
-              ? Math.min(below, room(-above))
-              : above > 0
-                ? -Math.min(above, room(-below))
-                : 0;
-          if (dy) svg?.setAttribute('viewBox', `0 ${dy} ${width / scale} ${visible}`);
+      // reach past the edge: move the visible area so the drawing fits – and if there is
+      // no room for that, show a little more around it (the drawing gets slightly smaller)
+      const fit = () => {
+        try {
+          if (!svg) return;
+          // VexFlow's music font has a huge line height, so the SVG's own box is no use:
+          // the clef reaches about 1.5 spaces beyond the lines, heads and stems from the notes
+          let high = topLine - 16;
+          let low = bottomLine + 16;
+          for (const { note } of drawn) {
+            const ys = note.getYs();
+            const up = note.getStemDirection() === 1;
+            high = Math.min(high, Math.min(...ys) - (up ? 36 : 7));
+            low = Math.max(low, Math.max(...ys) + (up ? 7 : 36));
+          }
+          // note names and fingers: text in the app font
+          for (const el of svg.querySelectorAll('text')) {
+            const font = `${el.getAttribute('font-family') ?? ''} ${el.getAttribute('style') ?? ''}`;
+            if (!font.includes('Nunito')) continue;
+            const b = el.getBBox();
+            high = Math.min(high, b.y);
+            low = Math.max(low, b.y + b.height);
+          }
+          const vw = width / scale;
+          const vh = height / scale;
+          const from = high - 2;
+          const to = low + 2;
+          if (to - from > vh) {
+            const h = to - from;
+            const w = (vw * h) / vh;
+            svg.setAttribute('viewBox', `${(vw - w) / 2} ${from} ${w} ${h}`);
+            return;
+          }
+          const dy = to > vh ? Math.min(to - vh, Math.max(0, from)) : from < 0 ? from : 0;
+          svg.setAttribute('viewBox', `0 ${dy} ${vw} ${vh}`);
+        } catch {
+          // no layout (tests): keep the drawing as it is
         }
-      } catch {
-        // no layout (tests): keep the drawing as it is
-      }
+      };
+      fit();
+      // the note names use the app font: measure again once it has loaded
+      void document.fonts?.ready.then(() => {
+        if (!cancelled) fit();
+      });
       setReady(true);
     });
     return () => {

@@ -896,6 +896,7 @@
   },
   "skipCheck": {
     "offer": "Kennst du das schon? Drei richtige Antworten, und du darfst die Lektion überspringen.",
+    "offerShort": "Kannst du das schon?",
     "start": "Kurzer Check",
     "title": "Kurzer Check",
     "finish": "Fertig",

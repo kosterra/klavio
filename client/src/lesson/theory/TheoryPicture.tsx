@@ -1,5 +1,6 @@
 import { Box, Text } from '@mantine/core';
 import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
+import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import {
   isBlackKey,
@@ -360,6 +361,9 @@ function StaffDiagram({
 export function TheoryPicture({ picture, kids }: { picture: Picture; kids: boolean }) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
+  // phones: a lower staff, so the explanation, picture and buttons fit on one screen
+  const narrow = useMediaQuery('(max-width: 36em)') ?? false;
+  const staffH = narrow ? 120 : kids ? 170 : 150;
   switch (picture.kind) {
     case 'keyboard':
       return <KeyboardPicture p={picture} height={kids ? 150 : 120} />;
@@ -427,7 +431,7 @@ export function TheoryPicture({ picture, kids }: { picture: Picture; kids: boole
                 : undefined,
             }))}
             // room below the staff for the note names
-            height={(kids ? 170 : 150) + (picture.names ? 40 : 0)}
+            height={staffH + (picture.names ? (narrow ? 30 : 40) : 0)}
             label={picture.notes.map((m) => midiToName(m, lang)).join(', ')}
           />
         </Box>
@@ -442,7 +446,7 @@ export function TheoryPicture({ picture, kids }: { picture: Picture; kids: boole
             bars={bars.map((bar) =>
               bar.map((n) => ({ midi: n.midi, duration: staffDuration(n), tie: n.tie })),
             )}
-            height={kids ? 170 : 150}
+            height={staffH}
             label={t('theory.musicBars', {
               count: bars.length,
               notes: bars

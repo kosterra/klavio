@@ -896,6 +896,7 @@
   },
   "skipCheck": {
     "offer": "Do you know this already? Three right answers and you may skip the lesson.",
+    "offerShort": "Know this already?",
     "start": "Quick check",
     "title": "Quick check",
     "finish": "Done",
