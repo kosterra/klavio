@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Tagesziel: Jetzt zählt alles Üben – Freies Spielen, Notenregen, Schnelle Runde, eigene Stücke und Klassiker, die Erklärungen und auch abgebrochene Durchgänge. Gezählt wird, solange du spielst oder tippst.',
+        'Daily goal: all practice counts now – free play, note rain, quick round, own pieces and classics, the explanations and runs you stopped early. It counts while you play or tap.',
+      ),
+      L(
         'Handy: Erklärungen, «Noten lesen» und die Lektions-Tipps sind kompakter und passen auf einen Bildschirm – die Sprechblase nutzt die ganze Breite, «Überspringen» und «Weiter» stehen immer nebeneinander.',
         'Phone: explanations, «Reading notes» and the lesson tips are more compact and fit on one screen – the speech bubble uses the full width, «Skip» and «Next» always sit side by side.',
       ),

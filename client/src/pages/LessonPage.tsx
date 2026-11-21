@@ -86,6 +86,7 @@ import { finishesWorld, worldOfLesson } from '../lesson/worlds';
 import { useWorldMode } from '../lesson/useWorldMode';
 import { useLessonFor } from '../lesson/useLessonFor';
 import stage from '../lesson/LessonStage.module.css';
+import { usePracticeTime } from '../practice/usePracticeTime';
 
 /** «Auf meinem Klavier» or «Auf dem Bildschirm», remembered on this device. */
 
@@ -210,6 +211,25 @@ function LessonRun({
     setCheckFailed(false);
     setPhase('check');
   };
+  // the daily goal: explanations, start card and check count while someone plays or taps;
+  // a finished run brings its own time with the result, an abandoned one is added here
+  const practice = usePracticeTime(phase !== 'play' && phase !== 'result');
+  const leaving = useRef({ phase, add: practice.add, since: 0 });
+  useEffect(() => {
+    leaving.current.add = practice.add;
+  });
+  useEffect(() => {
+    const was = leaving.current.phase;
+    leaving.current.phase = phase;
+    if (phase === 'play' && was !== 'play') leaving.current.since = performance.now();
+  }, [phase]);
+  useEffect(
+    () => () => {
+      const { phase: last, add, since } = leaving.current;
+      if (last === 'play') add(Math.min(1800, (performance.now() - since) / 1000));
+    },
+    [],
+  );
   const [savedPlayOn] = usePlayOn();
   const [playOn] = useState(savedPlayOn);
   const startLesson = (choice: 'piano' | 'screen' = 'piano') => {

@@ -9,6 +9,7 @@ import {
   applyCompletion,
 } from '@klavio/shared';
 import { KEYS, readJson, writeJson } from './storage';
+import { readPractice } from './practice';
 
 /** A lesson result that could not be sent yet (offline). */
 export interface QueuedResult extends LessonCompleteInput {
@@ -57,6 +58,12 @@ export function withQueuedResults(
     lessons[q.lessonId] = applyCompletion(lessons[q.lessonId], stars, q.localDate).next;
     if (q.localDate === progress.today.date) seconds += q.durationSec;
     if (q.localDate >= monday && q.localDate <= progress.today.date) weekDays.add(q.localDate);
+  }
+  // practice time outside lessons that this device has not sent yet
+  for (const p of readPractice()) {
+    if (p.profileId !== profileId) continue;
+    if (p.localDate === progress.today.date) seconds += p.seconds;
+    if (p.localDate >= monday && p.localDate <= progress.today.date) weekDays.add(p.localDate);
   }
   return {
     ...progress,

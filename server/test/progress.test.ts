@@ -338,3 +338,42 @@ describe('a lesson skipped by its check («Ich kann schon»)', () => {
     expect(lessons['read-staff']).toMatchObject({ bestStars: 3, completions: 1 });
   });
 });
+
+describe('practice time outside a finished lesson', () => {
+  const practise = (jar: CookieJar, body: object) =>
+    call(jar, 'POST', '/api/progress/practice', {
+      seconds: 300,
+      localDate: today,
+      pieceId: crypto.randomUUID(),
+      ...body,
+    });
+
+  it('counts for the day once per piece and earns the daily goal badge', async () => {
+    const { jar } = await learner();
+    const pieceId = crypto.randomUUID();
+    expect((await practise(jar, { pieceId })).statusCode).toBe(204);
+    // the same piece again (the answer got lost): counted once
+    expect((await practise(jar, { pieceId })).statusCode).toBe(204);
+    let progress = (await call(jar, 'GET', `/api/progress?date=${today}`)).json();
+    expect(progress.today.seconds).toBe(300);
+    expect(progress.weekDays).toContain(today);
+    // a finished lesson adds to it
+    await complete(jar, first!.id);
+    progress = (await call(jar, 'GET', `/api/progress?date=${today}`)).json();
+    expect(progress.today.seconds).toBe(420);
+    // 10 minutes (the default goal) reached by practising: the badge
+    await practise(jar, { seconds: 200 });
+    const profile = (await call(jar, 'GET', '/api/profiles')).json()[0];
+    expect(profile.badges.map((b: { id: string }) => b.id)).toContain('daily-goal');
+  });
+
+  it('refuses implausible dates and another profile’s piece', async () => {
+    const { jar } = await learner();
+    expect((await practise(jar, { localDate: '2020-01-01' })).json().error).toBe('BAD_DATE');
+    expect((await practise(jar, { seconds: 0 })).statusCode).toBe(400);
+    const pieceId = crypto.randomUUID();
+    await practise(jar, { pieceId });
+    const other = await learner('other@example.ch');
+    expect((await practise(other.jar, { pieceId })).json().error).toBe('BAD_PIECE_ID');
+  });
+});

@@ -16,6 +16,7 @@ import {
   newlyEarnedBadges,
   levelForXp,
   nextStreak,
+  practiceTimeSchema,
   progressQuerySchema,
   REVIEW_INTERVALS,
   starsFor,
@@ -63,6 +64,8 @@ function toDto(l: ProgressDoc): LessonProgressDto {
 
 /** How long a result's receipt is kept: longer than the device keeps unsent results. */
 const RECEIPT_DAYS = MAX_LATE_DAYS + 7;
+/** the badge for reaching the daily goal (see shared badges) */
+const DAILY_GOAL_BADGE = 'daily-goal';
 
 /**
  * The profile a request is about: the one named (it must be the account's) or
@@ -160,6 +163,40 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
         // a second tap at the same time: already skipped
         if (!isDuplicateKey(err)) throw err;
       }
+    }
+    return reply.code(204).send();
+  });
+
+  // practice time outside a finished lesson: counts for the day (daily goal, week)
+  app.post('/practice', { schema: { body: practiceTimeSchema } }, async (req, reply) => {
+    const profileId = await profileOf(req, req.body.profileId);
+    const { seconds, localDate, pieceId } = req.body;
+    if (!plausibleLocalDate(localDate)) throw badRequest('BAD_DATE');
+    // the same piece again (the answer got lost on the way): counted already
+    try {
+      await LessonReceipt.create({
+        _id: pieceId,
+        profileId,
+        expiresAt: new Date(Date.now() + RECEIPT_DAYS * 24 * 60 * 60 * 1000),
+      });
+    } catch (err) {
+      if (!isDuplicateKey(err)) throw err;
+      const receipt = await LessonReceipt.findById(pieceId).lean();
+      if (!receipt || !receipt.profileId.equals(profileId)) throw badRequest('BAD_PIECE_ID');
+      return reply.code(204).send();
+    }
+    const today = await DailyActivity.findOneAndUpdate(
+      { profileId, date: localDate },
+      { $inc: { seconds } },
+      { upsert: true, returnDocument: 'after', lean: true },
+    );
+    // the daily goal reached by practising: its badge, once
+    const profile = await Profile.findById(profileId, { dailyGoalMinutes: 1 }).lean();
+    if (profile && today && today.seconds >= (profile.dailyGoalMinutes ?? 10) * 60) {
+      await Profile.updateOne(
+        { _id: profileId, 'badges.id': { $ne: DAILY_GOAL_BADGE } },
+        { $push: { badges: { id: DAILY_GOAL_BADGE, earnedAt: new Date() } } },
+      );
     }
     return reply.code(204).send();
   });

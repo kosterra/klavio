@@ -44,6 +44,8 @@ export const KEYS = {
   snapshot: 'klavio.snapshot.v1',
   progressPrefix: 'klavio.progress.v1.',
   queue: 'klavio.queue.v1',
+  /** practice time not sent yet */
+  practice: 'klavio.practice.v1',
   installDismissed: 'klavio.installHint.dismissed',
   installSnoozedUntil: 'klavio.installHint.snoozedUntil',
   /** a profile chosen offline, not yet told to the server */

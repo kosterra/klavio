@@ -8,6 +8,7 @@ import { forgetAccount } from '../offline/forget';
 import { flushQueue, hasQueued } from '../offline/sync';
 import { notify } from '../components/notify';
 import i18n from '../i18n';
+import { flushPractice } from '../offline/practice';
 
 interface Snapshot {
   status: SessionStatus;
@@ -188,6 +189,10 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   // Back online: reload and send results played offline.
   const userId = snap.me?.user.id;
   const online = !snap.offline && snap.status === 'authenticated';
+  // practice time counted while offline (or not yet sent): send it now
+  useEffect(() => {
+    if (userId && online) void flushPractice(userId).catch(() => undefined);
+  }, [userId, online]);
   useEffect(() => {
     if (!userId || !online || !hasQueued(userId)) return;
     let cancelled = false;

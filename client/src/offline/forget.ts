@@ -30,6 +30,12 @@ export function forgetAccount(userId: string | null, profileIds: string[]): void
       KEYS.queue,
       queue.filter((q) => q.userId !== userId),
     );
+    // practice time not sent yet, too
+    const practice = readJson<{ userId: string }[]>(KEYS.practice) ?? [];
+    writeJson(
+      KEYS.practice,
+      practice.filter((p) => p.userId !== userId),
+    );
   }
   const ids = new Set(profileIds);
   for (const key of MAP_KEYS) {

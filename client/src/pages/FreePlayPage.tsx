@@ -17,6 +17,7 @@ import { useNoteEvents } from '../input/noteBus';
 import { GrandStaff } from '../notation/GrandStaff';
 import { usePlayOn } from '../lesson/playOn';
 import classes from './FreePlayPage.module.css';
+import { usePracticeTime } from '../practice/usePracticeTime';
 
 const TIMBRES: Timbre[] = ['piano', 'musicbox', 'marimba', 'organ'];
 /** How many of the last notes stay visible as a little trail. */
@@ -43,6 +44,7 @@ interface Played {
 export function FreePlayPage() {
   const { t, i18n } = useTranslation();
   usePageTitle(t('freePlay.title'));
+  usePracticeTime();
   const { activeProfile } = useSession();
   const kids = activeProfile?.uiMode !== 'classic';
   const lang = i18n.language.startsWith('de') ? 'de' : 'en';
