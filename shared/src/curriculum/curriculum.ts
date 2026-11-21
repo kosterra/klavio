@@ -527,6 +527,71 @@ export const CURRICULUM: Chapter[] = [
           ],
         },
       },
+      {
+        // grown-ups want to sound like piano music soon: four chords, the hand stays in place
+        id: 'chords-four',
+        kind: 'play',
+        bonus: true,
+        title: { 'de-CH': 'Vier Akkorde', en: 'Four chords' },
+        intro: {
+          'de-CH':
+            'Mit vier Akkorden – C, G, Am und F – kann man unzählige Lieder begleiten. Die linke Hand bleibt dabei fast am selben Ort: Von Akkord zu Akkord bewegen sich nur ein, zwei Finger. Mit einem Digitalpiano müssen alle drei Töne gleichzeitig klingen.',
+          en: 'With four chords – C, G, Am and F – you can accompany countless songs. Your left hand stays almost in one place: from chord to chord only one or two fingers move. With a digital piano all three notes have to sound at the same time.',
+        },
+        xp: 30,
+        keyboard: { from: 47, to: 64 },
+        keyLabels: 'all',
+        exercises: [
+          {
+            type: 'chords',
+            chords: [
+              seq('C3 E3 G3'),
+              seq('H2 D3 G3'),
+              seq('C3 E3 A3'),
+              seq('C3 F3 A3'),
+              seq('C3 E3 G3'),
+            ],
+            names: ['C', 'G', 'Am', 'F', 'C'],
+            fingers: [
+              [5, 3, 1],
+              [5, 3, 1],
+              [5, 3, 1],
+              [5, 2, 1],
+              [5, 3, 1],
+            ],
+          },
+          {
+            type: 'play-along',
+            sequences: [
+              seq('C3 E3 G3 E3'),
+              seq('H2 D3 G3 D3'),
+              seq('C3 E3 A3 E3'),
+              seq('C3 F3 A3 F3'),
+            ],
+            fingers: [
+              [5, 3, 1, 3],
+              [5, 3, 1, 3],
+              [5, 3, 1, 3],
+              [5, 2, 1, 2],
+            ],
+          },
+        ],
+      },
+      {
+        id: 'pedal-early',
+        kind: 'play',
+        bonus: true,
+        title: { 'de-CH': 'Klingen lassen: das Pedal', en: 'Let it ring: the pedal' },
+        intro: {
+          'de-CH':
+            'Das rechte Pedal lässt die Töne weiterklingen – so klingen schon einfache Akkorde nach richtiger Klaviermusik. Der Trick: Erst die neue Taste, dann das Pedal kurz heben und wieder drücken.',
+          en: 'The right pedal lets the notes keep ringing – so even simple chords sound like real piano music. The trick: first the new key, then lift the pedal briefly and press it again.',
+        },
+        xp: 25,
+        keyboard: { from: 47, to: 64 },
+        keyLabels: 'all',
+        exercises: [{ type: 'pedal', notes: seq('C3 H2 C3 C3 G3 G3 A3 A3') }],
+      },
     ],
   },
 ];

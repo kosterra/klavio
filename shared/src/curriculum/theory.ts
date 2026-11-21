@@ -1,5 +1,5 @@
 import { CURRICULUM } from './curriculum.ts';
-import type { Localized, QuizStep, TheoryStep } from './types.ts';
+import type { Localized, QuizStep, TheoryPicture, TheoryStep } from './types.ts';
 
 const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
 
@@ -20,6 +20,26 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       ),
     },
   ],
+  'chords-four': [
+    {
+      type: 'explain',
+      text: L(
+        'Ein Akkord sind drei Töne zusammen. C-Dur ist C, E, G. Für G, Am und F rückst du nur einzelne Finger: So wird die Begleitung ruhig und klingt verbunden.',
+        'A chord is three notes together. C major is C, E, G. For G, Am and F you only move single fingers: the accompaniment stays calm and sounds connected.',
+      ),
+      picture: { kind: 'keyboard', from: 47, to: 64, labels: 'all', marks: [48, 52, 55] },
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Welcher Ton kommt beim Am-Akkord statt des G?',
+        'Which note replaces G in the Am chord?',
+      ),
+      answers: [{ text: L('F', 'F') }, { text: L('A', 'A'), correct: true }, { text: L('H', 'B') }],
+      hint: L('Am heisst a-Moll: Sein Grundton ist das A.', 'Am means A minor: its root is A.'),
+    },
+  ],
+
   'expr-pedal': [
     {
       type: 'explain',
@@ -2134,6 +2154,90 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
  * entry replaces the step at that place.
  */
 const ADULT_THEORY: Record<string, Record<number, TheoryStep>> = {
+  // grown-ups: the same facts without children's pictures (pizza, the little house)
+  'keys-d-e': {
+    0: {
+      type: 'explain',
+      text: L(
+        'Das D liegt zwischen den zwei schwarzen Tasten der Zweiergruppe. Das E kommt gleich rechts daneben.',
+        'D sits between the two black keys of the group of two. E comes right next to it.',
+      ),
+      picture: { kind: 'keyboard', ...C4_C5, labels: 'all', marks: [62, 64] },
+    },
+    2: {
+      type: 'quiz',
+      text: L(
+        'Welcher Ton liegt zwischen den zwei schwarzen Tasten?',
+        'Which note sits between the two black keys?',
+      ),
+      answers: [{ text: L('C', 'C') }, { text: L('D', 'D'), correct: true }, { text: L('E', 'E') }],
+      hint: L(
+        'Links von der Zweiergruppe liegt das C – eine Taste weiter rechts?',
+        'C is left of the group of two – and one key further right?',
+      ),
+    },
+  },
+  'keys-f-g': {
+    2: {
+      type: 'quiz',
+      text: L('Wo liegt das F?', 'Where is F?'),
+      answers: [
+        { text: L('Links von zwei schwarzen Tasten', 'Left of two black keys') },
+        { text: L('Links von drei schwarzen Tasten', 'Left of three black keys'), correct: true },
+        { text: L('Zwischen zwei schwarzen Tasten', 'Between two black keys') },
+      ],
+      hint: L(
+        'Links von der Zweiergruppe liegt das C, links von der Dreiergruppe das F.',
+        'C is left of the group of two, F left of the group of three.',
+      ),
+    },
+  },
+  'rhythm-quarters': {
+    0: {
+      type: 'explain',
+      text: L(
+        'Notenwerte sagen, wie lange ein Ton klingt – gezählt in Schlägen. Die Viertel dauert einen Schlag, die Halbe zwei, die Ganze vier.',
+        'Note values tell how long a note sounds – counted in beats. A quarter note lasts one beat, a half note two, a whole note four.',
+      ),
+      picture: { kind: 'note-values', values: ['w', 'h', 'q'] },
+    },
+    1: {
+      type: 'quiz',
+      text: L('Welche Note dauert länger?', 'Which note lasts longer?'),
+      answers: [
+        { text: L('Die Halbe', 'The half note'), correct: true },
+        { text: L('Die Viertel', 'The quarter note') },
+      ],
+      hint: L(
+        'Die Halbe dauert zwei Schläge, die Viertel einen.',
+        'The half note lasts two beats, the quarter one.',
+      ),
+    },
+  },
+  'rhythm-rests': {
+    0: {
+      type: 'explain',
+      text: L(
+        'Die ganze Note klingt alle vier Schläge eines 4/4-Takts. Drück die Taste und halte sie, bis du bis vier gezählt hast.',
+        'The whole note sounds for all four beats of a 4/4 bar. Press the key and hold it until you have counted to four.',
+      ),
+      picture: { kind: 'note-values', values: ['w'] },
+    },
+    1: {
+      type: 'explain',
+      text: L(
+        'Pausen sind Notenwerte zum Schweigen: Sie zählen mit, aber du spielst nichts. Die Viertelpause dauert einen Schlag.',
+        'Rests are note values for silence: they count, but you play nothing. A quarter rest lasts one beat.',
+      ),
+      picture: { kind: 'note-values', values: ['q', 'qr'] },
+    },
+    3: {
+      type: 'quiz',
+      text: L('Wie viele Schläge dauert eine Ganze?', 'How many beats does a whole note last?'),
+      answers: [{ text: L('1', '1') }, { text: L('2', '2') }, { text: L('4', '4'), correct: true }],
+      hint: L('Sie füllt einen ganzen 4/4-Takt.', 'It fills a whole 4/4 bar.'),
+    },
+  },
   'song-haensel': {
     0: {
       type: 'explain',
@@ -2283,13 +2387,95 @@ export const ADULT_THEORY_STEPS: Record<string, number[]> = Object.fromEntries(
   Object.entries(ADULT_THEORY).map(([id, p]) => [id, Object.keys(p).map(Number)]),
 );
 
+const ans = (right: string, ...wrong: string[]) => [
+  { text: L(right, right), correct: true as const },
+  ...wrong.map((w) => ({ text: L(w, w) })),
+];
+/** a quiz with answers that are the same in both languages (note names, numbers) */
+const q = (
+  de: string,
+  en: string,
+  picture: TheoryPicture | undefined,
+  answers: QuizStep['answers'],
+): QuizStep => ({
+  type: 'quiz',
+  text: L(de, en),
+  ...(picture ? { picture } : {}),
+  answers,
+});
+/** shuffle the answer order a little, so the right one is not always first */
+const mix = (answers: QuizStep['answers'], shift: number): QuizStep['answers'] =>
+  answers.map((_, i) => answers[(i + shift) % answers.length]!);
+
 /**
- * «Ich kann schon Noten lesen»: a lesson with a check may be skipped by whoever
- * answers every question right at the first try – it then counts as passed,
- * like the placement at the start (1 star, no XP).
+ * «Kann ich schon»: the first lesson of a chapter offers a short check. Who
+ * answers every question right at the first try skips the whole chapter – its
+ * lessons count as passed, like the placement at the start (1 star, no XP).
+ * Mostly for grown-ups who already know a bit; «Erste Lieder» has none.
  */
-export const SKIP_CHECKS: Record<string, QuizStep[]> = {
-  'read-staff': [
+export const CHAPTER_CHECKS: Record<string, QuizStep[]> = {
+  keys: [
+    q(
+      'Wie heisst diese Taste?',
+      'What is this key called?',
+      { kind: 'keyboard', ...C3_C5, labels: 'none', marks: [60] },
+      mix(ans('C', 'D', 'F'), 1),
+    ),
+    q(
+      'Und diese?',
+      'And this one?',
+      { kind: 'keyboard', ...C3_C5, labels: 'none', marks: [65] },
+      mix(ans('F', 'G', 'E'), 2),
+    ),
+    q(
+      'Welche Nummer hat dieser Finger?',
+      'Which number is this finger?',
+      { kind: 'hand', highlight: 3, numbers: false },
+      mix(ans('3', '2', '4'), 1),
+    ),
+    {
+      type: 'quiz',
+      text: L('Welche Note dauert länger?', 'Which note lasts longer?'),
+      picture: { kind: 'note-values', values: ['h', 'q'] },
+      answers: [
+        { text: L('Die Viertel', 'The quarter note') },
+        { text: L('Die Halbe', 'The half note'), correct: true },
+        { text: L('Beide gleich lang', 'Both the same') },
+      ],
+    },
+  ],
+  hand: [
+    q(
+      'Wie heisst diese Taste?',
+      'What is this key called?',
+      { kind: 'keyboard', ...C3_C5, labels: 'none', marks: [69] },
+      mix(ans('A', 'G', 'H'), 2),
+    ),
+    q('Und diese?', 'And this one?', { kind: 'keyboard', ...C3_C5, labels: 'none', marks: [71] }, [
+      { text: L('A', 'A') },
+      { text: L('H', 'B'), correct: true },
+      { text: L('C', 'C') },
+    ]),
+    {
+      type: 'quiz',
+      text: L('Was heisst forte (f)?', 'What does forte (f) mean?'),
+      answers: [
+        { text: L('Leise', 'Soft') },
+        { text: L('Laut', 'Loud'), correct: true },
+        { text: L('Schnell', 'Fast') },
+      ],
+    },
+    {
+      type: 'quiz',
+      text: L('Was heisst staccato?', 'What does staccato mean?'),
+      answers: [
+        { text: L('Kurz', 'Short'), correct: true },
+        { text: L('Gebunden', 'Smooth') },
+        { text: L('Laut', 'Loud') },
+      ],
+    },
+  ],
+  read: [
     {
       type: 'quiz',
       text: L('Wie heisst dieser Notenschlüssel?', 'What is this clef called?'),
@@ -2300,34 +2486,251 @@ export const SKIP_CHECKS: Record<string, QuizStep[]> = {
         { text: L('C-Schlüssel', 'C clef') },
       ],
     },
+    q(
+      'Wie heisst diese Note?',
+      'What is this note called?',
+      { kind: 'staff', clef: 'treble', notes: [65] },
+      mix(ans('F', 'E', 'G', 'A'), 3),
+    ),
+    q('Und diese?', 'And this one?', { kind: 'staff', clef: 'treble', notes: [71] }, [
+      { text: L('G', 'G') },
+      { text: L('A', 'A') },
+      { text: L('H', 'B'), correct: true },
+      { text: L('C', 'C') },
+    ]),
+    q(
+      'Und diese?',
+      'And this one?',
+      { kind: 'staff', clef: 'treble', notes: [60] },
+      mix(ans('C', 'D', 'E', 'A'), 1),
+    ),
+    q(
+      'Und diese, unter dem C?',
+      'And this one, below C?',
+      { kind: 'staff', clef: 'treble', notes: [57] },
+      mix(ans('A', 'G', 'F', 'C'), 2),
+    ),
+  ],
+  rhythm: [
+    q(
+      'Wie viele Schläge dauert eine Ganze?',
+      'How many beats does a whole note last?',
+      undefined,
+      mix(ans('4', '2', '3'), 2),
+    ),
+    q(
+      'Wie viele Schläge hat ein Takt im 3/4-Takt?',
+      'How many beats does a bar in 3/4 time have?',
+      undefined,
+      mix(ans('3', '4', '2'), 1),
+    ),
+    q(
+      'Wie viele Achtel dauern so lange wie eine Viertel?',
+      'How many eighths last as long as one quarter?',
+      undefined,
+      mix(ans('2', '1', '4'), 2),
+    ),
     {
       type: 'quiz',
-      text: L('Wie heisst diese Note?', 'What is this note called?'),
-      picture: { kind: 'staff', clef: 'treble', notes: [65] },
+      text: L('Wie lange dauert eine punktierte Viertel?', 'How long does a dotted quarter last?'),
       answers: [
-        { text: L('E', 'E') },
-        { text: L('F', 'F'), correct: true },
-        { text: L('G', 'G') },
-        { text: L('A', 'A') },
+        { text: L('Einen Schlag', 'One beat') },
+        { text: L('Anderthalb Schläge', 'One and a half beats'), correct: true },
+        { text: L('Zwei Schläge', 'Two beats') },
+      ],
+    },
+  ],
+  bass: [
+    q(
+      'Wie heisst diese Note im Bassschlüssel?',
+      'What is this note called in the bass clef?',
+      { kind: 'staff', clef: 'bass', notes: [48] },
+      mix(ans('C', 'A', 'E'), 1),
+    ),
+    q(
+      'Und diese?',
+      'And this one?',
+      { kind: 'staff', clef: 'bass', notes: [43] },
+      mix(ans('G', 'H', 'E'), 2),
+    ),
+    q(
+      'Die linke Hand liegt auf C bis G. Mit welchem Finger spielt sie das C?',
+      'The left hand rests on C to G. Which finger plays C?',
+      undefined,
+      mix(ans('5', '1', '3'), 1),
+    ),
+  ],
+  both: [
+    {
+      type: 'quiz',
+      text: L(
+        'Welche Hand spielt die Noten im Bassschlüssel?',
+        'Which hand plays the notes in the bass clef?',
+      ),
+      answers: [
+        { text: L('Die rechte', 'The right') },
+        { text: L('Die linke', 'The left'), correct: true },
+        { text: L('Beide abwechselnd', 'Both in turn') },
+      ],
+    },
+    {
+      type: 'quiz',
+      text: L('Wie heisst der Abstand von C bis G?', 'What is the distance from C to G called?'),
+      answers: [
+        { text: L('Terz', 'Third') },
+        { text: L('Quinte', 'Fifth'), correct: true },
+        { text: L('Quarte', 'Fourth') },
+      ],
+    },
+    {
+      type: 'quiz',
+      text: L('Und von C bis E?', 'And from C to E?'),
+      answers: [
+        { text: L('Terz', 'Third'), correct: true },
+        { text: L('Sekunde', 'Second') },
+        { text: L('Quinte', 'Fifth') },
+      ],
+    },
+  ],
+  black: [
+    {
+      type: 'quiz',
+      text: L('Wie heisst diese schwarze Taste?', 'What is this black key called?'),
+      picture: { kind: 'keyboard', ...C3_C5, labels: 'none', marks: [61] },
+      answers: [
+        { text: L('Dis', 'D sharp') },
+        { text: L('Cis', 'C sharp'), correct: true },
+        { text: L('Fis', 'F sharp') },
       ],
     },
     {
       type: 'quiz',
       text: L('Und diese?', 'And this one?'),
-      picture: { kind: 'staff', clef: 'treble', notes: [71] },
+      picture: { kind: 'keyboard', ...C3_C5, labels: 'none', marks: [66] },
       answers: [
-        { text: L('G', 'G') },
-        { text: L('A', 'A') },
-        { text: L('H', 'B'), correct: true },
-        { text: L('C', 'C') },
+        { text: L('Fis', 'F sharp'), correct: true },
+        { text: L('Gis', 'G sharp') },
+        { text: L('Cis', 'C sharp') },
+      ],
+    },
+    {
+      type: 'quiz',
+      text: L('Was macht das Kreuz ♯?', 'What does the sharp ♯ do?'),
+      answers: [
+        { text: L('Einen Schritt tiefer', 'One step lower') },
+        { text: L('Einen Schritt höher', 'One step higher'), correct: true },
+        { text: L('Doppelt so lang', 'Twice as long') },
+      ],
+    },
+  ],
+  meter: [
+    {
+      type: 'quiz',
+      text: L('Was ist ein Auftakt?', 'What is an upbeat?'),
+      answers: [
+        { text: L('Töne vor der ersten «Eins»', 'Notes before the first “one”'), correct: true },
+        { text: L('Ein lauter Anfang', 'A loud beginning') },
+        { text: L('Eine Pause am Anfang', 'A rest at the start') },
+      ],
+    },
+    {
+      type: 'quiz',
+      text: L(
+        'Ein Haltebogen verbindet zwei gleiche Noten. Was tust du?',
+        'A tie connects two equal notes. What do you do?',
+      ),
+      answers: [
+        { text: L('Beide anschlagen', 'Play both') },
+        {
+          text: L(
+            'Die erste halten, die zweite nicht anschlagen',
+            'Hold the first, don’t play the second',
+          ),
+          correct: true,
+        },
+        { text: L('Beide kurz spielen', 'Play both short') },
+      ],
+    },
+    q(
+      'Wie viele Achtel hat ein Takt im 6/8-Takt?',
+      'How many eighths does a bar in 6/8 time have?',
+      undefined,
+      mix(ans('6', '8', '3'), 1),
+    ),
+  ],
+  keysigs: [
+    {
+      type: 'quiz',
+      text: L('Was macht das ♭?', 'What does the flat ♭ do?'),
+      answers: [
+        { text: L('Einen Schritt tiefer', 'One step lower'), correct: true },
+        { text: L('Einen Schritt höher', 'One step higher') },
+        { text: L('Leiser spielen', 'Play softer') },
+      ],
+    },
+    {
+      type: 'quiz',
+      text: L('Welche schwarze Taste gehört zu G-Dur?', 'Which black key belongs to G major?'),
+      answers: [
+        { text: L('B', 'B flat') },
+        { text: L('Fis', 'F sharp'), correct: true },
+        { text: L('Cis', 'C sharp') },
+      ],
+    },
+    {
+      type: 'quiz',
+      text: L('Und zu F-Dur?', 'And to F major?'),
+      answers: [
+        { text: L('B', 'B flat'), correct: true },
+        { text: L('Fis', 'F sharp') },
+        { text: L('Es', 'E flat') },
+      ],
+    },
+    {
+      type: 'quiz',
+      text: L('Was macht das Auflösungszeichen ♮?', 'What does the natural sign ♮ do?'),
+      answers: [
+        { text: L('Es hebt ♯ oder ♭ auf', 'It cancels ♯ or ♭'), correct: true },
+        { text: L('Es verlängert die Note', 'It makes the note longer') },
+        { text: L('Es heisst: Pause', 'It means: rest') },
+      ],
+    },
+  ],
+  accomp: [
+    q(
+      'Aus welchen Tönen besteht der C-Dur-Akkord?',
+      'Which notes make the C major chord?',
+      undefined,
+      mix(ans('C E G', 'C D E', 'C F A'), 1),
+    ),
+    q(
+      'Und der F-Dur-Akkord?',
+      'And the F major chord?',
+      undefined,
+      mix(ans('F A C', 'F G A', 'F H D'), 2),
+    ),
+    {
+      type: 'quiz',
+      text: L('Und der G-Dur-Akkord?', 'And the G major chord?'),
+      answers: [
+        { text: L('G A H', 'G A B') },
+        { text: L('G H D', 'G B D'), correct: true },
+        { text: L('G C E', 'G C E') },
       ],
     },
   ],
 };
 
-/** The questions that let a learner skip this lesson (none: it can't be skipped). */
+/** The chapter a lesson starts, with its check – null if it starts none or has no check. */
+export function chapterCheckFor(lessonId: string): { chapterId: string; steps: QuizStep[] } | null {
+  const chapter = CURRICULUM.find((c) => c.lessons[0]?.id === lessonId);
+  const steps = chapter ? CHAPTER_CHECKS[chapter.id] : undefined;
+  return chapter && steps ? { chapterId: chapter.id, steps } : null;
+}
+
+/** The questions that let a learner skip this lesson's chapter (none: it can't be skipped). */
 export function skipCheckFor(lessonId: string): QuizStep[] {
-  return SKIP_CHECKS[lessonId] ?? [];
+  return chapterCheckFor(lessonId)?.steps ?? [];
 }
 
 /** How many questions the recap at the start of a chapter asks. */

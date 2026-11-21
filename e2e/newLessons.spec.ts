@@ -19,7 +19,8 @@ async function learnerBefore(page: Page, tag: string, lessonId: string) {
   await skipSetup(page);
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   const ids = LESSONS.map((l) => l.id);
-  await seedCompletedLessons(page, ids.slice(0, ids.indexOf(lessonId)));
+  const before = ids.slice(0, ids.indexOf(lessonId));
+  if (before.length) await seedCompletedLessons(page, before);
   await page.goto(`/lesson/${lessonId}`);
 }
 
@@ -99,4 +100,40 @@ test('«Hänsel und Gretel»: a song with rests, waiting and in time', async ({ 
   }
   // in time: the rests are not played, only the 46 notes count
   expect(await playTimedSong(page)).toContain('46 von 46 Tönen im Takt');
+});
+
+test('grown-ups: «Kann ich schon» skips a chapter; texts without children’s pictures', async ({
+  page,
+}) => {
+  test.setTimeout(120_000);
+  await signUpWithEmail(page, uniqueEmail('adultskip'), 'Ralph');
+  await page.getByRole('button', { name: 'Profil hinzufügen' }).click();
+  await page.getByRole('dialog').getByLabel('Name').fill('Ralph');
+  await page.getByRole('dialog').getByLabel('Geburtsjahr').fill('1990');
+  await page.getByTestId('profile-more').click();
+  await page.getByRole('dialog').getByText('Classic', { exact: true }).click();
+  await page.getByRole('button', { name: 'Profil erstellen' }).click();
+  await skipSetup(page);
+  await page.goto('/lesson/keys-c');
+  await expect(page.getByTestId('skip-offer')).toBeVisible();
+  await audit(page);
+  await page.getByTestId('skip-check').click();
+  const next = page.getByTestId('theory-next');
+  for (const [i, answer] of ['C', 'F', '3', 'Die Halbe'].entries()) {
+    if (i) await next.click();
+    await page.getByRole('button', { name: answer, exact: true }).click();
+  }
+  await next.click();
+  await expect(page.getByText('Super, das kannst du schon!')).toBeVisible();
+  await expect(page).toHaveURL(/\/lesson\/hand-a-h$/);
+  // the D without «the little house»
+  await page.goto('/lesson/keys-d-e');
+  await page.getByTestId('theory-again').click();
+  await expect(page.getByTestId('theory-text')).toContainText('der Zweiergruppe');
+});
+
+test('children see no check at the very start', async ({ page }) => {
+  await learnerBefore(page, 'kidnocheck', 'keys-c');
+  await expect(page.getByTestId('theory-text')).toBeVisible();
+  await expect(page.getByTestId('skip-offer')).toHaveCount(0);
 });

@@ -137,6 +137,8 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
   'accomp-chords': ['chords'],
   'expr-dynamics': ['dynamics'],
   'expr-staccato': ['dynamics'],
+  'chords-four': ['chords'],
+  'pedal-early': ['pedal'],
   'expr-pedal': ['pedal'],
   'tech-fingers': ['right-hand'],
   'tech-thumb': ['right-hand'],

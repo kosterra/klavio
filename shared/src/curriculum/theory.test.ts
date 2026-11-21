@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { LESSONS } from './curriculum.ts';
-import { CURRICULUM } from './curriculum.ts';
-import { LESSON_THEORY, SKIP_CHECKS, recapFor } from './theory.ts';
+import { CURRICULUM, LESSONS } from './curriculum.ts';
+import { CHAPTER_CHECKS, LESSON_THEORY, chapterCheckFor, recapFor } from './theory.ts';
 import type { Localized, TheoryStep } from './types.ts';
 
 const texts = (s: TheoryStep): Localized[] => {
@@ -56,10 +55,18 @@ describe('lesson theory', () => {
   });
 });
 
-describe('skip checks («Ich kann schon»)', () => {
-  it('belong to existing lessons, are translated and have one right answer each', () => {
-    const ids = new Set(LESSONS.map((l) => l.id));
-    for (const [id, steps] of Object.entries(SKIP_CHECKS)) {
+describe('chapter checks («Kann ich schon»)', () => {
+  it('belong to existing chapters, are translated and have one right answer each', () => {
+    const ids = new Set(CURRICULUM.map((c) => c.id));
+    // every chapter but the songs can be skipped, from its first lesson
+    expect(Object.keys(CHAPTER_CHECKS).sort()).toEqual(
+      CURRICULUM.filter((c) => c.id !== 'songs')
+        .map((c) => c.id)
+        .sort(),
+    );
+    expect(chapterCheckFor('read-staff')?.chapterId).toBe('read');
+    expect(chapterCheckFor('read-c-d-e')).toBeNull();
+    for (const [id, steps] of Object.entries(CHAPTER_CHECKS)) {
       expect(ids.has(id), id).toBe(true);
       expect(steps.length, id).toBeGreaterThanOrEqual(3);
       for (const s of steps) {

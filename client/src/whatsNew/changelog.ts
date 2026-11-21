@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Für Erwachsene: Jedes Kapitel lässt sich mit einem kurzen Check überspringen, wenn du es schon kannst. Neue Bonus-Lektionen «Vier Akkorde» (C, G, Am, F) und «Klingen lassen: das Pedal» schon im zweiten Kapitel. Die Erklärungen zu Notenwerten und Tasten kommen ohne Pizza und kleines Haus aus.',
+        'For grown-ups: every chapter can be skipped with a short check if you already know it. New bonus lessons «Four chords» (C, G, Am, F) and «Let it ring: the pedal» already in the second chapter. The explanations of note values and keys do without the pizza and the little house.',
+      ),
+      L(
         'Neue Lieder, die man kennt: «Hänsel und Gretel» (mit Pausen), «Fuchs, du hast die Gans gestohlen», «Summ, summ, summ» (im Zweivierteltakt) und als Bonus «Kommt ein Vogel geflogen». Für Erwachsene: «Aura Lee», «Amazing Grace» und der Anfang von «Für Elise».',
         'New songs you know: «Hansel and Gretel» (with rests), «Fox, you stole the goose», «Buzz, buzz, buzz» (in two-four time) and as a bonus «A bird comes flying». For grown-ups: «Aura Lee», «Amazing Grace» and the opening of «Für Elise».',
       ),

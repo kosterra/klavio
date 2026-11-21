@@ -13,6 +13,7 @@ import {
   lessonCompleteSchema,
   scoringTarget,
   skipCheckFor,
+  CHAPTER_CHECKS,
   newlyEarnedBadges,
   levelForXp,
   nextStreak,
@@ -166,6 +167,43 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
     }
     return reply.code(204).send();
   });
+
+  /**
+   * «Kann ich schon»: the chapter's check (asked on the device) was passed –
+   * all its lessons count as passed like the placement (1 star, no XP, no
+   * reviews). Only chapters with a check, only once their first lesson is open.
+   */
+  app.post(
+    '/chapters/:chapterId/skip',
+    { schema: { params: z.object({ chapterId: z.string().regex(/^[a-z0-9-]{1,40}$/) }) } },
+    async (req, reply) => {
+      const profileId = await profileOf(req);
+      const chapter = CURRICULUM.find((c) => c.id === req.params.chapterId);
+      if (!chapter) throw notFound();
+      if (!CHAPTER_CHECKS[chapter.id]) throw new HttpError(400, 'NOT_SKIPPABLE');
+      const done = await LessonProgress.find({ profileId }, { lessonId: 1 }).lean();
+      const completed = new Set(done.map((d) => d.lessonId));
+      const pathOff = !!(await Profile.exists({ _id: profileId, pathOff: true }));
+      if (!pathOff && !isLessonUnlocked(chapter.lessons[0]!.id, completed))
+        throw new HttpError(403, 'LESSON_LOCKED');
+      const add = coreLessons(chapter).filter((l) => !completed.has(l.id));
+      for (const lesson of add) {
+        try {
+          await LessonProgress.create({
+            profileId,
+            lessonId: lesson.id,
+            bestStars: 1,
+            completions: 0,
+            placed: true,
+          });
+        } catch (err) {
+          // a second tap at the same time: already placed
+          if (!isDuplicateKey(err)) throw err;
+        }
+      }
+      return reply.code(204).send();
+    },
+  );
 
   // practice time outside a finished lesson: counts for the day (daily goal, week)
   app.post('/practice', { schema: { body: practiceTimeSchema } }, async (req, reply) => {

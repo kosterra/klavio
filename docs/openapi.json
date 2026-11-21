@@ -1133,6 +1133,26 @@
         }
       }
     },
+    "/api/progress/chapters/{chapterId}/skip": {
+      "post": {
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]{1,40}$"
+            },
+            "in": "path",
+            "name": "chapterId",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
     "/api/progress/practice": {
       "post": {
         "requestBody": {

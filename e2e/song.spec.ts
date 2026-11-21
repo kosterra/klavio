@@ -96,7 +96,7 @@ test('song mode waits for every note; "listen" plays the song first', async ({ p
   await expect(page.getByRole('heading', { name: 'Perfekt!' })).toBeVisible(); // 27 / 28 → 3 stars
 
   // the line moved on while playing: a later song shows dotted notes and eighths
-  await seedCompletedLessons(page, ['song-haenschen']);
+  await seedCompletedLessons(page, ['song-haenschen', 'song-haensel']);
   await page.goto('/lesson/song-freude');
   await startLesson(page);
   await expect(page.getByRole('img', { name: /Noten des Lieds/ }).locator('svg')).toBeVisible();
