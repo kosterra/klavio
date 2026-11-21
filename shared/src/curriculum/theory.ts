@@ -1244,6 +1244,60 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     },
   ],
 
+  'song-haensel': [
+    {
+      type: 'explain',
+      text: L(
+        '«Hänsel und Gretel» erzählt das Märchen der Brüder Grimm: Die Kinder verlaufen sich im Wald und finden ein Haus aus Lebkuchen.',
+        '“Hansel and Gretel” tells the fairy tale of the Brothers Grimm: the children get lost in the woods and find a house made of gingerbread.',
+      ),
+      picture: { kind: 'sticker', sticker: 'tree' },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Am Ende jeder Zeile steht eine Pause. Du spielst nichts – aber du zählst leise weiter, damit die nächste Zeile pünktlich kommt.',
+        'At the end of every line there is a rest. You play nothing – but you keep counting quietly, so the next line comes on time.',
+      ),
+      picture: { kind: 'music', clef: 'treble', melody: 'D4/q D4/q D4/q E4/q | C4/hd r/q' },
+    },
+  ],
+
+  'song-fuchs': [
+    {
+      type: 'explain',
+      text: L(
+        'Der Fuchs hat die Gans gestohlen – das Lied droht ihm mit dem Jäger. Die Melodie springt in der dritten Zeile bis zum hohen C hinauf.',
+        'The fox has stolen the goose – the song threatens him with the hunter. In the third line the melody jumps up to high C.',
+      ),
+      picture: { kind: 'sticker', sticker: 'bell' },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Hier springt die Melodie: vom A hinunter zum F, dann hinauf zum hohen C. Lies die Sprünge zuerst in Ruhe.',
+        'Here the melody jumps: from A down to F, then up to high C. Read the skips calmly first.',
+      ),
+      picture: { kind: 'music', clef: 'treble', melody: 'A4/q F4/q C5/q A4/q | G4/w' },
+    },
+  ],
+
+  'song-summ': [
+    {
+      type: 'explain',
+      text: L(
+        'Am Anfang steht 2/4: Jeder Takt hat nur zwei Viertel – «eins, zwei». Zwei Achtel zusammen dauern so lange wie eine Viertel.',
+        'At the start it says 2/4: every bar has only two quarter notes – “one, two”. Two eighths together last as long as one quarter note.',
+      ),
+      picture: {
+        kind: 'music',
+        clef: 'treble',
+        time: '2/4',
+        melody: 'G4/q F4/q | E4/q r/q | D4/8 E4/8 F4/8 D4/8 | C4/q r/q',
+      },
+    },
+  ],
+
   'song-freude': [
     {
       type: 'explain',
@@ -2080,6 +2134,42 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
  * entry replaces the step at that place.
  */
 const ADULT_THEORY: Record<string, Record<number, TheoryStep>> = {
+  'song-haensel': {
+    0: {
+      type: 'explain',
+      text: L(
+        '«Aura Lee» schrieb George R. Poulton 1861. Fast hundert Jahre später wurde die Melodie mit neuem Text als «Love Me Tender» berühmt.',
+        '“Aura Lee” was written by George R. Poulton in 1861. Almost a hundred years later the melody became famous with new words as “Love Me Tender”.',
+      ),
+      picture: { kind: 'sticker', sticker: 'heart' },
+    },
+    1: {
+      type: 'explain',
+      text: L(
+        'Die Melodie beginnt mit der punktierten Viertel und ihrer Achtel – «daaa-da». Am Ende jeder Zeile hältst du lang und zählst weiter.',
+        'The melody starts with the dotted quarter and its eighth – “daaa-da”. At the end of each line you hold long and keep counting.',
+      ),
+      picture: { kind: 'music', clef: 'treble', melody: 'G3/qd C4/8 H3/q C4/q | D4/q A3/q D4/h' },
+    },
+  },
+  'song-fuchs': {
+    0: {
+      type: 'explain',
+      text: L(
+        'Den Text von «Amazing Grace» schrieb John Newton 1772, ein früherer Sklavenhändler. Die Melodie, die heute alle kennen, kam etwas später dazu.',
+        'John Newton, a former slave trader, wrote the words of “Amazing Grace” in 1772. The melody everyone knows today came a little later.',
+      ),
+      picture: { kind: 'sticker', sticker: 'candle' },
+    },
+    1: {
+      type: 'explain',
+      text: L(
+        'Das Lied beginnt mit einem Auftakt: Das G kommt vor der ersten «Eins». Zähl «drei» – und spiel es dort. Der letzte Takt ist dafür kürzer.',
+        'The song starts with an upbeat: G comes before the first “one”. Count “three” – and play it there. The last bar is shorter for it.',
+      ),
+      picture: { kind: 'music', clef: 'treble', time: '3/4', melody: 'C4/h E4/8 C4/8 | E4/h D4/q' },
+    },
+  },
   'hand-entchen': {
     2: {
       type: 'explain',

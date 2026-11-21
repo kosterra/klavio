@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Neue Lieder, die man kennt: «Hänsel und Gretel» (mit Pausen), «Fuchs, du hast die Gans gestohlen», «Summ, summ, summ» (im Zweivierteltakt) und als Bonus «Kommt ein Vogel geflogen». Für Erwachsene: «Aura Lee», «Amazing Grace» und der Anfang von «Für Elise».',
+        'New songs you know: «Hansel and Gretel» (with rests), «Fox, you stole the goose», «Buzz, buzz, buzz» (in two-four time) and as a bonus «A bird comes flying». For grown-ups: «Aura Lee», «Amazing Grace» and the opening of «Für Elise».',
+      ),
+      L(
         'Neue Lektionen: «Unter dem C» (H, A und G mit Hilfslinien – die Töne, die in vielen Liedern vorkommen) und «Kurz und gebunden» (staccato und legato hören und spielen). Dazu ein Übe-Tipp bei den ersten Liedern, das Wiederholungszeichen und kürzere Erklärungen bei «Schritt und Sprung» und «Terz, Quarte, Quinte».',
         'New lessons: «Below C» (B, A and G with ledger lines – the notes many songs use) and «Short and smooth» (hear and play staccato and legato). Plus a practice tip with the first songs, the repeat sign and shorter explanations in «Step and skip» and «Thirds, fourths and fifths».',
       ),

@@ -18,7 +18,7 @@ export const READINESS_NEEDS = {
   rests: 'rhythm-rests',
   eighths: 'meter-eighths',
   dotted: 'rhythm-dotted',
-  'two-four': 'song-london',
+  'two-four': 'song-summ',
   bass: 'bass-clef',
   'bass-low': 'bass-low',
   both: 'both-hold',

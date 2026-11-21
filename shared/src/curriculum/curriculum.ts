@@ -779,6 +779,25 @@ CURRICULUM.push({
       exercises: [rhythm('qd 8 q q | qd 8 h | q q qd 8 | h h | qd 8 qd 8 | w', { tempo: 72 })],
     },
     {
+      id: 'song-summ',
+      kind: 'song',
+      title: { 'de-CH': 'Summ, summ, summ', en: 'Buzz, buzz, buzz' },
+      intro: {
+        'de-CH':
+          'Das Lied vom Bienchen im Zweivierteltakt: nur zwei Schläge pro Takt, «eins, zwei». Die schnellen Achtel summen wie eine Biene.',
+        en: 'The song of the little bee in two-four time: only two beats per bar, “one, two”. The quick eighths buzz like a bee.',
+      },
+      xp: 25,
+      keyboard: C4_C5,
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'G4/q F4/q | E4/q r/q | D4/8 E4/8 F4/8 D4/8 | C4/q r/q | E4/8 F4/8 G4/8 E4/8 | D4/8 E4/8 F4/8 D4/8 | E4/8 F4/8 G4/8 E4/8 | D4/8 E4/8 F4/8 D4/8 | G4/q F4/q | E4/q r/q | D4/8 E4/8 F4/8 D4/8 | C4/q r/q',
+          { time: '2/4', tempo: 72, position: RH_C4 },
+        ),
+      ],
+    },
+    {
       id: 'song-london',
       kind: 'song',
       bonus: true,
@@ -840,6 +859,39 @@ CURRICULUM.push({
       },
     },
     {
+      id: 'song-haensel',
+      kind: 'song',
+      title: { 'de-CH': 'Hänsel und Gretel', en: 'Hansel and Gretel' },
+      intro: {
+        'de-CH':
+          'Das Lied vom Hexenhaus im Wald – mit fünf Tönen von C bis G. Neu sind die Pausen: Dort spielst du nichts, zählst aber weiter.',
+        en: 'The song about the witch’s house in the woods – with five notes from C to G. New are the rests: you play nothing there, but keep counting.',
+      },
+      xp: 25,
+      keyboard: G3_C5,
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'G4/h E4/q F4/q | G4/h E4/q C4/q | D4/q D4/q D4/q E4/q | C4/hd r/q | G4/h E4/q F4/q | G4/h E4/q C4/q | D4/q D4/q D4/q E4/q | C4/h r/q C4/q | D4/q D4/q D4/q E4/q | F4/h D4/q D4/q | E4/q E4/q E4/q F4/q | G4/hd r/q | G4/h E4/q F4/q | G4/h E4/q C4/q | D4/q D4/q D4/q E4/q | C4/hd r/q',
+          { tempo: 100, position: RH_C4 },
+        ),
+      ],
+      adult: {
+        title: { 'de-CH': 'Aura Lee', en: 'Aura Lee' },
+        intro: {
+          'de-CH':
+            'Ein amerikanisches Lied von 1861 – die Melodie kennt man heute als «Love Me Tender». Sie beginnt unter dem C, auf dem G mit den zwei Hilfslinien, und hat die punktierte Viertel.',
+          en: 'An American song from 1861 – today the melody is known as “Love Me Tender”. It starts below C, on G with two ledger lines, and has the dotted quarter.',
+        },
+        exercises: [
+          song(
+            'G3/qd C4/8 H3/q C4/q | D4/q A3/q D4/h | C4/q H3/q A3/q H3/q | C4/hd r/q | G3/qd C4/8 H3/q C4/q | D4/q A3/q D4/h | C4/q H3/q A3/q H3/q | C4/w',
+            { tempo: 72 },
+          ),
+        ],
+      },
+    },
+    {
       id: 'song-freude',
       kind: 'song',
       title: { 'de-CH': 'Freude, schöner Götterfunken', en: 'Ode to Joy' },
@@ -890,6 +942,39 @@ CURRICULUM.push({
           song(
             'C4/q C4/q G4/q G4/q | A4/q A4/q G4/h | F4/q F4/q E4/q E4/q | D4/q D4/q C4/h | G4/q G4/q F4/q F4/q | E4/q E4/q D4/h | G4/q G4/q F4/q F4/q | E4/q E4/q D4/h | C4/q C4/q G4/q G4/q | A4/q A4/q G4/h | F4/q F4/q E4/q E4/q | D4/q D4/q C4/h',
             { tempo: 100 },
+          ),
+        ],
+      },
+    },
+    {
+      id: 'song-fuchs',
+      kind: 'song',
+      title: { 'de-CH': 'Fuchs, du hast die Gans gestohlen', en: 'Fox, you stole the goose' },
+      intro: {
+        'de-CH':
+          'Ein Lied, das fast alle Kinder kennen – vom C hinauf bis zum hohen C. Sing beim Spielen mit, dann merkst du sofort, wenn ein Ton nicht stimmt.',
+        en: 'A song almost every German-speaking child knows – from C up to high C. Sing along while you play, then you notice at once when a note is wrong.',
+      },
+      xp: 30,
+      keyboard: G3_C5,
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'C4/q D4/q E4/q F4/q | G4/q G4/q G4/q G4/q | A4/q F4/q C5/q A4/q | G4/w | A4/q F4/q C5/q A4/q | G4/w | G4/q F4/q F4/q F4/q | F4/q E4/q E4/q E4/q | E4/q D4/q E4/q D4/q | C4/q E4/q G4/h | G4/q F4/q F4/q F4/q | F4/q E4/q E4/q E4/q | E4/q D4/q E4/q D4/q | C4/w',
+          { tempo: 104 },
+        ),
+      ],
+      adult: {
+        title: { 'de-CH': 'Amazing Grace', en: 'Amazing Grace' },
+        intro: {
+          'de-CH':
+            'Ein Lied aus England, über 200 Jahre alt und auf der ganzen Welt gesungen. Es steht im Dreivierteltakt und beginnt mit einem Ton vor der ersten «Eins» – einem Auftakt.',
+          en: 'A song from England, more than 200 years old and sung all over the world. It is in three-four time and starts with one note before the first “one” – an upbeat.',
+        },
+        exercises: [
+          song(
+            'G3/q | C4/h E4/8 C4/8 | E4/h D4/q | C4/h A3/q | G3/h G3/q | C4/h E4/8 C4/8 | E4/h D4/q | G4/h E4/q | G4/qd E4/8 G4/8 E4/8 | C4/h G3/q | A3/qd C4/8 C4/8 A3/8 | G3/h G3/q | C4/h E4/8 C4/8 | E4/h D4/q | C4/h',
+            { time: '3/4', tempo: 84, pickup: 1 },
           ),
         ],
       },
@@ -1516,6 +1601,40 @@ CURRICULUM.push({
           { time: '3/4', tempo: 100, pickup: 1 },
         ),
       ],
+    },
+    {
+      id: 'song-vogel',
+      kind: 'song',
+      bonus: true,
+      title: { 'de-CH': 'Kommt ein Vogel geflogen', en: 'A bird comes flying' },
+      intro: {
+        'de-CH':
+          'Ein Volkslied im Dreivierteltakt, das mit einem Auftakt aus zwei Achteln beginnt. Am Schluss geht es kurz unter das C – zum H.',
+        en: 'A folk song in three-four time that starts with an upbeat of two eighths. Near the end it dips below C – to B.',
+      },
+      xp: 25,
+      keyboard: { from: 55, to: 76 },
+      keyLabels: 'c',
+      exercises: [
+        song(
+          'E4/8 F4/8 | G4/q E4/q E4/q | E4/q D4/q D4/8 E4/8 | F4/q D4/q D4/8 A4/8 | G4/q r/q E4/8 F4/8 | G4/q E4/q E4/q | E4/q D4/q D4/8 E4/8 | F4/q H3/q H3/q | C4/q r/q',
+          { time: '3/4', tempo: 96, pickup: 1 },
+        ),
+      ],
+      adult: {
+        title: { 'de-CH': 'Für Elise – Beethoven', en: 'Für Elise – Beethoven' },
+        intro: {
+          'de-CH':
+            'Der Anfang von Beethovens berühmtem Klavierstück, in a-Moll. Es beginnt mit einem Auftakt, und das Dis – die schwarze Taste neben dem D – pendelt mit dem E.',
+          en: 'The opening of Beethoven’s famous piano piece, in A minor. It starts with an upbeat, and D sharp – the black key next to D – rocks back and forth with E.',
+        },
+        exercises: [
+          song(
+            'E5/8 D#5/8 | E5/8 D#5/8 E5/8 H4/8 D5/8 C5/8 | A4/q r/8 C4/8 E4/8 A4/8 | H4/q r/8 E4/8 G#4/8 H4/8 | C5/q r/8 E4/8 E5/8 D#5/8 | E5/8 D#5/8 E5/8 H4/8 D5/8 C5/8 | A4/q r/8 C4/8 E4/8 A4/8 | H4/q r/8 E4/8 C5/8 H4/8 | A4/h',
+            { time: '3/4', tempo: 66, pickup: 1 },
+          ),
+        ],
+      },
     },
     {
       id: 'meter-ties',

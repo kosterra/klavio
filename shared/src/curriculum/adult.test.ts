@@ -23,7 +23,7 @@ describe('grown-ups play pieces instead of children’s songs', () => {
       for (const e of a.exercises) {
         const notes =
           e.type === 'song'
-            ? songNotes(e).map((n) => n.midi)
+            ? songNotes(e).flatMap((n) => (n.rest ? [] : [n.midi]))
             : e.type === 'piece'
               ? e.bars
                   .flatMap((b) => [...b.rh, ...b.lh])

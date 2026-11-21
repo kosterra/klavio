@@ -286,7 +286,8 @@ describe('bonus lessons', () => {
       ).map((l) => l.id),
     );
     expect(isLessonUnlocked('song-jakob', before)).toBe(false);
-    const done = new Set([...before, 'song-weihnachtsmann']);
+    // the bonus songs open after «Fuchs», the last core song before them
+    const done = new Set([...before, 'song-weihnachtsmann', 'song-fuchs']);
     expect(isLessonUnlocked('song-jakob', done)).toBe(true);
     expect(isLessonUnlocked('song-macdonald', done)).toBe(true);
     // the path goes on without them: sight-reading, then the left hand

@@ -1,7 +1,14 @@
 import { expect, test, type Page } from '@playwright/test';
 import { LESSONS, type ListenExercise } from '@klavio/shared';
 import { audit } from './audit';
-import { seedCompletedLessons, signUpWithEmail, skipSetup, uniqueEmail } from './helpers';
+import {
+  playTimedSong,
+  seedCompletedLessons,
+  signUpWithEmail,
+  skipSetup,
+  startLesson,
+  uniqueEmail,
+} from './helpers';
 
 async function learnerBefore(page: Page, tag: string, lessonId: string) {
   await signUpWithEmail(page, uniqueEmail(tag), 'Familie');
@@ -57,4 +64,39 @@ test('«Kurz und gebunden»: hear staccato and legato', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'C4', exact: true })).toBeVisible({
     timeout: 10_000,
   });
+});
+
+test('«Hänsel und Gretel»: a song with rests, waiting and in time', async ({ page }) => {
+  test.setTimeout(180_000);
+  await page.addInitScript(() => {
+    navigator.mediaDevices.getUserMedia = () =>
+      Promise.reject(new DOMException('denied', 'NotAllowedError'));
+  });
+  await learnerBefore(page, 'haensel', 'song-haensel');
+  await startLesson(page);
+  await expect(
+    page
+      .getByRole('img', { name: /Noten des Lieds/ })
+      .first()
+      .locator('svg'),
+  ).toBeVisible();
+  await audit(page);
+  const summary = page.getByRole('button', { name: 'Zum Lernpfad' });
+  const next = page.getByTestId('next-note');
+  const timed = page.getByTestId('timed-song');
+  while (!(await summary.isVisible()) && !(await timed.isVisible())) {
+    const text = (await next.allTextContents())[0] ?? '';
+    const note = /Nächster Ton: (\S+)/.exec(text)?.[1];
+    if (!note) {
+      await page.waitForTimeout(100);
+      continue;
+    }
+    const status = (await page.getByTestId('song-status').allTextContents())[0];
+    await page.getByRole('button', { name: `${note}4`, exact: true }).click();
+    await expect(
+      summary.or(timed).or(page.getByTestId('song-status').filter({ hasNotText: status })),
+    ).toBeVisible();
+  }
+  // in time: the rests are not played, only the 46 notes count
+  expect(await playTimedSong(page)).toContain('46 von 46 Tönen im Takt');
 });
