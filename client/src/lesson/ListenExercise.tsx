@@ -55,7 +55,8 @@ export function ListenExercise({
     // the microphone would hear Klavi's notes
     inputHub.muteMicrophoneUntil(performance.now() + ms + 500);
     setPlaying(true);
-    const p = playGroups(r.notes, exercise.tempo);
+    const hold = r.touch === 'staccato' ? 0.25 : r.touch === 'legato' ? 1.02 : undefined;
+    const p = playGroups(r.notes, exercise.tempo, undefined, hold);
     playback.current = p;
     void p.done.then(() => setPlaying(false));
   };

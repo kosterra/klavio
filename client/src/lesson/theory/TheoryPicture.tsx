@@ -443,6 +443,7 @@ export function TheoryPicture({ picture, kids }: { picture: Picture; kids: boole
           <Staff
             clef={picture.clef}
             time={picture.time}
+            repeat={picture.repeat}
             bars={bars.map((bar) =>
               bar.map((n) => ({ midi: n.midi, duration: staffDuration(n), tie: n.tie })),
             )}

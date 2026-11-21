@@ -1210,6 +1210,13 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     {
       type: 'explain',
       text: L(
+        'So übst du ein neues Lied: Hör es zuerst an. Spiel es langsam. Klappt eine Stelle nicht, übst du nur diese – ein paarmal, bis sie sitzt. Erst dann spielst du im Takt.',
+        'How to practise a new song: listen to it first. Play it slowly. If one spot doesn’t work, practise just that spot a few times until it sits. Only then play in time.',
+      ),
+    },
+    {
+      type: 'explain',
+      text: L(
         '«Hänschen klein» erzählt von einem Jungen, der allein in die weite Welt hinauszieht – und Jahre später zur Mutter zurückkommt. Das Lied ist fast 200 Jahre alt.',
         '“Hänschen klein” tells of a boy who sets out alone into the wide world – and comes back to his mother years later. The song is almost 200 years old.',
       ),
@@ -1341,6 +1348,19 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
         { notes: [60, 62, 64, 65], answer: 1 },
         { notes: [64, 69], answer: 0 },
       ],
+    },
+    {
+      type: 'explain',
+      text: L(
+        'In Notenheften siehst du oft zwei Punkte vor einem Doppelstrich: das Wiederholungszeichen. Es heisst: Spiel diesen Teil nochmals. Hier bei Klavi ist alles ausgeschrieben – so wie am Ende dieses Lieds, wo der Anfang wiederkommt.',
+        'In printed music you often see two dots before a double bar line: the repeat sign. It means: play this part again. Here with Klavi everything is written out – like at the end of this song, where the beginning comes back.',
+      ),
+      picture: {
+        kind: 'music',
+        clef: 'treble',
+        melody: 'C4/q C4/q G4/q G4/q | A4/q A4/q G4/h',
+        repeat: true,
+      },
     },
   ],
 
@@ -1789,6 +1809,54 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     },
   ],
 
+  'read-below-c': [
+    {
+      type: 'explain',
+      text: L(
+        'Unter dem mittleren C geht es weiter hinunter – mit Hilfslinien. Das H hängt direkt unter der Hilfslinie des C.',
+        'Below middle C the notes go on down – with ledger lines. B hangs right below the ledger line of C.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [60, 59], names: true },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Das A bekommt eine zweite Hilfslinie mitten durch den Kopf. Das G hängt unter dieser zweiten Linie.',
+        'A gets a second ledger line right through its head. G hangs below that second line.',
+      ),
+      picture: { kind: 'staff', clef: 'treble', notes: [60, 59, 57, 55], names: true },
+    },
+    {
+      type: 'quiz',
+      text: L('Wie heisst diese Note?', 'What is this note called?'),
+      picture: { kind: 'staff', clef: 'treble', notes: [57] },
+      answers: [{ text: L('G', 'G') }, { text: L('A', 'A'), correct: true }, { text: L('H', 'B') }],
+      hint: L(
+        'Zwei Hilfslinien, die zweite geht mitten durch die Note: das A.',
+        'Two ledger lines, the second goes right through the note: A.',
+      ),
+    },
+  ],
+
+  'expr-staccato': [
+    {
+      type: 'explain',
+      text: L(
+        'Ein Punkt über oder unter einer Note heisst staccato: kurz spielen. Die Taste springt gleich wieder hoch. Ohne Punkt spielst du gebunden – du lässt die Taste erst los, wenn die nächste klingt.',
+        'A dot above or below a note means staccato: play it short. The key bounces straight back up. Without a dot you play smoothly – you only let go when the next key sounds.',
+      ),
+    },
+    {
+      type: 'listen',
+      text: L('Hör zu: Gebunden oder kurz?', 'Listen: smooth or short?'),
+      answers: [L('Gebunden', 'Smooth'), L('Kurz', 'Short')],
+      rounds: [
+        { notes: [60, 62, 64], answer: 1, touch: 'staccato' },
+        { notes: [64, 62, 60], answer: 0, touch: 'legato' },
+      ],
+    },
+  ],
+
   'both-hold': [
     {
       type: 'explain',
@@ -2044,7 +2112,7 @@ const ADULT_THEORY: Record<string, Record<number, TheoryStep>> = {
     },
   },
   'song-haenschen': {
-    0: {
+    1: {
       type: 'explain',
       text: L(
         'Antonín Dvořák schrieb diese Melodie 1893 in Amerika, für seine Sinfonie «Aus der Neuen Welt». Später bekam sie einen Text: «Going Home» – nach Hause gehen.',
@@ -2052,7 +2120,7 @@ const ADULT_THEORY: Record<string, Record<number, TheoryStep>> = {
       ),
       picture: { kind: 'sticker', sticker: 'moon' },
     },
-    1: {
+    2: {
       type: 'explain',
       text: L(
         'Diesmal stehen keine Namen unter den Noten – du liest sie selbst. Tipp: Tippe zuerst auf «Anhören», dann weisst du, wie es klingen soll.',
@@ -2060,7 +2128,7 @@ const ADULT_THEORY: Record<string, Record<number, TheoryStep>> = {
       ),
       picture: { kind: 'staff', clef: 'treble', notes: [64, 67, 67, 64, 62, 60] },
     },
-    2: {
+    3: {
       type: 'listen',
       text: L(
         'Hör dir den Anfang an: Geht die Melodie hinauf oder hinunter?',

@@ -37,6 +37,8 @@ interface Props {
   paper?: boolean;
   /** Drawing scale (default: from the height); smaller leaves more room around the staff. */
   scale?: number;
+  /** repeat signs around the music (play it twice) */
+  repeat?: boolean;
 }
 
 const COLORS = {
@@ -57,6 +59,7 @@ export function Staff({
   spelling: spellingProp,
   paper = false,
   scale: scaleProp,
+  repeat = false,
 }: Props) {
   const spelling = spellingProp ?? spellingOf(keySignature);
   const bars = barsProp ?? [notes ?? []];
@@ -85,6 +88,7 @@ export function Staff({
     keySignature,
     spelling,
     scaleProp,
+    repeat,
   });
   useEffect(() => {
     const el = host.current;
@@ -132,6 +136,8 @@ export function Staff({
           if (time) stave.addTimeSignature(time);
         }
         if (i === bars.length - 1 && bars.length > 1) stave.setEndBarType(VF.Barline.type.SINGLE);
+        if (repeat && i === 0) stave.setBegBarType(VF.Barline.type.REPEAT_BEGIN);
+        if (repeat && i === bars.length - 1) stave.setEndBarType(VF.Barline.type.REPEAT_END);
         stave.setContext(ctx).draw();
         x += w;
 

@@ -30,6 +30,7 @@ const playIn = (position: HandPosition, sequences: number[][]) => ({
 
 const C3_C5 = { from: 48, to: 72 };
 const C4_C5 = { from: 60, to: 72 };
+const G3_C5 = { from: 55, to: 72 };
 
 /**
  * The curriculum: chapters → lessons → exercises, as plain data.
@@ -409,6 +410,39 @@ export const CURRICULUM: Chapter[] = [
         ],
       },
       {
+        id: 'expr-staccato',
+        kind: 'play',
+        title: { 'de-CH': 'Kurz und gebunden', en: 'Short and smooth' },
+        intro: {
+          'de-CH':
+            'Gebunden heisst: Ein Ton geht weich in den nächsten über. Kurz – staccato – heisst: Die Taste springt gleich wieder hoch, wie ein hüpfender Ball. Hör zuerst gut zu, dann spielst du beides.',
+          en: 'Smooth means: one note flows softly into the next. Short – staccato – means: the key bounces straight back up, like a bouncing ball. Listen first, then play both.',
+        },
+        xp: 15,
+        keyboard: C4_C5,
+        keyLabels: 'all',
+        exercises: [
+          {
+            type: 'listen',
+            question: { 'de-CH': 'Gebunden oder kurz?', en: 'Smooth or short?' },
+            answers: [
+              { 'de-CH': 'Gebunden', en: 'Smooth' },
+              { 'de-CH': 'Kurz', en: 'Short' },
+            ],
+            tempo: 100,
+            rounds: [
+              { notes: [[60], [62], [64], [65]], answer: 0, touch: 'legato' },
+              { notes: [[60], [62], [64], [65]], answer: 1, touch: 'staccato' },
+              { notes: [[67], [65], [64], [62]], answer: 1, touch: 'staccato' },
+              { notes: [[64], [62], [60], [62]], answer: 0, touch: 'legato' },
+              { notes: [[60], [64], [67], [64]], answer: 1, touch: 'staccato' },
+              { notes: [[67], [64], [60], [64]], answer: 0, touch: 'legato' },
+            ],
+          },
+          playIn(RH_C4, [seq('C4 D4 E4 F4 G4'), seq('G4 F4 E4 D4 C4'), seq('C4 E4 G4 E4 C4')]),
+        ],
+      },
+      {
         id: 'ear-echo-five',
         kind: 'keys',
         bonus: true,
@@ -581,8 +615,8 @@ CURRICULUM.push({
       title: { 'de-CH': 'Schritt und Sprung', en: 'Step and skip' },
       intro: {
         'de-CH':
-          'Du musst nicht jede Note abzählen. Von einer Linie in den Zwischenraum daneben ist ein Schritt – die Nachbartaste. Von Linie zu Linie ist ein Sprung – eine Taste wird übersprungen. Im Intervallregen steht die erste Note angeschrieben: Lies, wie weit die zweite weg ist, und spiel sie.',
-        en: 'You don’t have to count every note. From a line to the space next to it is a step – the next key. From line to line is a skip – one key is skipped. In the interval rain the first note is named: read how far away the second one is, and play it.',
+          'Von einer Linie in den Zwischenraum daneben ist ein Schritt, von Linie zu Linie ein Sprung. Im Intervallregen steht die erste Note angeschrieben: Lies, wie weit die zweite weg ist.',
+        en: 'From a line to the space next to it is a step, from line to line a skip. In the interval rain the first note is named: read how far away the second one is.',
       },
       xp: 20,
       keyboard: C4_C5,
@@ -613,6 +647,23 @@ CURRICULUM.push({
           goal: 8,
           fall: 10,
         },
+      ],
+    },
+    {
+      id: 'read-below-c',
+      kind: 'read',
+      title: { 'de-CH': 'Unter dem C: H, A, G', en: 'Below C: B, A, G' },
+      intro: {
+        'de-CH':
+          'Unter dem mittleren C geht es mit Hilfslinien weiter hinunter: H, A und G. Diese Töne spielt die rechte Hand oft in Liedern.',
+        en: 'Below middle C the notes go on down with ledger lines: B, A and G. The right hand often plays them in songs.',
+      },
+      xp: 20,
+      keyboard: G3_C5,
+      keyLabels: 'c',
+      exercises: [
+        { type: 'read-note', clef: 'treble', notes: seq('G3 A3 H3 C4'), rounds: 8 },
+        { type: 'note-rain', clef: 'treble', notes: seq('G3 A3 H3 C4 D4 E4'), goal: 8, fall: 9 },
       ],
     },
     {
@@ -1229,8 +1280,8 @@ CURRICULUM.push({
       title: { 'de-CH': 'Terz, Quarte, Quinte', en: 'Thirds, fourths and fifths' },
       intro: {
         'de-CH':
-          'Abstände haben Namen: die Sekunde ist der Nachbar, die Terz überspringt eine Taste, dann kommen Quarte und Quinte. Eine Quinte reicht vom Daumen bis zum kleinen Finger. In den Noten: Terz = Linie zu Linie, Quinte = eine Linie überspringen.',
-        en: 'Distances have names: the second is the neighbour, the third skips one key, then come the fourth and the fifth. A fifth reaches from the thumb to the little finger. In the music: third = line to line, fifth = skip one line.',
+          'Abstände zwischen zwei Tönen haben Namen: Terz, Quarte, Quinte. Eine Quinte reicht vom Daumen bis zum kleinen Finger.',
+        en: 'Distances between two notes have names: third, fourth, fifth. A fifth reaches from the thumb to the little finger.',
       },
       xp: 25,
       keyboard: { from: 60, to: 79 },
