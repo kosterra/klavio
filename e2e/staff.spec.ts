@@ -36,7 +36,7 @@ async function nextUntil(page: Page, text: RegExp) {
   throw new Error(`no step ${text}`);
 }
 
-test('«Das Notensystem»: lines counted from below, the clef, bar lines', async ({ page }) => {
+test('«Das Notensystem»: lines counted from below and the clef', async ({ page }) => {
   await beforeTheStaff(page, 'staff');
   // the offer to skip is there at the start
   await expect(page.getByTestId('skip-offer')).toBeVisible();
@@ -51,10 +51,8 @@ test('«Das Notensystem»: lines counted from below, the clef, bar lines', async
   await expect(page.getByRole('status')).toContainText('Genau!');
   await audit(page);
   await nextUntil(page, /G-Schlüssel rollt sich/);
-  await nextUntil(page, /Taktstrich/);
-  await expect(page.getByRole('img', { name: /Noten in 2 Takten/ })).toBeVisible();
   await page.getByTestId('theory-next').click();
-  await page.getByRole('button', { name: '3', exact: true }).click();
+  await page.getByRole('button', { name: 'Auf der 2. Linie' }).click();
   await expect(page.getByRole('status')).toContainText('Genau!');
   await audit(page);
   await page.getByTestId('theory-next').click();

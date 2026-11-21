@@ -13,7 +13,8 @@ describe('how hard a piece is', () => {
 
   it('a first melody is stage 1, two hands with black keys come later', () => {
     expect(pieceLevel(song('C4/q D4/q E4/h | D4/q C4/q C4/h'))).toBe(1);
-    expect(pieceLevel(piece('C4/h F#4/q | G4/hd', 'C3/hd | G2/hd', { time: '3/4' }))).toBe(3);
+    // the waltz comes early now: two hands and black keys make it stage 2
+    expect(pieceLevel(piece('C4/h F#4/q | G4/hd', 'C3/hd | G2/hd', { time: '3/4' }))).toBe(2);
   });
 
   it('beyond the path: fast sixteenths are «Anspruchsvoll», a calm one «Fortgeschritten»', () => {

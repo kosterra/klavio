@@ -23,6 +23,10 @@ export const CHANGELOG: Release[] = [
     version: UPCOMING,
     changes: [
       L(
+        'Lernpfad: neue Reihenfolge, wie eine Klavierlehrerin sie wählen würde – Fingernummern vor der ersten Melodie, «Viertel und Halbe» vor dem ersten Lied, «Laut und leise» und die linke Hand früher, der Dreivierteltakt vor den Achteln, «Daumen drunter» und die Tonleiter erst bei den Tonarten. Was du schon gespielt hast, bleibt offen, und «Weiter» schickt dich nicht zurück.',
+        'Learning path: a new order, as a piano teacher would choose it – finger numbers before the first melody, «Quarter and half notes» before the first song, «Loud and soft» and the left hand earlier, three-four time before eighths, «Thumb under» and the scale only with the keys. What you have played stays open, and «Next» never sends you back.',
+      ),
+      L(
         'Tagesziel: Jetzt zählt alles Üben – Freies Spielen, Notenregen, Schnelle Runde, eigene Stücke und Klassiker, die Erklärungen und auch abgebrochene Durchgänge. Gezählt wird, solange du spielst oder tippst.',
         'Daily goal: all practice counts now – free play, note rain, quick round, own pieces and classics, the explanations and runs you stopped early. It counts while you play or tap.',
       ),

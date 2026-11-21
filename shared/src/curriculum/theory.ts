@@ -687,6 +687,39 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       answers: [{ text: L('C', 'C') }, { text: L('D', 'D'), correct: true }, { text: L('E', 'E') }],
       hint: L('Denk an das kleine Haus.', 'Think of the little house.'),
     },
+    // finger numbers before the first melody: the play-along shows them on the keys
+    {
+      type: 'explain',
+      text: L(
+        'Deine Finger haben Nummern: Daumen 1, Zeigefinger 2, Mittelfinger 3, Ringfinger 4, kleiner Finger 5. Bei beiden Händen gleich.',
+        'Your fingers have numbers: thumb 1, index finger 2, middle finger 3, ring finger 4, little finger 5. The same on both hands.',
+      ),
+      picture: { kind: 'hand', numbers: true },
+    },
+    {
+      type: 'quiz',
+      text: L('Welche Nummer hat dieser Finger?', 'Which number is this finger?'),
+      picture: { kind: 'hand', highlight: 3, numbers: false },
+      answers: [{ text: L('2', '2') }, { text: L('3', '3'), correct: true }, { text: L('4', '4') }],
+      hint: L('Zähl vom Daumen aus: Der Daumen ist 1.', 'Count from the thumb: the thumb is 1.'),
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Leg die rechte Hand hin: Daumen 1 auf das mittlere C, Finger 2 auf das D, Finger 3 auf das E. Die Hand ist rund, als würdest du einen kleinen Ball halten.',
+        'Place your right hand: thumb 1 on middle C, finger 2 on D, finger 3 on E. Keep your hand round, as if holding a small ball.',
+      ),
+      picture: {
+        kind: 'keyboard',
+        ...C4_C5,
+        labels: 'all',
+        fingering: [
+          [60, 1],
+          [62, 2],
+          [64, 3],
+        ],
+      },
+    },
   ],
 
   'keys-cde': [
@@ -742,23 +775,11 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
 
   'keys-five': [
     {
-      type: 'explain',
+      type: 'quiz',
       text: L(
-        'Deine Finger haben Nummern: Daumen 1, Zeigefinger 2, Mittelfinger 3, Ringfinger 4, kleiner Finger 5. Bei beiden Händen gleich.',
-        'Your fingers have numbers: thumb 1, index finger 2, middle finger 3, ring finger 4, little finger 5. The same on both hands.',
+        'Weisst du noch die Fingernummern? Welche Nummer hat dieser Finger?',
+        'Remember the finger numbers? Which number is this finger?',
       ),
-      picture: { kind: 'hand', numbers: true },
-    },
-    {
-      type: 'quiz',
-      text: L('Welche Nummer hat dieser Finger?', 'Which number is this finger?'),
-      picture: { kind: 'hand', highlight: 3, numbers: false },
-      answers: [{ text: L('2', '2') }, { text: L('3', '3'), correct: true }, { text: L('4', '4') }],
-      hint: L('Zähl vom Daumen aus: Der Daumen ist 1.', 'Count from the thumb: the thumb is 1.'),
-    },
-    {
-      type: 'quiz',
-      text: L('Und welche Nummer hat dieser Finger?', 'And which number is this finger?'),
       picture: { kind: 'hand', highlight: 5, numbers: false },
       answers: [{ text: L('1', '1') }, { text: L('4', '4') }, { text: L('5', '5'), correct: true }],
       hint: L(
@@ -1038,36 +1059,6 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       ],
       hint: L('Um diese Linie rollt sich der G-Schlüssel.', 'The G clef curls around this line.'),
     },
-    {
-      type: 'explain',
-      text: L(
-        'Eine Note hat einen Kopf und meist einen Hals. Ein hohler Kopf klingt länger als ein ausgemalter. Wie lange genau, lernst du im Kapitel «Im Takt».',
-        'A note has a head and usually a stem. A hollow head sounds longer than a filled-in one. Exactly how long, you will learn in the chapter «In time».',
-      ),
-      picture: { kind: 'note-values', values: ['h', 'q'] },
-    },
-    {
-      type: 'explain',
-      text: L(
-        'Senkrechte Striche teilen die Musik in gleich lange Stücke, die Takte. Der Strich heisst Taktstrich. Erkennst du das Lied? Es ist «Hot Cross Buns».',
-        'Vertical lines divide the music into pieces of equal length, the bars. The line is called a bar line. Do you know the song? It is «Hot Cross Buns».',
-      ),
-      picture: { kind: 'music', clef: 'treble', melody: 'E4/q D4/q C4/h | E4/q D4/q C4/h' },
-    },
-    {
-      type: 'quiz',
-      text: L('Wie viele Takte siehst du?', 'How many bars do you see?'),
-      picture: {
-        kind: 'music',
-        clef: 'treble',
-        melody: 'E4/q D4/q C4/h | G4/h E4/h | C4/w',
-      },
-      answers: [{ text: L('2', '2') }, { text: L('3', '3'), correct: true }, { text: L('4', '4') }],
-      hint: L(
-        'Die Taktstriche trennen die Takte. Zähl die Stücke dazwischen.',
-        'The bar lines separate the bars. Count the pieces between them.',
-      ),
-    },
   ],
 
   'song-buns': [
@@ -1299,8 +1290,8 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     {
       type: 'explain',
       text: L(
-        'Das Klavier heisst eigentlich «Pianoforte»: piano heisst leise, forte heisst laut. Je kräftiger du die Taste drückst, desto lauter klingt sie. In den Noten steht p für leise und f für laut.',
-        'The piano is really called «pianoforte»: piano means soft, forte means loud. The harder you press a key, the louder it sounds. In the music, p means soft and f means loud.',
+        'Weisst du noch? Das Klavier heisst eigentlich «Pianoforte»: piano heisst leise, forte heisst laut. In den Noten steht p für leise und f für laut.',
+        'Remember? The piano is really called «pianoforte»: piano means soft, forte means loud. In the music, p means soft and f means loud.',
       ),
     },
     {
@@ -1373,6 +1364,28 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
       hint: L(
         'Ein halbes Stück Pizza ist grösser als ein Viertel.',
         'Half a pizza is bigger than a quarter.',
+      ),
+    },
+    {
+      type: 'explain',
+      text: L(
+        'Senkrechte Striche teilen die Musik in gleich lange Stücke, die Takte. Der Strich heisst Taktstrich. Das hier ist der Anfang von «Hot Cross Buns» – das spielst du bald.',
+        'Vertical lines divide the music into pieces of equal length, the bars. The line is called a bar line. This is the start of «Hot Cross Buns» – you will play it soon.',
+      ),
+      picture: { kind: 'music', clef: 'treble', melody: 'E4/q D4/q C4/h | E4/q D4/q C4/h' },
+    },
+    {
+      type: 'quiz',
+      text: L('Wie viele Takte siehst du?', 'How many bars do you see?'),
+      picture: {
+        kind: 'music',
+        clef: 'treble',
+        melody: 'E4/q D4/q C4/h | G4/h E4/h | C4/w',
+      },
+      answers: [{ text: L('2', '2') }, { text: L('3', '3'), correct: true }, { text: L('4', '4') }],
+      hint: L(
+        'Die Taktstriche trennen die Takte. Zähl die Stücke dazwischen.',
+        'The bar lines separate the bars. Count the pieces between them.',
       ),
     },
     {
@@ -1624,7 +1637,7 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
     {
       type: 'explain',
       text: L(
-        'Jetzt spielen beide Hände! Links liegt der kleine Finger auf dem tiefen C, rechts der Daumen auf dem mittleren C. Zuerst spielen sie abwechselnd.',
+        'Beide Hände zusammen kennst du schon vom Halten. Jetzt lernen sie, sich abzuwechseln: Links liegt der kleine Finger auf dem tiefen C, rechts der Daumen auf dem mittleren C.',
         'Now both hands play! On the left the little finger is on the low C, on the right the thumb is on middle C. First they take turns.',
       ),
       picture: {
@@ -1773,6 +1786,24 @@ export const LESSON_THEORY: Record<string, TheoryStep[]> = {
         { text: L('Die rechte Hand', 'The right hand'), correct: true },
       ],
       hint: L('Sie steht im oberen System.', 'It is in the upper staff.'),
+    },
+  ],
+
+  'both-hold': [
+    {
+      type: 'explain',
+      text: L(
+        'Jetzt spielt die linke Hand mit. Ihr kleiner Finger liegt auf dem tiefen C – eine Oktave unter dem mittleren C. Sie spielt einen langen Ton und hält ihn, die rechte spielt dazu weiter.',
+        'Now the left hand joins in. Its little finger rests on low C – one octave below middle C. It plays a long note and holds it while the right hand plays on.',
+      ),
+      picture: { kind: 'keyboard', ...C3_C5, labels: 'c', marks: [48, 60] },
+    },
+    {
+      type: 'explain',
+      text: L(
+        'In den Noten bekommt die linke Hand eine eigene Zeile unten. Den Schlüssel dort lernst du später – die Namen stehen bei den Noten.',
+        'In the music the left hand gets its own line at the bottom. You will learn its clef later – the names are written by the notes.',
+      ),
     },
   ],
 

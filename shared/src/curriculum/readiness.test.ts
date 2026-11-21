@@ -37,7 +37,8 @@ describe('from which lesson a piece can be played', () => {
     expect(p.needs.map((n) => n.need)).toEqual(
       expect.arrayContaining(['both', 'bass', 'bass-low', 'sharps', 'three-four']),
     );
-    expect(p.lesson.id).toBe('meter-waltz');
+    // the waltz is taught early now: the black keys come last
+    expect(p.lesson.id).toBe('black-sharps');
   });
 
   it('names what the path does not teach', () => {

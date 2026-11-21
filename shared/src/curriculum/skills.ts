@@ -150,7 +150,10 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
 
 /** Lessons (in learning order) that teach a skill; empty = planned for later. */
 export function lessonsForSkill(skill: SkillId): string[] {
-  return LESSONS.filter((l) => !l.bonus && LESSON_SKILLS[l.id]?.includes(skill)).map((l) => l.id);
+  const teaching = LESSONS.filter((l) => LESSON_SKILLS[l.id]?.includes(skill));
+  // the lessons of the path; a skill only bonus lessons teach (improvising) counts with them
+  const core = teaching.filter((l) => !l.bonus);
+  return (core.length ? core : teaching).map((l) => l.id);
 }
 
 export function isSkillTaught(skill: SkillId): boolean {
