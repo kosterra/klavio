@@ -20,7 +20,7 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
-    version: UPCOMING,
+    version: '2026.11.12',
     changes: [
       L(
         'Im Elternbereich unter «Lernpfad»: «Neu beginnen ab …» setzt den Lernpfad auf eine Lektion oder ein Kapitel zurück. Fehlen Lektionen vor der letzten gespielten – etwa neue –, ist die erste schon gewählt. XP und Abzeichen bleiben.',
