@@ -12,7 +12,7 @@ beforeEach(async () => ctx.reset());
 
 async function call(
   jar: CookieJar,
-  method: 'GET' | 'POST' | 'DELETE',
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE',
   url: string,
   payload?: unknown,
 ): Promise<LightMyRequestResponse> {
@@ -336,6 +336,36 @@ describe('a lesson skipped by its check («Ich kann schon»)', () => {
     await call(jar, 'POST', '/api/progress/lessons/read-staff/skip');
     const lessons = (await call(jar, 'GET', `/api/progress?date=${today}`)).json().lessons;
     expect(lessons['read-staff']).toMatchObject({ bestStars: 3, completions: 1 });
+  });
+});
+
+describe('resetting the path from a lesson (parent area)', () => {
+  it('removes that lesson and every later one, keeps the ones before and the XP', async () => {
+    const { jar } = await learner();
+    await complete(jar, first!.id);
+    await complete(jar, second!.id);
+    await complete(jar, third!.id);
+    const xpBefore = (await call(jar, 'GET', '/api/profiles')).json();
+    const res = await call(jar, 'POST', '/api/progress/reset', { lessonId: second!.id });
+    expect(res.statusCode).toBe(200);
+    expect(res.json()).toEqual({ removed: 2 });
+    const lessons = (await call(jar, 'GET', `/api/progress?date=${today}`)).json().lessons;
+    expect(Object.keys(lessons)).toEqual([first!.id]);
+    // XP is never taken away
+    expect((await call(jar, 'GET', '/api/profiles')).json()).toEqual(xpBefore);
+    // the path goes on from there
+    expect((await complete(jar, second!.id)).json().firstCompletion).toBe(true);
+  });
+
+  it('needs the parent area and a known lesson', async () => {
+    const { jar } = await learner();
+    expect(
+      (await call(jar, 'POST', '/api/progress/reset', { lessonId: 'nope' })).json().error,
+    ).toBe('UNKNOWN_LESSON');
+    await call(jar, 'PUT', '/api/account/pin', { pin: '1234' });
+    await call(jar, 'POST', '/api/account/pin/lock');
+    const res = await call(jar, 'POST', '/api/progress/reset', { lessonId: first!.id });
+    expect(res.json().error).toBe('PARENT_LOCKED');
   });
 });
 

@@ -9,6 +9,7 @@ import { useLocalized } from '../lesson/useLocalized';
 import { notify } from './notify';
 import { useSession } from '../auth/session';
 import { endpoints } from '../api/endpoints';
+import { ResetPath } from './ResetPath';
 
 /**
  * «Lernpfad» in the parent area: whoever already plays starts at a later
@@ -107,6 +108,8 @@ export function PlacementCard() {
             {t('placement.button')}
           </Button>
         </Group>
+        <Divider />
+        <ResetPath />
       </Stack>
     </Card>
   );

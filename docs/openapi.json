@@ -1153,6 +1153,34 @@
         }
       }
     },
+    "/api/progress/reset": {
+      "post": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lessonId": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9-]{1,64}$"
+                  }
+                },
+                "required": [
+                  "lessonId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response"
+          }
+        }
+      }
+    },
     "/api/progress/practice": {
       "post": {
         "requestBody": {

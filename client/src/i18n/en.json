@@ -1310,7 +1310,16 @@
     "pathOn": "Use the learning path",
     "pathOnHint": "Off: every lesson can be picked freely, and the start page shows your pieces, songs and tools instead of the map.",
     "offDone": "The learning path is switched off.",
-    "onDone": "The learning path is back."
+    "onDone": "The learning path is back.",
+    "resetTitle": "Start again from …",
+    "resetHint": "Play a lesson or a whole chapter again from the start: it and every lesson after it lose their stars. XP and badges stay.",
+    "resetGaps": "Lessons are missing before the last one played – new ones, for example. The first one is already chosen: the path goes on from there, and the lessons after it lose their stars. XP and badges stay.",
+    "resetLabel": "From lesson or chapter",
+    "resetChapter": "Whole chapter {{n}}",
+    "resetMissing": "missing",
+    "resetButton": "Reset",
+    "resetConfirm": "Start again from «{{from}}»? This lesson and every one after it lose their stars. XP and badges stay.",
+    "resetDone": "Reset – the path now goes on from there."
   },
   "setup": {
     "title": "Let's start",
