@@ -20,6 +20,15 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: UPCOMING,
+    changes: [
+      L(
+        'Admin: Bei den E-Mail-Vorlagen wählst du die E-Mail jetzt in einer Auswahlliste – so passt alles auch aufs Handy.',
+        'Admin: in the e-mail templates you now pick the e-mail from a list – so everything fits on a phone too.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.11',
     changes: [
       L(
