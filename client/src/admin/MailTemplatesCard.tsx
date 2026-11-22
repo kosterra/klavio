@@ -7,6 +7,7 @@ import {
   Code,
   Group,
   SegmentedControl,
+  Select,
   SimpleGrid,
   Stack,
   Text,
@@ -142,9 +143,13 @@ export function MailTemplatesCard() {
         {error && <Alert color="red">{error}</Alert>}
 
         <Group gap="sm">
-          <SegmentedControl
+          <Select
             value={id}
-            onChange={(v) => setId(v as MailTemplateId)}
+            onChange={(v) => v && setId(v as MailTemplateId)}
+            allowDeselect={false}
+            size="md"
+            w={{ base: '100%', xs: 280 }}
+            comboboxProps={{ withinPortal: true }}
             data={[
               { value: 'login-code', label: t('admin.mail.loginCode') },
               { value: 'verify-email', label: t('admin.mail.verifyEmail') },

@@ -20,6 +20,19 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: '2026.11.12',
+    changes: [
+      L(
+        'Im Elternbereich unter «Lernpfad»: «Neu beginnen ab …» setzt den Lernpfad auf eine Lektion oder ein Kapitel zurück. Fehlen Lektionen vor der letzten gespielten – etwa neue –, ist die erste schon gewählt. XP und Abzeichen bleiben.',
+        'In the parent area under «Learning path»: «Start again from …» resets the path to a lesson or a chapter. If lessons are missing before the last one played – new ones, say – the first is already chosen. XP and badges stay.',
+      ),
+      L(
+        'Admin: Bei den E-Mail-Vorlagen wählst du die E-Mail jetzt in einer Auswahlliste – so passt alles auch aufs Handy.',
+        'Admin: in the e-mail templates you now pick the e-mail from a list – so everything fits on a phone too.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.11',
     changes: [
       L(

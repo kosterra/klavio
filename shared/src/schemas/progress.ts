@@ -47,6 +47,15 @@ export const practiceTimeSchema = z.object({
 });
 export type PracticeTimeInput = z.infer<typeof practiceTimeSchema>;
 
+/**
+ * Reset the learning path (parent area): this lesson and every lesson after it
+ * on the path lose their progress, so the path goes on from there.
+ */
+export const progressResetSchema = z.object({
+  lessonId: z.string().regex(/^[a-z0-9-]{1,64}$/),
+});
+export type ProgressResetInput = z.infer<typeof progressResetSchema>;
+
 export const progressQuerySchema = z.object({
   date: isoDateSchema,
   /** one of the account's profiles; default: the session's active profile */

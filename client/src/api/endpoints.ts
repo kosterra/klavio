@@ -172,6 +172,9 @@ export const endpoints = {
   skipLesson: (lessonId: string) => api('POST', `/progress/lessons/${lessonId}/skip`),
   /** «Kann ich schon»: the chapter's check was passed – all its lessons count as done */
   skipChapter: (chapterId: string) => api('POST', `/progress/chapters/${chapterId}/skip`),
+  /** parent area: this lesson and every later one lose their progress */
+  resetProgress: (lessonId: string) =>
+    api<{ removed: number }>('POST', '/progress/reset', { lessonId }),
 
   adminSettings: () => api<AdminSettingsDto>('GET', '/admin/settings'),
   updateAdminSettings: (body: Partial<AdminSettingsDto>) =>

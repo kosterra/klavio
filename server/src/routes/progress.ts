@@ -18,6 +18,8 @@ import {
   levelForXp,
   nextStreak,
   practiceTimeSchema,
+  progressResetSchema,
+  LESSONS,
   progressQuerySchema,
   REVIEW_INTERVALS,
   starsFor,
@@ -202,6 +204,29 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
         }
       }
       return reply.code(204).send();
+    },
+  );
+
+  /**
+   * Parent area: start again from a lesson (or the first lesson of a chapter).
+   * It and every lesson after it on the path lose their stars and reviews;
+   * the lessons before it stay as they are. XP, badges and practice days stay
+   * – what has been earned is never taken away.
+   */
+  app.post(
+    '/reset',
+    { schema: { body: progressResetSchema } },
+    async (req, reply): Promise<{ removed: number }> => {
+      const profileId = await profileOf(req);
+      await app.requireParent(req, reply);
+      const from = LESSONS.findIndex((l) => l.id === req.body.lessonId);
+      if (from < 0) throw new HttpError(400, 'UNKNOWN_LESSON');
+      const ids = LESSONS.slice(from).map((l) => l.id);
+      const { deletedCount } = await LessonProgress.deleteMany({
+        profileId,
+        lessonId: { $in: ids },
+      });
+      return { removed: deletedCount };
     },
   );
 

@@ -1310,7 +1310,16 @@
     "pathOn": "Lernpfad verwenden",
     "pathOnHint": "Aus: Alle Lektionen sind frei wählbar, und der Start zeigt deine Stücke, Lieder und Werkzeuge statt der Karte.",
     "offDone": "Der Lernpfad ist ausgeschaltet.",
-    "onDone": "Der Lernpfad ist wieder da."
+    "onDone": "Der Lernpfad ist wieder da.",
+    "resetTitle": "Neu beginnen ab …",
+    "resetHint": "Eine Lektion oder ein ganzes Kapitel nochmals von vorn: Sie und alle Lektionen danach verlieren ihre Sterne. XP und Abzeichen bleiben.",
+    "resetGaps": "Im Lernpfad fehlen Lektionen vor der letzten gespielten – zum Beispiel neue. Die erste ist schon gewählt: Ab dort geht der Lernpfad weiter, die Lektionen danach verlieren ihre Sterne. XP und Abzeichen bleiben.",
+    "resetLabel": "Ab Lektion oder Kapitel",
+    "resetChapter": "Ganzes Kapitel {{n}}",
+    "resetMissing": "fehlt",
+    "resetButton": "Zurücksetzen",
+    "resetConfirm": "Ab «{{from}}» neu beginnen? Diese Lektion und alle danach verlieren ihre Sterne. XP und Abzeichen bleiben.",
+    "resetDone": "Zurückgesetzt – der Lernpfad geht jetzt dort weiter."
   },
   "setup": {
     "title": "Los geht's",
