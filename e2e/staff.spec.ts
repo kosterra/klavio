@@ -36,7 +36,7 @@ async function nextUntil(page: Page, text: RegExp) {
   throw new Error(`no step ${text}`);
 }
 
-test('«Das Notensystem»: lines counted from below, the clef, bar lines', async ({ page }) => {
+test('«Das Notensystem»: lines counted from below and the clef', async ({ page }) => {
   await beforeTheStaff(page, 'staff');
   // the offer to skip is there at the start
   await expect(page.getByTestId('skip-offer')).toBeVisible();
@@ -51,10 +51,8 @@ test('«Das Notensystem»: lines counted from below, the clef, bar lines', async
   await expect(page.getByRole('status')).toContainText('Genau!');
   await audit(page);
   await nextUntil(page, /G-Schlüssel rollt sich/);
-  await nextUntil(page, /Taktstrich/);
-  await expect(page.getByRole('img', { name: /Noten in 2 Takten/ })).toBeVisible();
   await page.getByTestId('theory-next').click();
-  await page.getByRole('button', { name: '3', exact: true }).click();
+  await page.getByRole('button', { name: 'Auf der 2. Linie' }).click();
   await expect(page.getByRole('status')).toContainText('Genau!');
   await audit(page);
   await page.getByTestId('theory-next').click();
@@ -62,30 +60,31 @@ test('«Das Notensystem»: lines counted from below, the clef, bar lines', async
   await expect(page.getByRole('heading', { name: 'Das Notensystem' })).toBeVisible();
 });
 
-test('«Ich kann schon»: three right answers skip the lesson', async ({ page }) => {
+test('«Kann ich schon»: five right answers skip the reading chapter', async ({ page }) => {
   await beforeTheStaff(page, 'staffskip');
   await page.getByTestId('skip-check').click();
   await expect(page.getByText('Kurzer Check', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'G-Schlüssel' }).click();
-  await page.getByTestId('theory-next').click();
-  await page.getByRole('button', { name: 'F', exact: true }).click();
-  await page.getByTestId('theory-next').click();
-  await page.getByRole('button', { name: 'H', exact: true }).click();
+  for (const note of ['F', 'H', 'C', 'A']) {
+    await page.getByTestId('theory-next').click();
+    await page.getByRole('button', { name: note, exact: true }).click();
+  }
   await audit(page);
   await page.getByTestId('theory-next').click();
   await expect(page.getByText('Super, das kannst du schon!')).toBeVisible();
-  await expect(page).toHaveURL(/\/lesson\/read-c-d-e$/);
+  // on to the next chapter, «Im Takt»
+  await expect(page).toHaveURL(/\/lesson\/rhythm-rests$/);
 });
 
-test('«Ich kann schon»: a wrong answer leads into the lesson', async ({ page }) => {
+test('«Kann ich schon»: a wrong answer leads into the lesson', async ({ page }) => {
   await beforeTheStaff(page, 'staffmiss');
   await page.getByTestId('skip-check').click();
   await page.getByRole('button', { name: 'F-Schlüssel' }).click();
   await page.getByRole('button', { name: 'G-Schlüssel' }).click();
-  await page.getByTestId('theory-next').click();
-  await page.getByRole('button', { name: 'F', exact: true }).click();
-  await page.getByTestId('theory-next').click();
-  await page.getByRole('button', { name: 'H', exact: true }).click();
+  for (const note of ['F', 'H', 'C', 'A']) {
+    await page.getByTestId('theory-next').click();
+    await page.getByRole('button', { name: note, exact: true }).click();
+  }
   await page.getByTestId('theory-next').click();
   await expect(page.getByTestId('skip-offer')).toContainText('Schauen wir es zusammen an');
   await expect(page.getByTestId('theory-text')).toContainText('Musik kann man aufschreiben');

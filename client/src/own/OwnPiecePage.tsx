@@ -30,6 +30,7 @@ import { SheetView } from '../print/SongSheetPage';
 import { useProgress } from '../lesson/useProgress';
 import { ReadinessNote } from './ReadinessNote';
 import { NotesView } from './NotesView';
+import { usePracticeTime } from '../practice/usePracticeTime';
 
 /** An own piece fetched by its id (shared by playing and printing). */
 function useOwnPiece() {
@@ -135,6 +136,8 @@ function PracticePiece({
   const input = useLessonInput();
   const { stopMicrophone } = input;
   const [phase, setPhase] = useState<'intro' | 'play' | 'done'>('intro');
+  // practising a piece counts for the daily goal
+  usePracticeTime();
   const [run, setRun] = useState(0);
   const { played, progress } = useProgress();
   useEffect(() => () => stopMicrophone(), [stopMicrophone]);

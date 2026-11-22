@@ -122,6 +122,15 @@ describe('curriculum data', () => {
     const third = LESSONS.find((l, i) => i > 1 && !LESSONS[i - 1]!.bonus)!.id;
     expect(isLessonUnlocked(third, new Set([first, third]))).toBe(true);
     expect(nextLesson(new Set([first])).id).toBe(second);
+    // a lesson moved (or added) behind the learner: open, and «next» doesn't go back to it
+    const core = CORE_LESSONS.map((l) => l.id);
+    const k = core.indexOf('rhythm-quarters');
+    const played = new Set(core.slice(0, core.indexOf('read-c-d-e')).filter((id, i) => i !== k));
+    expect(isLessonUnlocked('rhythm-quarters', played)).toBe(true);
+    expect(isLessonUnlocked(core[k + 1]!, played)).toBe(true);
+    expect(nextLesson(played).id).toBe('read-c-d-e');
+    // with nothing after it played, the gap is next
+    expect(nextLesson(new Set(core.slice(0, k))).id).toBe('rhythm-quarters');
     // all done: the last lesson of the path (a bonus lesson at the very end doesn't count)
     expect(nextLesson(new Set(LESSONS.map((l) => l.id))).id).toBe(CORE_LESSONS.at(-1)!.id);
   });
@@ -277,7 +286,8 @@ describe('bonus lessons', () => {
       ).map((l) => l.id),
     );
     expect(isLessonUnlocked('song-jakob', before)).toBe(false);
-    const done = new Set([...before, 'song-weihnachtsmann']);
+    // the bonus songs open after «Fuchs», the last core song before them
+    const done = new Set([...before, 'song-weihnachtsmann', 'song-fuchs']);
     expect(isLessonUnlocked('song-jakob', done)).toBe(true);
     expect(isLessonUnlocked('song-macdonald', done)).toBe(true);
     // the path goes on without them: sight-reading, then the left hand

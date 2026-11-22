@@ -29,8 +29,9 @@ describe('skills', () => {
   });
 
   it('a skill is reached when every lesson teaching it is done', () => {
-    const values = ['rhythm-quarters', 'rhythm-rests', 'rhythm-dotted', 'song-london'];
-    expect(isSkillReached('note-values', done(values.slice(0, 3)))).toBe(false);
+    // bonus lessons (London Bridge) don't count
+    const values = ['rhythm-quarters', 'rhythm-rests', 'rhythm-dotted'];
+    expect(isSkillReached('note-values', done(values.slice(0, 2)))).toBe(false);
     expect(isSkillReached('note-values', done(values))).toBe(true);
     expect(isSkillReached('pedal', done(LESSONS.map((l) => l.id)))).toBe(true);
     // every skill is taught somewhere now
@@ -62,8 +63,8 @@ describe('skills', () => {
   });
 
   it('reports milestones only when a goal skill is completed', () => {
-    const before = done(['rhythm-quarters', 'rhythm-rests', 'rhythm-dotted']);
-    expect(newlyReachedGoalSkills([], before, 'song-london')).toEqual(['note-values']);
+    const before = done(['rhythm-quarters', 'rhythm-rests']);
+    expect(newlyReachedGoalSkills([], before, 'rhythm-dotted')).toEqual(['note-values']);
     expect(newlyReachedGoalSkills([], done([]), 'rhythm-quarters')).toEqual([]);
   });
 });

@@ -184,6 +184,8 @@ export interface ListenExercise {
     notes: number[][];
     /** index into `answers` */
     answer: number;
+    /** how the notes sound: connected (legato) or short (staccato) */
+    touch?: 'legato' | 'staccato';
   }[];
   /**
    * Higher / lower: each round may be played back to front (the answer flips),
@@ -370,6 +372,8 @@ export type TheoryPicture =
       melody: string;
       /** draw the time signature at the start (e.g. '4/4') */
       time?: string;
+      /** repeat signs around it */
+      repeat?: true;
     }
   | {
       /** treble and bass staff together; notes from middle C up go into the treble */

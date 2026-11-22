@@ -20,6 +20,43 @@ const L = (de: string, en: string): Localized => ({ 'de-CH': de, en });
  */
 export const CHANGELOG: Release[] = [
   {
+    version: '2026.11.11',
+    changes: [
+      L(
+        'Für Erwachsene: Jedes Kapitel lässt sich mit einem kurzen Check überspringen, wenn du es schon kannst. Neue Bonus-Lektionen «Vier Akkorde» (C, G, Am, F) und «Klingen lassen: das Pedal» schon im zweiten Kapitel. Die Erklärungen zu Notenwerten und Tasten kommen ohne Pizza und kleines Haus aus.',
+        'For grown-ups: every chapter can be skipped with a short check if you already know it. New bonus lessons «Four chords» (C, G, Am, F) and «Let it ring: the pedal» already in the second chapter. The explanations of note values and keys do without the pizza and the little house.',
+      ),
+      L(
+        'Neue Lieder, die man kennt: «Hänsel und Gretel» (mit Pausen), «Fuchs, du hast die Gans gestohlen», «Summ, summ, summ» (im Zweivierteltakt) und als Bonus «Kommt ein Vogel geflogen». Für Erwachsene: «Aura Lee», «Amazing Grace» und der Anfang von «Für Elise».',
+        'New songs you know: «Hansel and Gretel» (with rests), «Fox, you stole the goose», «Buzz, buzz, buzz» (in two-four time) and as a bonus «A bird comes flying». For grown-ups: «Aura Lee», «Amazing Grace» and the opening of «Für Elise».',
+      ),
+      L(
+        'Neue Lektionen: «Unter dem C» (H, A und G mit Hilfslinien – die Töne, die in vielen Liedern vorkommen) und «Kurz und gebunden» (staccato und legato hören und spielen). Dazu ein Übe-Tipp bei den ersten Liedern, das Wiederholungszeichen und kürzere Erklärungen bei «Schritt und Sprung» und «Terz, Quarte, Quinte».',
+        'New lessons: «Below C» (B, A and G with ledger lines – the notes many songs use) and «Short and smooth» (hear and play staccato and legato). Plus a practice tip with the first songs, the repeat sign and shorter explanations in «Step and skip» and «Thirds, fourths and fifths».',
+      ),
+      L(
+        'Lernpfad: neue Reihenfolge, wie eine Klavierlehrerin sie wählen würde – Fingernummern vor der ersten Melodie, «Viertel und Halbe» vor dem ersten Lied, «Laut und leise» und die linke Hand früher, der Dreivierteltakt vor den Achteln, «Daumen drunter» und die Tonleiter erst bei den Tonarten. Was du schon gespielt hast, bleibt offen, und «Weiter» schickt dich nicht zurück.',
+        'Learning path: a new order, as a piano teacher would choose it – finger numbers before the first melody, «Quarter and half notes» before the first song, «Loud and soft» and the left hand earlier, three-four time before eighths, «Thumb under» and the scale only with the keys. What you have played stays open, and «Next» never sends you back.',
+      ),
+      L(
+        'Tagesziel: Jetzt zählt alles Üben – Freies Spielen, Notenregen, Schnelle Runde, eigene Stücke und Klassiker, die Erklärungen und auch abgebrochene Durchgänge. Gezählt wird, solange du spielst oder tippst.',
+        'Daily goal: all practice counts now – free play, note rain, quick round, own pieces and classics, the explanations and runs you stopped early. It counts while you play or tap.',
+      ),
+      L(
+        'Handy: Erklärungen, «Noten lesen» und die Lektions-Tipps sind kompakter und passen auf einen Bildschirm – die Sprechblase nutzt die ganze Breite, «Überspringen» und «Weiter» stehen immer nebeneinander.',
+        'Phone: explanations, «Reading notes» and the lesson tips are more compact and fit on one screen – the speech bubble uses the full width, «Skip» and «Next» always sit side by side.',
+      ),
+      L(
+        'Notenregen: Spielst du die richtige Note in der falschen Oktave, sagt Klavi das, statt es als Fehler zu zählen.',
+        'Note rain: if you play the right note in the wrong octave, Klavi tells you instead of counting a mistake.',
+      ),
+      L(
+        'Korrektur: Bei Noten auf Hilfslinien wurden Notennamen und die Kärtchen im Intervall-Regen unten abgeschnitten.',
+        'Fix: with notes on ledger lines, note names and the interval rain cards were cut off at the bottom.',
+      ),
+    ],
+  },
+  {
     version: '2026.11.10',
     changes: [
       L(

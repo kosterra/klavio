@@ -1,5 +1,6 @@
 import type {
   LessonCompleteInput,
+  PracticeTimeInput,
   ReminderDto,
   OwnPieceDto,
   PublicTestimonialDto,
@@ -165,8 +166,12 @@ export const endpoints = {
     ),
   completeLesson: (lessonId: string, body: LessonCompleteInput) =>
     api<LessonResultDto>('POST', `/progress/lessons/${lessonId}`, body),
+  /** practice time outside a finished lesson (sent in pieces, each counted once) */
+  recordPractice: (body: PracticeTimeInput) => api('POST', '/progress/practice', body),
   /** «Ich kann schon»: the lesson's check was passed – it counts as done */
   skipLesson: (lessonId: string) => api('POST', `/progress/lessons/${lessonId}/skip`),
+  /** «Kann ich schon»: the chapter's check was passed – all its lessons count as done */
+  skipChapter: (chapterId: string) => api('POST', `/progress/chapters/${chapterId}/skip`),
 
   adminSettings: () => api<AdminSettingsDto>('GET', '/admin/settings'),
   updateAdminSettings: (body: Partial<AdminSettingsDto>) =>

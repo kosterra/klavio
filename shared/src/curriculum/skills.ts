@@ -97,6 +97,10 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
   'rhythm-rests': ['note-values'],
   'rhythm-dotted': ['note-values'],
   'song-london': ['note-values'],
+  'song-summ': ['eighths'],
+  'song-haensel': ['right-hand'],
+  'song-fuchs': ['right-hand'],
+  'song-vogel': ['three-four'],
   'bass-hand': ['left-hand'],
   'bass-clef': ['bass-clef'],
   'bass-low': ['bass-clef'],
@@ -132,12 +136,16 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
   'accomp-broken': ['arpeggios'],
   'accomp-chords': ['chords'],
   'expr-dynamics': ['dynamics'],
+  'expr-staccato': ['dynamics'],
+  'chords-four': ['chords'],
+  'pedal-early': ['pedal'],
   'expr-pedal': ['pedal'],
   'tech-fingers': ['right-hand'],
   'tech-thumb': ['right-hand'],
   'tech-positions': ['black-keys'],
   'tech-scale-both': ['scales'],
   'read-steps': ['treble-clef'],
+  'read-below-c': ['treble-clef'],
   'read-intervals': ['grand-staff'],
   'sight-first': ['melodies'],
   'sight-bass': ['bass-clef'],
@@ -150,7 +158,10 @@ export const LESSON_SKILLS: Record<string, SkillId[]> = {
 
 /** Lessons (in learning order) that teach a skill; empty = planned for later. */
 export function lessonsForSkill(skill: SkillId): string[] {
-  return LESSONS.filter((l) => !l.bonus && LESSON_SKILLS[l.id]?.includes(skill)).map((l) => l.id);
+  const teaching = LESSONS.filter((l) => LESSON_SKILLS[l.id]?.includes(skill));
+  // the lessons of the path; a skill only bonus lessons teach (improvising) counts with them
+  const core = teaching.filter((l) => !l.bonus);
+  return (core.length ? core : teaching).map((l) => l.id);
 }
 
 export function isSkillTaught(skill: SkillId): boolean {

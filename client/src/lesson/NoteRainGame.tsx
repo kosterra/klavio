@@ -8,6 +8,7 @@ import { useNoteEvents } from '../input/noteBus';
 import { BuddySays } from '../components/BuddySays';
 import { VirtualKeyboard } from '../components/VirtualKeyboard';
 import { Staff } from '../notation/Staff';
+import { octaveOff } from './exercises';
 import classes from './NoteRain.module.css';
 
 /** treble or bass – or both: each note on the staff it belongs to (from middle C up: treble) */
@@ -58,7 +59,7 @@ const NoteCard = memo(function NoteCard({
       <Staff
         clef={clef}
         notes={[{ midi: from, state: 'done' }, { midi }]}
-        height={CARD_H - 30}
+        height={CARD_H - 26}
         label={t('lesson.rain.interval', { note: name })}
       />
     </>
@@ -140,6 +141,11 @@ export function NoteRainGame({
   const [caught, setCaught] = useState(0);
   const [lives, setLives] = useState(RAIN_LIVES);
   const [wrong, setWrong] = useState<number | null>(null);
+  /** the right note in the wrong octave: a hint instead of a miss */
+  const [octave, setOctave] = useState<{ note: string; dir: 'low' | 'high' } | null>(null);
+  const octaveTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(octaveTimer.current), []);
+  const lang = useNoteLang();
   const [result, setResult] = useState<RainResult>({ caught: 0, misses: 0 });
   const fresh = (startAt: number) => ({
     next: startAt + 400,
@@ -251,6 +257,16 @@ export function NoteRainGame({
       .filter((d) => !d.end && d.midi === e.midi)
       .sort((a, b) => left(a) - left(b))[0];
     if (!target) {
+      // the right note an octave off (or the microphone heard it so): say so, don't count it
+      const near = list.current
+        .filter((d) => !d.end && octaveOff(e.midi, d.midi))
+        .sort((a, b) => left(a) - left(b))[0];
+      if (near) {
+        setOctave({ note: midiToPitchName(e.midi, lang), dir: octaveOff(e.midi, near.midi)! });
+        clearTimeout(octaveTimer.current);
+        octaveTimer.current = setTimeout(() => setOctave(null), 2500);
+        return;
+      }
       game.current.misses++;
       setWrong(e.midi);
       setTimeout(() => setWrong(null), 400);
@@ -353,6 +369,11 @@ export function NoteRainGame({
               </div>
             );
           })}
+        {octave && phase === 'play' && (
+          <div className={classes.hint} role="status" data-testid="rain-octave">
+            {t(`lesson.octave.${octave.dir}`, { note: octave.note })}
+          </div>
+        )}
         <div className={classes.ground} aria-hidden />
         {phase !== 'play' && phase !== 'done' && (
           <div className={classes.overlay}>

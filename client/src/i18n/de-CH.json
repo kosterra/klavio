@@ -895,13 +895,14 @@
     "musicBars_other": "Noten in {{count}} Takten: {{notes}}"
   },
   "skipCheck": {
-    "offer": "Kennst du das schon? Drei richtige Antworten, und du darfst die Lektion überspringen.",
+    "offer": "Kennst du das schon? Beantworte alle Fragen richtig, und du überspringst dieses Kapitel.",
+    "offerShort": "Kannst du das schon?",
     "start": "Kurzer Check",
     "title": "Kurzer Check",
     "finish": "Fertig",
     "cancel": "Abbrechen",
     "failed": "Nicht ganz – kein Problem. Schauen wir es zusammen an.",
-    "done": "Super, das kannst du schon! Die Lektion zählt als bestanden.",
+    "done": "Super, das kannst du schon! Das ganze Kapitel zählt als bestanden.",
     "link": "Kann ich schon – kurzer Check"
   },
   "knowledge": {

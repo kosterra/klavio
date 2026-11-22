@@ -29,6 +29,24 @@ export const lessonCompleteSchema = z.object({
 });
 export type LessonCompleteInput = z.infer<typeof lessonCompleteSchema>;
 
+/**
+ * Practice time outside a finished lesson (free play, games, pieces, the
+ * explanations): counted on the device while someone plays or taps, sent in
+ * pieces. The daily goal and the week count it.
+ */
+export const practiceTimeSchema = z.object({
+  seconds: z.number().int().min(1).max(3600),
+  localDate: isoDateSchema,
+  /** the profile that practised (one of the account's); default: the active one */
+  profileId: z
+    .string()
+    .regex(/^[0-9a-f]{24}$/)
+    .optional(),
+  /** chosen on the device: the same piece sent twice counts once */
+  pieceId: z.string().uuid(),
+});
+export type PracticeTimeInput = z.infer<typeof practiceTimeSchema>;
+
 export const progressQuerySchema = z.object({
   date: isoDateSchema,
   /** one of the account's profiles; default: the session's active profile */

@@ -117,3 +117,16 @@
     opacity: 0;
   }
 }
+
+/* «eine Oktave zu tief»: on top of the sky, above the falling notes */
+.hint {
+  position: absolute;
+  inset: 8px 8px auto;
+  z-index: 2;
+  padding: 6px 10px;
+  border-radius: var(--mantine-radius-md);
+  background: var(--klavio-surface);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+  font-weight: 700;
+  text-align: center;
+}

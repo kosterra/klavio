@@ -36,7 +36,12 @@ describe('Klavi plays along', () => {
       for (const ev of events) {
         expect(ev.at + ev.beats, id).toBeLessThanOrEqual(total + 1e-9);
         if (e.clef === 'treble') {
-          const top = Math.min(...e.bars.flat().map((n) => n.midi));
+          const top = Math.min(
+            ...e.bars
+              .flat()
+              .filter((n) => !n.rest)
+              .map((n) => n.midi),
+          );
           expect(Math.max(...ev.midis), id).toBeLessThanOrEqual(top);
         }
       }

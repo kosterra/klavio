@@ -37,10 +37,11 @@ export function BuddySays({
   // sideways (little height) the figure stands beside the text, small
   const narrow = useMediaQuery('(max-width: 36em)') ?? false;
   const short = useMediaQuery('(max-height: 32em)') ?? false;
-  if (!kids && (classicRow || short)) {
+  // phones too: stacked, figure, task and speaker take a third of the screen
+  if (!kids && (classicRow || short || narrow)) {
     return (
       <Group justify="center" gap="md" wrap="nowrap">
-        <Buddy mood={mood} size={short ? Math.min(size, 48) : size} />
+        <Buddy mood={mood} size={short || narrow ? Math.min(size, 48) : size} />
         {children}
         {speaker}
       </Group>

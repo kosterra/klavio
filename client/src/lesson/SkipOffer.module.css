@@ -28,3 +28,40 @@
   background: var(--mantine-color-indigo-8);
   color: var(--mantine-color-white);
 }
+
+.text {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+
+.button {
+  flex: none;
+}
+
+.short {
+  display: none;
+}
+
+/* phones: a slim line – short text and the button side by side, no icon */
+@media (max-width: 36em) {
+  .offer {
+    padding: 6px var(--mantine-spacing-sm);
+  }
+
+  .row {
+    flex-wrap: nowrap;
+  }
+
+  .text {
+    flex-basis: auto;
+  }
+
+  .icon,
+  .long {
+    display: none;
+  }
+
+  .short {
+    display: inline;
+  }
+}

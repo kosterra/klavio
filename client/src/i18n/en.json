@@ -895,13 +895,14 @@
     "musicBars_other": "Notes in {{count}} bars: {{notes}}"
   },
   "skipCheck": {
-    "offer": "Do you know this already? Three right answers and you may skip the lesson.",
+    "offer": "Know this already? Answer every question right and you skip this chapter.",
+    "offerShort": "Know this already?",
     "start": "Quick check",
     "title": "Quick check",
     "finish": "Done",
     "cancel": "Cancel",
     "failed": "Not quite – no problem. Let’s look at it together.",
-    "done": "Great, you can do this already! The lesson counts as passed.",
+    "done": "Great, you know this already! The whole chapter counts as passed.",
     "link": "I know this – quick check"
   },
   "knowledge": {

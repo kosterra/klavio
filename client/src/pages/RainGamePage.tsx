@@ -9,6 +9,7 @@ import { useRealPiano } from '../components/useRealPiano';
 import { usePlayOn } from '../lesson/playOn';
 import { usePageTitle } from '../components/usePageTitle';
 import { NoteRainGame, type RainClef } from '../lesson/NoteRainGame';
+import { usePracticeTime } from '../practice/usePracticeTime';
 
 type Range = 'few' | 'more';
 
@@ -51,6 +52,7 @@ function writeBest(profileId: string | undefined, best: Best) {
 export function RainGamePage() {
   const { t } = useTranslation();
   usePageTitle(t('rainGame.title'));
+  usePracticeTime();
   const { activeProfile } = useSession();
   const kids = activeProfile?.uiMode !== 'classic';
   const [clef, setClef] = useState<RainClef>('treble');

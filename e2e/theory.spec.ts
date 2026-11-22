@@ -97,6 +97,15 @@ test('quiz: wrong answers get a hint, the right one unlocks "Weiter"', async ({ 
   await expect(page.getByRole('status')).toContainText('Genau!');
   await audit(page);
   await next.click();
+  // the finger numbers come before the first melody
+  await expect(page.getByTestId('theory-text')).toContainText('Deine Finger haben Nummern');
+  await next.click();
+  await page.getByRole('button', { name: '2', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText('Zähl vom Daumen aus');
+  await page.getByRole('button', { name: '3', exact: true }).click();
+  await next.click();
+  await expect(page.getByTestId('theory-text')).toContainText('Daumen 1 auf das mittlere C');
+  await next.click();
   await expect(page.getByTestId('lesson-start')).toBeVisible();
 });
 
@@ -113,7 +122,7 @@ test('reading and rhythm theory: staff lines/spaces, pizza note values, clap gam
   await expect(page.getByRole('heading', { name: 'Lernpfad' })).toBeVisible();
   const ids = LESSONS.map((l) => l.id);
   // all played: «Nochmals entdecken» opens just the lesson's theory (no recap)
-  await seedCompletedLessons(page, ids.slice(0, ids.indexOf('rhythm-quarters') + 1));
+  await seedCompletedLessons(page, ids.slice(0, ids.indexOf('read-a-h-c') + 1));
 
   const next = page.getByTestId('theory-next');
   const again = page.getByTestId('theory-again');
@@ -141,9 +150,15 @@ test('reading and rhythm theory: staff lines/spaces, pizza note values, clap gam
   await next.click();
   await page.getByRole('button', { name: 'Die Halbe' }).click();
   await next.click();
-  // the 4/4 at the start of the music, with bar lines
-  await expect(page.getByTestId('theory-text')).toContainText('4/4');
+  // bar lines: how many bars?
+  await expect(page.getByTestId('theory-text')).toContainText('Taktstrich');
   await expect(page.getByRole('img', { name: /Noten in 2 Takten/ })).toBeVisible();
+  await next.click();
+  await page.getByRole('button', { name: '3', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText('Genau!');
+  await next.click();
+  // the 4/4 at the start of the music
+  await expect(page.getByTestId('theory-text')).toContainText('4/4');
   await next.click();
   await next.click();
   await expect(page.getByTestId('theory-text')).toContainText('vier Viertel');

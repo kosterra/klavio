@@ -327,7 +327,7 @@ describe('a lesson skipped by its check («Ich kann schon»)', () => {
   it('only for lessons with a check, once they are open, never over a played one', async () => {
     const { jar } = await learner();
     expect((await call(jar, 'POST', '/api/progress/lessons/read-staff/skip')).statusCode).toBe(403);
-    expect((await call(jar, 'POST', `/api/progress/lessons/${first!.id}/skip`)).json().error).toBe(
+    expect((await call(jar, 'POST', '/api/progress/lessons/keys-middle-c/skip')).json().error).toBe(
       'NOT_SKIPPABLE',
     );
     expect((await call(jar, 'POST', '/api/progress/lessons/nope/skip')).statusCode).toBe(404);
@@ -336,5 +336,73 @@ describe('a lesson skipped by its check («Ich kann schon»)', () => {
     await call(jar, 'POST', '/api/progress/lessons/read-staff/skip');
     const lessons = (await call(jar, 'GET', `/api/progress?date=${today}`)).json().lessons;
     expect(lessons['read-staff']).toMatchObject({ bestStars: 3, completions: 1 });
+  });
+});
+
+describe('practice time outside a finished lesson', () => {
+  const practise = (jar: CookieJar, body: object) =>
+    call(jar, 'POST', '/api/progress/practice', {
+      seconds: 300,
+      localDate: today,
+      pieceId: crypto.randomUUID(),
+      ...body,
+    });
+
+  it('counts for the day once per piece and earns the daily goal badge', async () => {
+    const { jar } = await learner();
+    const pieceId = crypto.randomUUID();
+    expect((await practise(jar, { pieceId })).statusCode).toBe(204);
+    // the same piece again (the answer got lost): counted once
+    expect((await practise(jar, { pieceId })).statusCode).toBe(204);
+    let progress = (await call(jar, 'GET', `/api/progress?date=${today}`)).json();
+    expect(progress.today.seconds).toBe(300);
+    expect(progress.weekDays).toContain(today);
+    // a finished lesson adds to it
+    await complete(jar, first!.id);
+    progress = (await call(jar, 'GET', `/api/progress?date=${today}`)).json();
+    expect(progress.today.seconds).toBe(420);
+    // 10 minutes (the default goal) reached by practising: the badge
+    await practise(jar, { seconds: 200 });
+    const profile = (await call(jar, 'GET', '/api/profiles')).json()[0];
+    expect(profile.badges.map((b: { id: string }) => b.id)).toContain('daily-goal');
+  });
+
+  it('refuses implausible dates and another profile’s piece', async () => {
+    const { jar } = await learner();
+    expect((await practise(jar, { localDate: '2020-01-01' })).json().error).toBe('BAD_DATE');
+    expect((await practise(jar, { seconds: 0 })).statusCode).toBe(400);
+    const pieceId = crypto.randomUUID();
+    await practise(jar, { pieceId });
+    const other = await learner('other@example.ch');
+    expect((await practise(other.jar, { pieceId })).json().error).toBe('BAD_PIECE_ID');
+  });
+});
+
+describe('a chapter skipped by its check («Kann ich schon»)', () => {
+  it('places all its lessons once it is open, and the next chapter opens', async () => {
+    const { jar } = await learner();
+    // «Noten lesen» is not open yet
+    expect((await call(jar, 'POST', '/api/progress/chapters/read/skip')).statusCode).toBe(403);
+    await call(jar, 'POST', '/api/progress/placement', { chapterId: 'read' });
+    expect((await call(jar, 'POST', '/api/progress/chapters/read/skip')).statusCode).toBe(204);
+    const lessons = (await call(jar, 'GET', `/api/progress?date=${today}`)).json().lessons;
+    for (const id of ['read-staff', 'read-c-d-e', 'read-below-c'])
+      expect(lessons[id], id).toMatchObject({ bestStars: 1, completions: 0 });
+    // bonus lessons stay as they are
+    expect(lessons['rain-treble']).toBeUndefined();
+    // the first lesson of «Im Takt» can be played now
+    expect((await complete(jar, 'rhythm-rests')).statusCode).toBe(200);
+    // twice: nothing changes
+    expect((await call(jar, 'POST', '/api/progress/chapters/read/skip')).statusCode).toBe(204);
+  });
+
+  it('only for chapters with a check', async () => {
+    const { jar } = await learner();
+    expect((await call(jar, 'POST', '/api/progress/chapters/songs/skip')).json().error).toBe(
+      'NOT_SKIPPABLE',
+    );
+    expect((await call(jar, 'POST', '/api/progress/chapters/nope/skip')).statusCode).toBe(404);
+    // the first chapter is open from the start
+    expect((await call(jar, 'POST', '/api/progress/chapters/keys/skip')).statusCode).toBe(204);
   });
 });

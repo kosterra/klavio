@@ -32,7 +32,9 @@ import {
   scoringTarget,
   newlyReachedGoalSkills,
   recapFor,
-  skipCheckFor,
+  chapterCheckFor,
+  CURRICULUM,
+  coreLessons,
   theoryFor,
   xpFor,
   type Lesson,
@@ -86,6 +88,7 @@ import { finishesWorld, worldOfLesson } from '../lesson/worlds';
 import { useWorldMode } from '../lesson/useWorldMode';
 import { useLessonFor } from '../lesson/useLessonFor';
 import stage from '../lesson/LessonStage.module.css';
+import { usePracticeTime } from '../practice/usePracticeTime';
 
 /** «Auf meinem Klavier» or «Auf dem Bildschirm», remembered on this device. */
 
@@ -196,10 +199,17 @@ function LessonRun({
   // where the learner plays (start-up questions, «Mein Profil»): offered first.
   // The other way at the start counts for this lesson only – it does not
   // change the setting (one tap on «Bildschirm» used to switch every lesson after it)
-  // «Ich kann schon Noten lesen»: a short check instead of the lesson – only
-  // offered until the lesson is done; every question right at the first try
-  const skipCheck = skipCheckFor(lesson.id);
-  const canSkip = skipCheck.length > 0 && !completedBefore.has(lesson.id);
+  // «Kann ich schon»: a short check at the start of a chapter instead of the
+  // whole chapter – only offered until one of its lessons is done; every
+  // question right at the first try
+  const check = chapterCheckFor(lesson.id);
+  const skipCheck = check?.steps ?? [];
+  const checkChapter = CURRICULUM.findIndex((c) => c.id === check?.chapterId);
+  // grown-ups in every chapter; children only for reading (their first screens stay calm)
+  const canSkip =
+    skipCheck.length > 0 &&
+    (worldSet === 'journey' || check?.chapterId === 'read') &&
+    !coreLessons(CURRICULUM[checkChapter]!).some((l) => completedBefore.has(l.id));
   // offered during «Weisst du's noch?» and on the lesson's first step
   const offerUntil = discoverFirst ? recapFor(lesson.id).length : 0;
   const checkAnswers = useRef({ asked: 0, right: 0 });
@@ -210,6 +220,25 @@ function LessonRun({
     setCheckFailed(false);
     setPhase('check');
   };
+  // the daily goal: explanations, start card and check count while someone plays or taps;
+  // a finished run brings its own time with the result, an abandoned one is added here
+  const practice = usePracticeTime(phase !== 'play' && phase !== 'result');
+  const leaving = useRef({ phase, add: practice.add, since: 0 });
+  useEffect(() => {
+    leaving.current.add = practice.add;
+  });
+  useEffect(() => {
+    const was = leaving.current.phase;
+    leaving.current.phase = phase;
+    if (phase === 'play' && was !== 'play') leaving.current.since = performance.now();
+  }, [phase]);
+  useEffect(
+    () => () => {
+      const { phase: last, add, since } = leaving.current;
+      if (last === 'play') add(Math.min(1800, (performance.now() - since) / 1000));
+    },
+    [],
+  );
   const [savedPlayOn] = usePlayOn();
   const [playOn] = useState(savedPlayOn);
   const startLesson = (choice: 'piano' | 'screen' = 'piano') => {
@@ -459,11 +488,12 @@ function LessonRun({
                   return;
                 }
                 setSkipping(true);
+                const after = CURRICULUM[checkChapter + 1]?.lessons[0];
                 endpoints
-                  .skipLesson(lesson.id)
+                  .skipChapter(check!.chapterId)
                   .then(() => {
                     notify(t('skipCheck.done'));
-                    navigate(next ? `/lesson/${next.id}` : '/');
+                    navigate(after ? `/lesson/${after.id}` : '/');
                   })
                   .catch((err: unknown) => {
                     notify(errorText(err), 'red');

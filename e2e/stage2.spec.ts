@@ -24,7 +24,8 @@ async function learner(page: Page, name: string) {
 test('level 2: own map, piece for both hands on the grand staff', async ({ page }) => {
   test.setTimeout(120_000);
   await learner(page, 'stage2');
-  await seedCompletedLessons(page, ids.slice(0, ids.indexOf('both-entchen')));
+  // up to «Beide Hände» (level 2); «Entchen mit Begleitung» is at the end of level 1
+  await seedCompletedLessons(page, ids.slice(0, ids.indexOf('both-turns')));
   await page.reload();
 
   // the map of level 2 is shown, level 1 is one click away
@@ -39,6 +40,9 @@ test('level 2: own map, piece for both hands on the grand staff', async ({ page 
   await expect(page.getByTestId('chapter-bass')).toBeVisible();
 
   // piece: the first step needs the low C (left) and middle C (right)
+  await levels.getByText('Stufe 1 · Erste Schritte').click();
+  // a finished chapter is folded: open «Die rechte Hand»
+  await page.getByRole('button', { name: /Kapitel 2 · .*Die rechte Hand/ }).click();
   await page.getByTestId('path-both-entchen').click();
   await startLesson(page);
   const status = page.getByTestId('piece-status');

@@ -11,6 +11,7 @@ import { useProgress } from '../lesson/useProgress';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { ProgressPending } from '../components/ProgressPending';
 import { useWorldMode } from '../lesson/useWorldMode';
+import { usePracticeTime } from '../practice/usePracticeTime';
 
 /** Questions per quick round. */
 const ROUND_SIZE = 5;
@@ -37,6 +38,7 @@ function pickSteps(played: Set<string>, world: 'kids' | 'journey'): TheoryStep[]
 export function QuickRoundPage() {
   const { t } = useTranslation();
   usePageTitle(t('review.quick'));
+  usePracticeTime();
   const navigate = useNavigate();
   const { activeProfile } = useSession();
   const { progress, completed, error, reload } = useProgress();

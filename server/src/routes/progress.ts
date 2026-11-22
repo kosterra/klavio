@@ -13,9 +13,11 @@ import {
   lessonCompleteSchema,
   scoringTarget,
   skipCheckFor,
+  CHAPTER_CHECKS,
   newlyEarnedBadges,
   levelForXp,
   nextStreak,
+  practiceTimeSchema,
   progressQuerySchema,
   REVIEW_INTERVALS,
   starsFor,
@@ -63,6 +65,8 @@ function toDto(l: ProgressDoc): LessonProgressDto {
 
 /** How long a result's receipt is kept: longer than the device keeps unsent results. */
 const RECEIPT_DAYS = MAX_LATE_DAYS + 7;
+/** the badge for reaching the daily goal (see shared badges) */
+const DAILY_GOAL_BADGE = 'daily-goal';
 
 /**
  * The profile a request is about: the one named (it must be the account's) or
@@ -160,6 +164,77 @@ const progressRoutes: FastifyPluginAsyncZod = async (app) => {
         // a second tap at the same time: already skipped
         if (!isDuplicateKey(err)) throw err;
       }
+    }
+    return reply.code(204).send();
+  });
+
+  /**
+   * «Kann ich schon»: the chapter's check (asked on the device) was passed –
+   * all its lessons count as passed like the placement (1 star, no XP, no
+   * reviews). Only chapters with a check, only once their first lesson is open.
+   */
+  app.post(
+    '/chapters/:chapterId/skip',
+    { schema: { params: z.object({ chapterId: z.string().regex(/^[a-z0-9-]{1,40}$/) }) } },
+    async (req, reply) => {
+      const profileId = await profileOf(req);
+      const chapter = CURRICULUM.find((c) => c.id === req.params.chapterId);
+      if (!chapter) throw notFound();
+      if (!CHAPTER_CHECKS[chapter.id]) throw new HttpError(400, 'NOT_SKIPPABLE');
+      const done = await LessonProgress.find({ profileId }, { lessonId: 1 }).lean();
+      const completed = new Set(done.map((d) => d.lessonId));
+      const pathOff = !!(await Profile.exists({ _id: profileId, pathOff: true }));
+      if (!pathOff && !isLessonUnlocked(chapter.lessons[0]!.id, completed))
+        throw new HttpError(403, 'LESSON_LOCKED');
+      const add = coreLessons(chapter).filter((l) => !completed.has(l.id));
+      for (const lesson of add) {
+        try {
+          await LessonProgress.create({
+            profileId,
+            lessonId: lesson.id,
+            bestStars: 1,
+            completions: 0,
+            placed: true,
+          });
+        } catch (err) {
+          // a second tap at the same time: already placed
+          if (!isDuplicateKey(err)) throw err;
+        }
+      }
+      return reply.code(204).send();
+    },
+  );
+
+  // practice time outside a finished lesson: counts for the day (daily goal, week)
+  app.post('/practice', { schema: { body: practiceTimeSchema } }, async (req, reply) => {
+    const profileId = await profileOf(req, req.body.profileId);
+    const { seconds, localDate, pieceId } = req.body;
+    if (!plausibleLocalDate(localDate)) throw badRequest('BAD_DATE');
+    // the same piece again (the answer got lost on the way): counted already
+    try {
+      await LessonReceipt.create({
+        _id: pieceId,
+        profileId,
+        expiresAt: new Date(Date.now() + RECEIPT_DAYS * 24 * 60 * 60 * 1000),
+      });
+    } catch (err) {
+      if (!isDuplicateKey(err)) throw err;
+      const receipt = await LessonReceipt.findById(pieceId).lean();
+      if (!receipt || !receipt.profileId.equals(profileId)) throw badRequest('BAD_PIECE_ID');
+      return reply.code(204).send();
+    }
+    const today = await DailyActivity.findOneAndUpdate(
+      { profileId, date: localDate },
+      { $inc: { seconds } },
+      { upsert: true, returnDocument: 'after', lean: true },
+    );
+    // the daily goal reached by practising: its badge, once
+    const profile = await Profile.findById(profileId, { dailyGoalMinutes: 1 }).lean();
+    if (profile && today && today.seconds >= (profile.dailyGoalMinutes ?? 10) * 60) {
+      await Profile.updateOne(
+        { _id: profileId, 'badges.id': { $ne: DAILY_GOAL_BADGE } },
+        { $push: { badges: { id: DAILY_GOAL_BADGE, earnedAt: new Date() } } },
+      );
     }
     return reply.code(204).send();
   });
